@@ -1,0 +1,4 @@
+# Ignore sensitive files
+.env
+.cache/
+*.log
