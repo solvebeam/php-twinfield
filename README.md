@@ -2,12 +2,6 @@
 
 Modern PHP SDK for the Twinfield API, built on PSR standards.
 
-## Links
-
-- https://chatgpt.com/c/6983bca8-83d0-8327-aafb-c4cb3a774cb6
-- https://oauth2-client.thephpleague.com/providers/league/
-- https://oauth2-client.thephpleague.com/providers/thirdparty/
-
 ## PSR Compliance
 
 ### PSR-1 (Basic Coding Standard)
@@ -25,6 +19,11 @@ The SDK uses PSR-4 autoloading for the `SolveBeam\Twinfield\` namespace, configu
 ### PSR-6 (Caching)
 
 Examples use PSR-6 caching for token storage via `symfony/cache`.
+
+- https://www.php-fig.org/psr/psr-6/
+- https://github.com/php-fig/cache
+- https://packagist.org/packages/psr/cache
+- https://github.com/symfony/cache
 
 ### PSR-7 (HTTP Messages)
 
@@ -106,3 +105,10 @@ $accessToken = $provider->getAccessToken('authorization_code', [
 
 For more details, see the [Twinfield OpenID Connect documentation](https://developers.twinfield.com/documentation/api/authentication/openid-connect-auth).
 
+## Links
+
+- https://chatgpt.com/c/6983bca8-83d0-8327-aafb-c4cb3a774cb6
+- https://oauth2-client.thephpleague.com/providers/league/
+- https://oauth2-client.thephpleague.com/providers/thirdparty/
+- https://github.com/php-fig/cache
+- https://github.com/phpro/soap-client
