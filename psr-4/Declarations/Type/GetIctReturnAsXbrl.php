@@ -27,21 +27,5 @@ class GetIctReturnAsXbrl implements RequestInterface
         $this->documentId = $documentId;
         $this->isMessageIdRequired = $isMessageIdRequired;
     }
-
-    /**
-     * @return int
-     */
-    public function getDocumentId(): int
-    {
-        return $this->documentId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsMessageIdRequired(): bool
-    {
-        return $this->isMessageIdRequired;
-    }
 }
 

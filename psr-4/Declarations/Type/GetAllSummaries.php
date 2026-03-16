@@ -20,13 +20,5 @@ class GetAllSummaries implements RequestInterface
     {
         $this->companyCode = $companyCode;
     }
-
-    /**
-     * @return null | string
-     */
-    public function getCompanyCode(): ?string
-    {
-        return $this->companyCode;
-    }
 }
 

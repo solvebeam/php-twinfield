@@ -8,13 +8,5 @@ class ArrayOfDeclarationSummary
      * @var null | array<int<0,max>, \SolveBeam\Twinfield\Declarations\Type\DeclarationSummary>
      */
     private ?array $DeclarationSummary = null;
-
-    /**
-     * @return null | array<int<0,max>, \SolveBeam\Twinfield\Declarations\Type\DeclarationSummary>
-     */
-    public function getDeclarationSummary(): ?array
-    {
-        return $this->DeclarationSummary;
-    }
 }
 

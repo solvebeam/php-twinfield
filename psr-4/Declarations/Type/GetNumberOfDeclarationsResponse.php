@@ -15,21 +15,5 @@ class GetNumberOfDeclarationsResponse implements ResultInterface
      * @var int
      */
     private int $numberOfVatReturns;
-
-    /**
-     * @return null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage
-     */
-    public function getGetNumberOfDeclarationsResult(): ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage
-    {
-        return $this->GetNumberOfDeclarationsResult;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumberOfVatReturns(): int
-    {
-        return $this->numberOfVatReturns;
-    }
 }
 

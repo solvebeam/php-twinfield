@@ -27,21 +27,5 @@ class SetToRejected implements RequestInterface
         $this->documentId = $documentId;
         $this->reason = $reason;
     }
-
-    /**
-     * @return int
-     */
-    public function getDocumentId(): int
-    {
-        return $this->documentId;
-    }
-
-    /**
-     * @return null | string
-     */
-    public function getReason(): ?string
-    {
-        return $this->reason;
-    }
 }
 

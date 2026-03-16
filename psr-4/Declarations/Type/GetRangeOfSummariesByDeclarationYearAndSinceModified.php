@@ -48,45 +48,5 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModified implements RequestInt
         $this->count = $count;
         $this->modifiedSince = $modifiedSince;
     }
-
-    /**
-     * @return null | string
-     */
-    public function getCompanyCode(): ?string
-    {
-        return $this->companyCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDeclarationYear(): int
-    {
-        return $this->declarationYear;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStartIndex(): int
-    {
-        return $this->startIndex;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCount(): int
-    {
-        return $this->count;
-    }
-
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getModifiedSince(): \DateTimeInterface
-    {
-        return $this->modifiedSince;
-    }
 }
 

@@ -20,13 +20,5 @@ class GetTaxGroupVatReturnPaymentReference implements RequestInterface
     {
         $this->documentId = $documentId;
     }
-
-    /**
-     * @return int
-     */
-    public function getDocumentId(): int
-    {
-        return $this->documentId;
-    }
 }
 

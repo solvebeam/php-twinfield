@@ -18,7 +18,6 @@ return Config::create()
     ->setClassMapDestination('psr-4/Declarations')
     ->setClassMapName('DeclarationsClassmap')
     ->setClassMapNamespace('SolveBeam\Twinfield\Declarations')
-    ->addRule(new Rules\AssembleRule(new Assembler\GetterAssembler(new Assembler\GetterAssemblerOptions())))
     ->addRule(
         new Rules\IsRequestRule(
             $engine->getMetadata(),

@@ -34,29 +34,5 @@ class GetRangeOfSummaries implements RequestInterface
         $this->startIndex = $startIndex;
         $this->count = $count;
     }
-
-    /**
-     * @return null | string
-     */
-    public function getCompanyCode(): ?string
-    {
-        return $this->companyCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStartIndex(): int
-    {
-        return $this->startIndex;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCount(): int
-    {
-        return $this->count;
-    }
 }
 
