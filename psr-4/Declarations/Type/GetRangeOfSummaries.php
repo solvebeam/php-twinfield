@@ -44,18 +44,6 @@ class GetRangeOfSummaries implements RequestInterface
     }
 
     /**
-     * @param null | string $companyCode
-     * @return static
-     */
-    public function withCompanyCode(?string $companyCode): static
-    {
-        $new = clone $this;
-        $new->companyCode = $companyCode;
-
-        return $new;
-    }
-
-    /**
      * @return int
      */
     public function getStartIndex(): int
@@ -64,35 +52,11 @@ class GetRangeOfSummaries implements RequestInterface
     }
 
     /**
-     * @param int $startIndex
-     * @return static
-     */
-    public function withStartIndex(int $startIndex): static
-    {
-        $new = clone $this;
-        $new->startIndex = $startIndex;
-
-        return $new;
-    }
-
-    /**
      * @return int
      */
     public function getCount(): int
     {
         return $this->count;
-    }
-
-    /**
-     * @param int $count
-     * @return static
-     */
-    public function withCount(int $count): static
-    {
-        $new = clone $this;
-        $new->count = $count;
-
-        return $new;
     }
 }
 

@@ -28,17 +28,5 @@ class GetAllSummaries implements RequestInterface
     {
         return $this->companyCode;
     }
-
-    /**
-     * @param null | string $companyCode
-     * @return static
-     */
-    public function withCompanyCode(?string $companyCode): static
-    {
-        $new = clone $this;
-        $new->companyCode = $companyCode;
-
-        return $new;
-    }
 }
 

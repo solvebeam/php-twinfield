@@ -25,35 +25,11 @@ class GetRangeOfSummariesByDeclarationYearResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetRangeOfSummariesByDeclarationYearResult
-     * @return static
-     */
-    public function withGetRangeOfSummariesByDeclarationYearResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetRangeOfSummariesByDeclarationYearResult): static
-    {
-        $new = clone $this;
-        $new->GetRangeOfSummariesByDeclarationYearResult = $GetRangeOfSummariesByDeclarationYearResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary
      */
     public function getVatReturn(): ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary
     {
         return $this->vatReturn;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn
-     * @return static
-     */
-    public function withVatReturn(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn): static
-    {
-        $new = clone $this;
-        $new->vatReturn = $vatReturn;
-
-        return $new;
     }
 }
 

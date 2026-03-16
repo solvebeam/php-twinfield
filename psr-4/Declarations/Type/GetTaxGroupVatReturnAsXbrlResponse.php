@@ -25,35 +25,11 @@ class GetTaxGroupVatReturnAsXbrlResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetTaxGroupVatReturnAsXbrlResult
-     * @return static
-     */
-    public function withGetTaxGroupVatReturnAsXbrlResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetTaxGroupVatReturnAsXbrlResult): static
-    {
-        $new = clone $this;
-        $new->GetTaxGroupVatReturnAsXbrlResult = $GetTaxGroupVatReturnAsXbrlResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\GetTaxGroupVatReturnAsXbrlResponseVatReturn
      */
     public function getVatReturn(): ?\SolveBeam\Twinfield\Declarations\Type\GetTaxGroupVatReturnAsXbrlResponseVatReturn
     {
         return $this->vatReturn;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\GetTaxGroupVatReturnAsXbrlResponseVatReturn $vatReturn
-     * @return static
-     */
-    public function withVatReturn(?\SolveBeam\Twinfield\Declarations\Type\GetTaxGroupVatReturnAsXbrlResponseVatReturn $vatReturn): static
-    {
-        $new = clone $this;
-        $new->vatReturn = $vatReturn;
-
-        return $new;
     }
 }
 

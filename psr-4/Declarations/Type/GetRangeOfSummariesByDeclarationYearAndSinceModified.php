@@ -58,35 +58,11 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModified implements RequestInt
     }
 
     /**
-     * @param null | string $companyCode
-     * @return static
-     */
-    public function withCompanyCode(?string $companyCode): static
-    {
-        $new = clone $this;
-        $new->companyCode = $companyCode;
-
-        return $new;
-    }
-
-    /**
      * @return int
      */
     public function getDeclarationYear(): int
     {
         return $this->declarationYear;
-    }
-
-    /**
-     * @param int $declarationYear
-     * @return static
-     */
-    public function withDeclarationYear(int $declarationYear): static
-    {
-        $new = clone $this;
-        $new->declarationYear = $declarationYear;
-
-        return $new;
     }
 
     /**
@@ -98,18 +74,6 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModified implements RequestInt
     }
 
     /**
-     * @param int $startIndex
-     * @return static
-     */
-    public function withStartIndex(int $startIndex): static
-    {
-        $new = clone $this;
-        $new->startIndex = $startIndex;
-
-        return $new;
-    }
-
-    /**
      * @return int
      */
     public function getCount(): int
@@ -118,35 +82,11 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModified implements RequestInt
     }
 
     /**
-     * @param int $count
-     * @return static
-     */
-    public function withCount(int $count): static
-    {
-        $new = clone $this;
-        $new->count = $count;
-
-        return $new;
-    }
-
-    /**
      * @return \DateTimeInterface
      */
     public function getModifiedSince(): \DateTimeInterface
     {
         return $this->modifiedSince;
-    }
-
-    /**
-     * @param \DateTimeInterface $modifiedSince
-     * @return static
-     */
-    public function withModifiedSince(\DateTimeInterface $modifiedSince): static
-    {
-        $new = clone $this;
-        $new->modifiedSince = $modifiedSince;
-
-        return $new;
     }
 }
 

@@ -25,35 +25,11 @@ class GetVatReturnAsXmlResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetVatReturnAsXmlResult
-     * @return static
-     */
-    public function withGetVatReturnAsXmlResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetVatReturnAsXmlResult): static
-    {
-        $new = clone $this;
-        $new->GetVatReturnAsXmlResult = $GetVatReturnAsXmlResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\GetVatReturnAsXmlResponseVatReturn
      */
     public function getVatReturn(): ?\SolveBeam\Twinfield\Declarations\Type\GetVatReturnAsXmlResponseVatReturn
     {
         return $this->vatReturn;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\GetVatReturnAsXmlResponseVatReturn $vatReturn
-     * @return static
-     */
-    public function withVatReturn(?\SolveBeam\Twinfield\Declarations\Type\GetVatReturnAsXmlResponseVatReturn $vatReturn): static
-    {
-        $new = clone $this;
-        $new->vatReturn = $vatReturn;
-
-        return $new;
     }
 }
 

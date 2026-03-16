@@ -25,35 +25,11 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModifiedResponse implements Re
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetRangeOfSummariesByDeclarationYearAndSinceModifiedResult
-     * @return static
-     */
-    public function withGetRangeOfSummariesByDeclarationYearAndSinceModifiedResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetRangeOfSummariesByDeclarationYearAndSinceModifiedResult): static
-    {
-        $new = clone $this;
-        $new->GetRangeOfSummariesByDeclarationYearAndSinceModifiedResult = $GetRangeOfSummariesByDeclarationYearAndSinceModifiedResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary
      */
     public function getVatReturn(): ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary
     {
         return $this->vatReturn;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn
-     * @return static
-     */
-    public function withVatReturn(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn): static
-    {
-        $new = clone $this;
-        $new->vatReturn = $vatReturn;
-
-        return $new;
     }
 }
 

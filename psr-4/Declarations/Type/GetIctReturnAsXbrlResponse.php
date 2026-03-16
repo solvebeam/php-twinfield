@@ -25,35 +25,11 @@ class GetIctReturnAsXbrlResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetIctReturnAsXbrlResult
-     * @return static
-     */
-    public function withGetIctReturnAsXbrlResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetIctReturnAsXbrlResult): static
-    {
-        $new = clone $this;
-        $new->GetIctReturnAsXbrlResult = $GetIctReturnAsXbrlResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\GetIctReturnAsXbrlResponseVatReturn
      */
     public function getVatReturn(): ?\SolveBeam\Twinfield\Declarations\Type\GetIctReturnAsXbrlResponseVatReturn
     {
         return $this->vatReturn;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\GetIctReturnAsXbrlResponseVatReturn $vatReturn
-     * @return static
-     */
-    public function withVatReturn(?\SolveBeam\Twinfield\Declarations\Type\GetIctReturnAsXbrlResponseVatReturn $vatReturn): static
-    {
-        $new = clone $this;
-        $new->vatReturn = $vatReturn;
-
-        return $new;
     }
 }
 

@@ -51,35 +51,11 @@ class GetRangeOfSummariesSinceModified implements RequestInterface
     }
 
     /**
-     * @param null | string $companyCode
-     * @return static
-     */
-    public function withCompanyCode(?string $companyCode): static
-    {
-        $new = clone $this;
-        $new->companyCode = $companyCode;
-
-        return $new;
-    }
-
-    /**
      * @return int
      */
     public function getStartIndex(): int
     {
         return $this->startIndex;
-    }
-
-    /**
-     * @param int $startIndex
-     * @return static
-     */
-    public function withStartIndex(int $startIndex): static
-    {
-        $new = clone $this;
-        $new->startIndex = $startIndex;
-
-        return $new;
     }
 
     /**
@@ -91,35 +67,11 @@ class GetRangeOfSummariesSinceModified implements RequestInterface
     }
 
     /**
-     * @param int $count
-     * @return static
-     */
-    public function withCount(int $count): static
-    {
-        $new = clone $this;
-        $new->count = $count;
-
-        return $new;
-    }
-
-    /**
      * @return \DateTimeInterface
      */
     public function getModifiedSince(): \DateTimeInterface
     {
         return $this->modifiedSince;
-    }
-
-    /**
-     * @param \DateTimeInterface $modifiedSince
-     * @return static
-     */
-    public function withModifiedSince(\DateTimeInterface $modifiedSince): static
-    {
-        $new = clone $this;
-        $new->modifiedSince = $modifiedSince;
-
-        return $new;
     }
 }
 

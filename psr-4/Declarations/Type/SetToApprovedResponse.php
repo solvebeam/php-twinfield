@@ -18,17 +18,5 @@ class SetToApprovedResponse implements ResultInterface
     {
         return $this->SetToApprovedResult;
     }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToApprovedResult
-     * @return static
-     */
-    public function withSetToApprovedResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToApprovedResult): static
-    {
-        $new = clone $this;
-        $new->SetToApprovedResult = $SetToApprovedResult;
-
-        return $new;
-    }
 }
 

@@ -37,35 +37,11 @@ class SetToRejected implements RequestInterface
     }
 
     /**
-     * @param int $documentId
-     * @return static
-     */
-    public function withDocumentId(int $documentId): static
-    {
-        $new = clone $this;
-        $new->documentId = $documentId;
-
-        return $new;
-    }
-
-    /**
      * @return null | string
      */
     public function getReason(): ?string
     {
         return $this->reason;
-    }
-
-    /**
-     * @param null | string $reason
-     * @return static
-     */
-    public function withReason(?string $reason): static
-    {
-        $new = clone $this;
-        $new->reason = $reason;
-
-        return $new;
     }
 }
 

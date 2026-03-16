@@ -25,35 +25,11 @@ class GetTaxGroupVatReturnPaymentReferenceResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetTaxGroupVatReturnPaymentReferenceResult
-     * @return static
-     */
-    public function withGetTaxGroupVatReturnPaymentReferenceResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetTaxGroupVatReturnPaymentReferenceResult): static
-    {
-        $new = clone $this;
-        $new->GetTaxGroupVatReturnPaymentReferenceResult = $GetTaxGroupVatReturnPaymentReferenceResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | string
      */
     public function getPaymentReference(): ?string
     {
         return $this->paymentReference;
-    }
-
-    /**
-     * @param null | string $paymentReference
-     * @return static
-     */
-    public function withPaymentReference(?string $paymentReference): static
-    {
-        $new = clone $this;
-        $new->paymentReference = $paymentReference;
-
-        return $new;
     }
 }
 

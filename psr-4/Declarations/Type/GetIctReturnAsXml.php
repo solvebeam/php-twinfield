@@ -28,17 +28,5 @@ class GetIctReturnAsXml implements RequestInterface
     {
         return $this->documentId;
     }
-
-    /**
-     * @param int $documentId
-     * @return static
-     */
-    public function withDocumentId(int $documentId): static
-    {
-        $new = clone $this;
-        $new->documentId = $documentId;
-
-        return $new;
-    }
 }
 

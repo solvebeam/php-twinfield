@@ -18,17 +18,5 @@ class SetToRejectedResponse implements ResultInterface
     {
         return $this->SetToRejectedResult;
     }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToRejectedResult
-     * @return static
-     */
-    public function withSetToRejectedResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToRejectedResult): static
-    {
-        $new = clone $this;
-        $new->SetToRejectedResult = $SetToRejectedResult;
-
-        return $new;
-    }
 }
 

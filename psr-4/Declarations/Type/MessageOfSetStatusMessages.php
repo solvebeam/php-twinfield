@@ -33,35 +33,11 @@ class MessageOfSetStatusMessages
     }
 
     /**
-     * @param \SolveBeam\Twinfield\Declarations\Type\MessageType $Type
-     * @return static
-     */
-    public function withType(\SolveBeam\Twinfield\Declarations\Type\MessageType $Type): static
-    {
-        $new = clone $this;
-        $new->Type = $Type;
-
-        return $new;
-    }
-
-    /**
      * @return null | string
      */
     public function getText(): ?string
     {
         return $this->Text;
-    }
-
-    /**
-     * @param null | string $Text
-     * @return static
-     */
-    public function withText(?string $Text): static
-    {
-        $new = clone $this;
-        $new->Text = $Text;
-
-        return $new;
     }
 
     /**
@@ -73,35 +49,11 @@ class MessageOfSetStatusMessages
     }
 
     /**
-     * @param \SolveBeam\Twinfield\Declarations\Type\SetStatusMessages $Code
-     * @return static
-     */
-    public function withCode(\SolveBeam\Twinfield\Declarations\Type\SetStatusMessages $Code): static
-    {
-        $new = clone $this;
-        $new->Code = $Code;
-
-        return $new;
-    }
-
-    /**
      * @return null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfString
      */
     public function getParameters(): ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfString
     {
         return $this->Parameters;
-    }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfString $Parameters
-     * @return static
-     */
-    public function withParameters(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfString $Parameters): static
-    {
-        $new = clone $this;
-        $new->Parameters = $Parameters;
-
-        return $new;
     }
 }
 

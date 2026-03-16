@@ -37,35 +37,11 @@ class GetVatReturnAsXbrl implements RequestInterface
     }
 
     /**
-     * @param int $documentId
-     * @return static
-     */
-    public function withDocumentId(int $documentId): static
-    {
-        $new = clone $this;
-        $new->documentId = $documentId;
-
-        return $new;
-    }
-
-    /**
      * @return bool
      */
     public function getIsMessageIdRequired(): bool
     {
         return $this->isMessageIdRequired;
-    }
-
-    /**
-     * @param bool $isMessageIdRequired
-     * @return static
-     */
-    public function withIsMessageIdRequired(bool $isMessageIdRequired): static
-    {
-        $new = clone $this;
-        $new->isMessageIdRequired = $isMessageIdRequired;
-
-        return $new;
     }
 }
 

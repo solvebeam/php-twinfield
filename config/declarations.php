@@ -19,9 +19,6 @@ return Config::create()
     ->setClassMapName('DeclarationsClassmap')
     ->setClassMapNamespace('SolveBeam\Twinfield\Declarations')
     ->addRule(new Rules\AssembleRule(new Assembler\GetterAssembler(new Assembler\GetterAssemblerOptions())))
-    ->addRule(new Rules\AssembleRule(new Assembler\ImmutableSetterAssembler(
-        new Assembler\ImmutableSetterAssemblerOptions()
-    )))
     ->addRule(
         new Rules\IsRequestRule(
             $engine->getMetadata(),

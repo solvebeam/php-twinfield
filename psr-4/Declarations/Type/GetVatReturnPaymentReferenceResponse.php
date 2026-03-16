@@ -25,35 +25,11 @@ class GetVatReturnPaymentReferenceResponse implements ResultInterface
     }
 
     /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetVatReturnPaymentReferenceResult
-     * @return static
-     */
-    public function withGetVatReturnPaymentReferenceResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfLoadMessage $GetVatReturnPaymentReferenceResult): static
-    {
-        $new = clone $this;
-        $new->GetVatReturnPaymentReferenceResult = $GetVatReturnPaymentReferenceResult;
-
-        return $new;
-    }
-
-    /**
      * @return null | string
      */
     public function getPaymentReference(): ?string
     {
         return $this->paymentReference;
-    }
-
-    /**
-     * @param null | string $paymentReference
-     * @return static
-     */
-    public function withPaymentReference(?string $paymentReference): static
-    {
-        $new = clone $this;
-        $new->paymentReference = $paymentReference;
-
-        return $new;
     }
 }
 

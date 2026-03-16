@@ -18,17 +18,5 @@ class SetToSentResponse implements ResultInterface
     {
         return $this->SetToSentResult;
     }
-
-    /**
-     * @param null | \SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToSentResult
-     * @return static
-     */
-    public function withSetToSentResult(?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToSentResult): static
-    {
-        $new = clone $this;
-        $new->SetToSentResult = $SetToSentResult;
-
-        return $new;
-    }
 }
 
