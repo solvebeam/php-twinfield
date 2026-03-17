@@ -23,13 +23,12 @@ final class SoapResponse
         $xml = new DOMDocument('1.0', 'UTF-8');
 
         if (@$xml->loadXML($body) === false) {
-            var_dump( $body );
-            throw new RuntimeException('Unable to parse SOAP response as XML.');
+            throw new RuntimeException(self::buildNonSoapResponseMessage($response));
         }
 
         $envelope = $xml->documentElement;
-        if (!$envelope instanceof DOMElement) {
-            throw new RuntimeException('Unable to find SOAP envelope in response.');
+        if (!$envelope instanceof DOMElement || $envelope->localName !== 'Envelope') {
+            throw new RuntimeException(self::buildNonSoapResponseMessage($response));
         }
 
         $body = null;
@@ -146,5 +145,17 @@ final class SoapResponse
         }
 
         return null;
+    }
+
+    private static function buildNonSoapResponseMessage(ResponseInterface $response): string
+    {
+        $statusCode = $response->getStatusCode();
+        $reason = $response->getReasonPhrase();
+
+        return sprintf(
+            'Expected SOAP XML response, received HTTP %d %s.',
+            $statusCode,
+            $reason
+        );
     }
 }
