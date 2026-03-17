@@ -10,6 +10,7 @@ use LogicException;
 use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use SolveBeam\Twinfield\Soap\SoapAction;
+use SolveBeam\Twinfield\Soap\SoapArray;
 use SolveBeam\Twinfield\Soap\SoapName;
 
 final class SoapEnvelope
@@ -75,15 +76,41 @@ final class SoapEnvelope
 		string $elementName,
 	): DOMElement {
 		$inner = $doc->createElementNS($namespace, $elementName);
+		$reflection = new ReflectionClass($element);
 
-		foreach ((new ReflectionClass($element))->getProperties() as $prop) {
+		// SoapArray type: serialize items as child elements
+		$soapArrayAttrs = $reflection->getAttributes(SoapArray::class);
+		if ($soapArrayAttrs !== []) {
+			$soapArray = $soapArrayAttrs[0]->newInstance();
+			foreach ($element->items as $item) {
+				if (is_object($item)) {
+					$inner->appendChild($this->buildInnerElement($doc, $item, $namespace, $soapArray->elementName));
+				} else {
+					$inner->appendChild($doc->createElementNS($namespace, $soapArray->elementName, (string) $item));
+				}
+			}
+
+			return $inner;
+		}
+
+		// Regular object: serialize properties
+		foreach ($reflection->getProperties() as $prop) {
 			$nameAttrs = $prop->getAttributes(SoapName::class);
 			$xmlName = $nameAttrs !== []
 				? $nameAttrs[0]->newInstance()->name
 				: $prop->getName();
 
-			$child = $doc->createElementNS($namespace, $xmlName, (string) $prop->getValue($element));
-			$inner->appendChild($child);
+			$value = $prop->getValue($element);
+
+			if ($value === null) {
+				continue;
+			}
+
+			if (is_object($value)) {
+				$inner->appendChild($this->buildInnerElement($doc, $value, $namespace, $xmlName));
+			} else {
+				$inner->appendChild($doc->createElementNS($namespace, $xmlName, (string) $value));
+			}
 		}
 
 		return $inner;

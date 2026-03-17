@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Finder;
 
+use SolveBeam\Twinfield\Data\ArrayOfArrayOfString;
 use SolveBeam\Twinfield\Soap\SoapAction;
 use SolveBeam\Twinfield\Soap\SoapName;
 
@@ -22,5 +23,7 @@ final readonly class Search
         public int $firstRow,
         #[SoapName('maxRows')]
         public int $maxRows,
+        #[SoapName('options')]
+        public ?ArrayOfArrayOfString $options = null,
     ) {}
 }
