@@ -18,18 +18,16 @@ final class SoapClient
         object $body,
         object|null $header = null,
         string $method = 'POST',
-        string|null $responseClass = null,
     ): SoapResponse {
         $envelope = new SoapEnvelope($body, $header);
 
-        return $this->sendEnvelope($url, $envelope, $method, $responseClass);
+        return $this->sendEnvelope($url, $envelope, $method);
     }
 
     public function sendEnvelope(
         string $url,
         SoapEnvelope $envelope,
         string $method = 'POST',
-        string|null $responseClass = null,
     ): SoapResponse {
         $request = $envelope->toRequest($url, $this->requestFactory, $method);
         $response = $this->httpClient->sendRequest($request);
@@ -37,10 +35,6 @@ final class SoapClient
 
         if ($soapResponse->isFault()) {
             throw SoapFaultException::fromSoapResponse($soapResponse);
-        }
-
-        if ($responseClass !== null) {
-            $soapResponse = $soapResponse->withMappedPayload($responseClass);
         }
 
         return $soapResponse;
