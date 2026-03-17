@@ -29,7 +29,7 @@ final class DiscoverySoapRequestFactory implements SoapRequestFactory
     }
 }
 
-$accessToken = (string) (getenv('TWINFIELD_ACCESS_TOKEN') ?: '55b80a23746edabe309c309d85311857');
+$accessToken = (string) (getenv('TWINFIELD_ACCESS_TOKEN') ?: '11ce1a6192560f96fd9b882b2e0270f2');
 $companyCode = (string) (getenv('TWINFIELD_COMPANY_CODE') ?: '1000');
 $endpoint = (string) (getenv('TWINFIELD_SOAP_ENDPOINT') ?: 'https://api.accounting.twinfield.com/webservices/finder.asmx');
 

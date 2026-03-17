@@ -9,6 +9,7 @@ use LogicException;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
+use SolveBeam\Twinfield\Soap\SoapArray;
 use SolveBeam\Twinfield\Soap\SoapName;
 
 final class SoapResponseMapper
@@ -44,6 +45,13 @@ final class SoapResponseMapper
     private function mapObject(string $className, DOMElement $element): object
     {
         $reflection = new ReflectionClass($className);
+
+        // Check if this class is a SoapArray type
+        $soapArrayAttrs = $reflection->getAttributes(SoapArray::class);
+        if ($soapArrayAttrs !== []) {
+            return $this->mapSoapArray($reflection, $soapArrayAttrs[0]->newInstance(), $element);
+        }
+
         $constructor = $reflection->getConstructor();
 
         if ($constructor === null) {
@@ -102,6 +110,30 @@ final class SoapResponseMapper
         return $this->coerceValue($value, $type);
     }
 
+    /**
+     * @param ReflectionClass<object> $reflection
+     */
+    private function mapSoapArray(ReflectionClass $reflection, SoapArray $soapArray, DOMElement $element): object
+    {
+        $items = [];
+        foreach ($element->childNodes as $child) {
+            if (!$child instanceof DOMElement || $child->localName !== $soapArray->elementName) {
+                continue;
+            }
+
+            $items[] = $this->isBuiltinType($soapArray->type)
+                ? $this->coerceValue(trim($child->textContent), $soapArray->type)
+                : $this->mapObject($soapArray->type, $child);
+        }
+
+        return $reflection->newInstance($items);
+    }
+
+    private function isBuiltinType(string $type): bool
+    {
+        return in_array($type, ['string', 'int', 'float', 'bool'], true);
+    }
+
     private function getXmlElementName(ReflectionParameter $param): string
     {
         // SoapName attribute is REQUIRED
@@ -127,9 +159,9 @@ final class SoapResponseMapper
         return null;
     }
 
-    private function coerceValue(string $value, ReflectionNamedType $type): mixed
+    private function coerceValue(string $value, ReflectionNamedType|string $type): mixed
     {
-        $typeName = $type->getName();
+        $typeName = $type instanceof ReflectionNamedType ? $type->getName() : $type;
 
         return match ($typeName) {
             'int' => (int) $value,
