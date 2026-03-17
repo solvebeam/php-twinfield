@@ -34,7 +34,7 @@ final class SoapResponseMapper
         if (!$responseElement instanceof DOMElement) {
             throw new LogicException(sprintf(
                 'Response element "%s" not found in SOAP response.',
-                $responseAttr->element
+                $responseAttr->name
             ));
         }
 

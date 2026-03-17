@@ -112,3 +112,5 @@ For more details, see the [Twinfield OpenID Connect documentation](https://devel
 - https://oauth2-client.thephpleague.com/providers/thirdparty/
 - https://github.com/php-fig/cache
 - https://github.com/phpro/soap-client
+- https://www.w3.org/TR/soap/
+- https://www.w3.org/TR/soap12/

@@ -11,11 +11,10 @@ use RuntimeException;
 
 final class SoapResponse
 {
-    private object|null $mappedPayload = null;
-
     public function __construct(
         private readonly ResponseInterface $httpResponse,
         private readonly DOMDocument $xml,
+        private readonly DOMElement $body,
     ) {}
 
     public static function fromHttpResponse(ResponseInterface $response): self
@@ -24,10 +23,28 @@ final class SoapResponse
         $xml = new DOMDocument('1.0', 'UTF-8');
 
         if (@$xml->loadXML($body) === false) {
+            var_dump( $body );
             throw new RuntimeException('Unable to parse SOAP response as XML.');
         }
 
-        return new self($response, $xml);
+        $envelope = $xml->documentElement;
+        if (!$envelope instanceof DOMElement) {
+            throw new RuntimeException('Unable to find SOAP envelope in response.');
+        }
+
+        $body = null;
+        foreach ($envelope->childNodes as $child) {
+            if ($child instanceof DOMElement && $child->localName === 'Body') {
+                $body = $child;
+                break;
+            }
+        }
+
+        if (!$body instanceof DOMElement) {
+            throw new RuntimeException('SOAP response does not contain a soap:Body element.');
+        }
+
+        return new self($response, $xml, $body);
     }
 
     public function httpResponse(): ResponseInterface
@@ -40,24 +57,14 @@ final class SoapResponse
         return $this->xml;
     }
 
-    public function bodyElement(): ?DOMElement
+    public function bodyElement(): DOMElement
     {
-        $envelope = $this->xml->documentElement;
-        if (!$envelope instanceof DOMElement) {
-            return null;
-        }
-
-        return $this->firstElementByLocalName($envelope, 'Body');
+        return $this->body;
     }
 
     public function payloadElement(): ?DOMElement
     {
-        $body = $this->bodyElement();
-        if (!$body instanceof DOMElement) {
-            return null;
-        }
-
-        foreach ($body->childNodes as $child) {
+        foreach ($this->body->childNodes as $child) {
             if ($child instanceof DOMElement && $child->localName !== 'Fault') {
                 return $child;
             }
@@ -68,12 +75,7 @@ final class SoapResponse
 
     public function faultElement(): ?DOMElement
     {
-        $body = $this->bodyElement();
-        if (!$body instanceof DOMElement) {
-            return null;
-        }
-
-        return $this->firstElementByLocalName($body, 'Fault');
+        return $this->firstElementByLocalName($this->body, 'Fault');
     }
 
     public function isFault(): bool
@@ -125,25 +127,14 @@ final class SoapResponse
         return null;
     }
 
-    public function withMappedPayload(string $responseClass): self
+    /**
+     * @template T of object
+     * @param class-string<T> $responseClass
+     * @return T
+     */
+    public function mapTo(string $responseClass): object
     {
-        $payloadElement = $this->payloadElement();
-        if (!$payloadElement instanceof DOMElement) {
-            throw new RuntimeException('No payload element found in SOAP response to map.');
-        }
-
-        $mapper = new SoapResponseMapper();
-        $mappedObject = $mapper->mapFromResponseElement($responseClass, $payloadElement);
-
-        $self = clone $this;
-        $self->mappedPayload = $mappedObject;
-
-        return $self;
-    }
-
-    public function mappedPayload(): ?object
-    {
-        return $this->mappedPayload;
+        return (new SoapResponseMapper())->mapFromResponseElement($responseClass, $this->body);
     }
 
     private function firstElementByLocalName(DOMElement $parent, string $localName): ?DOMElement

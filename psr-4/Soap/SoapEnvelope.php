@@ -11,7 +11,6 @@ use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use SolveBeam\Twinfield\Soap\SoapAction;
 use SolveBeam\Twinfield\Soap\SoapName;
-use SolveBeam\Twinfield\Soap\SoapHeader;
 
 final class SoapEnvelope
 {
@@ -39,13 +38,12 @@ final class SoapEnvelope
 		}
 
 		if ($this->header !== null) {
-			$attr = $this->readRequiredClassAttribute($this->header, SoapHeader::class);
-			$namespace = $attr?->namespace ?: null;
-			$element = $attr->element;
+			$attr = $this->readRequiredClassAttribute($this->header, SoapName::class);
+			$element = $attr->name;
 
 			$soapHeader = $doc->createElementNS(self::SOAP_NS, 'soap:Header');
 
-			$soapHeader->appendChild($this->buildInnerElement($doc, $this->header, $namespace, $element));
+			$soapHeader->appendChild($this->buildInnerElement($doc, $this->header, $this->namespace, $element));
 			$envelope->appendChild($soapHeader);
 		}
 

@@ -10,6 +10,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Finder\Search;
+use SolveBeam\Twinfield\Finder\SearchResponse;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapEnvelopeBuilder;
 use SolveBeam\Twinfield\Soap\SoapFaultException;
@@ -68,8 +69,11 @@ if ($executeRemote) {
     try {
         $soapClient = new SoapClient(Psr18ClientDiscovery::find(), $requestFactory);
         $soapResponse = $soapClient->sendEnvelope($endpoint, $envelope);
-        $response = $soapResponse->httpResponse();
 
+        $data = $soapResponse->mapTo(SearchResponse::class);
+        var_dump($data);
+
+        $response = $soapResponse->httpResponse();
         echo "Status: {$response->getStatusCode()} {$response->getReasonPhrase()}\n";
         echo "Response Content-Type: {$response->getHeaderLine('Content-Type')}\n\n";
         echo (string) $response->getBody() . "\n";
@@ -77,6 +81,7 @@ if ($executeRemote) {
         echo 'SOAP fault: ' . $exception->getMessage() . "\n";
     } catch (Throwable $exception) {
         echo 'Remote request failed: ' . $exception->getMessage() . "\n";
+        var_dump( get_class( $exception ) );
     }
 } else {
     echo "\n--- Remote Request Disabled ---\n";
