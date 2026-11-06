@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use SolveBeam\Twinfield\Examples\Example;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
+use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -11,23 +12,15 @@ $twinfield = Example::twinfield();
 
 $code = $argv[1] ?? '1000';
 
-// Build the request with DOM, so values are escaped.
-$request = new DOMDocument();
-$read = $request->appendChild($request->createElement('read'));
-
-$fields = [
-    'type' => 'dimensions',
-    'office' => (string) $twinfield->companyCode(),
-    'dimtype' => 'DEB',
-    'code' => $code,
-];
-
-foreach ($fields as $name => $value) {
-    $read->appendChild($request->createElement($name))->appendChild($request->createTextNode($value));
-}
+// Build the request with XmlBuilder (DOM), so values are escaped.
+$request = XmlBuilder::create('read');
+$request->add($request->root(), 'type', 'dimensions');
+$request->add($request->root(), 'office', (string) $twinfield->companyCode());
+$request->add($request->root(), 'dimtype', 'DEB');
+$request->add($request->root(), 'code', $code);
 
 try {
-    $result = $twinfield->processXml($request);
+    $result = $twinfield->processXml($request->document());
 } catch (ProcessXmlException $exception) {
     foreach ($exception->result->messages() as $message) {
         echo $message->type->value, ' at ', $message->path, ': ', $message->text, PHP_EOL;

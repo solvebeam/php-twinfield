@@ -95,6 +95,24 @@ final class XmlValue
     }
 
     /**
+     * Checks a string field against its maximum length in characters, e.g. `string(40)`.
+     */
+    public static function maxLength(string $field, string $value, int $max): string
+    {
+        if (mb_strlen($value) > $max) {
+            throw new InvalidArgumentException(sprintf(
+                '%s must be at most %d characters, %d given: "%s".',
+                ucfirst($field),
+                $max,
+                mb_strlen($value),
+                $value,
+            ));
+        }
+
+        return $value;
+    }
+
+    /**
      * Code of at most 16 characters: A-Z, 0-9, `_`, `-` and `+`.
      */
     public static function code(string $code): string

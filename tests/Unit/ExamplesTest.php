@@ -21,6 +21,9 @@ final class ExamplesTest extends TestCase
 
     /** Examples that change data: skipped by `composer test:live`, run by `composer test:write`. */
     public const WRITES = [
+        'activities/create-activity',
+        'activities/delete-activity',
+        'activities/update-activity',
         'periods/rename-period',
     ];
 

@@ -7,6 +7,7 @@ Modern PHP SDK for the Twinfield API, built on PSR standards.
 ## Quick start
 
 ```php
+use SolveBeam\Twinfield\Activity\ActivityInput;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Twinfield;
 
@@ -24,9 +25,22 @@ $debtors = $twinfield->finder(FinderType::Dimensions)
 foreach ($twinfield->periods()->list(2025) as $period) {
     echo $period->number, ' ', $period->name, PHP_EOL;
 }
+
+$activity = $twinfield->activities()->create(
+    ActivityInput::create('A100', 'Consultancy')->customer('1010')->billable(true),
+);
 ```
 
 See [examples/](examples/) for small, runnable examples, starting with [Authentication](examples/getting-started/authentication/).
+
+## Master data
+
+Master data such as activities are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
+
+| Dimension type | Resource | Status |
+|---|---|---|
+| Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate. See [List activities](examples/activities/list-activities/) and [Create activity](examples/activities/create-activity/). |
+| Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
 
 ## Command & Query web services
 

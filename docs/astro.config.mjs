@@ -34,6 +34,7 @@ export default defineConfig({
 						{ label: 'Running the examples', slug: 'examples' },
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
+						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 					],
 				},
 				{
@@ -43,6 +44,10 @@ export default defineConfig({
 				{
 					label: 'Offices',
 					items: [{ autogenerate: { directory: 'examples/offices' } }],
+				},
+				{
+					label: 'Activities',
+					items: [{ autogenerate: { directory: 'examples/activities' } }],
 				},
 				{
 					label: 'Finder',

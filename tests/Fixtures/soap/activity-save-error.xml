@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimension result="0"&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;type name="Activiteiten" shortname="Activiteiten"&gt;ACT&lt;/type&gt;&lt;code&gt;A100&lt;/code&gt;&lt;uid&gt;8c1d7a52-3f0e-4b9a-9d55-2e6f1b0c7a11&lt;/uid&gt;&lt;name&gt;Deploy API documentation&lt;/name&gt;&lt;shortname/&gt;&lt;financials&gt;&lt;vatcode msgtype="error" msg="Btw-code XX bestaat niet." result="0"&gt;XX&lt;/vatcode&gt;&lt;/financials&gt;&lt;/dimension&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

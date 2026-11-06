@@ -37,6 +37,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [List offices](offices/list-offices/): all offices the user has access to.
 - [Switch company](offices/switch-company/): the same call for several companies.
 
+## Activities
+
+- [List activities](activities/list-activities/): code and name of all activities.
+- [Search activities](activities/search-activities/): search by name, change date or group.
+- [Read activity](activities/read-activity/): all settings of one activity.
+- [Create activity](activities/create-activity/): create an activity (changes data).
+- [Update activity](activities/update-activity/): change an existing activity (changes data).
+- [Delete activity](activities/delete-activity/): delete or hide an activity (changes data).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

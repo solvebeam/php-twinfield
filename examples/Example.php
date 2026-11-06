@@ -33,6 +33,23 @@ final class Example
     }
 
     /**
+     * An activity code that is not in use yet, from A999 down to A900, for the examples that
+     * create an activity. Deleted activities keep their code, so each run takes a new one.
+     */
+    public static function unusedActivityCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('A%03d', $number);
+
+            if ($twinfield->activities()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Activity codes A900–A999 are all in use.');
+    }
+
+    /**
      * The stored login (access token, provider) behind Example::twinfield().
      */
     public static function environment(): Environment

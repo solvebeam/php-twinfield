@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimension status="active" result="1"&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;type name="Activiteiten" shortname="Activiteiten"&gt;ACT&lt;/type&gt;&lt;code&gt;A001&lt;/code&gt;&lt;uid&gt;6d7bfbf1-58ce-4699-9a78-4fb50bc545be&lt;/uid&gt;&lt;name&gt;Deploy API documentation&lt;/name&gt;&lt;shortname/&gt;&lt;inuse&gt;false&lt;/inuse&gt;&lt;behaviour&gt;normal&lt;/behaviour&gt;&lt;touched&gt;0&lt;/touched&gt;&lt;financials&gt;&lt;vatcode/&gt;&lt;/financials&gt;&lt;projects&gt;&lt;invoicedescription/&gt;&lt;validfrom/&gt;&lt;validtill/&gt;&lt;authoriser locked="true" inherit="true"/&gt;&lt;customer locked="false" inherit="true"&gt;1010&lt;/customer&gt;&lt;billable locked="true" inherit="true" forratio="false"/&gt;&lt;rate locked="true" inherit="true"/&gt;&lt;quantities/&gt;&lt;/projects&gt;&lt;/dimension&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

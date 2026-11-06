@@ -13,6 +13,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
+use SolveBeam\Twinfield\Activity\ActivityResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
 use SolveBeam\Twinfield\CommandQuery\Query;
@@ -90,6 +91,14 @@ final readonly class Twinfield
     public function offices(): OfficeResource
     {
         return new OfficeResource($this);
+    }
+
+    /**
+     * Activities (dimension type ACT) of the company: search, read, create, update and delete.
+     */
+    public function activities(): ActivityResource
+    {
+        return new ActivityResource($this);
     }
 
     public function finder(FinderType $type): FinderQuery
