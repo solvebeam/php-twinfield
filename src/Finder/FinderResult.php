@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Finder;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
  * One page of Finder results.
@@ -31,10 +32,12 @@ final readonly class FinderResult implements IteratorAggregate, Countable
 
     public static function fromResponse(SearchResponse $response): self
     {
-        $data = $response->data;
+        $data = $response->data
+            ?? throw new UnexpectedResponseException('Finder response has no <data> element.');
 
+        // Empty arrays (<Columns>, <Items>) can be left out of the XML.
         return new self(
-            totalRows: $data->totalRows ?? 0,
+            totalRows: $data->totalRows,
             columns: array_values($data->columns->items ?? []),
             rows: array_values(array_map(
                 static fn ($row): array => array_values($row->items),

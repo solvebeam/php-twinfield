@@ -24,11 +24,11 @@
 
     <source>
         <include>
-            <directory>psr-4</directory>
+            <directory>src</directory>
         </include>
         <exclude>
-            <directory>psr-4/DeclarationsTest</directory>
-            <directory>psr-4/FinderTest</directory>
+            <directory>src/DeclarationsTest</directory>
+            <directory>src/FinderTest</directory>
         </exclude>
     </source>
 </phpunit>

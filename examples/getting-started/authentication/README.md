@@ -35,14 +35,41 @@ $twinfield = Twinfield::create($tokens, $httpClient, $requestFactory, $streamFac
 
 ## Getting the refresh token
 
-Send the user to `$provider->getAuthorizationUrl(['scope' => [...]])`, and in your callback exchange the code:
-
-```php
-$token = $provider->getAccessToken('authorization_code', ['code' => $_GET['code']]);
-$refreshToken = $token->getRefreshToken(); // store this
-```
+A user logs in once with the authorization code flow, and you store the refresh token you get back. See [Login](../login/) for a complete example.
 
 Request at least these scopes: `openid`, `twf.organisationUser` and `offline_access` (needed for a refresh token). See [OpenID Connect scopes](../../../README.md#scopes).
+
+## Storing a new refresh token
+
+Twinfield currently returns the same refresh token on every refresh. If it ever returns a new one, `RefreshTokenAccessTokenProvider` uses it from then on. Store it so you have it on the next request:
+
+```php
+if ($tokens->refreshToken() !== $storedRefreshToken) {
+    $storedRefreshToken = $tokens->refreshToken(); // save it
+}
+```
+
+## When the refresh token stops working
+
+A refresh token is valid for about 25 years, but it can stop working earlier. The first API call then throws an `IdentityProviderException`. Ask the user to log in again:
+
+```php
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+
+try {
+    $offices = $twinfield->offices()->list();
+} catch (IdentityProviderException $exception) {
+    $error = $exception->getResponseBody()['error'] ?? null;
+
+    // Send the user to the login again.
+}
+```
+
+| Error | Cause |
+|-------|-------|
+| `invalid_grant` | Wrong client ID or secret; refresh token invalid, expired or issued to another client; client may not use `offline_access` or a requested scope |
+| `invalid_request` | Refresh token missing; organisation inactive or deleted; user deleted, disabled, locked or password expired |
+| `unsupported_grant_type` | Grant type missing or invalid (a bug, not something the user can fix) |
 
 ## Run
 

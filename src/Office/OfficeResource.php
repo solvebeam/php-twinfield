@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\Office;
 
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Twinfield;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
  * Offices the logged in user has access to.
@@ -31,11 +32,30 @@ final readonly class OfficeResource
         $offices = [];
 
         // Finder columns for offices: code, name, … (names depend on the user's language).
-        foreach ($this->twinfield->finder(FinderType::Offices)->all() as $row) {
-            $offices[] = new Office(code: $row[0] ?? '', name: $row[1] ?? '');
+        foreach ($this->twinfield->finder(FinderType::Offices)->all() as $index => $row) {
+            $offices[] = self::fromFinderRow($index, $row);
         }
 
         return $offices;
+    }
+
+    /**
+     * @param list<string> $row
+     */
+    private static function fromFinderRow(int $index, array $row): Office
+    {
+        $code = $row[0] ?? '';
+        $name = $row[1] ?? '';
+
+        if ($code === '' || $name === '') {
+            throw new UnexpectedResponseException(sprintf(
+                'Finder office row %d has no code or name: %s.',
+                $index,
+                json_encode($row, JSON_THROW_ON_ERROR),
+            ));
+        }
+
+        return new Office(code: $code, name: $name);
     }
 
     public function find(string $code): ?Office

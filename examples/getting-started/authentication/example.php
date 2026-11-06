@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
 use SolveBeam\Twinfield\OAuth2\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\Twinfield;
@@ -32,5 +33,19 @@ $tokens = new RefreshTokenAccessTokenProvider(
 // 3. The client, for one company (office).
 $twinfield = Twinfield::create($tokens)->company(requireEnv('TWINFIELD_COMPANY'));
 
-echo 'Connected to ', $tokens->clusterUrl(), PHP_EOL;
-echo 'Company ', $twinfield->companyCode(), ' has access to ', count($twinfield->offices()->list()), ' offices.', PHP_EOL;
+try {
+    echo 'Connected to ', $tokens->clusterUrl(), PHP_EOL;
+    echo 'Company ', $twinfield->companyCode(), ' has access to ', count($twinfield->offices()->list()), ' offices.', PHP_EOL;
+} catch (IdentityProviderException $exception) {
+    // The refresh token no longer works (revoked, user locked, organisation inactive, …).
+    // Ask the user to log in again, see examples/getting-started/login.
+    $error = $exception->getResponseBody()['error'] ?? 'unknown';
+
+    echo "Log in to Twinfield again ({$error}: {$exception->getMessage()}).", PHP_EOL;
+    exit(1);
+}
+
+// 4. Store the refresh token again if Twinfield returned a new one.
+if ($tokens->refreshToken() !== requireEnv('TWINFIELD_REFRESH_TOKEN')) {
+    echo 'Store the new refresh token: ', $tokens->refreshToken(), PHP_EOL;
+}

@@ -27,7 +27,9 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 ## Getting started
 
+- [Login](getting-started/login/): let a user log in and get the refresh token.
 - [Authentication](getting-started/authentication/): create a client in your own application.
+- [Token info](getting-started/token-info/): organisation, user and cluster of an access token.
 
 ## Offices
 

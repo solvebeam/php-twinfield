@@ -29,6 +29,14 @@ final class Example
 {
     public static function twinfield(): Twinfield
     {
+        return self::environment()->client();
+    }
+
+    /**
+     * The stored login (access token, provider) behind Example::twinfield().
+     */
+    public static function environment(): Environment
+    {
         // Show API errors as one readable line instead of a stack trace.
         set_exception_handler(static function (Throwable $exception): void {
             fwrite(STDERR, sprintf('%s: %s%s', (new \ReflectionClass($exception))->getShortName(), $exception->getMessage(), PHP_EOL));
@@ -42,6 +50,6 @@ final class Example
             exit(1);
         }
 
-        return Environment::fromConfig($config)->client();
+        return Environment::fromConfig($config);
     }
 }

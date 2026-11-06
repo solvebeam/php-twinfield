@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Unit\Office;
 
+use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Twinfield;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class OfficeResourceTest extends TestCase
 {
@@ -39,6 +41,22 @@ final class OfficeResourceTest extends TestCase
         );
 
         self::assertEquals(new Office('1001', 'Example Retail B.V.'), $this->twinfield($http)->offices()->find('1001'));
+    }
+
+    public function testThrowsWhenARowHasNoName(): void
+    {
+        $http = new ReplayClient(ReplayClient::response('finder-offices-missing-name'));
+
+        $this->expectException(UnexpectedResponseException::class);
+
+        $this->twinfield($http)->offices()->list();
+    }
+
+    public function testOfficeRejectsEmptyCode(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Office('', 'Example Holding B.V.');
     }
 
     private function twinfield(ReplayClient $http): Twinfield

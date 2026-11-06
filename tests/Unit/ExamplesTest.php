@@ -13,7 +13,11 @@ use PHPUnit\Framework\TestCase;
 final class ExamplesTest extends TestCase
 {
     /** Examples that show their own setup instead of Example::twinfield(). */
-    private const OWN_SETUP = ['getting-started/authentication'];
+    private const OWN_SETUP = [
+        'getting-started/authentication',
+        'getting-started/login',
+        'getting-started/token-info',
+    ];
 
     /**
      * @return iterable<string, array{string}>
