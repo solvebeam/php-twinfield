@@ -9,6 +9,7 @@ use DOMXPath;
 use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\ProcessXml\MessageType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
@@ -29,6 +30,9 @@ final class ProcessXmlTest extends TestCase
         self::assertTrue($result->successful());
         self::assertSame('offices', $result->root()->localName);
         self::assertSame([], $result->messages());
+        $simpleXml = simplexml_load_string($result->xml());
+        self::assertInstanceOf(SimpleXMLElement::class, $simpleXml);
+        self::assertSame('offices', $simpleXml->getName());
         $offices = $result->xpath();
 
         self::assertSame('Example Retail & Co B.V.', $offices->evaluate('string(/offices/office[2]/@name)'));
@@ -82,15 +86,6 @@ final class ProcessXmlTest extends TestCase
             XML);
 
         self::assertSame('<read><type>dimensions</type><name>Café &amp; Co </name></read>', $request->xmlRequest);
-    }
-
-    public function testDoesNotChangeTheGivenDocument(): void
-    {
-        $document = new DOMDocument();
-        $document->loadXML("<list>\n  <type>offices</type>\n</list>");
-
-        self::assertSame('<list><type>offices</type></list>', ProcessXmlString::fromXml($document)->xmlRequest);
-        self::assertSame("<list>\n  <type>offices</type>\n</list>", $document->saveXML($document->documentElement));
     }
 
     public function testRejectsInvalidXml(): void
@@ -161,6 +156,13 @@ final class ProcessXmlTest extends TestCase
         $http = ReplayClient::fixture('processxml-no-result-element');
 
         $this->twinfield($http)->processXml('<list><type>offices</type></list>');
+    }
+
+    public function testKeepsTheResponseAsString(): void
+    {
+        $xml = '<dimension result="1"><name name="x">Café &amp; Co</name></dimension>';
+
+        self::assertSame($xml, ProcessXmlResult::fromXml($xml)->xml());
     }
 
     public function testThrowsOnAnUnknownMessageType(): void

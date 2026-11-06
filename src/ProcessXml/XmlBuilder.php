@@ -14,7 +14,7 @@ use DOMElement;
  *   $xml->add($xml->root(), 'type', 'dimensions');
  *   $xml->add($xml->root(), 'code', 'A&B');   // <code>A&amp;B</code>
  *
- *   $twinfield->processXml($xml->document());
+ *   $twinfield->processXml($xml->toXml());
  */
 final readonly class XmlBuilder
 {

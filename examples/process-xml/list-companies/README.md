@@ -2,7 +2,7 @@
 
 Lists all companies the user has access to, with a request on the [XML web services](https://developers.twinfield.com/documentation/api/types/xml-web-services/) (ProcessXml).
 
-`processXml()` sends an XML request to `processxml.asmx` and returns a `ProcessXmlResult` with the response as DOM document: use `root()`, `document()` or `xpath()` to read it.
+`processXml()` sends an XML request to `processxml.asmx` and returns a `ProcessXmlResult`. Use `root()`, `document()` or `xpath()` to read the response with DOM, or `xml()` for the response as string, e.g. for SimpleXML or XMLReader.
 
 ProcessXml requests normally work on one company, but listing companies is the exception: Twinfield asks to send it without a company in the header. `withoutCompany()` returns a client without company. Twinfield adds the `name` and `shortname` of each company to the response.
 

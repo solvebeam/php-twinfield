@@ -162,7 +162,7 @@ final readonly class ActivityResource
     private function send(XmlBuilder $xml, string $code): ProcessXmlResult
     {
         try {
-            return $this->twinfield->processXml($xml->document());
+            return $this->twinfield->processXml($xml->toXml());
         } catch (ProcessXmlException $exception) {
             throw DimensionNotFoundException::fromProcessXml($exception, 'ACT', $code) ?? $exception;
         }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield;
 
-use DOMDocument;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use LogicException;
@@ -145,13 +144,15 @@ final readonly class Twinfield
      *   $result = $twinfield->processXml('<read><type>dimensions</type><office>1000</office><dimtype>DEB</dimtype><code>1000</code></read>');
      *   $name = $result->xpath()->evaluate('string(/dimension/name)');
      *
-     * Comments and whitespace between elements are removed before sending.
+     * The request is an XML string: use `XmlBuilder::toXml()`, or e.g. `saveXML()` (DOM),
+     * `asXML()` (SimpleXML) or `outputMemory()` (XMLWriter). Comments and whitespace
+     * between elements are removed before sending.
      *
      * @throws ProcessXmlException When Twinfield did not process (all of) the request (`result="0"`).
      *
      * @see https://developers.twinfield.com/documentation/api/types/xml-web-services/
      */
-    public function processXml(DOMDocument|string $request): ProcessXmlResult
+    public function processXml(string $request): ProcessXmlResult
     {
         $response = $this->call('processxml', ProcessXmlString::fromXml($request));
 

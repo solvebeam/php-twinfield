@@ -17,10 +17,14 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  * `msg` and `msgtype` for errors and warnings, and `name`, `shortname` and `type`
  * on elements with the code of another entity, e.g.
  * `<currency name="Euro" shortname="€">EUR</currency>`.
+ *
+ * Read the response with DOM via `root()`, `document()` or `xpath()`, or use `xml()`
+ * with another parser, e.g. `simplexml_load_string()` or `XMLReader::XML()`.
  */
 final readonly class ProcessXmlResult
 {
     private function __construct(
+        private string $xml,
         private DOMDocument $document,
         private bool $successful,
     ) {
@@ -72,12 +76,20 @@ final readonly class ProcessXmlResult
             )),
         };
 
-        return new self($document, $successful);
+        return new self($xml, $document, $successful);
     }
 
     public function successful(): bool
     {
         return $this->successful;
+    }
+
+    /**
+     * The response as Twinfield returned it (the content of `ProcessXmlStringResult`).
+     */
+    public function xml(): string
+    {
+        return $this->xml;
     }
 
     public function document(): DOMDocument

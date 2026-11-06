@@ -29,11 +29,10 @@ final readonly class ProcessXmlString
 
     /**
      * Twinfield asks for XML without comments or whitespace between elements, in UTF-8.
-     * The given document is copied, not changed.
      */
-    public static function fromXml(DOMDocument|string $request): self
+    public static function fromXml(string $request): self
     {
-        $root = ($request instanceof DOMDocument ? $request : self::parse($request))->documentElement;
+        $root = self::parse($request)->documentElement;
 
         if (!$root instanceof DOMElement) {
             throw new InvalidArgumentException('The ProcessXml request has no root element.');

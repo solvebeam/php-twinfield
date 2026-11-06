@@ -2,7 +2,7 @@
 
 Reads a customer (dimension type `DEB`) with ProcessXml and shows what to do when Twinfield does not accept the request.
 
-Build requests with DOM, as Twinfield recommends, so values such as `&` are escaped. `XmlBuilder` makes that short: `add($parent, $name, $value, $attributes)`. A string works too: `processXml('<read>…</read>')`. Before sending, comments and whitespace between elements are removed, as Twinfield asks.
+`processXml()` takes the request as XML string. Build it with an XML library, as Twinfield recommends, so values such as `&` are escaped. `XmlBuilder` makes that short: `add($parent, $name, $value, $attributes)` and `toXml()`. DOM, SimpleXML or XMLWriter work too, or a plain string: `processXml('<read>…</read>')`. Before sending, comments and whitespace between elements are removed, as Twinfield asks.
 
 Twinfield marks the result of each element with a `result` attribute: `1` processed, `0` not. When the root element has `result="0"`, `processXml()` throws a `ProcessXmlException`. Its `result` has the whole response, and `messages()` gives each error and warning (`msg` and `msgtype`) with the path of the element, e.g. `dimension/code`. In a bulk request (e.g. `<transactions>` with several transactions) the other elements may have been processed: check their `result` attribute.
 
@@ -23,7 +23,7 @@ $request->add($request->root(), 'dimtype', 'DEB');
 $request->add($request->root(), 'code', $code);
 
 try {
-    $result = $twinfield->processXml($request->document());
+    $result = $twinfield->processXml($request->toXml());
 } catch (ProcessXmlException $exception) {
     foreach ($exception->result->messages() as $message) {
         echo $message->type->value, ' at ', $message->path, ': ', $message->text, PHP_EOL;

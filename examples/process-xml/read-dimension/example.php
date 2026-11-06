@@ -20,7 +20,7 @@ $request->add($request->root(), 'dimtype', 'DEB');
 $request->add($request->root(), 'code', $code);
 
 try {
-    $result = $twinfield->processXml($request->document());
+    $result = $twinfield->processXml($request->toXml());
 } catch (ProcessXmlException $exception) {
     foreach ($exception->result->messages() as $message) {
         echo $message->type->value, ' at ', $message->path, ': ', $message->text, PHP_EOL;
