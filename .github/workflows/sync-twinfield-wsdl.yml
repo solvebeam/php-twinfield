@@ -1,0 +1,79 @@
+name: Sync Twinfield WSDL
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-wsdl:
+    name: Sync Twinfield WSDL files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Download and format all Twinfield WSDLs
+        run: |
+          set -e
+
+          hosts=(
+            "accounting"
+            "accounting2"
+          )
+
+          services=(
+            "BankBookService.svc"
+            "BankStatementService.svc"
+            "CashBookService.svc"
+            "declarations.asmx"
+            "DocumentService.svc"
+            "ebankstatements.asmx"
+            "finder.asmx"
+            "hierarchies.asmx"
+            "matching.asmx"
+            "payandcollect.asmx"
+            "PeriodService.svc"
+            "processxml.asmx"
+            "sbr.asmx"
+            "session.asmx"
+            "versions.asmx"
+          )
+
+          for host in "${hosts[@]}"; do
+            for service in "${services[@]}"; do
+              dir="wsdl/${host}"
+              mkdir -p "${dir}"
+
+              file="wsdl/${host}/${service}.wsdl.xml"
+              url="https://${host}.twinfield.com/webservices/${service}?wsdl"
+
+              echo "Downloading: ${url}"
+              curl --fail "${url}" --output "${file}"
+
+              echo "Formatting: ${file}"
+              xmllint --format "${file}" --output "${file}"
+            done
+          done
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push if files changed
+        run: |
+          git add wsdl/
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Twinfield WSDL files"
+            git push
+          else
+            echo "No changes to commit"
+          fi
