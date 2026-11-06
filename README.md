@@ -45,6 +45,7 @@ Master data such as activities are dimensions, read and written with the XML web
 | Other master data | Resource | Status |
 |---|---|---|
 | Asset methods | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/asset-methods/read-asset-method/) and [Create asset method](examples/asset-methods/create-asset-method/). |
+| Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
 
 ## Command & Query web services
 

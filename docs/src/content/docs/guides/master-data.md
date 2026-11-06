@@ -140,6 +140,44 @@ $method = $assetMethods->create(
 $assetMethods->update($method->edit()->reducingBalance('25'));
 ```
 
+## Bank books
+
+Bank books are not dimensions and not part of the XML web services: `$twinfield->bankBooks()` uses the Command & Query web service `BankBookService`. It has `search()`, `get()`, `find()`, `create()` and `update()`, plus one method per change command. The differences:
+
+- Search uses the Finder type `BNK` with `banktype=0`, so cash books are left out. Results are `BankBookSummary`s; `group()` is for dimensions only.
+- Twinfield has **no delete** for bank books. Cash books are not bank books: `get('KAS')` throws `BankBookNotFoundException`.
+- There is no single save command. `update()` reads the bank book and sends only the commands for values that differ: `ChangeBankBookName`, `ChangeBankBookShortName`, `ChangeBankBookBankAccount` and `ChangeBankBookGeneralLedgerAccount`. So an unchanged account number or ledger account never runs into "may not be changed" once the bank book is in use. The commands are separate requests and not atomic.
+- `rename()`, `changeShortName()`, `changeBankAccount()` and `changeGeneralLedgerAccount()` send one command.
+- Not found is a `BankBookNotFoundException`, an existing code on `create()` a `BankBookAlreadyExistsException`. Other refusals are a `CommandQueryFaultException`; `BankBookServiceFaultCode::tryFrom($exception->errorCode)` tells which one.
+- `BankAccountInput` removes spaces from the IBAN, writes it in capitals and checks the check digits; BIC and country code are checked too. The read model `BankAccount` takes the values as Twinfield returns them, with `null` for empty values.
+- `automaticBankProcessing` (statements, payments, direct debits and the sign-up state) is read-only.
+
+```php
+use SolveBeam\Twinfield\BankBook\BankAccountInput;
+use SolveBeam\Twinfield\BankBook\BankBookInput;
+
+$bankBooks = $twinfield->bankBooks();
+
+$bankBook = $bankBooks->create(
+    BankBookInput::create('ABN', 'ABN AMRO')
+        ->generalLedgerAccount('1120')
+        ->bankAccount(BankAccountInput::create()->name('Example B.V.')->iban('NL91 ABNA 0417 1643 00')),
+);
+
+$bankBooks->update($bankBook->edit()->shortName('ABN'));
+```
+
+The [documentation page](https://developers.twinfield.com/documentation/api/master-data/bank-book/) differs from the service itself. The SDK follows the WSDL (`wsdl/accounting/BankBookService.svc.wsdl.xml`):
+
+| Documentation page | WSDL |
+|---|---|
+| `BankAccount` is an array | One `BankAccount` |
+| `CreateBankBook` has no short name | `CreateBankBook` has `ShortName` |
+| Fault codes `BankBookInvalidStructure`, `BankBookInvalidBusinessLogic` | `BankBookNotFound`, `BankBookAlreadyExists`, `BankBookInvalidAccountSettings`, `BankBookInvalidGeneralLedgerAccount`, `BankBookAccountNumberMayNotBeChanged`, `BankBookGeneralLedgerAccountMayNotBeChanged` |
+| `SignUpState` is an array | One value: `Inactive`, `Pending` or `Active` |
+
+All `BankAccount` fields except `Country` are required in the WSDL (nillable), so empty ones are sent as `i:nil="true"`.
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -153,3 +191,7 @@ $assetMethods->update($method->edit()->reducingBalance('25'));
 - [Create asset method](/examples/asset-methods/create-asset-method/)
 - [Update asset method](/examples/asset-methods/update-asset-method/)
 - [Delete asset method](/examples/asset-methods/delete-asset-method/)
+- [List bank books](/examples/bank-books/list-bank-books/)
+- [Read bank book](/examples/bank-books/read-bank-book/)
+- [Create bank book](/examples/bank-books/create-bank-book/)
+- [Update bank book](/examples/bank-books/update-bank-book/)

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Tests\Unit\CommandQuery;
 
 use DateTimeImmutable;
+use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
+use SolveBeam\Twinfield\CommandQuery\Nil;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 
@@ -69,6 +71,34 @@ final class CommandQueryEnvelopeTest extends TestCase
         self::assertStringContainsString('<a:Code>A&amp;B &lt;1&gt;</a:Code>', $xml);
         self::assertStringContainsString('<a:IncludeFinal>true</a:IncludeFinal>', $xml);
         self::assertStringContainsString('<a:IncludeProvisional>false</a:IncludeProvisional>', $xml);
+    }
+
+    public function testBuildsNestedElementsAndNilFields(): void
+    {
+        $command = new Command('ChangeBankBookBankAccount', [
+            'Code' => 'ING',
+            'BankAccount' => [
+                'Bic' => Nil::Value,
+                'Country' => null,
+                'Iban' => 'NL45INGB0003255112',
+            ],
+        ]);
+
+        $xml = CommandQueryEnvelope::command('BankBookService', $command, $this->authentication())->toXml();
+
+        self::assertMatchesRegularExpression(
+            '~<a:Code>ING</a:Code>\\s*<a:BankAccount>\\s*<a:Bic i:nil="true"/>\\s*<a:Iban>NL45INGB0003255112</a:Iban>\\s*</a:BankAccount>~',
+            $xml,
+            'Arrays become complex elements in the service namespace; Nil is i:nil, null is left out.',
+        );
+    }
+
+    public function testRefusesUnsupportedFieldValues(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Command & Query field "Amount" has an unsupported type: float.');
+
+        CommandQueryEnvelope::command('BudgetService', new Command('Change', ['Amount' => 1.5]), $this->authentication())->toXml();
     }
 
     public function testSetsSoapActionPerKind(): void

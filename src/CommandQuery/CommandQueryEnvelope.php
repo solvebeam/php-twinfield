@@ -43,7 +43,7 @@ final readonly class CommandQueryEnvelope implements SoapMessage
 
     /**
      * @param 'Query'|'Command' $element
-     * @param array<string, int|string|bool|DateTimeInterface|null> $fields
+     * @param array<string, int|string|bool|DateTimeInterface|Nil|array<string, mixed>|null> $fields
      */
     private function __construct(
         private string $service,
@@ -139,15 +139,54 @@ final readonly class CommandQueryEnvelope implements SoapMessage
         $payload->setAttributeNS(self::XMLNS_NS, 'xmlns:a', $namespace);
         $payload->setAttributeNS(self::XSI_NS, 'i:type', 'a:' . $this->type);
 
-        foreach ($this->fields as $name => $value) {
+        $this->appendFields($doc, $payload, $namespace, $this->fields);
+
+        return $payload;
+    }
+
+    /**
+     * Appends fields in the given order. An array is a complex element with its own fields,
+     * `Nil::Value` an element with `i:nil="true"`, and `null` is left out.
+     *
+     * @param array<array-key, mixed> $fields
+     */
+    private function appendFields(DOMDocument $doc, DOMElement $parent, string $namespace, array $fields): void
+    {
+        foreach ($fields as $name => $value) {
+            if (!is_string($name) || $name === '') {
+                throw new InvalidArgumentException('Command & Query field names must be non-empty strings.');
+            }
+
             if ($value === null) {
                 continue;
             }
 
-            $payload->appendChild(self::textElement($doc, $namespace, 'a:' . $name, self::format($value)));
-        }
+            if ($value === Nil::Value) {
+                $element = $doc->createElementNS($namespace, 'a:' . $name);
+                $element->setAttributeNS(self::XSI_NS, 'i:nil', 'true');
+                $parent->appendChild($element);
 
-        return $payload;
+                continue;
+            }
+
+            if (is_array($value)) {
+                $element = $doc->createElementNS($namespace, 'a:' . $name);
+                $parent->appendChild($element);
+                $this->appendFields($doc, $element, $namespace, $value);
+
+                continue;
+            }
+
+            if (!is_int($value) && !is_string($value) && !is_bool($value) && !$value instanceof DateTimeInterface) {
+                throw new InvalidArgumentException(sprintf(
+                    'Command & Query field "%s" has an unsupported type: %s.',
+                    $name,
+                    get_debug_type($value),
+                ));
+            }
+
+            $parent->appendChild(self::textElement($doc, $namespace, 'a:' . $name, self::format($value)));
+        }
     }
 
     private static function format(int|string|bool|DateTimeInterface $value): string

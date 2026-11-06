@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\CommandQuery;
 
+use BackedEnum;
 use DateTimeImmutable;
 use DOMElement;
 use Exception;
@@ -84,6 +85,40 @@ final readonly class ResultElement
         return $this->child($name)->text();
     }
 
+    /**
+     * Text that may be empty (`<b:Iban/>`) or nil; both give null. Only use this where
+     * an empty value is valid Twinfield behaviour; a missing element still throws.
+     */
+    public function nullableString(string $name): ?string
+    {
+        if ($this->isNil($name)) {
+            $this->element($name);
+
+            return null;
+        }
+
+        $text = $this->string($name);
+
+        return $text === '' ? null : $text;
+    }
+
+    /**
+     * A value of a backed enum, e.g. `enum('SignUpState', AutomaticBankProcessingSignUpState::class)`.
+     *
+     * @template E of BackedEnum
+     *
+     * @param class-string<E> $enum
+     *
+     * @return E
+     */
+    public function enum(string $name, string $enum): BackedEnum
+    {
+        $child = $this->child($name);
+        $values = array_map(static fn (BackedEnum $case): string => (string) $case->value, $enum::cases());
+
+        return $enum::tryFrom($child->text()) ?? throw $child->invalid('one of ' . implode(', ', $values));
+    }
+
     public function int(string $name): int
     {
         return $this->child($name)->asInt();
@@ -115,6 +150,17 @@ final readonly class ResultElement
     public function nullableDateTime(string $name): ?DateTimeImmutable
     {
         return $this->isNil($name) ? null : $this->dateTime($name);
+    }
+
+    private function element(string $name): DOMElement
+    {
+        foreach ($this->element->childNodes as $child) {
+            if ($child instanceof DOMElement && $child->localName === $name) {
+                return $child;
+            }
+        }
+
+        throw new UnexpectedResponseException(sprintf('%s/%s is missing.', $this->path, $name));
     }
 
     private function isNil(string $name): bool

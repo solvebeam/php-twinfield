@@ -13,14 +13,15 @@ use InvalidArgumentException;
  *   new Query('GetPeriods', ['Year' => 2021]);
  *
  * Give the fields in the order of the service's WSDL (usually alphabetical):
- * the WCF services do not accept fields in another order. `null` fields are left out.
+ * the WCF services do not accept fields in another order. `null` fields are left out,
+ * `Nil::Value` is sent as `i:nil="true"` and an array is a complex element with its own fields.
  *
  * @see https://developers.twinfield.com/documentation/api/types/command-and-query-webservices
  */
 final readonly class Query
 {
     /**
-     * @param array<string, int|string|bool|DateTimeInterface|null> $fields
+     * @param array<string, int|string|bool|DateTimeInterface|Nil|array<string, mixed>|null> $fields
      */
     public function __construct(
         public string $type,

@@ -54,6 +54,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/asset-methods' } }],
 				},
 				{
+					label: 'Bank books',
+					items: [{ autogenerate: { directory: 'examples/bank-books' } }],
+				},
+				{
 					label: 'Finder',
 					items: [{ autogenerate: { directory: 'examples/finder' } }],
 				},

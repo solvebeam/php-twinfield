@@ -54,6 +54,13 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update asset method](asset-methods/update-asset-method/): change an existing asset method (changes data).
 - [Delete asset method](asset-methods/delete-asset-method/): delete or hide an asset method (changes data).
 
+## Bank books
+
+- [List bank books](bank-books/list-bank-books/): code and name of all bank books, or those matching a pattern.
+- [Read bank book](bank-books/read-bank-book/): bank account, ledger account and automatic bank processing of one bank book.
+- [Create bank book](bank-books/create-bank-book/): create a bank book with a bank account (changes data; cannot be deleted).
+- [Update bank book](bank-books/update-bank-book/): change a bank book; only changed values are sent (changes data).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

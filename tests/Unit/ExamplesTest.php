@@ -27,6 +27,8 @@ final class ExamplesTest extends TestCase
         'asset-methods/create-asset-method',
         'asset-methods/delete-asset-method',
         'asset-methods/update-asset-method',
+        'bank-books/create-bank-book',
+        'bank-books/update-bank-book',
         'periods/rename-period',
     ];
 

@@ -13,6 +13,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
+use SolveBeam\Twinfield\BankBook\BankBookResource;
 use SolveBeam\Twinfield\AssetMethod\AssetMethodResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
@@ -99,6 +100,14 @@ final readonly class Twinfield
     public function activities(): ActivityResource
     {
         return new ActivityResource($this);
+    }
+
+    /**
+     * Bank books of the company (BankBookService): search, read, create and update.
+     */
+    public function bankBooks(): BankBookResource
+    {
+        return new BankBookResource($this);
     }
 
     /**
