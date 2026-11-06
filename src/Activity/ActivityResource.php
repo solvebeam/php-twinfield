@@ -8,8 +8,9 @@ use LogicException;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Dimension\DimensionAlreadyExistsException;
 use SolveBeam\Twinfield\Dimension\DimensionNotFoundException;
-use SolveBeam\Twinfield\Dimension\DimensionSearch;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
+use SolveBeam\Twinfield\Finder\CodeNameSearch;
+use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
@@ -49,11 +50,13 @@ final readonly class ActivityResource
      *
      * @param string $pattern `*` matches anything, `?` one character.
      *
-     * @return DimensionSearch<ActivitySummary>
+     * @return CodeNameSearch<ActivitySummary>
      */
-    public function search(string $pattern = '*'): DimensionSearch
+    public function search(string $pattern = '*'): CodeNameSearch
     {
-        return DimensionSearch::create($this->twinfield, 'ACT', ActivitySummary::fromFinderRow(...))->pattern($pattern);
+        $query = $this->twinfield->finder(FinderType::Dimensions)->option('dimtype', 'ACT');
+
+        return (new CodeNameSearch($query, ActivitySummary::fromFinderRow(...)))->pattern($pattern);
     }
 
     /**

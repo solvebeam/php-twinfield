@@ -47,7 +47,7 @@ $activities->delete('A100');
 
 ## Searching
 
-`search($pattern)` returns an immutable `DimensionSearch`: every method gives a new search, so you can keep a base search and refine it.
+`search($pattern)` returns an immutable `CodeNameSearch`: every method gives a new search, so you can keep a base search and refine it.
 
 | Method | What it does |
 |---|---|

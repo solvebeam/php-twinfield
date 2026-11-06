@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\Dimension;
+namespace SolveBeam\Twinfield\Finder;
 
 use Closure;
 use DateTimeInterface;
 use Generator;
-use SolveBeam\Twinfield\Finder\FinderQuery;
-use SolveBeam\Twinfield\Finder\FinderType;
-use SolveBeam\Twinfield\Twinfield;
 
 /**
- * Immutable search for dimensions of one type, via the Finder (type `DIM`).
+ * Immutable Finder search on code and name, for Finder types with the columns code and name
+ * (dimensions, bank books, …). Resources create it, e.g. activities and bank books:
  *
  *   $page = $twinfield->activities()->search('A*')
  *       ->inName()
@@ -20,7 +18,7 @@ use SolveBeam\Twinfield\Twinfield;
  *       ->limit(10)
  *       ->get();
  *
- *   foreach ($twinfield->activities()->search()->all() as $activity) { … }
+ *   foreach ($twinfield->bankBooks()->search()->all() as $bankBook) { … }
  *
  * Every method returns a new search, so a base search can be reused.
  *
@@ -28,28 +26,16 @@ use SolveBeam\Twinfield\Twinfield;
  *
  * @see https://developers.twinfield.com/documentation/api/miscellaneous/finder/
  */
-final readonly class DimensionSearch
+final readonly class CodeNameSearch
 {
     /**
+     * @param FinderQuery $query Finder query with the type and its fixed options, e.g. `dimtype`.
      * @param Closure(list<string>, int): T $mapRow Maps a Finder row (columns code, name, …) to a summary.
      */
     public function __construct(
         private FinderQuery $query,
         private Closure $mapRow,
     ) {
-    }
-
-    /**
-     * @template S of object
-     *
-     * @param string $type Dimension type, e.g. `ACT`.
-     * @param Closure(list<string>, int): S $mapRow
-     *
-     * @return self<S>
-     */
-    public static function create(Twinfield $twinfield, string $type, Closure $mapRow): self
-    {
-        return new self($twinfield->finder(FinderType::Dimensions)->option('dimtype', $type), $mapRow);
     }
 
     /**
@@ -93,7 +79,7 @@ final readonly class DimensionSearch
     }
 
     /**
-     * Only dimensions changed on or after this moment.
+     * Only items changed on or after this moment.
      *
      * @return self<T>
      */
@@ -103,13 +89,23 @@ final readonly class DimensionSearch
     }
 
     /**
-     * Only dimensions in this dimension group; wildcards are allowed.
+     * Only dimensions in this dimension group; wildcards are allowed. Dimension searches only.
      *
      * @return self<T>
      */
     public function group(string $group): self
     {
-        return new self($this->query->option('group', $group), $this->mapRow);
+        return $this->option('group', $group);
+    }
+
+    /**
+     * Any other Finder option of the type, e.g. `option('group', 'GRP1')` for dimensions in a group.
+     *
+     * @return self<T>
+     */
+    public function option(string $name, string $value): self
+    {
+        return new self($this->query->option($name, $value), $this->mapRow);
     }
 
     /**
@@ -135,13 +131,13 @@ final readonly class DimensionSearch
     /**
      * One page of results.
      *
-     * @return DimensionSearchResult<T>
+     * @return CodeNameSearchResult<T>
      */
-    public function get(): DimensionSearchResult
+    public function get(): CodeNameSearchResult
     {
         $page = $this->query->get();
 
-        return new DimensionSearchResult(
+        return new CodeNameSearchResult(
             $page->totalRows,
             array_map($this->mapRow, $page->rows, array_keys($page->rows)),
         );
@@ -160,7 +156,7 @@ final readonly class DimensionSearch
     }
 
     /**
-     * Number of matching dimensions, with one small request.
+     * Number of matching items, with one small request.
      */
     public function count(): int
     {

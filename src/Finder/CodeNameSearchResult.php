@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\Dimension;
+namespace SolveBeam\Twinfield\Finder;
 
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 
 /**
- * One page of a dimension search.
+ * One page of a CodeNameSearch.
  *
  * @template T of object
  *
  * @implements IteratorAggregate<int, T>
  */
-final readonly class DimensionSearchResult implements IteratorAggregate, Countable
+final readonly class CodeNameSearchResult implements IteratorAggregate, Countable
 {
     /**
      * @param list<T> $items
