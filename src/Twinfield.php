@@ -6,14 +6,20 @@ namespace SolveBeam\Twinfield;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use LogicException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
+use SolveBeam\Twinfield\CommandQuery\Command;
+use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
+use SolveBeam\Twinfield\CommandQuery\Query;
+use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
+use SolveBeam\Twinfield\Period\PeriodResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
@@ -80,12 +86,23 @@ final readonly class Twinfield
     }
 
     /**
-     * SOAP endpoint on the organisation's cluster, e.g. `finder` →
-     * `https://api.accounting.twinfield.com/webservices/finder.asmx`.
+     * Years and periods of the company (PeriodService).
      */
-    public function endpoint(string $service): string
+    public function periods(): PeriodResource
     {
-        return sprintf('%s/webservices/%s.asmx', rtrim($this->accessTokenProvider->clusterUrl(), '/'), $service);
+        return new PeriodResource($this);
+    }
+
+    /**
+     * SOAP endpoint on the organisation's cluster, e.g. `finder` →
+     * `https://api.accounting.twinfield.com/webservices/finder.asmx`, or
+     * `endpoint('PeriodService', 'svc')` for a Command & Query web service.
+     */
+    public function endpoint(string $service, string $extension = 'asmx'): string
+    {
+        $clusterUrl = rtrim($this->accessTokenProvider->clusterUrl(), '/');
+
+        return sprintf('%s/webservices/%s.%s', $clusterUrl, $service, $extension);
     }
 
     /**
@@ -99,5 +116,52 @@ final readonly class Twinfield
         );
 
         return $this->soap->send($this->endpoint($service), $body, $header);
+    }
+
+    /**
+     * Low-level query on a Command & Query web service; prefer the resource methods.
+     *
+     *   $result = $twinfield->query('PeriodService', new Query('GetYears'), 'GetYearsResult');
+     *   $years = $result->ints('Years');
+     *
+     * @param string $resultType Expected `i:type` of the result, e.g. `GetYearsResult`.
+     *
+     * @see https://developers.twinfield.com/documentation/api/types/command-and-query-webservices
+     */
+    public function query(string $service, Query $query, string $resultType): ResultElement
+    {
+        $envelope = CommandQueryEnvelope::query($service, $query, $this->commandQueryAuthentication());
+
+        $response = $this->soap->sendEnvelope($this->endpoint($service, 'svc'), $envelope);
+
+        return ResultElement::fromQueryResponse($response, $resultType);
+    }
+
+    /**
+     * Low-level command on a Command & Query web service; prefer the resource methods.
+     * Commands change data and return nothing; errors are thrown as SoapFaultException.
+     *
+     *   $twinfield->process('PeriodService', new Command('ClosePeriod', ['PeriodNumber' => 1, 'Year' => 2021]));
+     */
+    public function process(string $service, Command $command): void
+    {
+        $envelope = CommandQueryEnvelope::command($service, $command, $this->commandQueryAuthentication());
+
+        $this->soap->sendEnvelope($this->endpoint($service, 'svc'), $envelope);
+    }
+
+    /**
+     * Command & Query web services always work on one company.
+     */
+    private function commandQueryAuthentication(): AuthenticationHeader
+    {
+        if ($this->companyCode === null) {
+            throw new LogicException('Command & Query web services need a company: use company() first.');
+        }
+
+        return new AuthenticationHeader(
+            accessToken: $this->accessTokenProvider->accessToken(),
+            companyCode: $this->companyCode,
+        );
     }
 }

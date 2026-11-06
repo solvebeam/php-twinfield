@@ -127,6 +127,20 @@ final class SoapResponse
     }
 
     /**
+     * The fault's `detail` element (SOAP 1.1) or `Detail` (SOAP 1.2), if any.
+     */
+    public function faultDetail(): ?DOMElement
+    {
+        $fault = $this->faultElement();
+
+        if (!$fault instanceof DOMElement) {
+            return null;
+        }
+
+        return $this->firstElementByLocalName($fault, 'detail') ?? $this->firstElementByLocalName($fault, 'Detail');
+    }
+
+    /**
      * @template T of object
      * @param class-string<T> $responseClass
      * @return T

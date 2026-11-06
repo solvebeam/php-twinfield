@@ -31,6 +31,14 @@ final class SoapResponseTest extends TestCase
         self::assertSame('Company code is invalid.', $response->faultString());
     }
 
+    public function testExposesFaultDetail(): void
+    {
+        $response = SoapResponse::fromHttpResponse(ReplayClient::response('fault-guidelines-detail', 500));
+
+        self::assertSame('detail', $response->faultDetail()?->localName);
+        self::assertNull(SoapResponse::fromHttpResponse(ReplayClient::response('finder-search-dim'))->faultDetail());
+    }
+
     public function testExposesPayloadElement(): void
     {
         $response = SoapResponse::fromHttpResponse(ReplayClient::response('finder-search-dim'));

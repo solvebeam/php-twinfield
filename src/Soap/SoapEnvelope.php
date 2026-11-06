@@ -13,7 +13,7 @@ use SolveBeam\Twinfield\Soap\SoapAction;
 use SolveBeam\Twinfield\Soap\SoapArray;
 use SolveBeam\Twinfield\Soap\SoapName;
 
-final class SoapEnvelope
+final class SoapEnvelope implements SoapMessage
 {
 	private const SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
 	private const DEFAULT_NAMESPACE = 'http://www.twinfield.com/';

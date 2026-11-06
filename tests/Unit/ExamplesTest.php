@@ -19,6 +19,11 @@ final class ExamplesTest extends TestCase
         'getting-started/token-info',
     ];
 
+    /** Examples that change data: skipped by `composer test:live`, run by `composer test:write`. */
+    public const WRITES = [
+        'periods/rename-period',
+    ];
+
     /**
      * @return iterable<string, array{string}>
      */

@@ -9,6 +9,8 @@
  *   composer twinfield -- finder DIM            # search dimensions
  *   composer twinfield -- finder OFF "*" 50     # type, pattern, max rows
  *   composer twinfield -- finder DIM "*" 10 --company=1002_3 --quiet
+ *   composer twinfield -- periods               # years of the company
+ *   composer twinfield -- periods 2025          # periods of a year
  *
  * Without --quiet, the full SOAP request and response are printed (token masked).
  */
@@ -71,6 +73,25 @@ try {
         }
             break;
 
+        case 'periods':
+            $twinfield = $environment->client();
+            $twinfield = $company === null ? $twinfield : $twinfield->company($company);
+
+            if (!isset($arguments[0])) {
+                echo PHP_EOL, 'Years: ', implode(', ', $twinfield->periods()->years()), PHP_EOL;
+                break;
+            }
+
+            echo PHP_EOL;
+
+            foreach ($twinfield->periods()->list((int) $arguments[0]) as $period) {
+                $endDate = $period->endDate?->format('Y-m-d') ?? '-';
+                $status = $period->open ? 'open' : 'closed';
+
+                echo $period->number, ' | ', $period->name, ' | ', $endDate, ' | ', $status, PHP_EOL;
+            }
+            break;
+
         default:
             echo <<<'TXT'
                 Usage: composer twinfield -- <command> [arguments] [--company=CODE] [--quiet]
@@ -78,6 +99,7 @@ try {
                   whoami                         Show organisation, cluster and company
                   refresh                        Refresh the access token now
                   finder [type] [pattern] [max]  Finder search, e.g. finder DIM "*" 10
+                  periods [year]                 Years, or the periods of a year (PeriodService)
 
                 TXT;
     }

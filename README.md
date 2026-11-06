@@ -20,9 +20,64 @@ $debtors = $twinfield->finder(FinderType::Dimensions)
     ->option('dimtype', 'DEB')
     ->limit(10)
     ->get();
+
+foreach ($twinfield->periods()->list(2025) as $period) {
+    echo $period->number, ' ', $period->name, PHP_EOL;
+}
 ```
 
 See [examples/](examples/) for small, runnable examples, starting with [Authentication](examples/getting-started/authentication/).
+
+## Command & Query web services
+
+Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.
+
+| Service | Resource | Status |
+|---|---|---|
+| PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`; all commands. See [List periods](examples/periods/list-periods/) and [Rename period](examples/periods/rename-period/). |
+| BudgetService | – | Not yet |
+| BankBookService | – | Not yet |
+| CashBookService | – | Not yet |
+| DeletedTransactionsService | – | Not yet |
+| BankStatementService | – | Not yet |
+| TransactionBlockedValueService | – | Not yet |
+
+Services without a resource can be called directly. Give the fields in the order of the service's WSDL (usually alphabetical):
+
+```php
+use SolveBeam\Twinfield\CommandQuery\Command;
+use SolveBeam\Twinfield\CommandQuery\Query;
+
+$result = $twinfield->query('PeriodService', new Query('GetPeriods', ['Year' => 2025]), 'GetPeriodsResult');
+
+foreach ($result->list('Periods', 'Period') as $period) {
+    echo $period->int('Number'), ' ', $period->string('Name'), PHP_EOL;
+}
+
+$twinfield->process('PeriodService', new Command('ClosePeriod', ['PeriodNumber' => 1, 'Year' => 2025]));
+```
+
+The readers of the result (`string()`, `int()`, `bool()`, `dateTime()`, `list()`, `ints()`) throw an `UnexpectedResponseException` when a value is missing or invalid.
+
+## Errors
+
+Twinfield reports errors as SOAP faults; the SDK throws them as `SoapFaultException`. Besides the message, the exception has the fault detail, so you can act on an error without depending on the (language dependent) message:
+
+```php
+use SolveBeam\Twinfield\Period\PeriodServiceFaultCode;
+use SolveBeam\Twinfield\Soap\SoapFaultException;
+
+try {
+    $twinfield->periods()->list(1901);
+} catch (SoapFaultException $exception) {
+    $exception->detailType;    // 'PeriodServiceFault' (Command & Query services)
+    $exception->detailCode;    // 'YearNotFound', or e.g. '354' for classic services
+    $exception->detailMessage; // 'Year 1901 bestaat niet.'
+    $exception->source;        // called method (classic services only)
+}
+```
+
+See [Guidelines](https://developers.twinfield.com/documentation/api/types/guidelines) for the error codes of the classic services. Too many requests give a `RateLimitExceededException`.
 
 ## PSR Compliance
 
@@ -159,7 +214,7 @@ An optional `.env` in the project root (gitignored) overrides values, and real e
 | `composer test` | Offline unit tests on fixtures. Fast, no network. |
 | `composer test:live` | Read-only tests against the live API (`tests/Integration`), including running every example. Skipped without login. |
 | `composer test:write` | Write tests (`tests/Write`). Asks you to type the company code first; only companies in `TWINFIELD_WRITE_COMPANIES`. |
-| `composer twinfield -- finder DIM "*" 10` | Try a live call and see the SOAP request and response. Also `whoami`, `refresh`, `--company=CODE`, `--quiet`. |
+| `composer twinfield -- finder DIM "*" 10` | Try a live call and see the SOAP request and response. Also `periods [year]`, `whoami`, `refresh`, `--company=CODE`, `--quiet`. |
 | `composer twinfield:setup` | Guided setup: credentials, login and default company. Run again to change them. |
 | `composer twinfield:login` | Log in (again), e.g. when the refresh token has expired. Use `-- --manual` to paste the redirected URL. |
 | `composer twinfield:anonymize` | Turn recorded responses into anonymized fixtures. |

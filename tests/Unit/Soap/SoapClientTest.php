@@ -50,6 +50,21 @@ final class SoapClientTest extends TestCase
             ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
     }
 
+    public function testThrowsSoapFaultWithGuidelinesDetail(): void
+    {
+        try {
+            $this->client(ReplayClient::fixture('fault-guidelines-detail', 500))
+                ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            self::fail('Expected a SoapFaultException.');
+        } catch (SoapFaultException $exception) {
+            self::assertSame('soap:Client: Access denied. Token invalid. (code 354, source Search)', $exception->getMessage());
+            self::assertNull($exception->detailType);
+            self::assertSame('354', $exception->detailCode);
+            self::assertSame('Access denied. Token invalid.', $exception->detailMessage);
+            self::assertSame('Search', $exception->source);
+        }
+    }
+
     public function testThrowsOnNonSoapResponse(): void
     {
         $this->expectException(RuntimeException::class);

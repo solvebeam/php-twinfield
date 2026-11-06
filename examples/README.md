@@ -40,3 +40,8 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.
 - [Paginate](finder/paginate/): go through all results page by page.
+
+## Periods
+
+- [List periods](periods/list-periods/): years of the company and the periods of a year.
+- [Rename period](periods/rename-period/): change a period with a command (changes data).

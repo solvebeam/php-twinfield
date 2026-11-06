@@ -27,7 +27,7 @@ final class SoapClient
 
     public function sendEnvelope(
         string $url,
-        SoapEnvelope $envelope,
+        SoapMessage $envelope,
         string $method = 'POST',
     ): SoapResponse {
         $request = $envelope->toRequest($url, $this->requestFactory, $method);

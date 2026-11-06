@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Unit\Support;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Request;
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
+use SolveBeam\Twinfield\CommandQuery\Command;
+use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
+use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\Http\WriteBlockedException;
 use SolveBeam\Twinfield\Tests\Support\Http\WriteGuardClient;
@@ -31,6 +36,8 @@ final class WriteGuardClientTest extends TestCase
         yield 'process xml mixed' => ['ProcessXmlString', self::processXml('<general><read /><transaction /></general>'), false];
         yield 'process xml unparsable' => ['ProcessXmlString', self::processXml('not xml'), false];
         yield 'compressed (cannot inspect)' => ['ProcessXmlCompressed', self::envelope('<ProcessXmlCompressed />'), false];
+        yield 'command & query: query' => ['Query', self::envelope('<Query />'), true];
+        yield 'command & query: process (command)' => ['Process', self::envelope('<Command />'), false];
         yield 'unknown action' => ['SetToApproved', self::envelope('<SetToApproved />'), false];
     }
 
@@ -73,6 +80,21 @@ final class WriteGuardClientTest extends TestCase
         $body = self::processXml('<dimension><office>1000</office></dimension>', '1002');
 
         $this->guard(allowWrites: '1002')->sendRequest($this->request('ProcessXmlString', $body));
+    }
+
+    public function testBlocksUnconfirmedCommandOfCommandQueryService(): void
+    {
+        $envelope = CommandQueryEnvelope::command(
+            'PeriodService',
+            new Command('ClosePeriod', ['PeriodNumber' => 1, 'Year' => 2021]),
+            new AuthenticationHeader('x', '1002'),
+        );
+        $request = $envelope->toRequest('https://example.test/webservices/PeriodService.svc', new Psr17SoapRequestFactory(new Psr17Factory(), new Psr17Factory()));
+
+        $this->expectException(WriteBlockedException::class);
+        $this->expectExceptionMessage('Blocked SOAP write "Process" on company "1002": writes not confirmed.');
+
+        $this->guard(allowWrites: null)->sendRequest($request);
     }
 
     public function testAllowsConfirmedWrites(): void
