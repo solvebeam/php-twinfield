@@ -17,7 +17,8 @@ use RuntimeException;
  * - Command & Query web services (.svc):
  *   `<detail><PeriodServiceFault><Code>YearNotFound</Code><Message>…</Message></PeriodServiceFault></detail>`
  *
- * Messages are language dependent; use `detailCode` to act on specific errors.
+ * Messages are language dependent; use `detailCode` to act on specific errors, e.g. with
+ * ErrorCode (classic services) or PeriodServiceFaultCode.
  */
 final class SoapFaultException extends RuntimeException
 {

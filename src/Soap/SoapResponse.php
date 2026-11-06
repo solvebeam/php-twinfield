@@ -22,7 +22,7 @@ final class SoapResponse
         $body = (string) $response->getBody();
         $xml = new DOMDocument('1.0', 'UTF-8');
 
-        if (@$xml->loadXML($body) === false) {
+        if ($body === '' || @$xml->loadXML($body) === false) {
             throw new RuntimeException(self::buildNonSoapResponseMessage($response));
         }
 

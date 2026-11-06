@@ -53,4 +53,12 @@ final class SoapResponseTest extends TestCase
 
         SoapResponse::fromHttpResponse(new Response(200, [], '<?xml version="1.0"?><html />'));
     }
+
+    public function testRejectsEmptyBody(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Expected SOAP XML response, received HTTP 500 Internal Server Error.');
+
+        SoapResponse::fromHttpResponse(new Response(500, [], ''));
+    }
 }

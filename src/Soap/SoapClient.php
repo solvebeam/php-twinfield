@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Soap;
 
 use Psr\Http\Client\ClientInterface;
+use RuntimeException;
 
 final class SoapClient
 {
@@ -37,7 +38,16 @@ final class SoapClient
             throw RateLimitExceededException::fromHttpResponse($response);
         }
 
-        $soapResponse = SoapResponse::fromHttpResponse($response);
+        try {
+            $soapResponse = SoapResponse::fromHttpResponse($response);
+        } catch (RuntimeException $exception) {
+            // Authorization errors come as HTTP 401/403, not always with a SOAP fault.
+            if (in_array($response->getStatusCode(), [401, 403], true)) {
+                throw AccessDeniedException::fromHttpResponse($response, $exception);
+            }
+
+            throw $exception;
+        }
 
         if ($soapResponse->isFault()) {
             throw SoapFaultException::fromSoapResponse($soapResponse);

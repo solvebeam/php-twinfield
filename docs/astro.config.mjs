@@ -48,6 +48,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/finder' } }],
 				},
 				{
+					label: 'Periods',
+					items: [{ autogenerate: { directory: 'examples/periods' } }],
+				},
+				{
 					label: 'Reference',
 					items: [
 						{ label: 'PSR standards', slug: 'reference/standards' },

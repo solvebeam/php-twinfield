@@ -77,7 +77,11 @@ try {
 }
 ```
 
-See [Guidelines](https://developers.twinfield.com/documentation/api/types/guidelines) for the error codes of the classic services. Too many requests give a `RateLimitExceededException`.
+Match `detailCode` with `ErrorCode` for the general codes of the classic services (see [Guidelines](https://developers.twinfield.com/documentation/api/types/guidelines)), e.g. `ErrorCode::TokenInvalid`, or with the codes of a Command & Query service such as `PeriodServiceFaultCode`.
+
+Authorization errors come as HTTP 401 or 403; without a SOAP fault in the response the SDK throws an `AccessDeniedException`. Too many requests give a `RateLimitExceededException`.
+
+See the [error handling example](examples/getting-started/error-handling/) for all error codes.
 
 ## PSR Compliance
 
