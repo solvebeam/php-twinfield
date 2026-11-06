@@ -29,6 +29,14 @@ final readonly class WriteGuardClient implements ClientInterface
     private const READ_XML_ROOTS = ['read', 'list', 'columns'];
 
     /**
+     * Root elements that read when they contain only `<office>` and `<code>`, and save otherwise.
+     * Twinfield has no `<read>` type for these.
+     *
+     * @see https://developers.twinfield.com/documentation/api/master-data/asset-methods/#read
+     */
+    private const READ_BY_CODE_ROOTS = ['assetmethod'];
+
+    /**
      * @param list<string> $writeCompanies
      */
     public function __construct(
@@ -58,9 +66,9 @@ final readonly class WriteGuardClient implements ClientInterface
         }
 
         if (in_array($action, self::PROCESS_XML_ACTIONS, true)) {
-            $roots = self::processXmlRoots($body);
+            $requests = self::processXmlRequests($body);
 
-            return $roots !== [] && array_diff($roots, self::READ_XML_ROOTS) === [];
+            return $requests !== [] && array_filter($requests, self::isReadRequest(...)) === $requests;
         }
 
         foreach (self::READ_ACTION_PREFIXES as $prefix) {
@@ -111,10 +119,29 @@ final readonly class WriteGuardClient implements ClientInterface
         return $position === false ? $soapAction : substr($soapAction, $position + 1);
     }
 
+    private static function isReadRequest(DOMElement $request): bool
+    {
+        if (in_array($request->localName, self::READ_XML_ROOTS, true)) {
+            return true;
+        }
+
+        if (!in_array($request->localName, self::READ_BY_CODE_ROOTS, true) || $request->attributes->length > 0) {
+            return false;
+        }
+
+        $children = array_map(
+            static fn (DOMElement $child): string => (string) $child->localName,
+            self::childElements($request),
+        );
+        sort($children);
+
+        return $children === ['code', 'office'];
+    }
+
     /**
-     * @return list<string>
+     * @return list<DOMElement>
      */
-    private static function processXmlRoots(string $body): array
+    private static function processXmlRequests(string $body): array
     {
         $envelope = self::loadXml($body);
         $payload = $envelope === null ? null : self::firstByLocalName($envelope, 'xmlRequest');
@@ -130,9 +157,7 @@ final readonly class WriteGuardClient implements ClientInterface
         }
 
         // Multiple requests may be wrapped in a <general> element.
-        $elements = $request->localName === 'general' ? self::childElements($request) : [$request];
-
-        return array_map(static fn (DOMElement $element): string => (string) $element->localName, $elements);
+        return $request->localName === 'general' ? self::childElements($request) : [$request];
     }
 
     /**

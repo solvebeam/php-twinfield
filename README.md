@@ -42,6 +42,10 @@ Master data such as activities are dimensions, read and written with the XML web
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate. See [List activities](examples/activities/list-activities/) and [Create activity](examples/activities/create-activity/). |
 | Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
 
+| Other master data | Resource | Status |
+|---|---|---|
+| Asset methods | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/asset-methods/read-asset-method/) and [Create asset method](examples/asset-methods/create-asset-method/). |
+
 ## Command & Query web services
 
 Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.

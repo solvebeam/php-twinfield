@@ -50,6 +50,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/activities' } }],
 				},
 				{
+					label: 'Asset methods',
+					items: [{ autogenerate: { directory: 'examples/asset-methods' } }],
+				},
+				{
 					label: 'Finder',
 					items: [{ autogenerate: { directory: 'examples/finder' } }],
 				},

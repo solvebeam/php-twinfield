@@ -33,6 +33,11 @@ final class WriteGuardClientTest extends TestCase
         yield 'process xml browse' => ['ProcessXmlString', self::processXml('<columns code="000" />'), true];
         yield 'process xml general with reads' => ['ProcessXmlString', self::processXml('<general><read /><list /></general>'), true];
         yield 'process xml write' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office></dimension>'), false];
+        yield 'process xml asset method read' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>10JRGEB</code></assetmethod>'), true];
+        yield 'process xml asset method save' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>M</code><name>Machine</name></assetmethod>'), false];
+        yield 'process xml asset method status' => ['ProcessXmlString', self::processXml('<assetmethod status="deleted"><office>1002</office><code>M</code></assetmethod>'), false];
+        yield 'process xml asset method code only' => ['ProcessXmlString', self::processXml('<assetmethod><code>M</code><code>N</code></assetmethod>'), false];
+        yield 'process xml dimension by code' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office><code>1000</code></dimension>'), false];
         yield 'process xml mixed' => ['ProcessXmlString', self::processXml('<general><read /><transaction /></general>'), false];
         yield 'process xml unparsable' => ['ProcessXmlString', self::processXml('not xml'), false];
         yield 'compressed (cannot inspect)' => ['ProcessXmlCompressed', self::envelope('<ProcessXmlCompressed />'), false];

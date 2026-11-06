@@ -13,6 +13,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
+use SolveBeam\Twinfield\AssetMethod\AssetMethodResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
 use SolveBeam\Twinfield\CommandQuery\Query;
@@ -98,6 +99,14 @@ final readonly class Twinfield
     public function activities(): ActivityResource
     {
         return new ActivityResource($this);
+    }
+
+    /**
+     * Asset methods of the company (how fixed assets are depreciated): search, read, create, update and delete.
+     */
+    public function assetMethods(): AssetMethodResource
+    {
+        return new AssetMethodResource($this);
     }
 
     public function finder(FinderType $type): FinderQuery

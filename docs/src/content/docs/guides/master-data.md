@@ -10,6 +10,12 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
 | Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
+Other master data works the same way, but is not a dimension:
+
+| Master data | Resource | Status |
+|---|---|---|
+| [Asset methods](#asset-methods) | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate |
+
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 
 ## At a glance
@@ -105,6 +111,35 @@ New activities inherit every setting until you set it. Inherited settings have n
 
 `activate($code)` makes a deleted or hidden dimension active again. A deleted dimension keeps its code: `create()` with the same code throws `DimensionAlreadyExistsException`.
 
+## Asset methods
+
+An asset method says how fixed assets are depreciated and on which accounts. It is not a dimension, but `$twinfield->assetMethods()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`. The differences:
+
+- Search uses the Finder type `ASM` and gives `AssetMethodSummary` results. `group()` is for dimensions only.
+- Twinfield has no `<read>` for asset methods. `get()` sends an `<assetmethod>` with only the company and code, which is how Twinfield reads one.
+- Not found is an `AssetMethodNotFoundException`, an existing code on `create()` an `AssetMethodAlreadyExistsException`.
+- `create()`, `update()` and `save()` read the asset method back after saving, so you always get the complete `AssetMethod`.
+- The calculation is set with one method: `linear(60)`, `linearPercentage('20')`, `reducingBalance('25')` or `noDepreciation()`. Percentages are strings with a dot (`'12.5'`), never floats. Calculation settings that are not set are not sent, so Twinfield keeps them.
+
+```php
+use SolveBeam\Twinfield\AssetMethod\AssetMethodInput;
+use SolveBeam\Twinfield\AssetMethod\DepreciationStart;
+
+$assetMethods = $twinfield->assetMethods();
+
+$method = $assetMethods->create(
+    AssetMethodInput::create('LAPTOP', 'Laptops')
+        ->linear(36)
+        ->depreciateFrom(DepreciationStart::FromPurchaseDate)
+        ->purchaseValueAccount('0501')
+        ->cumulativeDepreciationAccount('0135')
+        ->depreciationCostsAccount('4730')
+        ->freeText(1, 'Serial number'),
+);
+
+$assetMethods->update($method->edit()->reducingBalance('25'));
+```
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -113,3 +148,8 @@ New activities inherit every setting until you set it. Inherited settings have n
 - [Create activity](/examples/activities/create-activity/)
 - [Update activity](/examples/activities/update-activity/)
 - [Delete activity](/examples/activities/delete-activity/)
+- [List asset methods](/examples/asset-methods/list-asset-methods/)
+- [Read asset method](/examples/asset-methods/read-asset-method/)
+- [Create asset method](/examples/asset-methods/create-asset-method/)
+- [Update asset method](/examples/asset-methods/update-asset-method/)
+- [Delete asset method](/examples/asset-methods/delete-asset-method/)

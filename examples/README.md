@@ -46,6 +46,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update activity](activities/update-activity/): change an existing activity (changes data).
 - [Delete activity](activities/delete-activity/): delete or hide an activity (changes data).
 
+## Asset methods
+
+- [List asset methods](asset-methods/list-asset-methods/): code and name of all asset methods, or those matching a pattern.
+- [Read asset method](asset-methods/read-asset-method/): calculation, accounts and free text fields of one asset method.
+- [Create asset method](asset-methods/create-asset-method/): create an asset method (changes data).
+- [Update asset method](asset-methods/update-asset-method/): change an existing asset method (changes data).
+- [Delete asset method](asset-methods/delete-asset-method/): delete or hide an asset method (changes data).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

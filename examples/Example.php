@@ -50,6 +50,23 @@ final class Example
     }
 
     /**
+     * An asset method code that is not in use yet, from EXAMPLE999 down to EXAMPLE900, for the
+     * examples that create an asset method.
+     */
+    public static function unusedAssetMethodCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('EXAMPLE%03d', $number);
+
+            if ($twinfield->assetMethods()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Asset method codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
      * The stored login (access token, provider) behind Example::twinfield().
      */
     public static function environment(): Environment

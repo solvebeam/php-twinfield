@@ -24,6 +24,9 @@ final class ExamplesTest extends TestCase
         'activities/create-activity',
         'activities/delete-activity',
         'activities/update-activity',
+        'asset-methods/create-asset-method',
+        'asset-methods/delete-asset-method',
+        'asset-methods/update-asset-method',
         'periods/rename-period',
     ];
 

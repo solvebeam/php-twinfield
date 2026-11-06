@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;assetmethod result="0"&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;code&gt;MACHINE&lt;/code&gt;&lt;name&gt;Machines 5 jaar lineair&lt;/name&gt;&lt;shortname&gt;Machines&lt;/shortname&gt;&lt;calcmethod&gt;linear&lt;/calcmethod&gt;&lt;nrofperiods&gt;60&lt;/nrofperiods&gt;&lt;balanceaccounts&gt;&lt;purchasevalue msgtype="error" msg="Grootboekrekening 9999 bestaat niet." result="0"&gt;9999&lt;/purchasevalue&gt;&lt;/balanceaccounts&gt;&lt;/assetmethod&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
