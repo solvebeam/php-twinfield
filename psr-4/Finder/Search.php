@@ -25,5 +25,6 @@ final readonly class Search
         public int $maxRows,
         #[SoapName('options')]
         public ?ArrayOfArrayOfString $options = null,
-    ) {}
+    ) {
+    }
 }

@@ -1,36 +1,40 @@
-# Twinfield PHP SDK Examples
+# Examples
 
-This directory contains various examples demonstrating how to use the Twinfield PHP SDK.
+Small, self-contained examples. Each folder shows one thing, with an `example.php` you can run and a `README.md` that explains it.
 
-## Available Examples
+## Setup
 
-### 📁 oauth2/
-Complete OAuth2 authentication example with Twinfield API.
+1. Register `http://localhost:8765/callback` as redirect URI for your client in the [Twinfield developer portal](https://developers.twinfield.com).
+2. Run any example, for instance:
 
-- Full OAuth2 authorization code flow
-- Token storage and refresh
-- Environment-based configuration
-- Beautiful web interface
-- Ready to run with PHP's built-in server
-
-**[View OAuth2 Example →](oauth2/README.md)**
-
-## Getting Started
-
-Each example directory contains its own README with specific setup instructions. Generally, you'll need:
-
-1. PHP 8.3 or higher
-2. Composer dependencies installed (from project root):
-   ```bash
-   composer install
+   ```sh
+   php examples/offices/list-offices/example.php
    ```
-3. Navigate to the example directory you want to try
-4. Follow the README instructions in that directory
 
-## More Examples Coming Soon
+The first time, the example asks for your client ID, client secret and redirect URI, opens the Twinfield login in your browser and asks for a default company. Everything is saved in `~/.config/twinfield/`, so after that examples start right away. Run `composer twinfield:setup` to change these values.
 
-Stay tuned for additional examples covering:
-- API Request/Response handling
-- Data manipulation
-- Error handling patterns
-- And more...
+Every example starts the same way:
+
+```php
+require __DIR__ . '/../../../vendor/autoload.php';
+
+$twinfield = Example::twinfield();
+```
+
+In your own application you create the client yourself: see [Authentication](getting-started/authentication/).
+
+Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
+
+## Getting started
+
+- [Authentication](getting-started/authentication/): create a client in your own application.
+
+## Offices
+
+- [List offices](offices/list-offices/): all offices the user has access to.
+- [Switch company](offices/switch-company/): the same call for several companies.
+
+## Finder
+
+- [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.
+- [Paginate](finder/paginate/): go through all results page by page.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult />
+      <data>
+        <TotalRows>3</TotalRows>
+        <Columns><string>Code</string><string>Naam</string></Columns>
+        <Items>
+          <ArrayOfString><string>1000</string><string>Example Holding B.V.</string></ArrayOfString>
+          <ArrayOfString><string>1001</string><string>Example Retail B.V.</string></ArrayOfString>
+        </Items>
+      </data>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

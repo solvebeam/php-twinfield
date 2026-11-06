@@ -1,2 +1,11 @@
 # Composer
 /vendor/
+
+# Local overrides of ~/.config/twinfield/.env
+/.env
+
+# PHPUnit
+/.phpunit.cache/
+
+# Raw recorded Twinfield responses (real data, never commit)
+/tests/Fixtures/raw/

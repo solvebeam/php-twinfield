@@ -12,7 +12,9 @@ final readonly class AuthenticationHeader
     public function __construct(
         #[SoapName('AccessToken')]
         public string $accessToken,
+        /** Omitted from the request when null, e.g. to list all offices. */
         #[SoapName('CompanyCode')]
-        public string $companyCode,
-    ) {}
+        public ?string $companyCode = null,
+    ) {
+    }
 }

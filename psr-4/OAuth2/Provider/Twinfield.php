@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\OAuth2\Provider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
@@ -36,7 +37,7 @@ final class Twinfield extends AbstractProvider
         return self::RESOURCE_OWNER_URL;
     }
 
-    public function getAccessTokenValidation(AccessToken $token): AccessTokenValidation
+    public function getAccessTokenValidation(AccessTokenInterface $token): AccessTokenValidation
     {
         $tokenValue = trim($token->getToken());
 
@@ -57,6 +58,29 @@ final class Twinfield extends AbstractProvider
     protected function getDefaultScopes(): array
     {
         return [];
+    }
+
+    /**
+     * Drops `approval_prompt`, a Google-specific parameter League adds by default.
+     *
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     */
+    protected function getAuthorizationParameters(array $options): array
+    {
+        $parameters = parent::getAuthorizationParameters($options);
+
+        unset($parameters['approval_prompt']);
+
+        return $parameters;
+    }
+
+    /**
+     * OAuth 2.0 scopes are space-delimited (RFC 6749, section 3.3).
+     */
+    protected function getScopeSeparator(): string
+    {
+        return ' ';
     }
 
     protected function checkResponse(ResponseInterface $response, $data): void

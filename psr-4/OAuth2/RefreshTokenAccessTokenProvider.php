@@ -1,0 +1,108 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SolveBeam\Twinfield\OAuth2;
+
+use DateTimeImmutable;
+use Psr\Cache\CacheItemPoolInterface;
+use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
+use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
+
+/**
+ * Gets access tokens with an OAuth refresh token and refreshes them when
+ * they expire. Pass a PSR-6 cache to share access tokens between requests.
+ *
+ *   $tokens = new RefreshTokenAccessTokenProvider(
+ *       new TwinfieldProvider(['clientId' => …, 'clientSecret' => …, 'redirectUri' => …]),
+ *       refreshToken: $storedRefreshToken,
+ *       cache: $cachePool,
+ *   );
+ *
+ * Twinfield may return a new refresh token on refresh; read it with
+ * refreshToken() and store it if you persist refresh tokens yourself.
+ */
+final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
+{
+    /** Refresh this many seconds before the access token expires. */
+    private const EXPIRY_MARGIN = 60;
+
+    /** @var array{token: string, expires: int, clusterUrl: string}|null */
+    private ?array $current = null;
+
+    public function __construct(
+        private readonly TwinfieldProvider $provider,
+        private string $refreshToken,
+        private readonly ?CacheItemPoolInterface $cache = null,
+    ) {
+    }
+
+    public function accessToken(): string
+    {
+        return $this->current()['token'];
+    }
+
+    public function clusterUrl(): string
+    {
+        return $this->current()['clusterUrl'];
+    }
+
+    public function refreshToken(): string
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * @return array{token: string, expires: int, clusterUrl: string}
+     */
+    private function current(): array
+    {
+        if ($this->current !== null && $this->isValid($this->current)) {
+            return $this->current;
+        }
+
+        $cached = $this->cache?->getItem($this->cacheKey());
+        $value = $cached?->get();
+
+        if ($cached !== null && $cached->isHit() && is_array($value) && $this->isValid($value)) {
+            /** @var array{token: string, expires: int, clusterUrl: string} $value */
+            return $this->current = $value;
+        }
+
+        $token = $this->provider->getAccessToken('refresh_token', ['refresh_token' => $this->refreshToken]);
+        $validation = $this->provider->getAccessTokenValidation($token);
+
+        $this->current = [
+            'token' => $token->getToken(),
+            'expires' => $token->getExpires() ?? $validation->exp,
+            'clusterUrl' => rtrim($validation->clusterUrl, '/'),
+        ];
+
+        if ($cached !== null) {
+            $cached->set($this->current);
+            $cached->expiresAt(new DateTimeImmutable('@' . $this->current['expires']));
+            $this->cache?->save($cached);
+        }
+
+        $this->refreshToken = $token->getRefreshToken() ?? $this->refreshToken;
+
+        return $this->current;
+    }
+
+    /**
+     * @param array<mixed> $value
+     */
+    private function isValid(array $value): bool
+    {
+        return is_string($value['token'] ?? null)
+            && is_string($value['clusterUrl'] ?? null)
+            && is_int($value['expires'] ?? null)
+            && $value['expires'] - self::EXPIRY_MARGIN > time();
+    }
+
+    private function cacheKey(): string
+    {
+        // PSR-6 keys allow A-Z, a-z, 0-9, _ and . only; never use the token itself.
+        return 'twinfield.access_token.' . hash('sha256', $this->refreshToken);
+    }
+}

@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace SolveBeam\Twinfield\Tests\Unit;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Keeps the examples consistent, so each one can become a docs page.
+ */
+final class ExamplesTest extends TestCase
+{
+    /** Examples that show their own setup instead of Example::twinfield(). */
+    private const OWN_SETUP = ['getting-started/authentication'];
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function examples(): iterable
+    {
+        $root = dirname(__DIR__, 2) . '/examples/';
+
+        foreach (glob($root . '*/*', GLOB_ONLYDIR) ?: [] as $directory) {
+            $name = substr($directory, strlen($root));
+
+            yield $name => [$name];
+        }
+    }
+
+    public function testThereAreExamples(): void
+    {
+        self::assertNotEmpty(iterator_to_array(self::examples()));
+    }
+
+    #[DataProvider('examples')]
+    public function testExampleIsComplete(string $name): void
+    {
+        $directory = dirname(__DIR__, 2) . '/examples/' . $name;
+
+        self::assertFileExists($directory . '/example.php');
+        self::assertFileExists($directory . '/README.md');
+
+        $code = (string) file_get_contents($directory . '/example.php');
+        $readme = (string) file_get_contents($directory . '/README.md');
+
+        self::assertStringStartsWith("<?php\n\ndeclare(strict_types=1);\n", $code);
+        self::assertStringContainsString("require __DIR__ . '/../../../vendor/autoload.php';", $code);
+
+        if (!in_array($name, self::OWN_SETUP, true)) {
+            self::assertStringContainsString('$twinfield = Example::twinfield();', $code, 'Examples use the one-line setup.');
+        }
+
+        self::assertMatchesRegularExpression('~^# \S~', $readme, 'README starts with a title.');
+        self::assertStringContainsString('## Code', $readme);
+        self::assertStringContainsString("php examples/{$name}/example.php", $readme, 'README shows how to run it.');
+
+        $index = (string) file_get_contents(dirname(__DIR__, 2) . '/examples/README.md');
+
+        self::assertStringContainsString("]({$name}/)", $index, 'Example is listed in examples/README.md.');
+
+        exec(sprintf('%s -l %s 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg($directory . '/example.php')), $output, $exitCode);
+
+        self::assertSame(0, $exitCode, implode("\n", $output));
+    }
+}

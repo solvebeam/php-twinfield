@@ -26,7 +26,12 @@
   "require": {
     "php": ">=8.3",
     "league/oauth2-client": "^2.9",
-    "phpro/soap-client": "^4.6"
+    "phpro/soap-client": "^4.6",
+    "psr/http-client": "^1.0",
+    "psr/http-factory": "^1.1",
+    "psr/http-message": "^2.0",
+    "php-http/discovery": "^1.20",
+    "psr/cache": "^2.0 || ^3.0"
   },
   "require-dev": {
     "rector/rector": "^2.3",
@@ -36,7 +41,10 @@
     "symfony/cache": "^7.0",
     "monolog/monolog": "^3.10",
     "php-http/logger-plugin": "^1.5",
-    "php-http/message": "^1.16"
+    "php-http/message": "^1.16",
+    "phpunit/phpunit": "^12",
+    "symfony/http-client": "^8.1",
+    "nyholm/psr7": "^1.8"
   },
   "suggest": {
     "symfony/http-client": "For using Symfony's lightweight PSR-18 HTTP client instead of Guzzle",
@@ -47,11 +55,48 @@
     "php-http/message": "For HTTP message formatters (FullHttpMessageFormatter for complete request/response logging)"
   },
   "scripts": {
-    "phpcs": "phpcs"
+    "phpcs": "phpcs",
+    "test": "phpunit --testsuite=unit",
+    "test:live": [
+      "Composer\\Config::disableProcessTimeout",
+      "phpunit --testsuite=integration"
+    ],
+    "test:write": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php bin/twinfield-write-tests.php"
+    ],
+    "twinfield": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php bin/twinfield.php"
+    ],
+    "twinfield:setup": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php bin/twinfield-setup.php"
+    ],
+    "twinfield:login": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php bin/twinfield-login.php"
+    ],
+    "twinfield:anonymize": "@php bin/twinfield-anonymize.php"
   },
   "config": {
     "allow-plugins": {
       "php-http/discovery": true
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SolveBeam\\Twinfield\\Tests\\": "tests/",
+      "SolveBeam\\Twinfield\\Examples\\": "examples/"
+    }
+  },
+  "scripts-descriptions": {
+    "test": "Run offline unit tests",
+    "test:live": "Run read-only tests against the live Twinfield API",
+    "test:write": "Run write tests on a test administration, after confirmation",
+    "twinfield": "Try live Twinfield calls (whoami, refresh, finder)",
+    "twinfield:login": "Log in to Twinfield once and store the refresh token",
+    "twinfield:anonymize": "Turn recorded responses into anonymized fixtures",
+    "twinfield:setup": "Guided setup: credentials, login and default company"
   }
 }

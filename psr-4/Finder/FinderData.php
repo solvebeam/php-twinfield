@@ -17,5 +17,6 @@ final readonly class FinderData
         public ?ArrayOfString $columns = null,
         #[SoapName('Items')]
         public ?ArrayOfArrayOfString $items = null,
-    ) {}
+    ) {
+    }
 }

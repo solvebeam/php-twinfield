@@ -12,6 +12,6 @@ final readonly class SearchResponse
     public function __construct(
         #[SoapName('data')]
         public FinderData|null $data = null,
-    ) {}
+    ) {
+    }
 }
-

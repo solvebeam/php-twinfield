@@ -11,7 +11,8 @@ final class SoapClient
     public function __construct(
         private readonly ClientInterface $httpClient,
         private readonly SoapRequestFactory $requestFactory,
-    ) {}
+    ) {
+    }
 
     public function send(
         string $url,
@@ -31,6 +32,11 @@ final class SoapClient
     ): SoapResponse {
         $request = $envelope->toRequest($url, $this->requestFactory, $method);
         $response = $this->httpClient->sendRequest($request);
+
+        if ($response->getStatusCode() === 429) {
+            throw RateLimitExceededException::fromHttpResponse($response);
+        }
+
         $soapResponse = SoapResponse::fromHttpResponse($response);
 
         if ($soapResponse->isFault()) {
