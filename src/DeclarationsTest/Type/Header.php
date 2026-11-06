@@ -24,4 +24,3 @@ class Header
      */
     private ?string $CompanyId = null;
 }
-

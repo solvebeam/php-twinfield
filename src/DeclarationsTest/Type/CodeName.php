@@ -14,4 +14,3 @@ class CodeName
      */
     private ?string $Name = null;
 }
-

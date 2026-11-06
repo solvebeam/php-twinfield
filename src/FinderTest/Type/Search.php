@@ -176,4 +176,3 @@ class Search implements RequestInterface
         return $new;
     }
 }
-

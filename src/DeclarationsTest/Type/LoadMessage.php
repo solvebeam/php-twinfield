@@ -2,7 +2,8 @@
 
 namespace SolveBeam\Twinfield\Declarations\Type;
 
-enum LoadMessage: string {
+enum LoadMessage: string
+{
     case NoAccess = 'NoAccess';
     case InvalidCode = 'InvalidCode';
     case InvalidParameter = 'InvalidParameter';

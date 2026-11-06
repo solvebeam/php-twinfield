@@ -42,4 +42,3 @@ class GetRangeOfSummariesSinceModified implements RequestInterface
         $this->modifiedSince = $modifiedSince;
     }
 }
-

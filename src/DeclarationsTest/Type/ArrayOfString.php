@@ -9,4 +9,3 @@ class ArrayOfString
      */
     private ?array $string = null;
 }
-

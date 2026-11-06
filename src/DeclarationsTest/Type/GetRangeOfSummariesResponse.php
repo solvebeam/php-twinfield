@@ -16,4 +16,3 @@ class GetRangeOfSummariesResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn = null;
 }
-

@@ -49,4 +49,3 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModified implements RequestInt
         $this->modifiedSince = $modifiedSince;
     }
 }
-

@@ -42,4 +42,3 @@ class GetRangeOfSummariesByDeclarationYear implements RequestInterface
         $this->count = $count;
     }
 }
-

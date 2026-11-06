@@ -11,4 +11,3 @@ class SetToApprovedResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToApprovedResult = null;
 }
-

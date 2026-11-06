@@ -21,4 +21,3 @@ class GetVatReturnPaymentReference implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

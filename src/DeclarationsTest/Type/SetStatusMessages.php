@@ -2,7 +2,8 @@
 
 namespace SolveBeam\Twinfield\Declarations\Type;
 
-enum SetStatusMessages: string {
+enum SetStatusMessages: string
+{
     case NoAccess = 'NoAccess';
     case DocumentDoesNotExist = 'DocumentDoesNotExist';
     case StartStatusInCorrectForTransition = 'StartStatusInCorrectForTransition';

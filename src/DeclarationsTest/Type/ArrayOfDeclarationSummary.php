@@ -9,4 +9,3 @@ class ArrayOfDeclarationSummary
      */
     private ?array $DeclarationSummary = null;
 }
-

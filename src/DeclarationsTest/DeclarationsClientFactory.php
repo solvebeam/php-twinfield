@@ -28,14 +28,14 @@ class DeclarationsClientFactory
                         ->addClassMapCollection(DeclarationsClassmap::types())
                         ->addBackedEnumClassMapCollection(DeclarationsClassmap::enums())
                 )
-                // If you want to enable WSDL caching:
-                // ->withCache() 
-                // If you want to use Alternate HTTP settings:
-                // ->withWsdlLoader()
-                // ->withTransport()
-                // If you want specific SOAP setting:
-                // ->withWsdlParserContext()
-                // ->withWsdlServiceSelectionCriteria()
+            // If you want to enable WSDL caching:
+            // ->withCache()
+            // If you want to use Alternate HTTP settings:
+            // ->withWsdlLoader()
+            // ->withTransport()
+            // If you want specific SOAP setting:
+            // ->withWsdlParserContext()
+            // ->withWsdlServiceSelectionCriteria()
         );
 
         $eventDispatcher = new EventDispatcher();
@@ -44,4 +44,3 @@ class DeclarationsClientFactory
         return new DeclarationsClient($caller);
     }
 }
-

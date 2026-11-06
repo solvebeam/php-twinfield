@@ -16,4 +16,3 @@ class GetAllSummariesResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn = null;
 }
-

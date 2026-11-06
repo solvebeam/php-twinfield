@@ -16,4 +16,3 @@ class GetVatReturnPaymentReferenceResponse implements ResultInterface
      */
     private ?string $paymentReference = null;
 }
-

@@ -9,4 +9,3 @@ class GetTaxGroupVatReturnAsXmlResponseVatReturn
      */
     private string $any;
 }
-

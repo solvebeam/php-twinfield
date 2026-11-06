@@ -2,7 +2,8 @@
 
 namespace SolveBeam\Twinfield\Finder\Type;
 
-enum MessageType: string {
+enum MessageType: string
+{
     case Error = 'Error';
     case Warning = 'Warning';
     case Informational = 'Informational';

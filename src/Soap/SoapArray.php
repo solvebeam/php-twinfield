@@ -17,5 +17,6 @@ final class SoapArray
     public function __construct(
         public readonly string $elementName,
         public readonly string $type = 'string',
-    ) {}
+    ) {
+    }
 }

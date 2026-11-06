@@ -11,4 +11,3 @@ class SetToSentResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfMessageOfSetStatusMessages $SetToSentResult = null;
 }
-

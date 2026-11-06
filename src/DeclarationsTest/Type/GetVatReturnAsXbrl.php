@@ -28,4 +28,3 @@ class GetVatReturnAsXbrl implements RequestInterface
         $this->isMessageIdRequired = $isMessageIdRequired;
     }
 }
-

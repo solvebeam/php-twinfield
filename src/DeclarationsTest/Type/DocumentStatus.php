@@ -19,4 +19,3 @@ class DocumentStatus
      */
     private ?string $ExtraInformation = null;
 }
-

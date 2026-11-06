@@ -16,4 +16,3 @@ class GetVatReturnAsXmlResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\GetVatReturnAsXmlResponseVatReturn $vatReturn = null;
 }
-

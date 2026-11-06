@@ -21,4 +21,3 @@ class GetTaxGroupVatReturnAsXml implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

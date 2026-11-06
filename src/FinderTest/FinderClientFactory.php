@@ -17,6 +17,7 @@ use Soap\Psr18Transport\Middleware\SoapHeaderMiddleware;
 use Soap\Xml\Builder\SoapHeader;
 use Psr\Log\LoggerInterface;
 use Http\Message\Formatter;
+
 use function VeeWee\Xml\Dom\Builder\namespaced_element;
 use function VeeWee\Xml\Dom\Builder\value;
 
@@ -32,27 +33,26 @@ class FinderClientFactory
      * @param Formatter|null $formatter Optional formatter for log messages (use FullHttpMessageFormatter for complete HTTP logging)
      */
     public static function factory(
-        string $wsdl, 
-        array $soapHeaders = [], 
+        string $wsdl,
+        array $soapHeaders = [],
         ?LoggerInterface $logger = null,
         ?Formatter $formatter = null
-    ): \SolveBeam\Twinfield\Finder\FinderClient
-    {
+    ): \SolveBeam\Twinfield\Finder\FinderClient {
         // Create HTTP client with optional plugins
         $httpClient = Psr18ClientDiscovery::find();
-        
+
         $plugins = [];
-        
+
         // Add SOAP header middleware if headers are provided
         if (!empty($soapHeaders)) {
             $plugins[] = new SoapHeaderMiddleware(...$soapHeaders);
         }
-        
+
         // Add logger plugin if logger is provided and plugin class exists
         if ($logger !== null && class_exists('Http\Client\Common\Plugin\LoggerPlugin')) {
             $plugins[] = new \Http\Client\Common\Plugin\LoggerPlugin($logger, $formatter);
         }
-        
+
         if (!empty($plugins)) {
             $httpClient = new PluginClient(
                 $httpClient,
@@ -70,13 +70,13 @@ class FinderClientFactory
                 ->withTransport(
                     Psr18Transport::createForClient($httpClient)
                 )
-                // If you want to enable WSDL caching:
-                // ->withCache() 
-                // If you want to use Alternate HTTP settings:
-                // ->withWsdlLoader()
-                // If you want specific SOAP setting:
-                // ->withWsdlParserContext()
-                // ->withWsdlServiceSelectionCriteria()
+            // If you want to enable WSDL caching:
+            // ->withCache()
+            // If you want to use Alternate HTTP settings:
+            // ->withWsdlLoader()
+            // If you want specific SOAP setting:
+            // ->withWsdlParserContext()
+            // ->withWsdlServiceSelectionCriteria()
         );
 
         $eventDispatcher = new EventDispatcher();
@@ -102,4 +102,3 @@ class FinderClientFactory
         );
     }
 }
-

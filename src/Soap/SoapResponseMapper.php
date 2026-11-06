@@ -21,17 +21,17 @@ final class SoapResponseMapper
         }
 
         $reflection = new ReflectionClass($responseClass);
-		$attrs = $reflection->getAttributes(SoapName::class);
+        $attrs = $reflection->getAttributes(SoapName::class);
 
-		if ($attrs === []) {
-			throw new LogicException(sprintf(
-				'Class "%s" must be annotated with #[SoapName].',
-				$responseClass
-			));
-		}
+        if ($attrs === []) {
+            throw new LogicException(sprintf(
+                'Class "%s" must be annotated with #[SoapName].',
+                $responseClass
+            ));
+        }
 
-		$responseAttr = $attrs[0]->newInstance();
-		$responseElement = $this->findFirstElementByLocalName($element, $responseAttr->name);
+        $responseAttr = $attrs[0]->newInstance();
+        $responseElement = $this->findFirstElementByLocalName($element, $responseAttr->name);
         if (!$responseElement instanceof DOMElement) {
             throw new LogicException(sprintf(
                 'Response element "%s" not found in SOAP response.',

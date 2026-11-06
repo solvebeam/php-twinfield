@@ -13,5 +13,6 @@ final class SoapAction
 {
     public function __construct(
         public readonly string $action,
-    ) {}
+    ) {
+    }
 }

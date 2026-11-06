@@ -28,4 +28,3 @@ class SetToRejected implements RequestInterface
         $this->reason = $reason;
     }
 }
-

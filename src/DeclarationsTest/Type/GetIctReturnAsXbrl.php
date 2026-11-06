@@ -28,4 +28,3 @@ class GetIctReturnAsXbrl implements RequestInterface
         $this->isMessageIdRequired = $isMessageIdRequired;
     }
 }
-

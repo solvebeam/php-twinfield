@@ -35,4 +35,3 @@ class GetRangeOfSummaries implements RequestInterface
         $this->count = $count;
     }
 }
-

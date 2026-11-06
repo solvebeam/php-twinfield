@@ -28,4 +28,3 @@ class GetTaxGroupVatReturnAsXbrl implements RequestInterface
         $this->isMessageIdRequired = $isMessageIdRequired;
     }
 }
-

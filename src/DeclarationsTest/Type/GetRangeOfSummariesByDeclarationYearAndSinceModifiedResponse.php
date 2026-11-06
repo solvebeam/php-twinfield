@@ -16,4 +16,3 @@ class GetRangeOfSummariesByDeclarationYearAndSinceModifiedResponse implements Re
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfDeclarationSummary $vatReturn = null;
 }
-

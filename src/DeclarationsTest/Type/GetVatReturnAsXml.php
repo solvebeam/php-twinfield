@@ -21,4 +21,3 @@ class GetVatReturnAsXml implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

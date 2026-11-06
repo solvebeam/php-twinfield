@@ -22,5 +22,6 @@ final readonly class Search
         public int $firstRow,
         #[SoapName('maxRows')]
         public int $maxRows,
-    ) {}
+    ) {
+    }
 }

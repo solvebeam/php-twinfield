@@ -56,4 +56,3 @@ class SearchResponse implements ResultInterface
         return $new;
     }
 }
-

@@ -9,4 +9,3 @@ class GetIctReturnAsXbrlResponseVatReturn
      */
     private string $any;
 }
-

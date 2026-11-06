@@ -16,7 +16,8 @@ namespace SolveBeam\Twinfield\Soap;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::TARGET_PARAMETER)]
 final class SoapName
 {
-	public function __construct(
-		public readonly string $name,
-	) {}
+    public function __construct(
+        public readonly string $name,
+    ) {
+    }
 }

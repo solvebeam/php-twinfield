@@ -16,4 +16,3 @@ class GetIctReturnAsXbrlResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\GetIctReturnAsXbrlResponseVatReturn $vatReturn = null;
 }
-

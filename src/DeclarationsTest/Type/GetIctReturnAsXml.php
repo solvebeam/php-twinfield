@@ -21,4 +21,3 @@ class GetIctReturnAsXml implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

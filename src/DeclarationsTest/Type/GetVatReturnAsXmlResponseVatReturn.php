@@ -9,4 +9,3 @@ class GetVatReturnAsXmlResponseVatReturn
      */
     private string $any;
 }
-

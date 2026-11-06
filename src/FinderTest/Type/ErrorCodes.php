@@ -2,7 +2,8 @@
 
 namespace SolveBeam\Twinfield\Finder\Type;
 
-enum ErrorCodes: string {
+enum ErrorCodes: string
+{
     case NoAccessToOffice = 'NoAccessToOffice';
     case OptionNotAllowed = 'OptionNotAllowed';
     case InvalidBooleanOptionValue = 'InvalidBooleanOptionValue';

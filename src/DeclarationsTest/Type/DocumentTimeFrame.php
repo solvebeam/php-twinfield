@@ -14,4 +14,3 @@ class DocumentTimeFrame
      */
     private ?string $Period = null;
 }
-

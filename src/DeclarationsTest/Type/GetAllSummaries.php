@@ -21,4 +21,3 @@ class GetAllSummaries implements RequestInterface
         $this->companyCode = $companyCode;
     }
 }
-

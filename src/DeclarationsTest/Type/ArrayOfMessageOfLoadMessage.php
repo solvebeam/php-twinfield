@@ -9,4 +9,3 @@ class ArrayOfMessageOfLoadMessage
      */
     private ?array $MessageOfLoadMessage = null;
 }
-

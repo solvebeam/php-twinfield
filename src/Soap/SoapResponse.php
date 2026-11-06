@@ -15,7 +15,8 @@ final class SoapResponse
         private readonly ResponseInterface $httpResponse,
         private readonly DOMDocument $xml,
         private readonly DOMElement $body,
-    ) {}
+    ) {
+    }
 
     public static function fromHttpResponse(ResponseInterface $response): self
     {

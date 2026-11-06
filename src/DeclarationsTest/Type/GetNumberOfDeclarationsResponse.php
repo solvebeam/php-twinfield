@@ -16,4 +16,3 @@ class GetNumberOfDeclarationsResponse implements ResultInterface
      */
     private int $numberOfVatReturns;
 }
-

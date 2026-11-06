@@ -16,4 +16,3 @@ class GetTaxGroupVatReturnAsXmlResponse implements ResultInterface
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\GetTaxGroupVatReturnAsXmlResponseVatReturn $vatReturn = null;
 }
-

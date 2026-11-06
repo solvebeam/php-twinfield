@@ -21,4 +21,3 @@ class SetToApproved implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

@@ -21,4 +21,3 @@ class GetNumberOfDeclarations implements RequestInterface
         $this->companyCode = $companyCode;
     }
 }
-

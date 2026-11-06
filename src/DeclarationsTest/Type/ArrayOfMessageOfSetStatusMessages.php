@@ -9,4 +9,3 @@ class ArrayOfMessageOfSetStatusMessages
      */
     private ?array $MessageOfSetStatusMessages = null;
 }
-

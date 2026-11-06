@@ -14,7 +14,8 @@ final readonly class ArrayOfArrayOfString implements IteratorAggregate
     /** @param ArrayOfString[] $items */
     public function __construct(
         public array $items,
-    ) {}
+    ) {
+    }
 
     /** @return ArrayIterator<int, ArrayOfString> */
     public function getIterator(): ArrayIterator
@@ -22,4 +23,3 @@ final readonly class ArrayOfArrayOfString implements IteratorAggregate
         return new ArrayIterator($this->items);
     }
 }
-

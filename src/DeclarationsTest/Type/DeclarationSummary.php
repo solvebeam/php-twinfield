@@ -39,4 +39,3 @@ class DeclarationSummary
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\CodeName $Company = null;
 }
-

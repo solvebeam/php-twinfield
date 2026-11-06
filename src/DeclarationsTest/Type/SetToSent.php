@@ -21,4 +21,3 @@ class SetToSent implements RequestInterface
         $this->documentId = $documentId;
     }
 }
-

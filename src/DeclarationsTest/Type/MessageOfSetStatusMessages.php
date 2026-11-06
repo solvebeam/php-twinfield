@@ -24,4 +24,3 @@ class MessageOfSetStatusMessages
      */
     private ?\SolveBeam\Twinfield\Declarations\Type\ArrayOfString $Parameters = null;
 }
-
