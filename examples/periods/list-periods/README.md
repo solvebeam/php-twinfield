@@ -37,7 +37,7 @@ foreach ($twinfield->periods()->list(max($years)) as $period) {
 }
 ```
 
-A year that does not exist gives a `SoapFaultException` with `detailCode` `YearNotFound` (see `PeriodServiceFaultCode`).
+A year that does not exist gives a `CommandQueryFaultException` with `errorCode` `YearNotFound` (see `PeriodServiceFaultCode`).
 
 ## Run
 

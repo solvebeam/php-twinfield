@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Soap;
 
 /**
- * General error codes of the classic web services (.asmx), in SoapFaultException::$detailCode.
+ * General error codes of the classic web services (.asmx), in ClassicServiceFaultException::$errorCode.
  *
  *   try {
  *       $twinfield->offices()->list();
- *   } catch (SoapFaultException $exception) {
- *       $code = ErrorCode::tryFrom($exception->detailCode ?? '');
+ *   } catch (ClassicServiceFaultException $exception) {
+ *       $code = ErrorCode::tryFrom($exception->errorCode);
  *
  *       if ($code === ErrorCode::TokenInvalid) { … }
  *   }

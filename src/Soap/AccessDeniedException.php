@@ -12,7 +12,7 @@ use Throwable;
  * Twinfield answered HTTP 401 Unauthorized or 403 Forbidden without a SOAP fault.
  *
  * When the response does contain a SOAP fault, a SoapFaultException is thrown
- * instead, with e.g. ErrorCode::TokenInvalid in `detailCode`.
+ * instead, e.g. a ClassicServiceFaultException with ErrorCode::TokenInvalid in `errorCode`.
  *
  * @see https://developers.twinfield.com/documentation/api/types/guidelines
  */

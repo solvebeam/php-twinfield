@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Tests\Integration\Period;
 
 use SolveBeam\Twinfield\Period\PeriodServiceFaultCode;
-use SolveBeam\Twinfield\Soap\SoapFaultException;
+use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\IntegrationTestCase;
 
 /**
@@ -51,9 +51,10 @@ final class PeriodResourceTest extends IntegrationTestCase
     {
         try {
             $this->twinfield->periods()->list(1901);
-            self::fail('Expected a SoapFaultException.');
-        } catch (SoapFaultException $exception) {
-            self::assertSame(PeriodServiceFaultCode::YearNotFound->value, $exception->detailCode);
+            self::fail('Expected a CommandQueryFaultException.');
+        } catch (CommandQueryFaultException $exception) {
+            self::assertSame('PeriodServiceFault', $exception->type);
+            self::assertSame(PeriodServiceFaultCode::YearNotFound->value, $exception->errorCode);
         }
     }
 }

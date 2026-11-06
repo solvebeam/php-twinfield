@@ -10,29 +10,22 @@ use RuntimeException;
 /**
  * Twinfield answered with a SOAP fault.
  *
- * The fault detail, when present, is available as properties. Twinfield uses two forms:
+ * Twinfield uses two forms of fault detail, each with its own subclass:
  *
- * - Classic web services (.asmx), see https://developers.twinfield.com/documentation/api/types/guidelines:
+ * - ClassicServiceFaultException for the classic web services (.asmx), see
+ *   https://developers.twinfield.com/documentation/api/types/guidelines:
  *   `<detail><message>…</message><code>354</code><source>KeepAlive</source></detail>`
- * - Command & Query web services (.svc):
+ * - CommandQueryFaultException for the Command & Query web services (.svc):
  *   `<detail><PeriodServiceFault><Code>YearNotFound</Code><Message>…</Message></PeriodServiceFault></detail>`
  *
- * Messages are language dependent; use `detailCode` to act on specific errors, e.g. with
- * ErrorCode (classic services) or PeriodServiceFaultCode.
+ * This class itself is thrown for a fault without such a detail.
  */
-final class SoapFaultException extends RuntimeException
+class SoapFaultException extends RuntimeException
 {
     public function __construct(
         string $message,
         public readonly ?string $faultCode = null,
         public readonly ?string $faultString = null,
-        /** Fault type of a Command & Query service, e.g. `PeriodServiceFault`, `SecurityFault` or `ValidationFault`. */
-        public readonly ?string $detailType = null,
-        /** E.g. `354` (classic) or `YearNotFound` (Command & Query). */
-        public readonly ?string $detailCode = null,
-        public readonly ?string $detailMessage = null,
-        /** Name of the called method (classic services only). */
-        public readonly ?string $source = null,
     ) {
         parent::__construct($message);
     }
@@ -43,34 +36,61 @@ final class SoapFaultException extends RuntimeException
         $faultString = $response->faultString();
 
         $detail = $response->faultDetail();
-        $detailType = null;
-        $fields = $detail === null ? null : self::childElements($detail);
+        $fields = $detail === null ? [] : self::childElements($detail);
 
         // Command & Query: the detail holds one typed fault element, e.g. <PeriodServiceFault>.
-        if ($fields !== null && !isset($fields['code']) && !isset($fields['message']) && count($fields) === 1) {
+        if (!isset($fields['code']) && !isset($fields['message']) && count($fields) === 1) {
             $typed = array_values($fields)[0];
-            $detailType = $typed->localName;
-            $fields = self::childElements($typed);
+            $type = (string) $typed->localName;
+            $typedFields = self::childElements($typed);
+            $code = self::text($typedFields['code'] ?? null);
+            $message = self::text($typedFields['message'] ?? null);
+
+            if ($code !== null && $message !== null) {
+                return new CommandQueryFaultException(
+                    self::message($faultCode, $faultString ?? $message, [$type, 'code ' . $code]),
+                    $faultCode,
+                    $faultString,
+                    $type,
+                    $code,
+                    $message,
+                );
+            }
         }
 
-        $detailCode = self::text($fields['code'] ?? null);
-        $detailMessage = self::text($fields['message'] ?? null);
+        $code = self::text($fields['code'] ?? null);
+        $message = self::text($fields['message'] ?? null);
         $source = self::text($fields['source'] ?? null);
 
-        $text = $faultString ?? $detailMessage ?? 'Unknown SOAP fault';
-        $message = sprintf('%s: %s', $faultCode ?? 'SOAP-FAULT', $text);
+        if ($code !== null && $message !== null) {
+            $details = ['code ' . $code, $source === null ? null : 'source ' . $source];
 
-        $details = array_filter([
-            $detailType,
-            $detailCode === null ? null : 'code ' . $detailCode,
-            $source === null ? null : 'source ' . $source,
-        ]);
+            return new ClassicServiceFaultException(
+                self::message($faultCode, $faultString ?? $message, $details),
+                $faultCode,
+                $faultString,
+                $code,
+                $message,
+                $source,
+            );
+        }
+
+        return new self(self::message($faultCode, $faultString ?? 'Unknown SOAP fault', []), $faultCode, $faultString);
+    }
+
+    /**
+     * @param list<?string> $details
+     */
+    private static function message(?string $faultCode, string $text, array $details): string
+    {
+        $message = sprintf('%s: %s', $faultCode ?? 'SOAP-FAULT', $text);
+        $details = array_filter($details);
 
         if ($details !== []) {
             $message .= sprintf(' (%s)', implode(', ', $details));
         }
 
-        return new self($message, $faultCode, $faultString, $detailType, $detailCode, $detailMessage, $source);
+        return $message;
     }
 
     /**

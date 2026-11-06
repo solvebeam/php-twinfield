@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Period;
 
 /**
- * Error codes of the PeriodService, in SoapFaultException::$detailCode.
+ * Error codes of the PeriodService, in CommandQueryFaultException::$errorCode (type `PeriodServiceFault`).
  *
  *   try {
  *       $twinfield->periods()->list(1901);
- *   } catch (SoapFaultException $exception) {
- *       $code = PeriodServiceFaultCode::tryFrom($exception->detailCode ?? '');
+ *   } catch (CommandQueryFaultException $exception) {
+ *       $code = PeriodServiceFaultCode::tryFrom($exception->errorCode);
  *
  *       if ($code === PeriodServiceFaultCode::YearNotFound) { … }
  *   }

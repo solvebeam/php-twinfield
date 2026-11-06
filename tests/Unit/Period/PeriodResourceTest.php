@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Period\PeriodServiceFaultCode;
-use SolveBeam\Twinfield\Soap\SoapFaultException;
+use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
@@ -67,12 +67,12 @@ final class PeriodResourceTest extends TestCase
     {
         try {
             $this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->list(1901);
-            self::fail('Expected a SoapFaultException.');
-        } catch (SoapFaultException $exception) {
+            self::fail('Expected a CommandQueryFaultException.');
+        } catch (CommandQueryFaultException $exception) {
             self::assertSame('s:Client: Year 1901 bestaat niet. (PeriodServiceFault, code YearNotFound)', $exception->getMessage());
-            self::assertSame('PeriodServiceFault', $exception->detailType);
-            self::assertSame(PeriodServiceFaultCode::YearNotFound, PeriodServiceFaultCode::tryFrom($exception->detailCode ?? ''));
-            self::assertSame('Year 1901 bestaat niet.', $exception->detailMessage);
+            self::assertSame('PeriodServiceFault', $exception->type);
+            self::assertSame(PeriodServiceFaultCode::YearNotFound, PeriodServiceFaultCode::tryFrom($exception->errorCode));
+            self::assertSame('Year 1901 bestaat niet.', $exception->errorMessage);
         }
     }
 

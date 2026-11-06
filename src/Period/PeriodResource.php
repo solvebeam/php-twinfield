@@ -22,7 +22,7 @@ use SolveBeam\Twinfield\Twinfield;
  *
  *   $periods->close(2025, 1);
  *
- * Errors are thrown as SoapFaultException; `detailCode` holds a PeriodServiceFaultCode value.
+ * Errors are thrown as CommandQueryFaultException; `errorCode` holds a PeriodServiceFaultCode value.
  *
  * Field order in the commands follows the WSDL; the service does not accept another order.
  *

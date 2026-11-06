@@ -4,7 +4,7 @@ Renames period 1 of the last year and then restores the old name.
 
 > **This example changes data in Twinfield.** It restores the name afterwards, but only run it on a test administration.
 
-Changes go through commands of the PeriodService, a [Command & Query web service](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). A command returns nothing; when Twinfield refuses it, you get a `SoapFaultException` with a `detailCode` such as `PeriodNotFound` or `NameCanNotBeChanged` (see `PeriodServiceFaultCode`).
+Changes go through commands of the PeriodService, a [Command & Query web service](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). A command returns nothing; when Twinfield refuses it, you get a `CommandQueryFaultException` with an `errorCode` such as `PeriodNotFound` or `NameCanNotBeChanged` (see `PeriodServiceFaultCode`).
 
 All commands of `periods()`:
 

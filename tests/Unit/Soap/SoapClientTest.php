@@ -12,6 +12,7 @@ use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Finder\Search;
 use SolveBeam\Twinfield\Finder\SearchResponse;
 use SolveBeam\Twinfield\Soap\AccessDeniedException;
+use SolveBeam\Twinfield\Soap\ClassicServiceFaultException;
 use SolveBeam\Twinfield\Soap\ErrorCode;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
@@ -43,13 +44,17 @@ final class SoapClientTest extends TestCase
         self::assertSame('http://www.twinfield.com/Search', $http->lastRequest()->getHeaderLine('SOAPAction'));
     }
 
-    public function testThrowsOnSoapFault(): void
+    public function testThrowsOnSoapFaultWithoutDetail(): void
     {
-        $this->expectException(SoapFaultException::class);
-        $this->expectExceptionMessage('soap:Client: Access denied. Token invalid.');
-
-        $this->client(ReplayClient::fixture('fault-soap11', 500))
-            ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+        try {
+            $this->client(ReplayClient::fixture('fault-soap11', 500))
+                ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            self::fail('Expected a SoapFaultException.');
+        } catch (SoapFaultException $exception) {
+            self::assertSame(SoapFaultException::class, $exception::class);
+            self::assertSame('soap:Client: Access denied. Token invalid.', $exception->getMessage());
+            self::assertSame('soap:Client', $exception->faultCode);
+        }
     }
 
     public function testThrowsSoapFaultWithGuidelinesDetail(): void
@@ -57,14 +62,13 @@ final class SoapClientTest extends TestCase
         try {
             $this->client(ReplayClient::fixture('fault-guidelines-detail', 500))
                 ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
-            self::fail('Expected a SoapFaultException.');
-        } catch (SoapFaultException $exception) {
+            self::fail('Expected a ClassicServiceFaultException.');
+        } catch (ClassicServiceFaultException $exception) {
             self::assertSame('soap:Client: Access denied. Token invalid. (code 354, source Search)', $exception->getMessage());
-            self::assertNull($exception->detailType);
-            self::assertSame('354', $exception->detailCode);
-            self::assertSame('Access denied. Token invalid.', $exception->detailMessage);
+            self::assertSame('354', $exception->errorCode);
+            self::assertSame('Access denied. Token invalid.', $exception->errorMessage);
             self::assertSame('Search', $exception->source);
-            self::assertSame(ErrorCode::TokenInvalid, ErrorCode::tryFrom($exception->detailCode ?? ''));
+            self::assertSame(ErrorCode::TokenInvalid, ErrorCode::tryFrom($exception->errorCode));
         }
     }
 
@@ -73,9 +77,9 @@ final class SoapClientTest extends TestCase
         try {
             $this->client(ReplayClient::fixture('fault-guidelines-detail', 401))
                 ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
-            self::fail('Expected a SoapFaultException.');
-        } catch (SoapFaultException $exception) {
-            self::assertSame(ErrorCode::TokenInvalid, ErrorCode::tryFrom($exception->detailCode ?? ''));
+            self::fail('Expected a ClassicServiceFaultException.');
+        } catch (ClassicServiceFaultException $exception) {
+            self::assertSame(ErrorCode::TokenInvalid, ErrorCode::tryFrom($exception->errorCode));
         }
     }
 
