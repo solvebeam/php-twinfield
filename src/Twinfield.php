@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield;
 
+use DOMDocument;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use LogicException;
@@ -20,6 +21,9 @@ use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Period\PeriodResource;
+use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
+use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
+use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
@@ -70,6 +74,14 @@ final readonly class Twinfield
         return new self($this->accessTokenProvider, $this->soap, $code);
     }
 
+    /**
+     * Client without company, e.g. to list all companies with ProcessXml.
+     */
+    public function withoutCompany(): self
+    {
+        return new self($this->accessTokenProvider, $this->soap, null);
+    }
+
     public function companyCode(): ?string
     {
         return $this->companyCode;
@@ -116,6 +128,25 @@ final readonly class Twinfield
         );
 
         return $this->soap->send($this->endpoint($service), $body, $header);
+    }
+
+    /**
+     * Request on the XML web services (ProcessXmlString on `processxml.asmx`).
+     *
+     *   $result = $twinfield->processXml('<read><type>dimensions</type><office>1000</office><dimtype>DEB</dimtype><code>1000</code></read>');
+     *   $name = $result->xpath()->evaluate('string(/dimension/name)');
+     *
+     * Comments and whitespace between elements are removed before sending.
+     *
+     * @throws ProcessXmlException When Twinfield did not process (all of) the request (`result="0"`).
+     *
+     * @see https://developers.twinfield.com/documentation/api/types/xml-web-services/
+     */
+    public function processXml(DOMDocument|string $request): ProcessXmlResult
+    {
+        $response = $this->call('processxml', ProcessXmlString::fromXml($request));
+
+        return ProcessXmlResult::fromSoapResponse($response)->throwIfFailed();
     }
 
     /**

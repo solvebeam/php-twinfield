@@ -59,6 +59,20 @@ $twinfield->process('PeriodService', new Command('ClosePeriod', ['PeriodNumber' 
 
 The readers of the result (`string()`, `int()`, `bool()`, `dateTime()`, `list()`, `ints()`) throw an `UnexpectedResponseException` when a value is missing or invalid.
 
+## XML web services (ProcessXml)
+
+`processXml()` sends a request to the [XML web services](https://developers.twinfield.com/documentation/api/types/xml-web-services/) (`ProcessXmlString` on `processxml.asmx`) and returns the response as DOM document:
+
+```php
+$result = $twinfield->processXml('<read><type>dimensions</type><office>1000</office><dimtype>DEB</dimtype><code>1000</code></read>');
+
+echo $result->xpath()->evaluate('string(/dimension/name)'), PHP_EOL;
+```
+
+Comments and whitespace between elements are removed before sending. A response with `result="0"` throws a `ProcessXmlException` with every error and warning and the path of its element. `XmlValue` formats and checks the value types (date, money, period, boolean, code). Listing companies works without company: `$twinfield->withoutCompany()->processXml('<list><type>offices</type></list>')`.
+
+Not supported, because Twinfield deprecated them or they are only for .NET: `ProcessXmlCompressed`, `ProcessXmlDocument` and the `<general>` root element for bulk requests. See the [ProcessXml guide](https://php-twinfield.solvebeam.com/guides/process-xml/) and the examples [List companies](examples/process-xml/list-companies/) and [Read dimension](examples/process-xml/read-dimension/).
+
 ## Errors
 
 Twinfield reports errors as SOAP faults; the SDK throws them as `SoapFaultException`. Besides the message, the exception has the fault detail, so you can act on an error without depending on the (language dependent) message:

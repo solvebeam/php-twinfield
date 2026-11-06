@@ -35,6 +35,13 @@ final class SoapEnvelopeTest extends TestCase
         self::assertSame('10', $xpath->evaluate('string(//tw:Search/tw:maxRows)'));
     }
 
+    public function testEscapesValues(): void
+    {
+        $envelope = new SoapEnvelope(new Search(type: 'DIM', pattern: 'M&amp;Z & <co>', field: 0, firstRow: 1, maxRows: 10));
+
+        self::assertSame('M&amp;Z & <co>', $this->xpath($envelope->toXml())->evaluate('string(//tw:Search/tw:pattern)'));
+    }
+
     public function testSkipsNullProperties(): void
     {
         $envelope = new SoapEnvelope(new Search(type: 'DIM', pattern: '*', field: 0, firstRow: 1, maxRows: 10));

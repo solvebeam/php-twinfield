@@ -33,6 +33,7 @@ export default defineConfig({
 						{ label: 'Installation', slug: 'getting-started/installation' },
 						{ label: 'Running the examples', slug: 'examples' },
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
+						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
 					],
 				},
 				{
@@ -50,6 +51,10 @@ export default defineConfig({
 				{
 					label: 'Periods',
 					items: [{ autogenerate: { directory: 'examples/periods' } }],
+				},
+				{
+					label: 'ProcessXml',
+					items: [{ autogenerate: { directory: 'examples/process-xml' } }],
 				},
 				{
 					label: 'Reference',

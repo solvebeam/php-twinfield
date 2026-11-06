@@ -87,7 +87,7 @@ final class SoapEnvelope implements SoapMessage
                 if (is_object($item)) {
                     $inner->appendChild($this->buildInnerElement($doc, $item, $namespace, $soapArray->elementName));
                 } else {
-                    $inner->appendChild($doc->createElementNS($namespace, $soapArray->elementName, (string) $item));
+                    $inner->appendChild($this->textElement($doc, $namespace, $soapArray->elementName, (string) $item));
                 }
             }
 
@@ -110,11 +110,22 @@ final class SoapEnvelope implements SoapMessage
             if (is_object($value)) {
                 $inner->appendChild($this->buildInnerElement($doc, $value, $namespace, $xmlName));
             } else {
-                $inner->appendChild($doc->createElementNS($namespace, $xmlName, (string) $value));
+                $inner->appendChild($this->textElement($doc, $namespace, $xmlName, (string) $value));
             }
         }
 
         return $inner;
+    }
+
+    /**
+     * The value argument of createElementNS() is not escaped (`&` breaks it), so set it as text.
+     */
+    private function textElement(DOMDocument $doc, ?string $namespace, string $name, string $value): DOMElement
+    {
+        $element = $doc->createElementNS($namespace, $name);
+        $element->appendChild($doc->createTextNode($value));
+
+        return $element;
     }
 
     private function readAttribute(object $object, string $attributeClass): ?object

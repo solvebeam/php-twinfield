@@ -46,3 +46,8 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List periods](periods/list-periods/): years of the company and the periods of a year.
 - [Rename period](periods/rename-period/): change a period with a command (changes data).
+
+## ProcessXml
+
+- [List companies](process-xml/list-companies/): all companies, with a request without company.
+- [Read dimension](process-xml/read-dimension/): read a customer and handle errors.

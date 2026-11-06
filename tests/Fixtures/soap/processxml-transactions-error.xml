@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;transactions result="0"&gt;&lt;transaction destiny="temporary" result="1" location="temporary"&gt;&lt;header&gt;&lt;office name="Example Holding B.V." shortname="Holding"&gt;1000&lt;/office&gt;&lt;code name="Memoriaal" shortname="Memo"&gt;MEMO&lt;/code&gt;&lt;currency name="Euro" shortname="€"&gt;EUR&lt;/currency&gt;&lt;period&gt;2025/01&lt;/period&gt;&lt;date msgtype="warning" msg="The date is in another period."&gt;20250205&lt;/date&gt;&lt;/header&gt;&lt;/transaction&gt;&lt;transaction destiny="temporary" result="0"&gt;&lt;header&gt;&lt;office name="Example Holding B.V." shortname="Holding"&gt;1000&lt;/office&gt;&lt;code name="Memoriaal" shortname="Memo"&gt;MEMO&lt;/code&gt;&lt;period msgtype="error" msg="Period 2021/6 is closed." result="0"&gt;2021/06&lt;/period&gt;&lt;/header&gt;&lt;/transaction&gt;&lt;/transactions&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
