@@ -1,0 +1,75 @@
+---
+title: PHP Twinfield SDK
+description: Modern PHP SDK for the Twinfield API, built on PSR standards.
+template: splash
+editUrl: false
+lastUpdated: false
+hero:
+  tagline: A modern, strictly typed PHP SDK for the Twinfield accounting API. OAuth2 login, a fluent Finder and PSR interfaces all the way down.
+  image:
+    file: ../../assets/logo.svg
+  actions:
+    - text: Get started
+      link: /getting-started/installation/
+      icon: right-arrow
+    - text: Browse examples
+      link: /examples/
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/solvebeam/php-twinfield
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Quick start
+
+```sh
+composer require solvebeam/twinfield
+```
+
+```php
+use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Twinfield;
+
+$twinfield = Twinfield::create($accessTokenProvider)->company('1000');
+
+foreach ($twinfield->offices()->list() as $office) {
+    echo $office->code, ' ', $office->name, PHP_EOL;
+}
+
+$debtors = $twinfield->finder(FinderType::Dimensions)
+    ->option('dimtype', 'DEB')
+    ->limit(10)
+    ->get();
+```
+
+## Why this SDK
+
+<CardGrid>
+	<Card title="OAuth2 built in" icon="padlock">
+		Log in once, store the refresh token, and access tokens are refreshed and cached for you. The cluster URL of
+		the organisation is found automatically.
+	</Card>
+	<Card title="Fluent Finder" icon="magnifier">
+		Search dimensions, countries and more with options, limits and lazy pagination: `all()` fetches the next page
+		only when your loop needs it.
+	</Card>
+	<Card title="PSR all the way" icon="puzzle">
+		Bring your own PSR-18 HTTP client, PSR-17 factories, PSR-6 cache and PSR-3 logger. Nothing is hard-wired.
+	</Card>
+	<Card title="Strict models" icon="approve-check">
+		Read models are typed and validated. Unexpected responses throw instead of quietly turning into empty
+		values.
+	</Card>
+</CardGrid>
+
+## Next steps
+
+<CardGrid>
+	<LinkCard title="Installation" description="Requirements and choosing an HTTP client." href="/getting-started/installation/" />
+	<LinkCard title="Authentication" description="Create a client in your own application." href="/examples/getting-started/authentication/" />
+	<LinkCard title="Finder" description="Search with pattern, options and limit." href="/examples/finder/search-dimensions/" />
+	<LinkCard title="Switch company" description="Run the same call for several companies." href="/examples/offices/switch-company/" />
+</CardGrid>

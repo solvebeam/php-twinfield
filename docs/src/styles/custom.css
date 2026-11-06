@@ -1,0 +1,51 @@
+/* Dark theme (default) */
+:root {
+	--sl-color-accent-low: #0b2a3a;
+	--sl-color-accent: #22b8d6;
+	--sl-color-accent-high: #b5f0fb;
+	--sl-hue-accent: 195;
+	--sl-font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--sl-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+	--sl-content-width: 48rem;
+}
+
+/* Light theme */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #d4f3fa;
+	--sl-color-accent: #0e7490;
+	--sl-color-accent-high: #083344;
+}
+
+/* Gradient title and soft glow on the home page */
+[data-has-hero] .hero h1 {
+	background: linear-gradient(120deg, #22d3ee, #6366f1 60%, #a855f7);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	letter-spacing: -0.03em;
+}
+
+[data-has-hero] .page {
+	background:
+		radial-gradient(60rem 30rem at 85% -10%, rgb(99 102 241 / 0.18), transparent 70%),
+		radial-gradient(40rem 25rem at 0% 10%, rgb(34 211 238 / 0.12), transparent 70%);
+}
+
+[data-has-hero] .hero > img {
+	filter: drop-shadow(0 1.5rem 3rem rgb(99 102 241 / 0.45));
+}
+
+/* Cards with a subtle lift */
+.card {
+	border-radius: 0.8rem;
+	transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.card:hover {
+	transform: translateY(-2px);
+	border-color: var(--sl-color-accent);
+}
+
+[data-has-hero] .hero > img {
+	width: min(16rem, 60vw);
+}
