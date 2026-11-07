@@ -18,6 +18,7 @@ Other master data works the same way, but is not a dimension:
 | [Asset methods](#asset-methods) | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate |
 | [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
 | [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
+| [Currencies](#currencies) | `$twinfield->currencies()` | Search, read, create, update, delete; exchange rates |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
@@ -290,6 +291,50 @@ The [documentation page](https://developers.twinfield.com/documentation/api/mast
 | Fault codes `CashBookInvalidStructure`, `CashBookInvalidBusinessLogic` | `CashBookNotFound`, `CashBookAlreadyExists`, `CashBookInvalidGeneralLedgerAccount`, `CashBookGeneralLedgerAccountMayNotBeChanged` |
 | `GetCashBook` sample sends `CompanyCompany` | The usual `CompanyCode` in the authentication header |
 
+## Currencies
+
+`$twinfield->currencies()` manages the currencies of the company and their exchange rates. It has `search()`, `exists()`, `get()`, `find()`, `create()`, `update()`, `save()` and `delete()`.
+
+```php
+use SolveBeam\Twinfield\Currency\CurrencyInput;
+
+$currencies = $twinfield->currencies();
+
+// Search (Finder type CUR): code and name
+foreach ($currencies->search()->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Read, with the rate on a date
+$usd = $currencies->get('USD');
+echo $usd->rateOn(new DateTimeImmutable('2026-03-15'))?->rate, PHP_EOL;
+
+// Create with rates
+$currencies->create(
+    CurrencyInput::create('GBP', 'Pound sterling')
+        ->shortName('£')
+        ->rate(new DateTimeImmutable('2026-01-01'), '0.8650'),
+);
+
+// Add, change and remove rates
+$currencies->update(
+    $usd->edit()
+        ->rate(new DateTimeImmutable('2026-07-01'), '1.0912')
+        ->removeRate(new DateTimeImmutable('2025-01-01')),
+);
+
+// Delete
+$currencies->delete('GBP');
+```
+
+- A `Currency` has `name`, `shortName` (`null` when not set), `status` and `rates`: `CurrencyRate`s with a `startDate` and a `rate`, oldest first. A rate applies from its start date until the next one. `rateOn($date)` gives the rate on a date, `latestRate()` the newest; both are `null` when there is none.
+- Exchange rates are `ExchangeRate` objects: positive numeric strings with all their decimals (`'1.0850'` becomes `1.085`), never floats. Pass a string or an `ExchangeRate` to `rate()`. They are not `Amount`s: a rate is not money.
+- `CurrencyInput` is immutable. `rate($startDate, $rate)` adds a rate or replaces the one with the same start date; `removeRate($startDate)` deletes it (`rate/@status="deleted"`).
+- `$currency->edit()` has all current rates, so `update()` sends them again and only the rates you change differ.
+- Not found is a `CurrencyNotFoundException`, an existing code on `create()` a `CurrencyAlreadyExistsException`. Other refusals are a `ProcessXmlException` with the messages per element.
+
+Twinfield has no `<read>` for currencies, and a `<currency>` request creates the currency when the code is unknown. So `get()`, `update()` and `delete()` first check in the Finder that the code exists, and `get()` then sends a `<currency>` with only the company and the code, which returns the currency. A read never creates a currency, at the cost of one extra (small) request. `create()` and `save()` read the currency back after saving, so you always get all its rates.
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -315,3 +360,8 @@ The [documentation page](https://developers.twinfield.com/documentation/api/mast
 - [Read cash book](/examples/cash-books/read-cash-book/)
 - [Create cash book](/examples/cash-books/create-cash-book/)
 - [Update cash book](/examples/cash-books/update-cash-book/)
+- [List currencies](/examples/currencies/list-currencies/)
+- [Read currency](/examples/currencies/read-currency/)
+- [Create currency](/examples/currencies/create-currency/)
+- [Update currency rates](/examples/currencies/update-currency-rates/)
+- [Delete currency](/examples/currencies/delete-currency/)

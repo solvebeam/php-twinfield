@@ -38,6 +38,11 @@ final class ExamplesTest extends TestCase
         'cost-centers/create-cost-center',
         'cost-centers/delete-cost-center',
         'cost-centers/update-cost-center',
+        // Reading a currency sends a <currency> request, which the write guard counts as a write.
+        'currencies/create-currency',
+        'currencies/delete-currency',
+        'currencies/read-currency',
+        'currencies/update-currency-rates',
         'periods/rename-period',
     ];
 

@@ -24,6 +24,7 @@ use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\CostCenter\CostCenterResource;
+use SolveBeam\Twinfield\Currency\CurrencyResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -113,6 +114,14 @@ final readonly class Twinfield
     public function costCenters(): CostCenterResource
     {
         return new CostCenterResource($this);
+    }
+
+    /**
+     * Currencies of the company and their exchange rates: search, read, create, update and delete.
+     */
+    public function currencies(): CurrencyResource
+    {
+        return new CurrencyResource($this);
     }
 
     /**

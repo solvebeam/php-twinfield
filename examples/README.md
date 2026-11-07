@@ -93,6 +93,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update cost center](cost-centers/update-cost-center/): rename an existing cost center (changes data).
 - [Delete cost center](cost-centers/delete-cost-center/): delete or hide a cost center, and activate it again (changes data).
 
+## Currencies
+
+- [List currencies](currencies/list-currencies/): code and name of all currencies, or those matching a pattern.
+- [Read currency](currencies/read-currency/): short name, status and exchange rates of one currency, and the rate today.
+- [Create currency](currencies/create-currency/): create a currency with exchange rates (changes data).
+- [Update currency rates](currencies/update-currency-rates/): add, change and remove exchange rates (changes data).
+- [Delete currency](currencies/delete-currency/): delete a currency (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;currency status="active" result="1"&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;USD&lt;/code&gt;&lt;name&gt;US dollar&lt;/name&gt;&lt;shortname&gt;$&lt;/shortname&gt;&lt;rates&gt;&lt;rate&gt;&lt;startdate&gt;20260101&lt;/startdate&gt;&lt;rate&gt;1,085&lt;/rate&gt;&lt;/rate&gt;&lt;/rates&gt;&lt;/currency&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

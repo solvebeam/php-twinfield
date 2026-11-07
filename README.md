@@ -58,6 +58,7 @@ Master data such as activities and cost centers are dimensions, read and written
 | Asset methods | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/asset-methods/read-asset-method/) and [Create asset method](examples/asset-methods/create-asset-method/). |
 | Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
 | Cash books | `$twinfield->cashBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read cash book](examples/cash-books/read-cash-book/) and [Update cash book](examples/cash-books/update-cash-book/). |
+| Currencies | `$twinfield->currencies()` | Search, read, create, update, delete, with exchange rates (`rateOn($date)`). See [Read currency](examples/currencies/read-currency/) and [Update currency rates](examples/currencies/update-currency-rates/). |
 | Budgets | `$twinfield->budgets()` | Search, budget vs. actual per account, cost center or project (Command & Query; read-only). See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 
 ## Transactions

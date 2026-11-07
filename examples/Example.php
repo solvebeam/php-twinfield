@@ -83,6 +83,23 @@ final class Example
     }
 
     /**
+     * A currency code that is not in use yet, from ZZZ down to ZZA, for the examples that
+     * create a currency.
+     */
+    public static function unusedCurrencyCode(Twinfield $twinfield): string
+    {
+        foreach (array_reverse(range('A', 'Z')) as $letter) {
+            $code = 'ZZ' . $letter;
+
+            if (!$twinfield->currencies()->exists($code)) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Currency codes ZZA–ZZZ are all in use.');
+    }
+
+    /**
      * An asset method code that is not in use yet, from EXAMPLE999 down to EXAMPLE900, for the
      * examples that create an asset method.
      */
