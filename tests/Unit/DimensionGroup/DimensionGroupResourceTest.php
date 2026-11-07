@@ -272,19 +272,42 @@ final class DimensionGroupResourceTest extends TestCase
         self::assertCount(1, $http->requests, 'save() does not check the Finder.');
     }
 
-    public function testDeletesAGroup(): void
+    public function testDeletesAGroupAfterEmptyingIt(): void
     {
         $http = new ReplayClient(
             ReplayClient::response('finder-dimension-groups-nl'),
+            ReplayClient::response('dimension-group-empty'),
             ReplayClient::response('dimension-group-delete'),
         );
 
         $this->twinfield($http)->dimensionGroups()->delete('NL-CUSTOMERS');
 
+        self::assertCount(3, $http->requests);
+        self::assertSame(
+            '<dimensiongroup><office>1000</office><code>NL-CUSTOMERS</code><dimensions/></dimensiongroup>',
+            $this->xmlRequest($http->requests[1]),
+            'Empties the group first, so no dimension keeps the code of the deleted group.',
+        );
         self::assertSame(
             '<dimensiongroup status="deleted"><office>1000</office><code>NL-CUSTOMERS</code></dimensiongroup>',
-            $this->xmlRequest($http->lastRequest()),
+            $this->xmlRequest($http->requests[2]),
         );
+    }
+
+    public function testDoesNotDeleteAGroupThatStillHasDimensions(): void
+    {
+        $http = new ReplayClient(
+            ReplayClient::response('finder-dimension-groups-nl'),
+            ReplayClient::response('dimension-group-read'),
+        );
+
+        try {
+            $this->twinfield($http)->dimensionGroups()->delete('NL-CUSTOMERS');
+            self::fail('Expected UnexpectedResponseException.');
+        } catch (UnexpectedResponseException $exception) {
+            self::assertSame('Dimension group NL-CUSTOMERS still has dimensions after emptying it.', $exception->getMessage());
+            self::assertCount(2, $http->requests, 'No delete request.');
+        }
     }
 
     public function testDoesNotDeleteAnUnknownGroup(): void
@@ -303,6 +326,7 @@ final class DimensionGroupResourceTest extends TestCase
     {
         $http = new ReplayClient(
             ReplayClient::response('finder-dimension-groups-nl'),
+            ReplayClient::response('dimension-group-empty'),
             ReplayClient::response('dimension-group-delete-still-active'),
         );
 

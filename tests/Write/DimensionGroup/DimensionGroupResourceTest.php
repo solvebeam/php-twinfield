@@ -19,7 +19,8 @@ use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
  *
  * Also checks the Twinfield behaviour the SDK relies on, which its documentation leaves
  * open: a save replaces all dimensions, mixed dimension types are allowed, a deleted group
- * is not in the Finder, and its code can be used again.
+ * is not in the Finder, its code can be used again, and after delete() no dimension still
+ * refers to it.
  */
 final class DimensionGroupResourceTest extends WriteTestCase
 {
@@ -115,6 +116,12 @@ final class DimensionGroupResourceTest extends WriteTestCase
             self::assertSame(DimensionGroupStatus::Active, $again->status);
             self::assertSame([$first], $again->codes());
             self::assertTrue($groups->exists($code));
+            self::assertContains($code, $this->twinfield->customers()->get($first)->groups);
+
+            // Deleting empties the group first, so the customer no longer refers to it.
+            $groups->delete($code);
+
+            self::assertNotContains($code, $this->twinfield->customers()->get($first)->groups);
         } finally {
             if ($groups->exists($code)) {
                 $groups->delete($code);

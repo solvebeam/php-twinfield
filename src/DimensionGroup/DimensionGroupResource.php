@@ -148,13 +148,29 @@ final readonly class DimensionGroupResource
     }
 
     /**
-     * Deletes the group. The dimensions themselves are not changed.
+     * Deletes the group. Three requests: a Finder check, emptying the group, and the delete.
+     *
+     * Twinfield keeps the code of a deleted group on its dimensions (e.g. in the groups of a
+     * customer), so the group is emptied first: afterwards no dimension refers to it.
      *
      * @throws DimensionGroupNotFoundException When there is no (active) group with this code.
      */
     public function delete(string $code): void
     {
         $this->assertExists($code);
+
+        // Only <dimensions/>: Twinfield keeps the name and short name.
+        $empty = XmlBuilder::create('dimensiongroup');
+        $empty->add($empty->root(), 'office', $this->company());
+        $empty->add($empty->root(), 'code', $code);
+        $empty->add($empty->root(), 'dimensions');
+
+        if ($this->send($empty)->dimensions !== []) {
+            throw new UnexpectedResponseException(sprintf(
+                'Dimension group %s still has dimensions after emptying it.',
+                $code,
+            ));
+        }
 
         $xml = XmlBuilder::create('dimensiongroup', ['status' => DimensionGroupStatus::Deleted->value]);
         $xml->add($xml->root(), 'office', $this->company());
