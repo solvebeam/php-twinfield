@@ -121,6 +121,17 @@ final readonly class CodeNameSearch
     }
 
     /**
+     * Only dimension groups with at least one dimension of this type, e.g. `DEB`. Dimension
+     * group searches only.
+     *
+     * @return self<T>
+     */
+    public function dimensionType(string $type): self
+    {
+        return $this->option('dimtype', $type);
+    }
+
+    /**
      * Any other Finder option of the type, e.g. `option('group', 'GRP1')` for dimensions in a group.
      *
      * @return self<T>

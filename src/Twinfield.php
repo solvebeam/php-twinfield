@@ -26,6 +26,7 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Currency\CurrencyResource;
 use SolveBeam\Twinfield\Customer\CustomerResource;
+use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -131,6 +132,14 @@ final readonly class Twinfield
     public function currencies(): CurrencyResource
     {
         return new CurrencyResource($this);
+    }
+
+    /**
+     * Dimension groups of the company (sets of dimensions): search, read, create, update and delete.
+     */
+    public function dimensionGroups(): DimensionGroupResource
+    {
+        return new DimensionGroupResource($this);
     }
 
     /**

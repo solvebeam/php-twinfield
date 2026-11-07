@@ -20,6 +20,7 @@ Other master data works the same way, but is not a dimension:
 | [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
 | [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
 | [Currencies](#currencies) | `$twinfield->currencies()` | Search, read, create, update, delete; exchange rates |
+| [Dimension groups](#dimension-groups) | `$twinfield->dimensionGroups()` | Search, read, create, update, delete |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
@@ -425,6 +426,51 @@ $currencies->delete('GBP');
 
 Twinfield has no `<read>` for currencies, and a `<currency>` request creates the currency when the code is unknown. So `get()`, `update()` and `delete()` first check in the Finder that the code exists, and `get()` then sends a `<currency>` with only the company and the code, which returns the currency. A read never creates a currency, at the cost of one extra (small) request. `create()` and `save()` read the currency back after saving, so you always get all its rates.
 
+## Dimension groups
+
+A dimension group is a named set of dimensions, e.g. your key account customers or the cost centers of one department. `$twinfield->dimensionGroups()` has `search()`, `exists()`, `get()`, `find()`, `create()`, `update()`, `save()` and `delete()`.
+
+```php
+use SolveBeam\Twinfield\DimensionGroup\DimensionGroupInput;
+
+$groups = $twinfield->dimensionGroups();
+
+// Search (Finder type GRP), optionally only groups with dimensions of one type
+foreach ($groups->search()->dimensionType('DEB')->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Read
+$group = $groups->get('KEY-ACCOUNTS');
+
+foreach ($group->dimensions as $dimension) {
+    echo $dimension->type, ' ', $dimension->code, ' ', $dimension->name, PHP_EOL;
+}
+
+// Create
+$groups->create(
+    DimensionGroupInput::create('KEY-ACCOUNTS', 'Key accounts')
+        ->shortName('Key')
+        ->add('DEB', '1000', '1001', '1002'),
+);
+
+// Add and remove dimensions
+$groups->update($group->edit()->add('DEB', '1003')->remove('DEB', '1000'));
+
+// Delete
+$groups->delete('KEY-ACCOUNTS');
+```
+
+- A `DimensionGroup` has `name`, `shortName` (`null` when not set), `status`, `touched` and `dimensions`: `DimensionGroupDimension`s with `type`, `code` and the `name` Twinfield adds. `has('DEB', '1000')`, `codes('DEB')` and `types()` help to look into them.
+- A group can have dimensions of more than one type, e.g. customers and cost centers. `search()->dimensionType('KPL')` finds the groups that have at least one dimension of that type.
+- `DimensionGroupInput` is immutable and is the **complete** group: saving it replaces the name, the short name and all dimensions. `add($type, ...$codes)` adds dimensions (each once), `remove($type, ...$codes)` and `clear(?$type)` remove them. Start from `$group->edit()` to keep what you do not change.
+- The name has at most 40 characters, the short name at most 20. The dimensions must exist: Twinfield refuses an unknown code with a `ProcessXmlException` with the message on that dimension, e.g. `dimensiongroup/dimensions/dimension[2]/code`.
+- Not found is a `DimensionGroupNotFoundException`, an existing code on `create()` a `DimensionGroupAlreadyExistsException`.
+- `delete()` sets the status to `deleted`; the dimensions themselves do not change. A deleted group is not in the Finder, so `get()` and `exists()` treat it as unknown, and `create()` can use its code again.
+- The dimensions of a group are in `$group->dimensions`.
+
+Twinfield has no `<read>` for dimension groups, and a `<dimensiongroup>` request for an unknown code creates the group (named after its code), also when it only reads or deletes. So `get()`, `update()` and `delete()` first check in the Finder that the code exists, and `get()` then sends a `<dimensiongroup>` with only the company and the code, which returns the group. A read never creates a group, at the cost of one extra (small) request. Requests that save always send `status="active"`: without it, saving a deleted group keeps it deleted.
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -455,6 +501,11 @@ Twinfield has no `<read>` for currencies, and a `<currency>` request creates the
 - [Create currency](/examples/currencies/create-currency/)
 - [Update currency rates](/examples/currencies/update-currency-rates/)
 - [Delete currency](/examples/currencies/delete-currency/)
+- [List dimension groups](/examples/dimension-groups/list-dimension-groups/)
+- [Read dimension group](/examples/dimension-groups/read-dimension-group/)
+- [Create dimension group](/examples/dimension-groups/create-dimension-group/)
+- [Update dimension group](/examples/dimension-groups/update-dimension-group/)
+- [Delete dimension group](/examples/dimension-groups/delete-dimension-group/)
 - [List customers](/examples/customers/list-customers/)
 - [Read customer](/examples/customers/read-customer/)
 - [Create customer](/examples/customers/create-customer/)

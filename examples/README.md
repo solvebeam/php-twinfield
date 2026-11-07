@@ -109,6 +109,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update customer](customers/update-customer/): change settings, an address, and add an address and a bank account (changes data).
 - [Delete customer](customers/delete-customer/): delete or hide a customer, and activate it again (changes data).
 
+## Dimension groups
+
+- [List dimension groups](dimension-groups/list-dimension-groups/): code and name of all dimension groups, or those of one dimension type.
+- [Read dimension group](dimension-groups/read-dimension-group/): short name, status and the dimensions of one group.
+- [Create dimension group](dimension-groups/create-dimension-group/): create a group of customers (changes data).
+- [Update dimension group](dimension-groups/update-dimension-group/): rename a group, and add and remove dimensions (changes data).
+- [Delete dimension group](dimension-groups/delete-dimension-group/): delete a group (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

@@ -60,6 +60,7 @@ Master data such as customers, activities and cost centers are dimensions, read 
 | Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
 | Cash books | `$twinfield->cashBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read cash book](examples/cash-books/read-cash-book/) and [Update cash book](examples/cash-books/update-cash-book/). |
 | Currencies | `$twinfield->currencies()` | Search, read, create, update, delete, with exchange rates (`rateOn($date)`). See [Read currency](examples/currencies/read-currency/) and [Update currency rates](examples/currencies/update-currency-rates/). |
+| Dimension groups | `$twinfield->dimensionGroups()` | Search (also by dimension type), read, create, update, delete; dimensions of any type. See [Read dimension group](examples/dimension-groups/read-dimension-group/) and [Update dimension group](examples/dimension-groups/update-dimension-group/). |
 | Budgets | `$twinfield->budgets()` | Search, budget vs. actual per account, cost center or project (Command & Query; read-only). See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 
 ## Transactions

@@ -46,6 +46,11 @@ final class ExamplesTest extends TestCase
         'customers/create-customer',
         'customers/delete-customer',
         'customers/update-customer',
+        // Reading a dimension group sends a <dimensiongroup> request, which the write guard counts as a write.
+        'dimension-groups/create-dimension-group',
+        'dimension-groups/delete-dimension-group',
+        'dimension-groups/read-dimension-group',
+        'dimension-groups/update-dimension-group',
         'periods/rename-period',
     ];
 

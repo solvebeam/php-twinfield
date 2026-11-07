@@ -83,6 +83,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/customers' } }],
 				},
 				{
+					label: 'Dimension groups',
+					items: [{ autogenerate: { directory: 'examples/dimension-groups' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

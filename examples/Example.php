@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Examples;
 
 use SolveBeam\Twinfield\BankBook\BankBook;
+use SolveBeam\Twinfield\Customer\CustomerSummary;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\Tests\Support\Config;
@@ -97,6 +98,42 @@ final class Example
         }
 
         throw new \RuntimeException('Currency codes ZZA–ZZZ are all in use.');
+    }
+
+    /**
+     * A dimension group code that is not in use yet, from EXAMPLE-999 down to EXAMPLE-900, for
+     * the examples that create a dimension group. The code of a deleted group can be used again.
+     */
+    public static function unusedDimensionGroupCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('EXAMPLE-%03d', $number);
+
+            if (!$twinfield->dimensionGroups()->exists($code)) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Dimension group codes EXAMPLE-900–EXAMPLE-999 are all in use.');
+    }
+
+    /**
+     * Codes of the first customers of the company, as members for the dimension group examples.
+     *
+     * @return list<string>
+     */
+    public static function customerCodes(Twinfield $twinfield, int $count): array
+    {
+        $codes = array_map(
+            static fn (CustomerSummary $customer): string => $customer->code,
+            $twinfield->customers()->search()->limit($count)->get()->items,
+        );
+
+        if (count($codes) < $count) {
+            throw new \RuntimeException(sprintf('The examples need at least %d customers.', $count));
+        }
+
+        return $codes;
     }
 
     /**

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimensiongroup status="active" result="1"&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;code&gt;NL-CUSTOMERS&lt;/code&gt;&lt;name&gt;Dutch customers &amp;amp; partners&lt;/name&gt;&lt;shortname&gt;NL customers&lt;/shortname&gt;&lt;touched&gt;5&lt;/touched&gt;&lt;dimensions /&gt;&lt;/dimensiongroup&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
