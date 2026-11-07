@@ -1,0 +1,70 @@
+---
+// Logos of the maker of this SDK and of the maker of Twinfield, for the home page.
+import solveBeamLogo from '../assets/brand/solvebeam/solvebeam-logo.svg';
+import solveBeamLogoDark from '../assets/brand/solvebeam/solvebeam-logo-dark.svg';
+import woltersKluwerLogo from '../assets/brand/wolters-kluwer/wolters-kluwer-logo.svg';
+import woltersKluwerLogoDark from '../assets/brand/wolters-kluwer/wolters-kluwer-logo-dark.svg';
+---
+
+<div class="brands not-content">
+	<a class="brand" href="https://www.solvebeam.com/">
+		<span class="label">Made by</span>
+		<img class="light-only" src={solveBeamLogo.src} alt="SolveBeam" height="40" />
+		<img class="dark-only" src={solveBeamLogoDark.src} alt="SolveBeam" height="40" />
+	</a>
+	<a class="brand" href="https://www.twinfield.com/">
+		<span class="label">Twinfield is a product of</span>
+		<img class="light-only" src={woltersKluwerLogo.src} alt="Wolters Kluwer" height="32" />
+		<img class="dark-only" src={woltersKluwerLogoDark.src} alt="Wolters Kluwer" height="32" />
+	</a>
+</div>
+
+<style>
+	.brands {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+
+	.brand {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		padding: 1.75rem 1.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.8rem;
+		text-decoration: none;
+		transition: transform 0.15s ease, border-color 0.15s ease;
+	}
+
+	.brand:hover {
+		transform: translateY(-2px);
+		border-color: var(--sl-color-accent);
+	}
+
+	.label {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+
+	img {
+		width: auto;
+		max-width: 100%;
+	}
+
+	img[height='40'] {
+		height: 2.5rem;
+	}
+
+	img[height='32'] {
+		height: 2rem;
+	}
+
+	:global(:root[data-theme='light']) .dark-only,
+	:global(:root:not([data-theme='light'])) .light-only {
+		display: none;
+	}
+</style>

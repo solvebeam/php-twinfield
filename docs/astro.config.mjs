@@ -9,7 +9,8 @@ export default defineConfig({
 			title: 'PHP Twinfield SDK',
 			description: 'Modern PHP SDK for the Twinfield API, built on PSR standards.',
 			logo: {
-				src: './src/assets/logo.svg',
+				src: './src/assets/brand/twinfield/twinfield-icon.svg',
+				alt: 'Twinfield',
 			},
 			favicon: '/favicon.svg',
 			social: [
@@ -20,6 +21,9 @@ export default defineConfig({
 			},
 			lastUpdated: true,
 			customCss: ['./src/styles/custom.css'],
+			components: {
+				Footer: './src/components/Footer.astro',
+			},
 			expressiveCode: {
 				themes: ['github-dark-default', 'github-light-default'],
 				styleOverrides: {

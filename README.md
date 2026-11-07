@@ -1,8 +1,18 @@
-# PHP Twinfield SDK
+<p align="center">
+	<a href="https://php-twinfield.solvebeam.com/">
+		<img src="images/twinfield/twinfield-icon.svg" alt="Twinfield" width="96" height="96">
+	</a>
+</p>
 
-Modern PHP SDK for the Twinfield API, built on PSR standards.
+<h1 align="center">PHP Twinfield SDK</h1>
 
-**Documentation:** https://php-twinfield.solvebeam.com/
+<p align="center">
+	Modern PHP SDK for the Twinfield API, built on PSR standards.
+	<br>
+	<a href="https://php-twinfield.solvebeam.com/"><strong>Documentation</strong></a>
+	·
+	<a href="examples/">Examples</a>
+</p>
 
 ## Quick start
 
@@ -298,6 +308,33 @@ The anonymizer keeps the XML structure and replaces every value with a fake valu
 ### Safety
 
 All live calls go through a write guard. Requests that may change data (anything that is not a search, get, query or ProcessXml `read`/`list`/browse) are blocked unless writes were confirmed for that company via `composer test:write`.
+
+## About
+
+<table>
+	<tr>
+		<td align="center" width="50%">
+			Made by<br><br>
+			<a href="https://www.solvebeam.com/">
+				<picture>
+					<source media="(prefers-color-scheme: dark)" srcset="images/solvebeam/solvebeam-logo-dark.svg">
+					<img src="images/solvebeam/solvebeam-logo.svg" alt="SolveBeam" height="40">
+				</picture>
+			</a>
+		</td>
+		<td align="center" width="50%">
+			Twinfield is a product of<br><br>
+			<a href="https://www.twinfield.com/">
+				<picture>
+					<source media="(prefers-color-scheme: dark)" srcset="images/wolters-kluwer/wolters-kluwer-logo-dark.svg">
+					<img src="images/wolters-kluwer/wolters-kluwer-logo.svg" alt="Wolters Kluwer" height="32">
+				</picture>
+			</a>
+		</td>
+	</tr>
+</table>
+
+Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and logos are used only to refer to their products. See [images/](images/) for the logo files.
 
 ## Links
 

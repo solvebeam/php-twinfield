@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
       - 'examples/**'
+      - 'images/**'
       - 'README.md'
       - '.github/workflows/docs.yml'
   workflow_dispatch:

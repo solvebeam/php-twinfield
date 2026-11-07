@@ -7,7 +7,8 @@ lastUpdated: false
 hero:
   tagline: A modern, strictly typed PHP SDK for the Twinfield accounting API. OAuth2 login, a fluent Finder and PSR interfaces all the way down.
   image:
-    file: ../../assets/logo.svg
+    file: ../../assets/brand/twinfield/twinfield-icon.svg
+    alt: Twinfield
   actions:
     - text: Get started
       link: /getting-started/installation/
@@ -22,6 +23,7 @@ hero:
 ---
 
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import Brands from '../../components/Brands.astro';
 
 ## Quick start
 
@@ -73,3 +75,9 @@ $debtors = $twinfield->finder(FinderType::Dimensions)
 	<LinkCard title="Finder" description="Search with pattern, options and limit." href="/examples/finder/search-dimensions/" />
 	<LinkCard title="Switch company" description="Run the same call for several companies." href="/examples/offices/switch-company/" />
 </CardGrid>
+
+## About
+
+This SDK is made and maintained by [SolveBeam](https://www.solvebeam.com/). [Twinfield](https://www.twinfield.com/) is the online accounting software of Wolters Kluwer.
+
+<Brands />

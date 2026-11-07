@@ -4,3 +4,7 @@ dist/
 
 # Generated from ../examples by scripts/sync-examples.mjs
 src/content/docs/examples/
+
+# Generated from ../images by scripts/sync-images.mjs
+src/assets/brand/
+public/favicon.svg
