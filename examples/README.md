@@ -101,6 +101,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update currency rates](currencies/update-currency-rates/): add, change and remove exchange rates (changes data).
 - [Delete currency](currencies/delete-currency/): delete a currency (changes data).
 
+## Customers
+
+- [List customers](customers/list-customers/): code and name of all customers, or those matching a pattern.
+- [Read customer](customers/read-customer/): payment term, direct debit, credit management, addresses and bank accounts of one customer.
+- [Create customer](customers/create-customer/): create a customer with an address and a bank account (changes data).
+- [Update customer](customers/update-customer/): change settings, an address, and add an address and a bank account (changes data).
+- [Delete customer](customers/delete-customer/): delete or hide a customer, and activate it again (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

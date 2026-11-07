@@ -43,6 +43,9 @@ final class ExamplesTest extends TestCase
         'currencies/delete-currency',
         'currencies/read-currency',
         'currencies/update-currency-rates',
+        'customers/create-customer',
+        'customers/delete-customer',
+        'customers/update-customer',
         'periods/rename-period',
     ];
 

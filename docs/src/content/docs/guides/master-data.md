@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as activities and cost centers, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as customers, activities and cost centers, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -9,7 +9,8 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 |---|---|---|
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
 | [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
-| Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
+| [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
+| Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Other master data works the same way, but is not a dimension:
 
@@ -139,6 +140,95 @@ $costCenters->delete('400'); // DeleteResult::Hidden when it is used in a transa
 - The read model `CostCenter` has `code`, `name`, `uid`, `status`, `inUse`, `behaviour`, `touched` and `modified`. Twinfield documents the other dimension fields (short name, periods, website, chamber of commerce and VAT number) as "not in use" for cost centers, so the SDK leaves them out.
 - The code format differs per company (in Twinfield under dimension types, `KPL`). The SDK only checks that the code is 1–16 characters `A-Z`, `0-9`, `_`, `-` or `+`. When Twinfield refuses a code on `create()` or `save()`, you get a `ProcessXmlException` with the message on `dimension/code`.
 - Use cost centers as `dim2` on transaction lines (`costCenter:` on [transactions](/guides/transactions/)) and per cost center in budgets: `$twinfield->budgets()->totals($code, 2025)->byCostCenter()`.
+
+## Customers
+
+Customers (dimension type `DEB`, level 2) have the richest model of all dimensions. `$twinfield->customers()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\Customer\CollectionSchema;
+use SolveBeam\Twinfield\Customer\CustomerInput;
+use SolveBeam\Twinfield\Customer\SendReminder;
+use SolveBeam\Twinfield\Dimension\AddressInput;
+use SolveBeam\Twinfield\Dimension\BankInput;
+
+$customers = $twinfield->customers();
+
+// Search on code and name, bank account number or address fields
+$customers->search('*Example*')->inName()->all();
+$customers->search('NL91ABNA*')->inBankAccount()->all();
+$customers->search('*Amsterdam*')->inAddress()->all();
+
+// Read
+$customer = $customers->get('1000');
+echo $customer->financials->dueDays, ' ', $customer->defaultAddress()?->city, ' ', $customer->vatNumber(), PHP_EOL;
+
+// Create: without code(), Twinfield gives the next free code
+$customer = $customers->create(
+    CustomerInput::create('Example Trading B.V.')
+        ->dueDays(30)
+        ->vatCode('VH')
+        ->eInvoicing('invoices@example.com')
+        ->directDebit('SEPANLDD')
+        ->collectMandate('MANDATE-001', new DateTimeImmutable('2026-01-15'))
+        ->collectionSchema(CollectionSchema::Core)
+        ->creditLimit('5000.00')
+        ->sendReminder(SendReminder::ByEmail, 'finance@example.com')
+        ->address(
+            AddressInput::invoice('Example Trading B.V.')
+                ->field(2, 'Damrak 1')
+                ->postcode('1012 AB')
+                ->city('Amsterdam')
+                ->country('NL')
+                ->vatNumber('NL001234567B01')
+                ->default(),
+        )
+        ->bank(BankInput::create()->iban('NL91 ABNA 0417 1643 00')->ascription('Example Trading B.V.')->default())
+        ->paymentCondition(8, '2'),
+);
+
+// Update: edit() carries every value, including addresses and banks with their ids
+$customers->update(
+    $customer->edit()
+        ->dueDays(14)
+        ->address($customer->defaultAddress()->edit()->city('Rotterdam'))
+        ->withoutBank(1),
+);
+
+$customers->delete($customer->code); // DeleteResult::Hidden when it is used in a transaction
+```
+
+The read model `Customer` groups the settings like Twinfield does:
+
+| Property | Contents |
+|---|---|
+| `code`, `name`, `shortName`, `website`, `status`, `inUse`, `uid`, `modified` | The dimension itself |
+| `activeFrom`, `activeUntil` | `FinancialPeriod`s, `null` for no limit (Twinfield's `0`) |
+| `financials` | `dueDays`, `directDebit`, `meansOfPayment`, `payCode`, `eInvoicing`, `eInvoicingEmail`, `balanceAccount`, `vatCode`, `collectMandate` (SEPA mandate id and signature date), `collectionSchema` (`core`, `b2b`) |
+| `creditManagement` | `creditLimit` (an `Amount`), `sendReminder`, `reminderEmail`, `responsibleUser`, `blocked`, `rightOfUse`, `segmentCode`, `comment` |
+| `remittanceAdvice` | `sendType` and `email` |
+| `addresses` | `Address`es: `type` (`invoice`, `postal`, `contact`), `default`, `name`, `country`, `city`, `postcode`, `telephone`, `telefax`, `email` and the free fields `field1`–`field6` |
+| `banks` | `Bank`s: `iban`, `bic`, `accountNumber`, `ascription`, `bankName`, `nationalBankCode`, the bank address and `default` |
+| `groups`, `postingRules`, `paymentConditions`, `discountArticle` | Dimension groups, posting rules with lines, payment discounts, the discount article |
+
+- Optional values are `null` when they are not set; required values (such as the balance sheet account) are never `null`, and an unexpected response throws an `UnexpectedResponseException`.
+- `defaultAddress()`, `defaultBank()`, `address($id)`, `bank($id)`, `addressesOfType($type)`, `vatNumber()` and `chamberOfCommerceNumber()` are shortcuts.
+- The labels of the address fields are set per dimension type. By default field 1 is "attention of", 2 and 3 are address lines, 4 is the VAT number (only valid VAT numbers are accepted) and 5 the chamber of commerce number. `AddressInput` has `vatNumber()` and `chamberOfCommerceNumber()` for fields 4 and 5.
+- `CustomerInput` is immutable and only sends what you set: when creating, everything else gets the default of the dimension type; when updating, it stays as it is. Setting a value to `null` clears it.
+- Settings that belong together are set together, so they cannot contradict each other: `directDebit($payCode)` also sets the means of payment to a payment file, `withoutDirectDebit()` to none; `sendReminder(SendReminder::ByEmail, $email)` requires the email address.
+- Addresses, bank accounts, groups and payment conditions are sent as a whole once set. `address()` and `bank()` replace the entry with the same id, or add one; a new default makes the others non-default. `withoutAddress($id)` and `withoutBank($id)` remove one; `withoutPostingRule($id)` deletes a posting rule (`status="deleted"`).
+- IBANs are normalised (spaces removed, upper case) and checked with the ISO 13616 checksum. Amounts are numeric strings or `Amount`s, never floats.
+- `Address`, `Bank`, `PostingRule` and `PaymentCondition` live in `SolveBeam\Twinfield\Dimension`, as suppliers (`CRD`) have them too.
+
+Differences with the [documentation](https://developers.twinfield.com/documentation/api/master-data/customers/) that the SDK handles:
+
+| Documentation | Twinfield |
+|---|---|
+| `<invoicing>`, `<groups>`, `<postingrules>` and `<paymentconditions>` | Left out of the response when empty |
+| Posting rule lines have `dimension2` and `dimension3` | Left out when empty |
+| A posting rule has a currency and amount | A rule can have an empty `<currency/>`, `<amount/>` and `<lines/>` |
+| An address has a name | The name can be empty |
+| `<remittanceadvice>` is not listed in the root elements | It is in every read response |
 
 ## Asset methods
 
@@ -365,3 +455,8 @@ Twinfield has no `<read>` for currencies, and a `<currency>` request creates the
 - [Create currency](/examples/currencies/create-currency/)
 - [Update currency rates](/examples/currencies/update-currency-rates/)
 - [Delete currency](/examples/currencies/delete-currency/)
+- [List customers](/examples/customers/list-customers/)
+- [Read customer](/examples/customers/read-customer/)
+- [Create customer](/examples/customers/create-customer/)
+- [Update customer](/examples/customers/update-customer/)
+- [Delete customer](/examples/customers/delete-customer/)

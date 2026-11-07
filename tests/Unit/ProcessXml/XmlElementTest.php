@@ -97,10 +97,28 @@ final class XmlElementTest extends TestCase
             static fn (XmlElement $d): mixed => $d->child('projects')->child('quantities')->list('quantity')[1]->string('label'),
             'dimension/projects/quantities/quantity[2]/label is empty.',
         ];
+        yield 'non-integer attribute' => [
+            static fn (XmlElement $d): mixed => $d->intAttribute('status'),
+            'dimension/@status is "active", expected an integer.',
+        ];
+        yield 'unknown nullable enum' => [
+            static fn (XmlElement $d): mixed => $d->nullableEnum('code', DimensionStatus::class),
+            'dimension/code is "A001", expected one of active, deleted, hide.',
+        ];
         yield 'other element in list' => [
             static fn (XmlElement $d): mixed => $d->child('projects')->list('validfrom'),
             'dimension/projects contains <validtill>, expected <validfrom>.',
         ];
+    }
+
+    public function testReadsAnIntegerAttribute(): void
+    {
+        self::assertSame(1, $this->dimension()->intAttribute('result'));
+    }
+
+    public function testReadsAnEmptyNullableEnumAsNull(): void
+    {
+        self::assertNull($this->dimension()->nullableEnum('shortname', DimensionStatus::class));
     }
 
     /**

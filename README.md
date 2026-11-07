@@ -45,13 +45,14 @@ See [examples/](examples/) for small, runnable examples, starting with [Authenti
 
 ## Master data
 
-Master data such as activities and cost centers are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
+Master data such as customers, activities and cost centers are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
 
 | Dimension type | Resource | Status |
 |---|---|---|
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate. See [List activities](examples/activities/list-activities/) and [Create activity](examples/activities/create-activity/). |
 | Cost centers (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate. See [List cost centers](examples/cost-centers/list-cost-centers/) and [Create cost center](examples/cost-centers/create-cost-center/). |
-| Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
+| Customers (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate; addresses, bank accounts, SEPA direct debit, credit management, posting rules. See [Read customer](examples/customers/read-customer/) and [Create customer](examples/customers/create-customer/). |
+| Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
 
 | Other master data | Resource | Status |
 |---|---|---|

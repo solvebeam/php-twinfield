@@ -162,6 +162,21 @@ final readonly class XmlElement
     }
 
     /**
+     * A backed enum from the text of a child element that is there but may be empty (null).
+     * Only use this where an empty value is valid Twinfield behaviour.
+     *
+     * @template T of BackedEnum
+     *
+     * @param class-string<T> $enum
+     *
+     * @return T|null
+     */
+    public function nullableEnum(string $name, string $enum): ?BackedEnum
+    {
+        return $this->child($name)->text() === '' ? null : $this->enum($name, $enum);
+    }
+
+    /**
      * A backed enum from an attribute of this element.
      *
      * @template T of BackedEnum
@@ -190,6 +205,22 @@ final readonly class XmlElement
         }
 
         return $this->element->getAttribute($name);
+    }
+
+    public function intAttribute(string $name): int
+    {
+        $value = $this->attribute($name);
+
+        if (preg_match('~^-?\d+$~', $value) !== 1) {
+            throw new UnexpectedResponseException(sprintf(
+                '%s/@%s is "%s", expected an integer.',
+                $this->path,
+                $name,
+                $value,
+            ));
+        }
+
+        return (int) $value;
     }
 
     public function boolAttribute(string $name): bool

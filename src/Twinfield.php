@@ -25,6 +25,7 @@ use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Currency\CurrencyResource;
+use SolveBeam\Twinfield\Customer\CustomerResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -114,6 +115,14 @@ final readonly class Twinfield
     public function costCenters(): CostCenterResource
     {
         return new CostCenterResource($this);
+    }
+
+    /**
+     * Customers (dimension type DEB) of the company: search, read, create, update and delete.
+     */
+    public function customers(): CustomerResource
+    {
+        return new CustomerResource($this);
     }
 
     /**

@@ -79,6 +79,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/currencies' } }],
 				},
 				{
+					label: 'Customers',
+					items: [{ autogenerate: { directory: 'examples/customers' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

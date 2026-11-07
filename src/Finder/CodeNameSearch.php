@@ -79,6 +79,28 @@ final readonly class CodeNameSearch
     }
 
     /**
+     * Match the pattern on the bank account number. Customers and suppliers only; the rows
+     * then have the bank account as third column.
+     *
+     * @return self<T>
+     */
+    public function inBankAccount(): self
+    {
+        return new self($this->query->field(3), $this->mapRow);
+    }
+
+    /**
+     * Match the pattern on the address fields, e.g. `search('*Amsterdam*')->inAddress()`.
+     * Customers and suppliers only.
+     *
+     * @return self<T>
+     */
+    public function inAddress(): self
+    {
+        return new self($this->query->field(4), $this->mapRow);
+    }
+
+    /**
      * Only items changed on or after this moment.
      *
      * @return self<T>
