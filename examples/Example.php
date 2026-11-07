@@ -53,6 +53,36 @@ final class Example
     }
 
     /**
+     * A cost center code that is not in use yet, for the examples that create a cost center.
+     *
+     * The code format of cost centers differs per company, so this takes the length of an
+     * existing numeric code (at least 3) and tries 999…, 998…, down to 900….
+     */
+    public static function unusedCostCenterCode(Twinfield $twinfield): string
+    {
+        $length = 3;
+
+        foreach ($twinfield->costCenters()->search()->limit(20)->get() as $costCenter) {
+            if (ctype_digit($costCenter->code)) {
+                $length = max($length, strlen($costCenter->code));
+
+                break;
+            }
+        }
+
+        for ($number = 999; $number >= 900; $number--) {
+            $code = str_pad((string) $number, $length, '9', STR_PAD_LEFT);
+
+            // find(), not search(): deleted cost centers keep their code.
+            if ($twinfield->costCenters()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Cost center codes 999 down to 900 are all in use.');
+    }
+
+    /**
      * An asset method code that is not in use yet, from EXAMPLE999 down to EXAMPLE900, for the
      * examples that create an asset method.
      */

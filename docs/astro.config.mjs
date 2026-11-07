@@ -71,6 +71,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/cash-books' } }],
 				},
 				{
+					label: 'Cost centers',
+					items: [{ autogenerate: { directory: 'examples/cost-centers' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

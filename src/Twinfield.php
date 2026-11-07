@@ -23,6 +23,7 @@ use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -104,6 +105,14 @@ final readonly class Twinfield
     public function activities(): ActivityResource
     {
         return new ActivityResource($this);
+    }
+
+    /**
+     * Cost centers (dimension type KPL) of the company: search, read, create, update and delete.
+     */
+    public function costCenters(): CostCenterResource
+    {
+        return new CostCenterResource($this);
     }
 
     /**

@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as activities, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as activities and cost centers, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -8,6 +8,7 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | Dimension type | Resource | Status |
 |---|---|---|
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
+| [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
 | Projects (`PRJ`), customers (`DEB`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Other master data works the same way, but is not a dimension:
@@ -113,6 +114,30 @@ New activities inherit every setting until you set it. Inherited settings have n
 - `DeleteResult::Hidden`: the dimension is in use, so Twinfield hid it instead (status `hide`).
 
 `activate($code)` makes a deleted or hidden dimension active again. A deleted dimension keeps its code: `create()` with the same code throws `DimensionAlreadyExistsException`.
+
+## Cost centers
+
+Cost centers (dimension type `KPL`, level 2) are the simplest dimension: only the **name** (at most 80 characters) can be set. `$twinfield->costCenters()` has the same methods as activities: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\CostCenter\CostCenterInput;
+
+$costCenters = $twinfield->costCenters();
+
+foreach ($costCenters->search('1*')->inCode()->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+$costCenter = $costCenters->create(CostCenterInput::create('400', 'Marketing'));
+
+$costCenters->update($costCenter->edit()->name('Sales & marketing'));
+
+$costCenters->delete('400'); // DeleteResult::Hidden when it is used in a transaction
+```
+
+- The read model `CostCenter` has `code`, `name`, `uid`, `status`, `inUse`, `behaviour`, `touched` and `modified`. Twinfield documents the other dimension fields (short name, periods, website, chamber of commerce and VAT number) as "not in use" for cost centers, so the SDK leaves them out.
+- The code format differs per company (in Twinfield under dimension types, `KPL`). The SDK only checks that the code is 1–16 characters `A-Z`, `0-9`, `_`, `-` or `+`. When Twinfield refuses a code on `create()` or `save()`, you get a `ProcessXmlException` with the message on `dimension/code`.
+- Use cost centers as `dim2` on transaction lines (`costCenter:` on [transactions](/guides/transactions/)) and per cost center in budgets: `$twinfield->budgets()->totals($code, 2025)->byCostCenter()`.
 
 ## Asset methods
 

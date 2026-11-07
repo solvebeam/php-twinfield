@@ -85,6 +85,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Read cash transaction](cash-transactions/read-cash-transaction/): header and lines of one cash transaction.
 - [Daily cash register](cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
 
+## Cost centers
+
+- [List cost centers](cost-centers/list-cost-centers/): code and name of all cost centers, or those matching a pattern.
+- [Read cost center](cost-centers/read-cost-center/): name, status and use of one cost center.
+- [Create cost center](cost-centers/create-cost-center/): create a cost center (changes data).
+- [Update cost center](cost-centers/update-cost-center/): rename an existing cost center (changes data).
+- [Delete cost center](cost-centers/delete-cost-center/): delete or hide a cost center, and activate it again (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimension result="0"&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;type name="Kostenplaatsen" shortname="Kostenplaatsen"&gt;KPL&lt;/type&gt;&lt;code msgtype="error" msg="Code voldoet niet aan het formaat [0-9][0-9][0-9]." result="0"&gt;SALES&lt;/code&gt;&lt;name&gt;Sales&lt;/name&gt;&lt;/dimension&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

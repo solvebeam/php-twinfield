@@ -170,7 +170,7 @@ final class DetailLineInput
     }
 
     /**
-     * The cost centre (`dim2`) of a profit and loss account.
+     * The cost center (`dim2`) of a profit and loss account; see `$twinfield->costCenters()`.
      */
     public function costCenter(?string $code): self
     {
