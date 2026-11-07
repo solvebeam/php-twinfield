@@ -46,6 +46,28 @@ Master data such as activities are dimensions, read and written with the XML web
 |---|---|---|
 | Asset methods | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/asset-methods/read-asset-method/) and [Create asset method](examples/asset-methods/create-asset-method/). |
 | Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
+| Budgets | `$twinfield->budgets()` | Search, budget vs. actual per account, cost center or project (Command & Query; read-only). See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
+
+## Transactions
+
+Transactions are read and written with the XML web services. You add lines with `receive()` and `pay()`; the SDK chooses debit or credit and calculates the total line and the closing balance. Amounts are exact numeric strings (`Amount`), never floats. See the [transactions guide](https://php-twinfield.solvebeam.com/guides/transactions/).
+
+```php
+use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
+
+$transaction = $twinfield->bankTransactions()->create(
+    BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))
+        ->statement(245, startValue: '1000.00')
+        ->receive('1300', '121.00', customer: '1000', invoice: '2026-0042')
+        ->pay('4500', '10.00', vatCode: 'IH', vatValue: '2.10', description: 'Bank costs'),
+);
+```
+
+| Transactions | Resource | Status |
+|---|---|---|
+| Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete. See [Create bank transaction](examples/bank-transactions/create-bank-transaction/) and [Import bank statement](examples/bank-transactions/import-bank-statement/). |
+| Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete. See [Daily cash register](examples/cash-transactions/daily-cash-register/). |
+| Sales, purchase, journal | – | Not yet; use `processXml()` |
 
 ## Command & Query web services
 
@@ -54,8 +76,8 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 | Service | Resource | Status |
 |---|---|---|
 | PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`; all commands. See [List periods](examples/periods/list-periods/) and [Rename period](examples/periods/rename-period/). |
-| BudgetService | – | Not yet |
-| BankBookService | – | Not yet |
+| BudgetService | `$twinfield->budgets()` | All queries: `totals()->byProfitAndLoss()`, `byCostCenter()`, `byProject()`. See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
+| BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
 | CashBookService | – | Not yet |
 | DeletedTransactionsService | – | Not yet |
 | BankStatementService | – | Not yet |

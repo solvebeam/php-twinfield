@@ -124,6 +124,23 @@ final readonly class ResultElement
         return $this->child($name)->asInt();
     }
 
+    /**
+     * An `xs:decimal` as an exact string, as Twinfield returns it, e.g. `474.3600`, `-70.0100` or `0`.
+     *
+     * @return numeric-string
+     */
+    public function decimal(string $name): string
+    {
+        $child = $this->child($name);
+        $text = $child->text();
+
+        if (preg_match('~^-?\d+(\.\d+)?$~', $text) !== 1 || !is_numeric($text)) {
+            throw $child->invalid('a decimal');
+        }
+
+        return $text;
+    }
+
     public function bool(string $name): bool
     {
         $child = $this->child($name);

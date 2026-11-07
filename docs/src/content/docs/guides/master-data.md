@@ -15,6 +15,8 @@ Other master data works the same way, but is not a dimension:
 | Master data | Resource | Status |
 |---|---|---|
 | [Asset methods](#asset-methods) | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate |
+| [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
+| [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 
@@ -178,6 +180,57 @@ The [documentation page](https://developers.twinfield.com/documentation/api/mast
 
 All `BankAccount` fields except `Country` are required in the WSDL (nillable), so empty ones are sent as `i:nil="true"`.
 
+## Budgets
+
+`$twinfield->budgets()` uses the Command & Query web service `BudgetService`. It can only **read**: budgets cannot be created or changed through the API.
+
+- `search()` uses the Finder type `BDS` and returns `BudgetSummary`s (`code`, `name`).
+- `totals($code, $year)` starts an immutable `BudgetTotalsQuery`. Every filter returns a new query; one of the three endings sends it.
+
+| Method | What it does | Default |
+|---|---|---|
+| `period(3)`, `periods(1, 6)` | Periods, both included; 0 is the opening balance | 0–55 |
+| `generalLedgerAccounts('8000', '8999')`, `generalLedgerAccount('8000')` | General ledger accounts (dimension 1) | All |
+| `dimension2('KPL100', 'KPL199')`, `dimension2('KPL100')` | Dimension 2, e.g. cost centers | All |
+| `dimension3('P0001', 'P0099')`, `dimension3('P0001')` | Dimension 3, e.g. projects | All |
+| `finalOnly()`, `provisionalOnly()`, `finalAndProvisional()` | Which transactions count for the actual amounts | Both |
+| `regime(Regime::Fiscal)` | Reporting regime, for companies with more than one | Company default |
+| `byProfitAndLoss()` | Sends `GetBudgetByProfitAndLoss`: per account and period | |
+| `byCostCenter()` | Sends `GetBudgetByCostCenter`: also per dimension 2 | |
+| `byProject()` | Sends `GetBudgetByProject`: also per dimensions 2 and 3 | |
+
+```php
+$totals = $twinfield->budgets()->totals('001', 2025)
+    ->periods(1, 6)
+    ->generalLedgerAccounts('4000', '4999')
+    ->finalOnly()
+    ->byCostCenter();
+
+foreach ($totals as $total) {
+    echo $total->period, ' ', $total->generalLedgerAccount, ' ', $total->dimension2 ?? '-', ' ',
+        $total->budget->total, ' ', $total->actual->total, PHP_EOL;
+}
+```
+
+The result is `BudgetTotals`: countable and iterable, with `forPeriod()`, `forGeneralLedgerAccount()`, `forDimension2()` and `forDimension3()` to filter, `periods()` and `generalLedgerAccounts()` for the distinct values, and `isEmpty()`. Twinfield only returns lines with a budget or actual amount. Each `BudgetTotal` has:
+
+- `year`, `period` and `generalLedgerAccount`;
+- `groups`: the group codes of the account from the highest level down, e.g. `['3', 'RES40', 'KST400']`; empty when the account is in no group;
+- `dimension2` and `dimension3`: `null` for amounts without that dimension. Dimension 2 is the cost center on profit and loss accounts, but the customer or supplier on balance sheet accounts;
+- `budget` and `actual`, each with `debit`, `credit` and `total` (debit minus credit).
+
+Amounts are **exact decimal strings** as Twinfield returns them, e.g. `2100.5000`, `-318.0200` or `0`, never floats. Calculate with [bcmath](https://www.php.net/bcmath) (`bcadd($a, $b, 2)`) or a money library.
+
+An unknown budget code throws `BudgetNotFoundException`. The query checks its input itself (code, four-digit year, periods 0–55 in order, at least final or provisional), so the other Twinfield refusals (`BudgetServiceFaultCode`) do not occur.
+
+The [documentation page](https://developers.twinfield.com/documentation/api/master-data/budget/) differs from the service itself:
+
+| Documentation page | Service |
+|---|---|
+| Only `SecurityFault` and `ValidationFault` | Also `BudgetServiceFault` with `BudgetNotFound`, `CodeMandatory`, `YearMandatory` and `ChooseAtLeastOneTransactionStatus` |
+| No `Regime` field | `Regime` (`Generic`, `Fiscal`, `Commercial`, `Economic`) in the WSDL |
+| Periods look optional | Without `PeriodFrom`/`PeriodTo` the result is empty, so the SDK always sends them |
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -195,3 +248,7 @@ All `BankAccount` fields except `Country` are required in the WSDL (nillable), s
 - [Read bank book](/examples/bank-books/read-bank-book/)
 - [Create bank book](/examples/bank-books/create-bank-book/)
 - [Update bank book](/examples/bank-books/update-bank-book/)
+- [List budgets](/examples/budgets/list-budgets/)
+- [Budget vs. actual](/examples/budgets/budget-vs-actual/)
+- [Budget by cost center](/examples/budgets/budget-by-cost-center/)
+- [Budget by project](/examples/budgets/budget-by-project/)

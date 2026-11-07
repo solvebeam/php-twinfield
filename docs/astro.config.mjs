@@ -35,6 +35,7 @@ export default defineConfig({
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
+						{ label: 'Transactions', slug: 'guides/transactions' },
 					],
 				},
 				{
@@ -56,6 +57,18 @@ export default defineConfig({
 				{
 					label: 'Bank books',
 					items: [{ autogenerate: { directory: 'examples/bank-books' } }],
+				},
+				{
+					label: 'Bank transactions',
+					items: [{ autogenerate: { directory: 'examples/bank-transactions' } }],
+				},
+				{
+					label: 'Cash transactions',
+					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
+				},
+				{
+					label: 'Budgets',
+					items: [{ autogenerate: { directory: 'examples/budgets' } }],
 				},
 				{
 					label: 'Finder',

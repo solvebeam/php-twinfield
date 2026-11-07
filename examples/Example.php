@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Examples;
 
+use SolveBeam\Twinfield\BankBook\BankBook;
+use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\Tests\Support\Config;
 use SolveBeam\Twinfield\Tests\Support\Environment;
 use SolveBeam\Twinfield\Tests\Support\Setup\Prompt;
@@ -64,6 +67,49 @@ final class Example
         }
 
         throw new \RuntimeException('Asset method codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
+     * The first bank book with a ledger account, for the bank transaction examples.
+     */
+    public static function bankBook(Twinfield $twinfield): BankBook
+    {
+        foreach ($twinfield->bankBooks()->search()->all() as $summary) {
+            $bankBook = $twinfield->bankBooks()->get($summary->code);
+
+            if ($bankBook->generalLedgerAccount !== null) {
+                return $bankBook;
+            }
+        }
+
+        throw new \RuntimeException('The company has no bank book with a ledger account.');
+    }
+
+    /**
+     * The first profit and loss account of the company, e.g. for bank costs in the examples.
+     */
+    public static function profitAndLossAccount(Twinfield $twinfield): string
+    {
+        $row = $twinfield->finder(FinderType::Dimensions)
+            ->option('dimtype', 'PNL')
+            ->limit(1)
+            ->get()
+            ->rows[0] ?? throw new \RuntimeException('The company has no profit and loss accounts.');
+
+        return $row[0];
+    }
+
+    /**
+     * A ProcessXml request, indented, to show what an example would send.
+     */
+    public static function xml(XmlBuilder $xml): string
+    {
+        $document = new \DOMDocument();
+        $document->preserveWhiteSpace = false;
+        $document->formatOutput = true;
+        $document->loadXML($xml->toXml());
+
+        return (string) $document->saveXML($document->documentElement);
     }
 
     /**

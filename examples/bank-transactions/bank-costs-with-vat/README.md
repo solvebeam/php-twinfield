@@ -1,0 +1,78 @@
+# Bank costs with VAT
+
+The bank statement only has the amount including VAT; a bank transaction line needs the amount without VAT and the VAT amount. This example splits the amount with bcmath (exact, no floats) and books it with `pay(…, vatCode: 'IH', vatValue: …)`.
+
+With a VAT code, bank and cash lines need the VAT amount: the total line on the bank account includes it, so without it the transaction would not balance. Twinfield checks the VAT against its own calculation; `autoBalanceVat()` lets it round differences of at most two cents.
+
+By default it is a dry run; add `--save` to create the transaction as provisional. Pass another amount as first argument, e.g. `99.99`.
+
+## Code
+
+```php
+$twinfield = Example::twinfield();
+
+// The bank statement only has the amount including VAT.
+$gross = Amount::fromString($argv[1] ?? '12.10');
+$vatRate = '21';
+$vatCode = 'IH';
+
+// Amount without VAT: gross × 100 / (100 + rate), rounded half up to cents.
+$net = Amount::of(bcadd(bcdiv(bcmul($gross->value, '100', 6), bcadd('100', $vatRate, 6), 6), '0.005', 2));
+$vat = $gross->minus($net);
+
+echo 'Gross ', $gross, ' = net ', $net, ' + VAT ', $vat, ' (', $vatRate, '%)', PHP_EOL;
+
+$input = BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))
+    ->pay('4500', $net, vatCode: $vatCode, vatValue: $vat, description: 'Bank costs November')
+    // Twinfield calculates the VAT itself; allow a rounding difference of at most two cents.
+    ->autoBalanceVat();
+
+echo 'Total line: ', $input->balance()->absolute(), ' paid', PHP_EOL;
+
+if (!in_array('--save', $argv ?? [], true)) {
+    echo PHP_EOL, 'Dry run; add --save to create it as provisional transaction:', PHP_EOL, PHP_EOL;
+    echo Example::xml($input->toXml($twinfield->companyCode() ?? '')), PHP_EOL;
+
+    exit(0);
+}
+
+$transaction = $twinfield->bankTransactions()->create($input);
+
+echo 'Created provisional transaction ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;
+```
+
+## Run
+
+```sh
+php examples/bank-transactions/bank-costs-with-vat/example.php
+```
+
+```text
+Gross 12.10 = net 10.00 + VAT 2.10 (21%)
+Total line: 12.10 paid
+
+Dry run; add --save to create it as provisional transaction:
+
+<transaction destiny="temporary" autobalancevat="true">
+  <header>
+    <office>1002</office>
+    <code>BNK</code>
+    <date>20261103</date>
+  </header>
+  <lines>
+    <line type="total" id="1">
+      <dim1>1010</dim1>
+      <debitcredit>credit</debitcredit>
+      <value>12.10</value>
+    </line>
+    <line type="detail" id="2">
+      <dim1>4500</dim1>
+      <debitcredit>debit</debitcredit>
+      <value>10.00</value>
+      <description>Bank costs November</description>
+      <vatcode>IH</vatcode>
+      <vatvalue>2.10</vatvalue>
+    </line>
+  </lines>
+</transaction>
+```

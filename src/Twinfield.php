@@ -14,6 +14,9 @@ use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
 use SolveBeam\Twinfield\BankBook\BankBookResource;
+use SolveBeam\Twinfield\BankTransaction\BankTransactionResource;
+use SolveBeam\Twinfield\CashTransaction\CashTransactionResource;
+use SolveBeam\Twinfield\Budget\BudgetResource;
 use SolveBeam\Twinfield\AssetMethod\AssetMethodResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
@@ -108,6 +111,30 @@ final readonly class Twinfield
     public function bankBooks(): BankBookResource
     {
         return new BankBookResource($this);
+    }
+
+    /**
+     * Budgets of the company (BudgetService): search, and budgeted versus actual amounts. Read-only.
+     */
+    public function budgets(): BudgetResource
+    {
+        return new BudgetResource($this);
+    }
+
+    /**
+     * Bank transactions of the company: read, create, update, post and delete.
+     */
+    public function bankTransactions(): BankTransactionResource
+    {
+        return new BankTransactionResource($this);
+    }
+
+    /**
+     * Cash transactions of the company: read, create, update, post and delete.
+     */
+    public function cashTransactions(): CashTransactionResource
+    {
+        return new CashTransactionResource($this);
     }
 
     /**

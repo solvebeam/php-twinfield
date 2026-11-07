@@ -11,6 +11,9 @@
  *   composer twinfield -- finder DIM "*" 10 --company=1002_3 --quiet
  *   composer twinfield -- periods               # years of the company
  *   composer twinfield -- periods 2025          # periods of a year
+ *   composer twinfield -- budgets               # search budgets
+ *   composer twinfield -- budgets 001 2025      # budget vs. actual per account and period
+ *   composer twinfield -- budgets 001 2025 kpl  # per cost center (pl, kpl or prj)
  *
  * Without --quiet, the full SOAP request and response are printed (token masked).
  */
@@ -92,6 +95,36 @@ try {
             }
             break;
 
+        case 'budgets':
+            $twinfield = $environment->client();
+            $budgets = ($company === null ? $twinfield : $twinfield->company($company))->budgets();
+
+            echo PHP_EOL;
+
+            if (!isset($arguments[0])) {
+                foreach ($budgets->search()->all() as $summary) {
+                    echo $summary->code, ' | ', $summary->name, PHP_EOL;
+                }
+                break;
+            }
+
+            $query = $budgets->totals($arguments[0], (int) ($arguments[1] ?? date('Y')));
+            $totals = match ($arguments[2] ?? 'pl') {
+                'pl' => $query->byProfitAndLoss(),
+                'kpl' => $query->byCostCenter(),
+                'prj' => $query->byProject(),
+                default => throw new InvalidArgumentException('Grouping must be pl, kpl or prj.'),
+            };
+
+            foreach ($totals as $total) {
+                echo $total->period, ' | ', $total->generalLedgerAccount, ' | ',
+                    $total->dimension2 ?? '-', ' | ', $total->dimension3 ?? '-', ' | ',
+                    'budget ', $total->budget->total, ' | actual ', $total->actual->total, PHP_EOL;
+            }
+
+            echo count($totals), ' lines', PHP_EOL;
+            break;
+
         default:
             echo <<<'TXT'
                 Usage: composer twinfield -- <command> [arguments] [--company=CODE] [--quiet]
@@ -100,6 +133,7 @@ try {
                   refresh                        Refresh the access token now
                   finder [type] [pattern] [max]  Finder search, e.g. finder DIM "*" 10
                   periods [year]                 Years, or the periods of a year (PeriodService)
+                  budgets [code year [pl|kpl|prj]]  Budgets, or budget vs. actual (BudgetService)
 
                 TXT;
     }

@@ -61,6 +61,30 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Create bank book](bank-books/create-bank-book/): create a bank book with a bank account (changes data; cannot be deleted).
 - [Update bank book](bank-books/update-bank-book/): change a bank book; only changed values are sent (changes data).
 
+## Bank transactions
+
+- [Read bank transaction](bank-transactions/read-bank-transaction/): header, lines and matches of one bank transaction.
+- [Create bank transaction](bank-transactions/create-bank-transaction/): a bank statement with calculated total line and closing balance (changes data).
+- [Update bank transaction](bank-transactions/update-bank-transaction/): change a provisional transaction with `edit()` (changes data).
+- [Delete bank transaction](bank-transactions/delete-bank-transaction/): delete a provisional transaction (changes data).
+- [Post bank transaction](bank-transactions/post-bank-transaction/): make a provisional transaction final (changes data; cannot be undone).
+- [Import bank statement](bank-transactions/import-bank-statement/): a CSV statement to one transaction, with rules per line and a balance check.
+- [Bank costs with VAT](bank-transactions/bank-costs-with-vat/): split an amount including VAT, exactly.
+- [Split payment over invoices](bank-transactions/split-payment-over-invoices/): one payment for several open invoices.
+- [Bulk import with errors](bank-transactions/bulk-import-with-errors/): save several transactions at once and handle the ones that fail (changes data).
+
+## Cash transactions
+
+- [Read cash transaction](cash-transactions/read-cash-transaction/): header and lines of one cash transaction.
+- [Daily cash register](cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
+
+## Budgets
+
+- [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.
+- [Budget vs. actual](budgets/budget-vs-actual/): budget and actual amounts per general ledger account, with the difference.
+- [Budget by cost center](budgets/budget-by-cost-center/): amounts per account, cost center and period.
+- [Budget by project](budgets/budget-by-project/): amounts per period, account, cost center and project.
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

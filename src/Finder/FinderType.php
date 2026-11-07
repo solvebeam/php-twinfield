@@ -13,6 +13,7 @@ enum FinderType: string
 {
     case Articles = 'ART';
     case AssetMethods = 'ASM';
+    case Budgets = 'BDS';
     case CashbooksAndBanks = 'BNK';
     case Countries = 'CTR';
     case Currencies = 'CUR';

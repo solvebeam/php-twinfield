@@ -29,6 +29,10 @@ final class ExamplesTest extends TestCase
         'asset-methods/update-asset-method',
         'bank-books/create-bank-book',
         'bank-books/update-bank-book',
+        'bank-transactions/bulk-import-with-errors',
+        'bank-transactions/create-bank-transaction',
+        'bank-transactions/delete-bank-transaction',
+        'bank-transactions/update-bank-transaction',
         'periods/rename-period',
     ];
 
