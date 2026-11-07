@@ -27,6 +27,7 @@ use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Currency\CurrencyResource;
 use SolveBeam\Twinfield\Customer\CustomerResource;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
+use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -140,6 +141,15 @@ final readonly class Twinfield
     public function dimensionGroups(): DimensionGroupResource
     {
         return new DimensionGroupResource($this);
+    }
+
+    /**
+     * Dimension types of the company (BAS, DEB, KPL, …): search, read and update the name,
+     * code mask and address labels.
+     */
+    public function dimensionTypes(): DimensionTypeResource
+    {
+        return new DimensionTypeResource($this);
     }
 
     /**

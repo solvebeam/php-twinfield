@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Finder;
 use Closure;
 use DateTimeInterface;
 use Generator;
+use InvalidArgumentException;
 
 /**
  * Immutable Finder search on code and name, for Finder types with the columns code and name
@@ -129,6 +130,32 @@ final readonly class CodeNameSearch
     public function dimensionType(string $type): self
     {
         return $this->option('dimtype', $type);
+    }
+
+    /**
+     * Only dimension types of this financial level, 1–6: e.g. 1 for BAS and PNL, 2 for DEB,
+     * CRD and KPL. Dimension type searches only.
+     *
+     * @return self<T>
+     */
+    public function financialLevel(int $level): self
+    {
+        if ($level < 1 || $level > 6) {
+            throw new InvalidArgumentException(sprintf('Financial level must be 1 to 6, %d given.', $level));
+        }
+
+        return $this->option('finlevel', (string) $level);
+    }
+
+    /**
+     * Only the dimension types that have a dimension with this code, e.g. `1000` gives BAS
+     * and DEB when both have a dimension 1000. Dimension type searches only.
+     *
+     * @return self<T>
+     */
+    public function ofDimension(string $code): self
+    {
+        return $this->option('dim', $code);
     }
 
     /**

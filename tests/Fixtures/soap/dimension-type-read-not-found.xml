@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimensiontype msgtype="error" msg="Dimensietype XYZ bestaat niet." result="0" status="active"&gt;&lt;office name="Testomgeving" shortname=""&gt;1000&lt;/office&gt;&lt;code&gt;XYZ&lt;/code&gt;&lt;name&gt;XYZ&lt;/name&gt;&lt;shortname&gt;&lt;/shortname&gt;&lt;mask&gt;*&lt;/mask&gt;&lt;touched&gt;0&lt;/touched&gt;&lt;levels&gt;&lt;financials&gt;0&lt;/financials&gt;&lt;time&gt;0&lt;/time&gt;&lt;fixedassets&gt;0&lt;/fixedassets&gt;&lt;invoices&gt;0&lt;/invoices&gt;&lt;/levels&gt;&lt;address&gt;&lt;label1&gt;&lt;/label1&gt;&lt;label2&gt;&lt;/label2&gt;&lt;label3&gt;&lt;/label3&gt;&lt;label4&gt;&lt;/label4&gt;&lt;label5&gt;&lt;/label5&gt;&lt;label6&gt;&lt;/label6&gt;&lt;/address&gt;&lt;/dimensiontype&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

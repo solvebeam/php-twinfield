@@ -117,6 +117,12 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update dimension group](dimension-groups/update-dimension-group/): rename a group, and add and remove dimensions (changes data).
 - [Delete dimension group](dimension-groups/delete-dimension-group/): delete a group (changes data).
 
+## Dimension types
+
+- [List dimension types](dimension-types/list-dimension-types/): code, name, mask and levels of all dimension types, or those of one financial level.
+- [Read dimension type](dimension-types/read-dimension-type/): mask, levels and address labels of one type, and whether a code matches the mask.
+- [Update dimension type](dimension-types/update-dimension-type/): change an address label (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

@@ -87,6 +87,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/dimension-groups' } }],
 				},
 				{
+					label: 'Dimension types',
+					items: [{ autogenerate: { directory: 'examples/dimension-types' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

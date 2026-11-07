@@ -37,6 +37,8 @@ final class WriteGuardClientTest extends TestCase
         yield 'process xml asset method save' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>M</code><name>Machine</name></assetmethod>'), false];
         yield 'process xml asset method status' => ['ProcessXmlString', self::processXml('<assetmethod status="deleted"><office>1002</office><code>M</code></assetmethod>'), false];
         yield 'process xml asset method code only' => ['ProcessXmlString', self::processXml('<assetmethod><code>M</code><code>N</code></assetmethod>'), false];
+        yield 'process xml dimension type read' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code></dimensiontype>'), true];
+        yield 'process xml dimension type save' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code><name>Debiteuren</name></dimensiontype>'), false];
         yield 'process xml dimension by code' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office><code>1000</code></dimension>'), false];
         yield 'process xml mixed' => ['ProcessXmlString', self::processXml('<general><read /><transaction /></general>'), false];
         yield 'process xml unparsable' => ['ProcessXmlString', self::processXml('not xml'), false];

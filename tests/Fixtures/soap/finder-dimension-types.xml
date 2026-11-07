@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult />
+      <data>
+        <TotalRows>8</TotalRows>
+        <Columns>
+          <string>Code</string>
+          <string>Naam</string>
+        </Columns>
+        <Items>
+          <ArrayOfString>
+            <string>ACT</string>
+            <string>Activiteiten</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>AST</string>
+            <string>Vaste activa</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>BAS</string>
+            <string>Balans</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>CRD</string>
+            <string>Crediteuren</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>DEB</string>
+            <string>Debiteuren</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>KPL</string>
+            <string>Kostenplaatsen</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>PNL</string>
+            <string>Winst &amp; verlies</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>PRJ</string>
+            <string>Projecten</string>
+          </ArrayOfString>
+        </Items>
+      </data>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

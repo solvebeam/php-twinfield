@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;dimensiontype status="active" result="1"&gt;&lt;office name="Testomgeving" shortname=""&gt;1000&lt;/office&gt;&lt;code&gt;AST&lt;/code&gt;&lt;name&gt;Vaste activa&lt;/name&gt;&lt;shortname&gt;&lt;/shortname&gt;&lt;mask&gt;6[0-9][0-9][0-9][0-9]&lt;/mask&gt;&lt;touched&gt;1&lt;/touched&gt;&lt;levels&gt;&lt;financials&gt;3&lt;/financials&gt;&lt;time&gt;0&lt;/time&gt;&lt;fixedassets&gt;1&lt;/fixedassets&gt;&lt;invoices&gt;0&lt;/invoices&gt;&lt;/levels&gt;&lt;address&gt;&lt;label1&gt;&lt;/label1&gt;&lt;label2&gt;&lt;/label2&gt;&lt;label3&gt;&lt;/label3&gt;&lt;label4&gt;&lt;/label4&gt;&lt;label5&gt;&lt;/label5&gt;&lt;label6&gt;&lt;/label6&gt;&lt;/address&gt;&lt;/dimensiontype&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

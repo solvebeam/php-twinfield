@@ -51,6 +51,7 @@ final class ExamplesTest extends TestCase
         'dimension-groups/delete-dimension-group',
         'dimension-groups/read-dimension-group',
         'dimension-groups/update-dimension-group',
+        'dimension-types/update-dimension-type',
         'periods/rename-period',
     ];
 

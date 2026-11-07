@@ -33,8 +33,9 @@ final readonly class WriteGuardClient implements ClientInterface
      * Twinfield has no `<read>` type for these.
      *
      * @see https://developers.twinfield.com/documentation/api/master-data/asset-methods/#read
+     * @see https://developers.twinfield.com/documentation/api/master-data/dimension-types/#read
      */
-    private const READ_BY_CODE_ROOTS = ['assetmethod'];
+    private const READ_BY_CODE_ROOTS = ['assetmethod', 'dimensiontype'];
 
     /**
      * @param list<string> $writeCompanies

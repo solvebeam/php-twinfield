@@ -21,6 +21,7 @@ Other master data works the same way, but is not a dimension:
 | [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
 | [Currencies](#currencies) | `$twinfield->currencies()` | Search, read, create, update, delete; exchange rates |
 | [Dimension groups](#dimension-groups) | `$twinfield->dimensionGroups()` | Search, read, create, update, delete |
+| [Dimension types](#dimension-types) | `$twinfield->dimensionTypes()` | Search, read, update (no create or delete) |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
@@ -471,6 +472,47 @@ $groups->delete('KEY-ACCOUNTS');
 
 Twinfield has no `<read>` for dimension groups, and a `<dimensiongroup>` request for an unknown code creates the group (named after its code), also when it only reads or deletes. So `get()`, `update()` and `delete()` first check in the Finder that the code exists, and `get()` then sends a `<dimensiongroup>` with only the company and the code, which returns the group. A read never creates a group, at the cost of one extra (small) request. Requests that save always send `status="active"`: without it, saving a deleted group keeps it deleted.
 
+## Dimension types
+
+`$twinfield->dimensionTypes()` reads and changes the settings of the dimension types (`BAS`, `PNL`, `CRD`, `DEB`, `KPL`, `AST`, `PRJ`, `ACT`): the name, the code mask and the labels of the address fields. It has `search()`, `exists()`, `get()`, `find()` and `update()`. Twinfield has a fixed set of types, so they cannot be created or deleted.
+
+```php
+use SolveBeam\Twinfield\DimensionType\DimensionTypeCode;
+
+$types = $twinfield->dimensionTypes();
+
+// Search (Finder type DMT): code and name
+foreach ($types->search()->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+$types->search()->financialLevel(2)->all();    // CRD, DEB, KPL
+$types->search()->ofDimension('1000')->all();  // the types with a dimension 1000, e.g. BAS and DEB
+
+// Read
+$customers = $types->get(DimensionTypeCode::AccountsReceivable);   // or get('DEB')
+
+echo $customers->mask, PHP_EOL;                // e.g. 1[0-9][0-9][0-9]
+$customers->mask->matches('1010');             // true: a valid code for a new customer
+echo $customers->addressLabels->field4, PHP_EOL;
+
+// Update the name, mask and address labels
+$types->update(
+    $customers->edit()
+        ->mask('1[0-9][0-9][0-9][0-9]')
+        ->addressLabel(6, 'IBAN'),
+);
+```
+
+- A `DimensionType` has `name`, `shortName` (`null` when not set), `mask`, `levels`, `addressLabels` and `touched` (the number of changes). The short name and the levels are read-only.
+- The `mask` is a `CodeMask` with the `pattern` as Twinfield returns it, e.g. `1[0-9][0-9][0-9]`, `P[0-9][0-9][0-9][0-9]` or `*` for any code. `matches($code)` understands `[…]` (a character from a set or range), `*` (anything), `?` (one character) and `#` (one digit); every other character stands for itself.
+- `levels` is a `DimensionTypeLevels` with the `financial` level (1 general ledger, 2 customers, suppliers and cost centers, 3 projects and fixed assets, 4 activities), the level in `time` & expenses and in `fixedAssets`. A transaction line has a dimension per financial level.
+- `addressLabels` names the free fields `field1`–`field6` of the addresses of customers and suppliers (`Address::$field1` …), `null` when a field is not used. `forField(4)` gives one label, `used()` only those that are set.
+- `DimensionTypeInput` is immutable and comes from `$type->edit()`, so an update always sends all values. `name()` (40 characters), `mask()` (80) and `addressLabel($field, $label)` (20; `null` removes it) are checked before anything is sent.
+- Not found is a `DimensionTypeNotFoundException`. Other refusals are a `ProcessXmlException` with the messages per element.
+
+Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>` with only the company and the code, which returns the type without changing it. An unknown code is refused, so a read needs only one request. Twinfield's documentation shows the mask as `1####`; companies return masks like `1[0-9][0-9][0-9]`.
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -506,6 +548,9 @@ Twinfield has no `<read>` for dimension groups, and a `<dimensiongroup>` request
 - [Create dimension group](/examples/dimension-groups/create-dimension-group/)
 - [Update dimension group](/examples/dimension-groups/update-dimension-group/)
 - [Delete dimension group](/examples/dimension-groups/delete-dimension-group/)
+- [List dimension types](/examples/dimension-types/list-dimension-types/)
+- [Read dimension type](/examples/dimension-types/read-dimension-type/)
+- [Update dimension type](/examples/dimension-types/update-dimension-type/)
 - [List customers](/examples/customers/list-customers/)
 - [Read customer](/examples/customers/read-customer/)
 - [Create customer](/examples/customers/create-customer/)
