@@ -2,7 +2,7 @@
 
 Lists the code and name of all bank books of the company, or of those matching a pattern.
 
-`bankBooks()->search()` searches with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) type `BNK` and option `banktype=0`, so cash books are left out. `all()` goes through all pages for you. The search has the same methods as the activity search: `inCode()`, `inName()`, `modifiedSince()`, `limit()` and `offset()`.
+`bankBooks()->search()` searches with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) type `BNK` and option `banktype=0`, so cash books are left out (see [List cash books](../../cash-books/list-cash-books/)). `all()` goes through all pages for you. The search has the same methods as the activity search: `inCode()`, `inName()`, `modifiedSince()`, `limit()` and `offset()`.
 
 Each result is a `BankBookSummary` with `code` and `name`. Use `get()` for the bank account and other settings (see [Read bank book](../read-bank-book/)).
 

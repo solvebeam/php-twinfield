@@ -14,6 +14,7 @@ use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
 use SolveBeam\Twinfield\BankBook\BankBookResource;
+use SolveBeam\Twinfield\CashBook\CashBookResource;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionResource;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionResource;
 use SolveBeam\Twinfield\Budget\BudgetResource;
@@ -119,6 +120,14 @@ final readonly class Twinfield
     public function budgets(): BudgetResource
     {
         return new BudgetResource($this);
+    }
+
+    /**
+     * Cash books of the company (CashBookService): search, read, create and update.
+     */
+    public function cashBooks(): CashBookResource
+    {
+        return new CashBookResource($this);
     }
 
     /**

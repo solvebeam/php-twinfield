@@ -94,7 +94,7 @@ $input = $input->line(
 );
 ```
 
-The bank account of the total line comes from `create($dayBook, $account, $date)`. For bank transactions, `BankTransactionInput::forBankBook($bankBook, $date)` takes the code and the ledger account of a bank book from `$twinfield->bankBooks()->get('BNK')`.
+The bank account of the total line comes from `create($dayBook, $account, $date)`. For bank transactions, `BankTransactionInput::forBankBook($bankBook, $date)` takes the code and the ledger account of a bank book from `$twinfield->bankBooks()->get('BNK')`. For cash transactions, `CashTransactionInput::forCashBook($cashBook, $date)` does the same with a cash book from `$twinfield->cashBooks()->get('KAS')`.
 
 ## Amounts
 

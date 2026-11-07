@@ -2,7 +2,7 @@
 
 Reads one bank book: the code from the command line, or else the first bank book.
 
-`get()` returns a `BankBook`, or throws a `BankBookNotFoundException` when the code does not exist. Use `find()` to get `null` instead. Cash books are not bank books: `get('KAS')` throws as well.
+`get()` returns a `BankBook`, or throws a `BankBookNotFoundException` when the code does not exist. Use `find()` to get `null` instead. Cash books are not bank books: `get('KAS')` throws as well. Use `cashBooks()` for those (see [Read cash book](../../cash-books/read-cash-book/)).
 
 - `generalLedgerAccount`: the balance sheet account of the bank; `null` when not set, as on the default bank book `BNK` of a new company.
 - `bankAccount`: a `BankAccount` with `name`, `number`, `iban`, `bic`, `nbic`, `country` and `referenceNumber`. Every field is `null` when not set.

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\CashTransaction;
 
+use DateTimeInterface;
+use InvalidArgumentException;
+use SolveBeam\Twinfield\CashBook\CashBook;
 use SolveBeam\Twinfield\Transaction\StatementTransactionInput;
 
 /**
@@ -24,4 +27,18 @@ use SolveBeam\Twinfield\Transaction\StatementTransactionInput;
  */
 final class CashTransactionInput extends StatementTransactionInput
 {
+    /**
+     * Uses the code and the ledger account of a cash book, e.g. from `$twinfield->cashBooks()->get('KAS')`.
+     *
+     * @throws InvalidArgumentException When the cash book has no ledger account.
+     */
+    public static function forCashBook(CashBook $cashBook, DateTimeInterface $date): self
+    {
+        $account = $cashBook->generalLedgerAccount ?? throw new InvalidArgumentException(sprintf(
+            'Cash book %s has no ledger account: set one in Twinfield, or pass it to create().',
+            $cashBook->code,
+        ));
+
+        return self::create($cashBook->code, $account, $date);
+    }
 }

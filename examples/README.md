@@ -73,6 +73,13 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Split payment over invoices](bank-transactions/split-payment-over-invoices/): one payment for several open invoices.
 - [Bulk import with errors](bank-transactions/bulk-import-with-errors/): save several transactions at once and handle the ones that fail (changes data).
 
+## Cash books
+
+- [List cash books](cash-books/list-cash-books/): code and name of all cash books, or those matching a pattern.
+- [Read cash book](cash-books/read-cash-book/): name, short name and ledger account of one cash book.
+- [Create cash book](cash-books/create-cash-book/): create a cash book (changes data; cannot be deleted).
+- [Update cash book](cash-books/update-cash-book/): change a cash book; only changed values are sent (changes data).
+
 ## Cash transactions
 
 - [Read cash transaction](cash-transactions/read-cash-transaction/): header and lines of one cash transaction.

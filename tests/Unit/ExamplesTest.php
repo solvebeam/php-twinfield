@@ -33,6 +33,8 @@ final class ExamplesTest extends TestCase
         'bank-transactions/create-bank-transaction',
         'bank-transactions/delete-bank-transaction',
         'bank-transactions/update-bank-transaction',
+        'cash-books/create-cash-book',
+        'cash-books/update-cash-book',
         'periods/rename-period',
     ];
 

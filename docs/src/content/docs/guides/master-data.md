@@ -16,6 +16,7 @@ Other master data works the same way, but is not a dimension:
 |---|---|---|
 | [Asset methods](#asset-methods) | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate |
 | [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
+| [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
@@ -147,7 +148,7 @@ $assetMethods->update($method->edit()->reducingBalance('25'));
 Bank books are not dimensions and not part of the XML web services: `$twinfield->bankBooks()` uses the Command & Query web service `BankBookService`. It has `search()`, `get()`, `find()`, `create()` and `update()`, plus one method per change command. The differences:
 
 - Search uses the Finder type `BNK` with `banktype=0`, so cash books are left out. Results are `BankBookSummary`s; `group()` is for dimensions only.
-- Twinfield has **no delete** for bank books. Cash books are not bank books: `get('KAS')` throws `BankBookNotFoundException`.
+- Twinfield has **no delete** for bank books. Cash books are not bank books: `get('KAS')` throws `BankBookNotFoundException`. See [Cash books](#cash-books).
 - There is no single save command. `update()` reads the bank book and sends only the commands for values that differ: `ChangeBankBookName`, `ChangeBankBookShortName`, `ChangeBankBookBankAccount` and `ChangeBankBookGeneralLedgerAccount`. So an unchanged account number or ledger account never runs into "may not be changed" once the bank book is in use. The commands are separate requests and not atomic.
 - `rename()`, `changeShortName()`, `changeBankAccount()` and `changeGeneralLedgerAccount()` send one command.
 - Not found is a `BankBookNotFoundException`, an existing code on `create()` a `BankBookAlreadyExistsException`. Other refusals are a `CommandQueryFaultException`; `BankBookServiceFaultCode::tryFrom($exception->errorCode)` tells which one.
@@ -231,6 +232,39 @@ The [documentation page](https://developers.twinfield.com/documentation/api/mast
 | No `Regime` field | `Regime` (`Generic`, `Fiscal`, `Commercial`, `Economic`) in the WSDL |
 | Periods look optional | Without `PeriodFrom`/`PeriodTo` the result is empty, so the SDK always sends them |
 
+## Cash books
+
+Cash books work like bank books, with their own Command & Query web service `CashBookService`: `$twinfield->cashBooks()` has `search()`, `get()`, `find()`, `create()` and `update()`, plus `rename()`, `changeShortName()` and `changeGeneralLedgerAccount()`. A cash book has only a name, a short name and a general ledger account; there is no bank account and no automatic processing.
+
+- Search uses the Finder type `BNK` with `banktype=1`, so bank books are left out. Results are `CashBookSummary`s.
+- Twinfield has **no delete** for cash books. Bank books are not cash books: `get('BNK')` throws `CashBookNotFoundException`, and `find()` returns `null`.
+- `update()` reads the cash book and sends only the commands for values that differ: `ChangeCashBookName`, `ChangeCashBookShortName` and `ChangeCashBookGeneralLedgerAccount`. The commands are separate requests and not atomic.
+- Not found is a `CashBookNotFoundException`, an existing code on `create()` a `CashBookAlreadyExistsException`. Other refusals are a `CommandQueryFaultException`; `CashBookServiceFaultCode::tryFrom($exception->errorCode)` tells which one (`InvalidGeneralLedgerAccount`, `GeneralLedgerAccountMayNotBeChanged`).
+- Empty short name and ledger account are `null` in the read model `CashBook`. On the input, `null` or `''` removes them.
+- To book on a cash book, pass it to `CashTransactionInput::forCashBook($cashBook, $date)` and create the transaction with `$twinfield->cashTransactions()` (see the [transactions guide](/guides/transactions/)).
+
+```php
+use SolveBeam\Twinfield\CashBook\CashBookInput;
+
+$cashBooks = $twinfield->cashBooks();
+
+$cashBook = $cashBooks->create(
+    CashBookInput::create('KAS2', 'Kas winkel')
+        ->shortName('Winkel')
+        ->generalLedgerAccount('1010'),
+);
+
+$cashBooks->update($cashBook->edit()->name('Kas hoofdkantoor'));
+```
+
+The [documentation page](https://developers.twinfield.com/documentation/api/master-data/cash-book/) differs from the service itself. The SDK follows the WSDL (`wsdl/accounting/CashBookService.svc.wsdl.xml`):
+
+| Documentation page | WSDL |
+|---|---|
+| `CreateCashBook` has no short name | `CreateCashBook` has `ShortName` |
+| Fault codes `CashBookInvalidStructure`, `CashBookInvalidBusinessLogic` | `CashBookNotFound`, `CashBookAlreadyExists`, `CashBookInvalidGeneralLedgerAccount`, `CashBookGeneralLedgerAccountMayNotBeChanged` |
+| `GetCashBook` sample sends `CompanyCompany` | The usual `CompanyCode` in the authentication header |
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -252,3 +286,7 @@ The [documentation page](https://developers.twinfield.com/documentation/api/mast
 - [Budget vs. actual](/examples/budgets/budget-vs-actual/)
 - [Budget by cost center](/examples/budgets/budget-by-cost-center/)
 - [Budget by project](/examples/budgets/budget-by-project/)
+- [List cash books](/examples/cash-books/list-cash-books/)
+- [Read cash book](/examples/cash-books/read-cash-book/)
+- [Create cash book](/examples/cash-books/create-cash-book/)
+- [Update cash book](/examples/cash-books/update-cash-book/)

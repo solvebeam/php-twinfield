@@ -46,6 +46,7 @@ Master data such as activities are dimensions, read and written with the XML web
 |---|---|---|
 | Asset methods | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/asset-methods/read-asset-method/) and [Create asset method](examples/asset-methods/create-asset-method/). |
 | Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
+| Cash books | `$twinfield->cashBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read cash book](examples/cash-books/read-cash-book/) and [Update cash book](examples/cash-books/update-cash-book/). |
 | Budgets | `$twinfield->budgets()` | Search, budget vs. actual per account, cost center or project (Command & Query; read-only). See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 
 ## Transactions
@@ -78,7 +79,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 | PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`; all commands. See [List periods](examples/periods/list-periods/) and [Rename period](examples/periods/rename-period/). |
 | BudgetService | `$twinfield->budgets()` | All queries: `totals()->byProfitAndLoss()`, `byCostCenter()`, `byProject()`. See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 | BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
-| CashBookService | – | Not yet |
+| CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |
 | DeletedTransactionsService | – | Not yet |
 | BankStatementService | – | Not yet |
 | TransactionBlockedValueService | – | Not yet |

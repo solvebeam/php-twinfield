@@ -63,6 +63,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/bank-transactions' } }],
 				},
 				{
+					label: 'Cash books',
+					items: [{ autogenerate: { directory: 'examples/cash-books' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

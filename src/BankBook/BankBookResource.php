@@ -30,7 +30,8 @@ use SolveBeam\Twinfield\Twinfield;
  *   $bankBooks->update($bankBook->edit()->name('ING zakelijk'));
  *
  * Twinfield has no command to delete a bank book. Cash books are not bank books: get()
- * throws BankBookNotFoundException for them, and search() leaves them out.
+ * throws BankBookNotFoundException for them, and search() leaves them out. Use
+ * `$twinfield->cashBooks()` for cash books.
  *
  * Other errors are thrown as CommandQueryFaultException; `errorCode` holds a BankBookServiceFaultCode value.
  *
