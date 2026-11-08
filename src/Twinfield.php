@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use InvalidArgumentException;
 use LogicException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -33,7 +34,9 @@ use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeResource;
+use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Period\PeriodResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
@@ -81,10 +84,17 @@ final readonly class Twinfield
     }
 
     /**
-     * Client for another office (company code), e.g. `company('1000')`.
+     * Client for another office (company), e.g. `company('1000')`, or an office from
+     * `offices()->list()` or `offices()->get()`.
      */
-    public function company(string $code): self
+    public function company(string|Office|OfficeSummary $company): self
     {
+        $code = is_string($company) ? $company : $company->code;
+
+        if ($code === '') {
+            throw new InvalidArgumentException('Company code must not be empty.');
+        }
+
         return new self($this->accessTokenProvider, $this->soap, $code);
     }
 
@@ -101,6 +111,9 @@ final readonly class Twinfield
         return $this->companyCode;
     }
 
+    /**
+     * Offices (companies) the user has access to: list, search and read their settings.
+     */
     public function offices(): OfficeResource
     {
         return new OfficeResource($this);

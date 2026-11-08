@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <soap:Fault>
+      <faultcode>soap:Client</faultcode>
+      <faultstring>Access denied. Company missing in request header.</faultstring>
+      <detail>
+        <message>Access denied. Company missing in request header.</message>
+        <code>359</code>
+        <source>ProcessXmlString</source>
+      </detail>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>

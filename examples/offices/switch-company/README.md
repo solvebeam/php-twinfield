@@ -2,7 +2,7 @@
 
 Runs the same call for several companies (offices).
 
-Most Twinfield calls work on one company. `company('1000')` gives you a client for that company. The client is immutable: `company()` returns a **new** client and leaves the original as it was, so you can safely keep one client per company.
+Most Twinfield calls work on one company. `company('1000')` gives you a client for that company; it also takes an office from `offices()->list()` or `offices()->get()`. The client is immutable: `company()` returns a **new** client and leaves the original as it was, so you can safely keep one client per company.
 
 ## Code
 
@@ -10,7 +10,7 @@ Most Twinfield calls work on one company. `company('1000')` gives you a client f
 $twinfield = Example::twinfield();
 
 foreach (array_slice($twinfield->offices()->list(), 0, 3) as $office) {
-    $company = $twinfield->company($office->code);
+    $company = $twinfield->company($office);
 
     $dimensions = $company->finder(FinderType::Dimensions)->limit(1)->get()->totalRows;
 

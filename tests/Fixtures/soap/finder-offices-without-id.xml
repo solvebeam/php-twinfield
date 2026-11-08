@@ -5,10 +5,8 @@
       <SearchResult />
       <data>
         <TotalRows>1</TotalRows>
-        <Columns><string>Code</string><string>Naam</string></Columns>
-        <Items>
-          <ArrayOfString><string>1002</string></ArrayOfString>
-        </Items>
+        <Columns><string>Code</string><string>Naam</string><string>Land</string><string>Tijdvak</string><string>beginkwartaal</string></Columns>
+        <Items><ArrayOfString><string>1000</string><string>Example Holding B.V.</string><string>NL</string><string>1</string><string>21</string></ArrayOfString></Items>
       </data>
     </SearchResponse>
   </soap:Body>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult />
+      <data>
+        <TotalRows>3</TotalRows>
+        <Columns><string>Code</string><string>Naam</string><string>ID</string><string>Land</string><string>Tijdvak</string><string>beginkwartaal</string></Columns>
+        <Items><ArrayOfString><string>1000</string><string>Example Holding B.V.</string><string>0f8fad5b-d9cb-469f-a165-70867728950e</string><string>NL</string><string>1</string><string>21</string></ArrayOfString><ArrayOfString><string>1001</string><string>Example Retail &amp; Co B.V.</string><string>7c9e6679-7425-40de-944b-e07fc1f90ae7</string><string>NL</string><string>0</string><string>30</string></ArrayOfString></Items>
+      </data>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

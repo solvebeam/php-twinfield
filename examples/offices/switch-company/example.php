@@ -11,7 +11,7 @@ $twinfield = Example::twinfield();
 
 foreach (array_slice($twinfield->offices()->list(), 0, 3) as $office) {
     // company() returns a new client; $twinfield itself does not change.
-    $company = $twinfield->company($office->code);
+    $company = $twinfield->company($office);
 
     $dimensions = $company->finder(FinderType::Dimensions)->limit(1)->get()->totalRows;
 

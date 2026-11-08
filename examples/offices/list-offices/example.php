@@ -9,5 +9,5 @@ require __DIR__ . '/../../../vendor/autoload.php';
 $twinfield = Example::twinfield();
 
 foreach ($twinfield->offices()->list() as $office) {
-    echo $office->code, ' ', $office->name, PHP_EOL;
+    echo $office->code, ' ', $office->name, ' (', $office->country, ', ', $office->companyId, ')', PHP_EOL;
 }

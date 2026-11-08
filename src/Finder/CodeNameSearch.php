@@ -170,6 +170,17 @@ final readonly class CodeNameSearch
     }
 
     /**
+     * Only offices that are not in a fiscal unity (tax group), are no template and have no VAT
+     * declaration in progress. Office searches only.
+     *
+     * @return self<T>
+     */
+    public function withoutTaxGroup(): self
+    {
+        return $this->option('withouttaxgroup', '1');
+    }
+
+    /**
      * Any other Finder option of the type, e.g. `option('group', 'GRP1')` for dimensions in a group.
      *
      * @return self<T>

@@ -65,6 +65,7 @@ Master data such as customers, general ledger accounts, activities, cost centers
 | Dimension groups | `$twinfield->dimensionGroups()` | Search (also by dimension type), read, create, update, delete; dimensions of any type. See [Read dimension group](examples/dimension-groups/read-dimension-group/) and [Update dimension group](examples/dimension-groups/update-dimension-group/). |
 | Dimension types | `$twinfield->dimensionTypes()` | Search (also by financial level and by dimension code), read, update name, code mask and address labels; `$type->mask->matches($code)`. See [Read dimension type](examples/dimension-types/read-dimension-type/) and [Update dimension type](examples/dimension-types/update-dimension-type/). |
 | Budgets | `$twinfield->budgets()` | Search, budget vs. actual per account, cost center or project (Command & Query; read-only). See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
+| Offices | `$twinfield->offices()` | List and search (also without tax group) with company ID, read all settings: currencies, VAT, system dimensions, intercompany and locked settings (read-only). `company($office)` takes an office. See [Read office](examples/offices/read-office/) and [Search offices](examples/offices/search-offices/). |
 
 ## Transactions
 

@@ -35,6 +35,8 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 ## Offices
 
 - [List offices](offices/list-offices/): all offices the user has access to.
+- [Search offices](offices/search-offices/): search by code or name, or only offices without tax group.
+- [Read office](offices/read-office/): all settings of one office.
 - [Switch company](offices/switch-company/): the same call for several companies.
 
 ## Activities

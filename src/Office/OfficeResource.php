@@ -4,16 +4,34 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Office;
 
+use LogicException;
+use SolveBeam\Twinfield\Finder\CodeNameSearch;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
+use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
+use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Soap\ClassicServiceFaultException;
+use SolveBeam\Twinfield\Soap\ErrorCode;
 use SolveBeam\Twinfield\Twinfield;
-use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
- * Offices the logged in user has access to.
+ * Offices (companies, administrations) the logged in user has access to. Read-only: offices
+ * cannot be created or changed with the API.
  *
- *   foreach ($twinfield->offices()->list() as $office) {
- *       echo $office->code, ' ', $office->name;
+ *   $offices = $twinfield->offices();
+ *
+ *   foreach ($offices->list() as $summary) {
+ *       echo $summary->code, ' ', $summary->name, PHP_EOL;
  *   }
+ *
+ *   $holdings = $offices->search('*Holding*')->inName()->withoutTaxGroup()->all();
+ *
+ *   $office = $offices->get('1000');
+ *   echo $office->general->baseCurrency->code, PHP_EOL;
+ *
+ *   $company = $twinfield->company($office);   // client for that office
+ *
+ * @see https://developers.twinfield.com/documentation/api/master-data/offices
  */
 final readonly class OfficeResource
 {
@@ -25,47 +43,87 @@ final readonly class OfficeResource
     /**
      * All offices, over all Finder pages.
      *
-     * @return list<Office>
+     * @return list<OfficeSummary>
      */
     public function list(): array
     {
-        $offices = [];
-
-        // Finder columns for offices: code, name, … (names depend on the user's language).
-        foreach ($this->twinfield->finder(FinderType::Offices)->all() as $index => $row) {
-            $offices[] = self::fromFinderRow($index, $row);
-        }
-
-        return $offices;
+        return iterator_to_array($this->search()->all(), false);
     }
 
     /**
-     * @param list<string> $row
+     * Search offices by code and name, e.g. `search('10*')->inCode()->get()`, or only the
+     * offices that can join a fiscal unity: `search()->withoutTaxGroup()`.
+     *
+     * Works without company: the Finder searches all offices of the user.
+     *
+     * @param string $pattern `*` matches anything, `?` one character.
+     *
+     * @return CodeNameSearch<OfficeSummary>
      */
-    private static function fromFinderRow(int $index, array $row): Office
+    public function search(string $pattern = '*'): CodeNameSearch
     {
-        $code = $row[0] ?? '';
-        $name = $row[1] ?? '';
+        // With includeid the columns are always the same: code, name, ID, country, VAT period, quarter.
+        $query = $this->twinfield->finder(FinderType::Offices)->pattern($pattern)->option('includeid', '1');
 
-        if ($code === '' || $name === '') {
-            throw new UnexpectedResponseException(sprintf(
-                'Finder office row %d has no code or name: %s.',
-                $index,
-                json_encode($row, JSON_THROW_ON_ERROR),
-            ));
-        }
-
-        return new Office(code: $code, name: $name);
+        return new CodeNameSearch($query, OfficeSummary::fromFinderRow(...));
     }
 
-    public function find(string $code): ?Office
+    /**
+     * The office with all its settings.
+     *
+     * Twinfield only reads an office with a company in the request. Without company, the client
+     * uses the office itself, so `get()` also works on a client without company.
+     *
+     * @throws OfficeNotFoundException When there is no office with this code, or the user has no access.
+     */
+    public function get(string $code): Office
     {
-        foreach ($this->list() as $office) {
-            if ($office->code === $code) {
-                return $office;
+        $xml = XmlBuilder::create('read');
+        $xml->add($xml->root(), 'type', 'office');
+        $xml->add($xml->root(), 'code', $code);
+
+        $client = $this->twinfield->companyCode() === null ? $this->twinfield->company($code) : $this->twinfield;
+
+        try {
+            $result = $client->processXml($xml->toXml());
+        } catch (ProcessXmlException $exception) {
+            throw OfficeNotFoundException::fromProcessXml($exception, $code) ?? $exception;
+        } catch (ClassicServiceFaultException $exception) {
+            // With an unknown office as company, Twinfield refuses the request itself: 359, no company.
+            $noCompany = ErrorCode::tryFrom($exception->errorCode) === ErrorCode::CompanyIdMissing;
+
+            if ($noCompany && $client !== $this->twinfield) {
+                throw new OfficeNotFoundException($code, $exception->errorMessage, $exception);
             }
+
+            throw $exception;
         }
 
-        return null;
+        return Office::fromXml(XmlElement::root($result));
+    }
+
+    /**
+     * The office, or null when there is no office with this code.
+     */
+    public function find(string $code): ?Office
+    {
+        try {
+            return $this->get($code);
+        } catch (OfficeNotFoundException) {
+            return null;
+        }
+    }
+
+    /**
+     * The office of the client: `$twinfield->company('1000')->offices()->current()`.
+     *
+     * @throws LogicException When the client has no company.
+     */
+    public function current(): Office
+    {
+        $code = $this->twinfield->companyCode()
+            ?? throw new LogicException('The client has no company: use company(\'1000\') first, or get(\'1000\').');
+
+        return $this->get($code);
     }
 }

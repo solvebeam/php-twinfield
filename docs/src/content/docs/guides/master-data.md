@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as customers, general ledger accounts, activities, cost centers and fixed assets, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as customers, general ledger accounts, activities, cost centers, fixed assets and offices, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -25,6 +25,7 @@ Other master data works the same way, but is not a dimension:
 | [Dimension groups](#dimension-groups) | `$twinfield->dimensionGroups()` | Search, read, create, update, delete |
 | [Dimension types](#dimension-types) | `$twinfield->dimensionTypes()` | Search, read, update (no create or delete) |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
+| [Offices](#offices) | `$twinfield->offices()` | List, search, read (read-only) |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 
@@ -673,6 +674,70 @@ $types->update(
 
 Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>` with only the company and the code, which returns the type without changing it. An unknown code is refused, so a read needs only one request. Twinfield's documentation shows the mask as `1####`; companies return masks like `1[0-9][0-9][0-9]`.
 
+## Offices
+
+`$twinfield->offices()` lists, searches and reads the offices (companies, administrations) the user has access to. Offices are read-only in the API: they cannot be created, changed or deleted. Twinfield is moving from the term "office" to "company"; the classes keep the name `Office` for now.
+
+```php
+use SolveBeam\Twinfield\Office\OfficeField;
+
+$offices = $twinfield->offices();
+
+// List (Finder type OFF, all pages): code, name, company ID, country, VAT period
+foreach ($offices->list() as $summary) {
+    echo $summary->code, ' ', $summary->name, ' ', $summary->companyId, PHP_EOL;
+}
+
+// Search
+$offices->search('*Holding*')->inName()->all();
+$offices->search()->withoutTaxGroup()->count();   // offices that can join a fiscal unity
+
+// Read
+$office = $offices->get('1000');                  // or find(): null when it does not exist
+$office = $twinfield->company('1000')->offices()->current();
+
+echo $office->general->baseCurrency->code, PHP_EOL;              // EUR
+echo $office->systemDimensions->accountsReceivable?->code, PHP_EOL;
+echo $office->vatManagement->taxGroup?->code ?? 'no fiscal unity', PHP_EOL;
+$office->isLocked(OfficeField::DeclarationTimeframe);
+
+// A client for the office
+$company = $twinfield->company($office);           // also takes an OfficeSummary
+```
+
+- `list()` and `search()` return `OfficeSummary` objects with `code`, `name`, `companyId` (the GUID of the company), `country`, `vatPeriod` and `startingQuarter`. Searches can match `inCode()`, `inName()` or `inCodeAndName()` (default). `withoutTaxGroup()` keeps only offices that are not in a fiscal unity, are no template and have no VAT declaration in progress.
+- `get()` returns an `Office`, `find()` returns null instead of throwing `OfficeNotFoundException` for an unknown code or an office the user has no access to. `current()` reads the office of the client and throws a `LogicException` when the client has no company.
+- `get()` also works on a client without company: Twinfield only reads an office with a company in the request, so the SDK uses the office itself.
+
+### Read model
+
+An `Office` has `code`, `name`, `shortName`, `status`, `created`, `modified`, `touched`, the `user` who last changed it, and a section per part of the settings:
+
+| Property | Class | Contents |
+|---|---|---|
+| `general` | `OfficeGeneral` | Base and reporting currency, type, demo, VAT and chamber of commerce numbers, last closed year, SEPA creditor identifier, default bank book and matching, hierarchy, template, payment discount, `address` (`OfficeAddress`) |
+| `systemDimensions` | `SystemDimensions` | Control accounts for customers and suppliers, suspense account, turnover, exchange and payment differences, discount, the default cost center of fixed assets, opening balance and closing account. Each is a `SystemDimension` (code, name, `readOnly`), or null when not set |
+| `systemDimensionTypes` | `SystemDimensionTypes` | The dimension type codes per purpose: `DEB`, `CRD`, `BAS`, `PNL`, `AST`, `PRJ`, `KPL`, `ACT` |
+| `creditManagement` | `CreditManagement` | Days after the due date and after a part payment, the minimum amount (`Amount`), browses, prompts and sort fields |
+| `vatManagement` | `VatManagement` | Contacts of the taxpayer and intermediary, tax group (fiscal unity), declaration and ICP periods, starting quarter, which provisional transactions the declaration includes, default gateway, accounting scheme |
+| `fixedAssets` | `FixedAssetSettings` | The depreciation transaction type and browses |
+| `intercompany` | `Intercompany` | Status and the `outgoing` and `incoming` relations with other offices (`IntercompanyRelation`) |
+| `regional` | `RegionalSettings` | Date format and separators in the Twinfield user interface |
+
+Codes with a name, such as currencies, bank books and the tax group, are `NamedReference` objects with `code`, `name` and `shortName`. `lockedFields` lists the settings with `locked="true"`, e.g. the VAT period once declarations were filed; `isLocked()` checks one.
+
+Optional settings are null when Twinfield returns an empty element. Twinfield writes "not set" as `0` for `lastClosedYear` and `sicMajorGroup`; the SDK turns that into null. Unknown values, such as a new office type, throw an `UnexpectedResponseException`.
+
+### Differences with the documentation
+
+The [documentation](https://developers.twinfield.com/documentation/api/master-data/offices) shows the requests, not the responses. The read model is based on the responses of 247 live offices:
+
+- A read without company in the header is refused with SOAP fault 359 (company missing). With an unknown office as company, Twinfield refuses the same way; with another company in the header, an unknown office is `<office msgtype="error" msg="…" result="0">` with only its code.
+- With `includeid=1` the Finder inserts the company ID as third column: code, name, ID, country, VAT period, starting quarter.
+- The VAT booleans `include…provisionaltransactions` and `vatrollover` are `True` and `False`, unlike the rest of the response (`true`, `false`). `mayestimate` is `0` or `1`.
+- Outgoing intercompany relations have an `indirectoffice`, incoming ones a `transaction` instead. The name of the other office is empty when the user has no access to it.
+- The values of the declaration and ICP timeframes are not documented. Live offices have `0`, `1` (most) or `2`, and a starting quarter of `21` or `30`; the SDK returns them as numbers.
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -721,6 +786,10 @@ Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>`
 - [Create general ledger account](/examples/general-ledger-accounts/create-general-ledger-account/)
 - [Update general ledger account](/examples/general-ledger-accounts/update-general-ledger-account/)
 - [Delete general ledger account](/examples/general-ledger-accounts/delete-general-ledger-account/)
+- [List offices](/examples/offices/list-offices/)
+- [Search offices](/examples/offices/search-offices/)
+- [Read office](/examples/offices/read-office/)
+- [Switch company](/examples/offices/switch-company/)
 - [List customers](/examples/customers/list-customers/)
 - [Read customer](/examples/customers/read-customer/)
 - [Create customer](/examples/customers/create-customer/)

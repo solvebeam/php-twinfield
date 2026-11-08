@@ -78,3 +78,18 @@ composer test:live -- --filter='GeneralLedgerAccount|general-ledger'
 has created an account with a VAT code and a group, record its read response
 (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) and replace these fixtures with it.
 Update the "Differences with the documentation" in the master data guide if anything differs.
+
+## Offices: undocumented values
+
+The office read model is based on 247 live offices of one accountancy environment; the Twinfield
+documentation shows no responses. To check when other environments are available:
+
+- The meaning of `vatmanagement/decltimeframe` and `icptimeframe` (`0`, `1`, `2`) and of
+  `startingquarter` (`21`, `30`). Once known, they can become enums.
+- Other values of `office/@status` (only `active` seen), `general/type` (only `accountantinternal`
+  and `accountantexternal`), `general/paymentdiscount` (only `vatexclusive`), `general/scheme`
+  (only `invoice`), `vatmanagement/accountingscheme` (only `invoicebased`) and
+  `intercompany/@status` (only `none` and `both`; `in` and `out` are guesses).
+- What `vatmanagement/seb`, `systemdimensions/teqcostcenter` and `forbalynd`,
+  `general/allowicmt940` and `lockwordinv` are.
+- Indirect intercompany relations (`indirect` is `false` everywhere).
