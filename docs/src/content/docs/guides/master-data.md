@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as customers, activities, cost centers and fixed assets, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as customers, general ledger accounts, activities, cost centers and fixed assets, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -11,6 +11,7 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
 | [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
 | [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
+| [General ledger accounts](#general-ledger-accounts) (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Other master data works the same way, but is not a dimension:
@@ -310,6 +311,86 @@ Live responses differ from the documented ones, and the SDK follows the live res
 - Every element in `<fixedassets>` has `@locked`, also `<method>`. The documented save response leaves `@locked` out on the elements of the request; they are read as not locked.
 - `<method>`, `<nrofperiods>`, `<beginperiod>`, `<purchasedate>` and `<lastdepreciation>` can be empty, and `<groups>` is left out when the asset is in no group.
 - The cost center is always on level 2 (`substitutionlevel`), with the name and dimension type on `<substitutewith>`.
+
+## General ledger accounts
+
+General ledger accounts are two dimension types with the same settings: balance sheet accounts (`BAS`) and profit and loss accounts (`PNL`), both level 1, the first dimension (`dim1`) of every transaction line. Each type has its own resource, with `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`:
+
+```php
+use SolveBeam\Twinfield\GeneralLedgerAccount\ChildValidation;
+use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountInput;
+use SolveBeam\Twinfield\GeneralLedgerAccount\SubAnalysis;
+
+$balanceSheet = $twinfield->balanceSheetAccounts();      // BAS
+$profitAndLoss = $twinfield->profitAndLossAccounts();    // PNL
+
+foreach ($profitAndLoss->search('8*')->inCode()->includeHidden()->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, $summary->hidden ? ' (hidden)' : '', PHP_EOL;
+}
+
+$account = $profitAndLoss->create(
+    GeneralLedgerAccountInput::profitAndLoss('8010', 'Revenue services')
+        ->shortName('Services')
+        ->vatCode('VH')
+        ->subAnalysis(SubAnalysis::Required)
+        ->childValidation(ChildValidation::dimensionType('KPL'))
+        ->group('REVENUE'),
+);
+
+$profitAndLoss->update($account->edit()->name('Revenue consultancy'));
+
+$profitAndLoss->delete('8010'); // DeleteResult::Hidden when it is in use
+```
+
+The input knows its type: `GeneralLedgerAccountInput::balanceSheet()`, `::profitAndLoss()`, or `::of($type, …)` when the type is a variable. The resource of the other type refuses it with an `InvalidArgumentException` before anything is sent, so an account never ends up as the wrong type. A code belongs to one type: `$balanceSheet->find('8000')` is null when `8000` is a profit and loss account.
+
+The code is required, as it is part of the chart of accounts (customers and fixed assets can get the next free code instead). The code format (mask) differs per company; see the [dimension types](#dimension-types).
+
+### Read model
+
+`GeneralLedgerAccount` has the dimension fields (`code`, `name`, `shortName`, `uid`, `status`, `inUse`, `behaviour`, `touched`, `modified`) and:
+
+| Property | Element | Notes |
+|---|---|---|
+| `type` | `type` | `GeneralLedgerAccountType::BalanceSheet` or `ProfitAndLoss`; also `isBalanceSheet()` and `isProfitAndLoss()`. |
+| `activeFrom`, `activeUntil` | `beginyear`/`beginperiod`, `endyear`/`endperiod` | `FinancialPeriod`; null for no limit (Twinfield sends 0). |
+| `matchable` | `financials/matchtype` | True for `matchable`, e.g. a suspense account. |
+| `subAnalysis` | `financials/subanalyse` | `SubAnalysis`, see below. |
+| `childValidations` | `financials/childvalidations` | List of `ChildValidation`, see below. |
+| `vatCode`, `vatCodeFixed` | `financials/vatcode` | `VatCodeReference` with `code`, `name`, `shortName` and `type` (purchase or sales); null when not set. `vatCodeFixed` is true when lines can only use this VAT code. |
+| `groups`, `inGroup()` | `groups` | Dimension group codes. |
+
+Twinfield documents the other elements (due days, pay code, e-invoicing, collect mandate, website, …) as "not in use" for general ledger accounts, so the SDK leaves them out. `financials/accounttype` (`balance` or `profitandloss`) follows from the type: it is checked when reading and not sent when saving.
+
+### Sub-analysis and child validations
+
+`subAnalysis` says whether lines on the account need a dimension 2, such as a cost center or customer:
+
+| `SubAnalysis` | `subanalyse` | Meaning |
+|---|---|---|
+| `Required` | `true` | Every line needs a dimension 2. |
+| `NotAllowed` | `false` | Lines have no dimension 2. |
+| `Optional` | `maybe` | A dimension 2 is allowed; usual for profit and loss accounts. |
+
+Child validations say which dimensions are allowed below the account, per financial level (2 for customers, suppliers and cost centers, 3 for projects and fixed assets, 4 for activities):
+
+```php
+ChildValidation::dimensionType('KPL');       // any cost center; the level follows from the type
+ChildValidation::dimensionType('XYZ', 2);    // a type the SDK does not know: pass the level
+ChildValidation::dimension('00100', 2);      // only cost center 00100
+ChildValidation::group('MARKETING', 2);      // the dimensions in a dimension group
+ChildValidation::group('MARKETING');         // level 0: groups only, any level
+```
+
+`childValidation()` adds one; `childValidations(...)` replaces them all, and without arguments removes them. Groups work the same with `group()` and `groups(...)`. `edit()` carries the current child validations and groups, so an update keeps what you do not change.
+
+### Differences with the documentation
+
+Live responses (read on two test companies, about 230 accounts) differ from the documented ones, and the SDK follows the live responses:
+
+- `<childvalidations>` and `<groups>` are left out when they are empty.
+- An account without VAT code has `<vatcode fixed="false" />`, without the `name`, `shortname` and `type` attributes.
+- Hidden accounts have the status `hide`. The Finder leaves them out, unless you search with `includeHidden()`: the rows then have a third column with `active` or `hidden`.
 
 ## Asset methods
 
@@ -635,6 +716,11 @@ Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>`
 - [Create fixed asset](/examples/fixed-assets/create-fixed-asset/)
 - [Update fixed asset](/examples/fixed-assets/update-fixed-asset/)
 - [Delete fixed asset](/examples/fixed-assets/delete-fixed-asset/)
+- [List general ledger accounts](/examples/general-ledger-accounts/list-general-ledger-accounts/)
+- [Read general ledger account](/examples/general-ledger-accounts/read-general-ledger-account/)
+- [Create general ledger account](/examples/general-ledger-accounts/create-general-ledger-account/)
+- [Update general ledger account](/examples/general-ledger-accounts/update-general-ledger-account/)
+- [Delete general ledger account](/examples/general-ledger-accounts/delete-general-ledger-account/)
 - [List customers](/examples/customers/list-customers/)
 - [Read customer](/examples/customers/read-customer/)
 - [Create customer](/examples/customers/create-customer/)

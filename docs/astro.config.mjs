@@ -95,6 +95,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/fixed-assets' } }],
 				},
 				{
+					label: 'General ledger accounts',
+					items: [{ autogenerate: { directory: 'examples/general-ledger-accounts' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

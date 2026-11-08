@@ -8,6 +8,7 @@ use SolveBeam\Twinfield\AssetMethod\AssetMethodStatus;
 use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\Customer\CustomerSummary;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\Tests\Support\Config;
 use SolveBeam\Twinfield\Tests\Support\Environment;
@@ -82,6 +83,42 @@ final class Example
         }
 
         throw new \RuntimeException('Cost center codes 999 down to 900 are all in use.');
+    }
+
+    /**
+     * An account code that is not in use yet, for the examples that create a general ledger
+     * account.
+     *
+     * The code format differs per company, so this takes an existing numeric code of the type
+     * (e.g. `8000` or `80000`), keeps its first digit and length, and tries the highest codes
+     * first: 8999, 8998, … down to 8900.
+     */
+    public static function unusedGeneralLedgerAccountCode(GeneralLedgerAccountResource $accounts): string
+    {
+        $example = null;
+
+        foreach ($accounts->search()->limit(20)->get() as $account) {
+            if (ctype_digit($account->code) && strlen($account->code) >= 4) {
+                $example = $account->code;
+
+                break;
+            }
+        }
+
+        if ($example === null) {
+            throw new \RuntimeException('The company has no numeric account code of 4 digits or more to follow.');
+        }
+
+        for ($number = 999; $number >= 900; $number--) {
+            $code = $example[0] . str_pad((string) $number, strlen($example) - 1, '9', STR_PAD_LEFT);
+
+            // find(), not search(): deleted accounts keep their code.
+            if ($accounts->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException(sprintf('Account codes %s999 down to %s900 are all in use.', $example[0], $example[0]));
     }
 
     /**

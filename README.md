@@ -45,7 +45,7 @@ See [examples/](examples/) for small, runnable examples, starting with [Authenti
 
 ## Master data
 
-Master data such as customers, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
+Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
 
 | Dimension type | Resource | Status |
 |---|---|---|
@@ -53,6 +53,7 @@ Master data such as customers, activities, cost centers and fixed assets are dim
 | Cost centers (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate. See [List cost centers](examples/cost-centers/list-cost-centers/) and [Create cost center](examples/cost-centers/create-cost-center/). |
 | Customers (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate; addresses, bank accounts, SEPA direct debit, credit management, posting rules. See [Read customer](examples/customers/read-customer/) and [Create customer](examples/customers/create-customer/). |
 | Fixed assets (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate; asset method, depreciation settings, free texts, transaction lines and locked settings. See [Read fixed asset](examples/fixed-assets/read-fixed-asset/) and [Create fixed asset](examples/fixed-assets/create-fixed-asset/). |
+| General ledger accounts (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate; sub-analysis, child validations, VAT code, groups. See [Read general ledger account](examples/general-ledger-accounts/read-general-ledger-account/) and [Create general ledger account](examples/general-ledger-accounts/create-general-ledger-account/). |
 | Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
 
 | Other master data | Resource | Status |

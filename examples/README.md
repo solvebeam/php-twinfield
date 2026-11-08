@@ -131,6 +131,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update fixed asset](fixed-assets/update-fixed-asset/): change a fixed asset; locked settings are left out (changes data).
 - [Delete fixed asset](fixed-assets/delete-fixed-asset/): delete or hide a fixed asset, and activate it again (changes data).
 
+## General ledger accounts
+
+- [List general ledger accounts](general-ledger-accounts/list-general-ledger-accounts/): balance sheet or profit and loss accounts, hidden ones included.
+- [Read general ledger account](general-ledger-accounts/read-general-ledger-account/): sub-analysis, child validations, VAT code and groups of one account.
+- [Create general ledger account](general-ledger-accounts/create-general-ledger-account/): create a profit and loss account that needs a cost center (changes data).
+- [Update general ledger account](general-ledger-accounts/update-general-ledger-account/): make an account matchable and change its child validations (changes data).
+- [Delete general ledger account](general-ledger-accounts/delete-general-ledger-account/): delete or hide an account, and activate it again (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

@@ -36,3 +36,28 @@ once a test company has an active or sold asset.
 The output in the READMEs of `examples/fixed-assets/{create,update,delete}-fixed-asset` is
 illustrative. Run the examples on company 1002_3 and replace it with the real output (with
 fictitious names and codes where needed).
+
+## General ledger accounts: verify writing live
+
+The general ledger accounts (`BAS`, `PNL`) are tested offline with fixtures and read-only live on
+companies 1002 and 1002_3 (about 230 accounts read). Creating, updating and deleting are not yet
+tested live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=GeneralLedgerAccount
+```
+
+To check:
+
+- `financials/accounttype` is not sent (it is documented read-only, but the request example has
+  it). Does Twinfield accept a new account without it?
+- Does an empty `<childvalidations/>` remove the child validations, and `<groups/>` the groups?
+- An account with a VAT code: are `name`, `shortname` and `type` on `<vatcode>` as documented?
+  `VatCodeReference::fromXml()` throws when they are missing. Does `fixed="true"` stick?
+- An account in a dimension group: does `<groups>` look as documented? No account in the test
+  companies is in a group.
+- The default `subanalyse` and `matchtype` of a new account (the update example prints them).
+- Does Twinfield give the next free code when the code is left out? The SDK requires a code now.
+
+Then run the write examples in `examples/general-ledger-accounts/{create,update,delete}-*` and
+replace the illustrative output in their READMEs with the real output.

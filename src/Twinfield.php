@@ -30,6 +30,8 @@ use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
+use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
+use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Period\PeriodResource;
@@ -159,6 +161,24 @@ final readonly class Twinfield
     public function fixedAssets(): FixedAssetResource
     {
         return new FixedAssetResource($this);
+    }
+
+    /**
+     * Balance sheet accounts (dimension type BAS) of the company: search, read, create, update
+     * and delete.
+     */
+    public function balanceSheetAccounts(): GeneralLedgerAccountResource
+    {
+        return new GeneralLedgerAccountResource($this, GeneralLedgerAccountType::BalanceSheet);
+    }
+
+    /**
+     * Profit and loss accounts (dimension type PNL) of the company: search, read, create, update
+     * and delete.
+     */
+    public function profitAndLossAccounts(): GeneralLedgerAccountResource
+    {
+        return new GeneralLedgerAccountResource($this, GeneralLedgerAccountType::ProfitAndLoss);
     }
 
     /**

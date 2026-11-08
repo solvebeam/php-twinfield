@@ -55,6 +55,9 @@ final class ExamplesTest extends TestCase
         'fixed-assets/create-fixed-asset',
         'fixed-assets/delete-fixed-asset',
         'fixed-assets/update-fixed-asset',
+        'general-ledger-accounts/create-general-ledger-account',
+        'general-ledger-accounts/delete-general-ledger-account',
+        'general-ledger-accounts/update-general-ledger-account',
         'periods/rename-period',
     ];
 

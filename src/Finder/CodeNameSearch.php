@@ -122,6 +122,17 @@ final readonly class CodeNameSearch
     }
 
     /**
+     * Also hidden items; the rows then have the status (`active` or `hidden`) as third column.
+     * Dimension searches only.
+     *
+     * @return self<T>
+     */
+    public function includeHidden(): self
+    {
+        return $this->option('includehidden', '1');
+    }
+
+    /**
      * Only dimension groups with at least one dimension of this type, e.g. `DEB`. Dimension
      * group searches only.
      *
