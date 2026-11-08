@@ -61,3 +61,20 @@ To check:
 
 Then run the write examples in `examples/general-ledger-accounts/{create,update,delete}-*` and
 replace the illustrative output in their READMEs with the real output.
+
+## General ledger accounts: rerun the live read tests
+
+The live read tests passed once (9/9), but a rerun hit the Twinfield rate limit (HTTP 429) after a
+lot of probing. Run them again on a quiet moment:
+
+```sh
+composer test:live -- --filter='GeneralLedgerAccount|general-ledger'
+```
+
+## General ledger accounts: fixtures with VAT code and groups
+
+`general-ledger-account-read-full.xml` (VAT code, groups, periods, matchable) and
+`general-ledger-account-save.xml` are fictitious, based on the documentation. Once the write test
+has created an account with a VAT code and a group, record its read response
+(`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) and replace these fixtures with it.
+Update the "Differences with the documentation" in the master data guide if anything differs.
