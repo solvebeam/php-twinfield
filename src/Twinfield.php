@@ -47,6 +47,7 @@ use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
 use SolveBeam\Twinfield\Supplier\SupplierResource;
+use SolveBeam\Twinfield\User\UserResource;
 
 /**
  * Entry point of the SDK.
@@ -115,11 +116,31 @@ final readonly class Twinfield
     }
 
     /**
+     * Code of the Twinfield user the access token belongs to, e.g. `JDOE`. Read the user with
+     * `users()->current()`.
+     *
+     * @see AccessTokenProvider::userCode()
+     */
+    public function userCode(): string
+    {
+        return $this->accessTokenProvider->userCode();
+    }
+
+    /**
      * Offices (companies) the user has access to: list, search and read their settings.
      */
     public function offices(): OfficeResource
     {
         return new OfficeResource($this);
+    }
+
+    /**
+     * Users of the organisation: search, read (also the user of the access token), create,
+     * update and delete. Needs a company in the client, any company works.
+     */
+    public function users(): UserResource
+    {
+        return new UserResource($this);
     }
 
     /**

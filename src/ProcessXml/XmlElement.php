@@ -146,6 +146,41 @@ final readonly class XmlElement
     }
 
     /**
+     * A date and time `yyyymmddhhmmss`, or an empty element (null). Only use this where an
+     * empty value is valid Twinfield behaviour.
+     */
+    public function nullableDateTime(string $name): ?DateTimeImmutable
+    {
+        return $this->child($name)->text() === '' ? null : $this->dateTime($name);
+    }
+
+    /**
+     * A date and time `yyyymmddhhmmss` from an attribute of this element, or null when the
+     * attribute is empty. Only use this where an empty value is valid Twinfield behaviour.
+     */
+    public function nullableDateTimeAttribute(string $name): ?DateTimeImmutable
+    {
+        $value = $this->attribute($name);
+
+        if ($value === '') {
+            return null;
+        }
+
+        $date = preg_match('~^\d{14}$~', $value) === 1 ? DateTimeImmutable::createFromFormat('!YmdHis', $value) : false;
+
+        if ($date === false || $date->format('YmdHis') !== $value) {
+            throw new UnexpectedResponseException(sprintf(
+                '%s/@%s is "%s", expected a date and time yyyymmddhhmmss.',
+                $this->path,
+                $name,
+                $value,
+            ));
+        }
+
+        return $date;
+    }
+
+    /**
      * A backed enum from the text of a child element.
      *
      * @template T of BackedEnum

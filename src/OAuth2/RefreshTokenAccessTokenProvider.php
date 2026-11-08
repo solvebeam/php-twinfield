@@ -13,6 +13,9 @@ use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
  * Gets access tokens with an OAuth refresh token and refreshes them when
  * they expire. Pass a PSR-6 cache to share access tokens between requests.
  *
+ * The cluster URL and the user code come from the access token validation, which it calls once
+ * per new access token.
+ *
  *   $tokens = new RefreshTokenAccessTokenProvider(
  *       new TwinfieldProvider(['clientId' => …, 'clientSecret' => …, 'redirectUri' => …]),
  *       refreshToken: $storedRefreshToken,
@@ -27,7 +30,7 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
     /** Refresh this many seconds before the access token expires. */
     private const EXPIRY_MARGIN = 60;
 
-    /** @var array{token: string, expires: int, clusterUrl: string}|null */
+    /** @var array{token: string, expires: int, clusterUrl: string, userCode: string}|null */
     private ?array $current = null;
 
     public function __construct(
@@ -47,13 +50,18 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
         return $this->current()['clusterUrl'];
     }
 
+    public function userCode(): string
+    {
+        return $this->current()['userCode'];
+    }
+
     public function refreshToken(): string
     {
         return $this->refreshToken;
     }
 
     /**
-     * @return array{token: string, expires: int, clusterUrl: string}
+     * @return array{token: string, expires: int, clusterUrl: string, userCode: string}
      */
     private function current(): array
     {
@@ -65,7 +73,7 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
         $value = $cached?->get();
 
         if ($cached !== null && $cached->isHit() && is_array($value) && $this->isValid($value)) {
-            /** @var array{token: string, expires: int, clusterUrl: string} $value */
+            /** @var array{token: string, expires: int, clusterUrl: string, userCode: string} $value */
             return $this->current = $value;
         }
 
@@ -76,6 +84,7 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
             'token' => $token->getToken(),
             'expires' => $token->getExpires() ?? $validation->exp,
             'clusterUrl' => rtrim($validation->clusterUrl, '/'),
+            'userCode' => $validation->organisationUserCode,
         ];
 
         if ($cached !== null) {
@@ -96,6 +105,8 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
     {
         return is_string($value['token'] ?? null)
             && is_string($value['clusterUrl'] ?? null)
+            // Cache entries of older versions have no user code; they are refreshed.
+            && is_string($value['userCode'] ?? null)
             && is_int($value['expires'] ?? null)
             && $value['expires'] - self::EXPIRY_MARGIN > time();
     }

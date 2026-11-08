@@ -182,6 +182,30 @@ final readonly class CodeNameSearch
     }
 
     /**
+     * Also users that the access rules hide, e.g. users without access to the companies of the
+     * logged in user (Finder option `accessrules=0`). Only for users with access to user
+     * management. User searches only.
+     *
+     * @return self<T>
+     */
+    public function withoutAccessRules(): self
+    {
+        return $this->option('accessrules', '0');
+    }
+
+    /**
+     * Users with access to at least one of the companies of the logged in user (Finder option
+     * `mutualoffices=1`). This can give more users than the default search, which leaves out
+     * some users of the organisation. User searches only.
+     *
+     * @return self<T>
+     */
+    public function withMutualCompanies(): self
+    {
+        return $this->option('mutualoffices', '1');
+    }
+
+    /**
      * Only rates of this type: hours or quantities, e.g. `rateType(RateType::Quantity)`. Rate
      * searches only.
      *

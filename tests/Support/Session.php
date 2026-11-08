@@ -70,6 +70,18 @@ final class Session implements AccessTokenProvider
         return rtrim((string) ($this->load()['cluster_url'] ?? ''), '/');
     }
 
+    public function userCode(): string
+    {
+        $this->accessToken();
+        $userCode = $this->load()['organisation_user_code'] ?? null;
+
+        if (!is_string($userCode) || $userCode === '') {
+            throw new RuntimeException('No user code in the Twinfield session. Run `composer twinfield:login` again.');
+        }
+
+        return $userCode;
+    }
+
     public function organisationCode(): string
     {
         return (string) ($this->load()['organisation_code'] ?? '');

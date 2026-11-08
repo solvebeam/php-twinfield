@@ -11,6 +11,7 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 use SolveBeam\Twinfield\OAuth2\Provider\TwinfieldResourceOwner;
 
 final class Twinfield extends AbstractProvider
@@ -52,7 +53,11 @@ final class Twinfield extends AbstractProvider
 
         $this->checkResponse($response, $data);
 
-        return AccessTokenValidation::fromArray(is_array($data) ? $data : []);
+        if (!is_array($data)) {
+            throw new UnexpectedResponseException('Access token validation did not return a JSON object.');
+        }
+
+        return AccessTokenValidation::fromArray($data);
     }
 
     protected function getDefaultScopes(): array
