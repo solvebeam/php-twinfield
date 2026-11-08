@@ -8,7 +8,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
  * Whether a user may change a project setting (authoriser, customer, billable, rate)
- * when entering a timesheet, or whether it is inherited from the project or user level.
+ * when entering a timesheet, or whether it is inherited from another level: an activity inherits
+ * from its project or the user, a project from the activity or the user.
  *
  * In the XML this is the pair of `locked` and `inherit` attributes:
  *

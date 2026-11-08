@@ -99,6 +99,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/general-ledger-accounts' } }],
 				},
 				{
+					label: 'Projects',
+					items: [{ autogenerate: { directory: 'examples/projects' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

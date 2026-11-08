@@ -59,6 +59,9 @@ final class ExamplesTest extends TestCase
         'general-ledger-accounts/delete-general-ledger-account',
         'general-ledger-accounts/update-general-ledger-account',
         'periods/rename-period',
+        'projects/create-project',
+        'projects/delete-project',
+        'projects/update-project',
     ];
 
     /**

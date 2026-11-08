@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as customers, general ledger accounts, activities, cost centers, fixed assets and offices, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as customers, general ledger accounts, activities, projects, cost centers, fixed assets and offices, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -12,7 +12,8 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
 | [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
 | [General ledger accounts](#general-ledger-accounts) (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
-| Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
+| [Projects](#projects) (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate |
+| Suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Other master data works the same way, but is not a dimension:
 
@@ -103,15 +104,15 @@ All three return the saved read model from Twinfield's response. When Twinfield 
 
 ## Who may change a setting: ChangeMode
 
-Time & expenses settings such as the customer, rate, authoriser and billable have a `ChangeMode`: whether users may change the value in their timesheet, or whether it comes from the project or user level.
+Time & expenses settings such as the customer, rate, authoriser and billable have a `ChangeMode`: whether users may change the value in their timesheet, or whether it comes from another level. An activity inherits from its project or the user, a [project](#projects) from the activity or the user.
 
 | ChangeMode | Meaning | XML |
 |---|---|---|
 | `Allow` | Fixed value, users may change it | `locked="false" inherit="false"` |
 | `Disallow` | Fixed value, users may not change it | `locked="true" inherit="false"` |
-| `Inherit` | From the project or user level | `locked="true" inherit="true"` |
+| `Inherit` | From another level (see above) | `locked="true" inherit="true"` |
 
-New activities inherit every setting until you set it. Inherited settings have no value of their own, so `code` (and `billable`) are `null`.
+New activities and projects inherit every setting until you set it. Inherited settings have no value of their own, so `code` (and `billable`) are `null`.
 
 ## Deleting
 
@@ -392,6 +393,43 @@ Live responses (read on two test companies, about 230 accounts) differ from the 
 - `<childvalidations>` and `<groups>` are left out when they are empty.
 - An account without VAT code has `<vatcode fixed="false" />`, without the `name`, `shortname` and `type` attributes.
 - Hidden accounts have the status `hide`. The Finder leaves them out, unless you search with `includeHidden()`: the rows then have a third column with `active` or `hidden`.
+
+## Projects
+
+Projects (dimension type `PRJ`) have the same time & expenses settings as activities. In Twinfield Time & Expenses, hours are booked on an activity of a project; in the ledger, projects are dimensions at level 3 (activities at level 4). `$twinfield->projects()` has the same methods as activities: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\Dimension\ChangeMode;
+use SolveBeam\Twinfield\Dimension\Quantity;
+use SolveBeam\Twinfield\Project\ProjectInput;
+
+$projects = $twinfield->projects();
+
+$project = $projects->create(
+    ProjectInput::create('P0100', 'Website redesign and API documentation')
+        ->shortName('Website')
+        ->customer('1010', ChangeMode::Disallow) // users may not book on another customer
+        ->rate('T001')
+        ->billable(true, forRatio: true)
+        ->vatCode('VH')
+        ->validFrom(new DateTimeImmutable('2026-01-01'))
+        ->quantity(Quantity::create('KM')->rate('KM')),
+);
+
+$projects->update($project->edit()->validTill(new DateTimeImmutable('2026-12-31')));
+
+echo $project->projects->customer->code, PHP_EOL; // 1010
+```
+
+What differs from activities:
+
+- The **name** may be 80 characters (activities: 40). The short name is at most 20.
+- The **VAT code** applies to all activities of the project; an activity with its own VAT code uses that one instead.
+- Settings with `ChangeMode::Inherit` come from the **activity or user level**.
+- Twinfield links every project to a **customer**: set it with `customer()`, or leave it inherited so the customer of the activity is used. The SDK does not enforce it.
+- The default code format is `P[0-9][0-9][0-9][0-9]` (in Twinfield under dimension types, `PRJ`).
+
+The read model `Project` has the same fields as `Activity`, with the time & expenses settings in `$project->projects` (a `ProjectSettings`). Use projects as `dim3` on transaction lines and per project in budgets: `$twinfield->budgets()->totals($code, 2026)->byProject()` (see [Budgets](#budgets)).
 
 ## Asset methods
 
@@ -786,6 +824,12 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - [Create general ledger account](/examples/general-ledger-accounts/create-general-ledger-account/)
 - [Update general ledger account](/examples/general-ledger-accounts/update-general-ledger-account/)
 - [Delete general ledger account](/examples/general-ledger-accounts/delete-general-ledger-account/)
+- [List projects](/examples/projects/list-projects/)
+- [Search projects](/examples/projects/search-projects/)
+- [Read project](/examples/projects/read-project/)
+- [Create project](/examples/projects/create-project/)
+- [Update project](/examples/projects/update-project/)
+- [Delete project](/examples/projects/delete-project/)
 - [List offices](/examples/offices/list-offices/)
 - [Search offices](/examples/offices/search-offices/)
 - [Read office](/examples/offices/read-office/)

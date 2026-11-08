@@ -56,6 +56,25 @@ final class Example
     }
 
     /**
+     * A project code that is not in use yet, from P9999 down to P9900, for the examples that
+     * create a project. Deleted projects keep their code, so each run takes a new one.
+     *
+     * Uses P[0-9][0-9][0-9][0-9], the default code format of projects.
+     */
+    public static function unusedProjectCode(Twinfield $twinfield): string
+    {
+        for ($number = 9999; $number >= 9900; $number--) {
+            $code = sprintf('P%04d', $number);
+
+            if ($twinfield->projects()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Project codes P9900–P9999 are all in use.');
+    }
+
+    /**
      * A cost center code that is not in use yet, for the examples that create a cost center.
      *
      * The code format of cost centers differs per company, so this takes the length of an

@@ -38,6 +38,7 @@ use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Period\PeriodResource;
+use SolveBeam\Twinfield\Project\ProjectResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
@@ -125,6 +126,14 @@ final readonly class Twinfield
     public function activities(): ActivityResource
     {
         return new ActivityResource($this);
+    }
+
+    /**
+     * Projects (dimension type PRJ) of the company: search, read, create, update and delete.
+     */
+    public function projects(): ProjectResource
+    {
+        return new ProjectResource($this);
     }
 
     /**

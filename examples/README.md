@@ -141,6 +141,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update general ledger account](general-ledger-accounts/update-general-ledger-account/): make an account matchable and change its child validations (changes data).
 - [Delete general ledger account](general-ledger-accounts/delete-general-ledger-account/): delete or hide an account, and activate it again (changes data).
 
+## Projects
+
+- [List projects](projects/list-projects/): code and name of all projects.
+- [Search projects](projects/search-projects/): search by name, change date or group.
+- [Read project](projects/read-project/): all settings of one project.
+- [Create project](projects/create-project/): create a project (changes data).
+- [Update project](projects/update-project/): change an existing project (changes data).
+- [Delete project](projects/delete-project/): delete or hide a project (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

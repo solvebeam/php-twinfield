@@ -14,8 +14,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
 /**
  * Time & expenses settings of an activity or project (the `projects` element).
  *
- * Every setting is optional in Twinfield: by default everything is inherited
- * from the project or user level and the activity is valid on every date.
+ * Every setting is optional in Twinfield: by default everything is inherited (see ChangeMode)
+ * and the activity or project is valid on every date.
  */
 final readonly class ProjectSettings
 {
@@ -153,8 +153,7 @@ final readonly class ProjectSettings
         DOMElement $parent,
         string $name,
         CodeSetting $setting,
-    ): void
-    {
+    ): void {
         $xml->add($parent, $name, $setting->code, self::changeAttributes($setting->change));
     }
 

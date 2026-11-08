@@ -93,3 +93,28 @@ documentation shows no responses. To check when other environments are available
 - What `vatmanagement/seb`, `systemdimensions/teqcostcenter` and `forbalynd`,
   `general/allowicmt940` and `lockwordinv` are.
 - Indirect intercompany relations (`indirect` is `false` everywhere).
+
+## Projects: verify live
+
+The projects (`PRJ`) are tested offline with fixtures based on the documentation and on the live
+activity responses (the XML is the same), and read-only live (`composer test:live -- --filter=Project`
+passes; the code format is `P[0-9][0-9][0-9][0-9]`, financial level 3). Creating, updating and
+deleting are not yet tested live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=Project
+```
+
+To check:
+
+- Does Twinfield accept a name of more than 40 characters (documented: 80)? The write test
+  renames the project to a name of 55 characters.
+- Does Twinfield refuse a project without a customer, or one with an inherited customer? The
+  documentation says "a project always needs to be linked to a customer".
+- The shape of the save response (`project-save.xml` follows the documentation, without
+  `modified`). Live reads parse fine; record one with all settings filled
+  (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) and replace `project-read.xml`.
+
+Then run the write examples in `examples/projects/{create,update,delete}-project` and replace the
+illustrative output in their READMEs (and in `list-projects`, `search-projects` and
+`read-project`) with the real output.

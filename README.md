@@ -54,7 +54,8 @@ Master data such as customers, general ledger accounts, activities, cost centers
 | Customers (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate; addresses, bank accounts, SEPA direct debit, credit management, posting rules. See [Read customer](examples/customers/read-customer/) and [Create customer](examples/customers/create-customer/). |
 | Fixed assets (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate; asset method, depreciation settings, free texts, transaction lines and locked settings. See [Read fixed asset](examples/fixed-assets/read-fixed-asset/) and [Create fixed asset](examples/fixed-assets/create-fixed-asset/). |
 | General ledger accounts (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate; sub-analysis, child validations, VAT code, groups. See [Read general ledger account](examples/general-ledger-accounts/read-general-ledger-account/) and [Create general ledger account](examples/general-ledger-accounts/create-general-ledger-account/). |
-| Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use `processXml()` |
+| Projects (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate; valid dates, customer, rate, authoriser, billable, quantities and a VAT code for all activities. See [Read project](examples/projects/read-project/) and [Create project](examples/projects/create-project/). |
+| Suppliers (`CRD`), … | – | Not yet; use `processXml()` |
 
 | Other master data | Resource | Status |
 |---|---|---|

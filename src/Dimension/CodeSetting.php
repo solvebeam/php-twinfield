@@ -7,9 +7,10 @@ namespace SolveBeam\Twinfield\Dimension;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 
 /**
- * A project setting with a code, such as the customer, rate or authoriser of an activity.
+ * A time & expenses setting with a code, such as the customer, rate or authoriser of an activity
+ * or project.
  *
- *   CodeSetting::inherit();                         // from project or user level
+ *   CodeSetting::inherit();                         // from another level, see ChangeMode
  *   new CodeSetting('1010');                        // fixed, may be changed in a timesheet
  *   new CodeSetting('T001', ChangeMode::Disallow);  // fixed, may not be changed
  */
