@@ -29,6 +29,7 @@ use SolveBeam\Twinfield\Customer\CustomerResource;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
+use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Period\PeriodResource;
@@ -150,6 +151,14 @@ final readonly class Twinfield
     public function dimensionTypes(): DimensionTypeResource
     {
         return new DimensionTypeResource($this);
+    }
+
+    /**
+     * Fixed assets (dimension type AST) of the company: search, read, create, update and delete.
+     */
+    public function fixedAssets(): FixedAssetResource
+    {
+        return new FixedAssetResource($this);
     }
 
     /**

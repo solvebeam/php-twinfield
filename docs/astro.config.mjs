@@ -91,6 +91,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/dimension-types' } }],
 				},
 				{
+					label: 'Fixed assets',
+					items: [{ autogenerate: { directory: 'examples/fixed-assets' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

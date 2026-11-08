@@ -123,6 +123,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Read dimension type](dimension-types/read-dimension-type/): mask, levels and address labels of one type, and whether a code matches the mask.
 - [Update dimension type](dimension-types/update-dimension-type/): change an address label (changes data).
 
+## Fixed assets
+
+- [List fixed assets](fixed-assets/list-fixed-assets/): code and name of all fixed assets, or those matching a pattern or in a group.
+- [Read fixed asset](fixed-assets/read-fixed-asset/): status, depreciation settings, free texts, transaction lines and locked settings of one asset.
+- [Create fixed asset](fixed-assets/create-fixed-asset/): create a fixed asset with the next free code (changes data).
+- [Update fixed asset](fixed-assets/update-fixed-asset/): change a fixed asset; locked settings are left out (changes data).
+- [Delete fixed asset](fixed-assets/delete-fixed-asset/): delete or hide a fixed asset, and activate it again (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

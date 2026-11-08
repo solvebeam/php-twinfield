@@ -52,6 +52,9 @@ final class ExamplesTest extends TestCase
         'dimension-groups/read-dimension-group',
         'dimension-groups/update-dimension-group',
         'dimension-types/update-dimension-type',
+        'fixed-assets/create-fixed-asset',
+        'fixed-assets/delete-fixed-asset',
+        'fixed-assets/update-fixed-asset',
         'periods/rename-period',
     ];
 

@@ -1,6 +1,6 @@
 ---
 title: Master data (dimensions)
-description: Search, read, create, update and delete master data such as customers, activities and cost centers, with typed models and clear errors.
+description: Search, read, create, update and delete master data such as customers, activities, cost centers and fixed assets, with typed models and clear errors.
 ---
 
 Master data in Twinfield, such as activities, projects, customers and suppliers, are **dimensions**. Each has a dimension type, e.g. `ACT` for activities. The SDK searches them with the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -10,6 +10,7 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
 | [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
 | [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
+| [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
 | Projects (`PRJ`), suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Other master data works the same way, but is not a dimension:
@@ -231,6 +232,84 @@ Differences with the [documentation](https://developers.twinfield.com/documentat
 | A posting rule has a currency and amount | A rule can have an empty `<currency/>`, `<amount/>` and `<lines/>` |
 | An address has a name | The name can be empty |
 | `<remittanceadvice>` is not listed in the root elements | It is in every read response |
+
+## Fixed assets
+
+Fixed assets (dimension type `AST`, level 3) are the third dimension (`dim3`) on investment accounts. `$twinfield->fixedAssets()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
+use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
+use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+
+$fixedAssets = $twinfield->fixedAssets();
+
+foreach ($fixedAssets->search()->group('VEHICLES')->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Without code(), Twinfield gives the next free code.
+$asset = $fixedAssets->create(
+    FixedAssetInput::create('Delivery van')
+        ->method('5YVEH')
+        ->costCenter('00000')
+        ->purchaseDate(new DateTimeImmutable('2026-03-15'))
+        ->depreciateFrom(FinancialPeriod::of(2026, 4))
+        ->residualValue('2500.00')
+        ->freeText(1, 'WDB9066331S123456')
+        ->group('VEHICLES'),
+);
+
+echo $asset->assetStatus->name, PHP_EOL; // ToBeActivated
+
+$fixedAssets->update($asset->edit()->residualValue('1000.00'));
+
+$fixedAssets->delete($asset->code); // DeleteResult::Hidden when it is used in a transaction
+```
+
+### Read model
+
+`FixedAsset` has the dimension fields (`code`, `name`, `uid`, `status`, `inUse`, `touched`, `modified`), the `costCenter` and `vatCode` from the financials, the `groups`, and the fixed asset settings:
+
+| Property | Element | Notes |
+|---|---|---|
+| `assetStatus` | `status` | `FixedAssetStatus`: `ToBeActivated`, `Active`, `Inactive` or `Sold`. Not the same as `status`, which is the dimension status (active, deleted, hidden). |
+| `method` | `method` | `AssetMethodReference` with code and name; null when the asset has no method. Read the method with `$twinfield->assetMethods()->get($asset->method->code)`. |
+| `periods`, `periodsInherited` | `nrofperiods` | `periodsInherited` is true when the number comes from the asset method. |
+| `percentage` | `percentage` | Numeric string such as `'12.5'`; null for methods without percentage. |
+| `residualValue`, `stopValue` | `residualvalue`, `stopvalue` | `Amount`. |
+| `depreciateFrom`, `lastDepreciation` | `beginperiod`, `lastdepreciation` | `FinancialPeriod`, also for weekly periods such as `2015/48`; null until set. |
+| `purchaseDate`, `sellDate` | `purchasedate`, `selldate` | Null until set or sold. |
+| `freeTexts`, `freeText(1)` | `freetext1`–`freetext5` | Values only; the asset method has the labels (`$method->freeText(1)->label`). |
+| `transactionLines` | `translines` | `FixedAssetTransactionLine`: transaction type and number, line, `amount`, `period`, `account()` (dim1), `costCenter()` (dim2), `dimension(1–6)`. |
+| `lockedFields`, `isLocked()` | `@locked` | What Twinfield does not allow to change now. |
+
+### Locked settings
+
+Twinfield locks settings depending on the status of the asset. The status and sell date are always locked; once an asset is active, the begin period, last depreciation and transaction lines are locked too. `edit()` leaves locked settings out, and setting one on that input throws a `LogicException` before anything is sent:
+
+```php
+$input = $asset->edit()->residualValue('1000.00');
+
+if (!$asset->isLocked(FixedAssetField::DepreciateFrom)) {
+    $input = $input->depreciateFrom(FinancialPeriod::of(2026, 5));
+}
+```
+
+`edit()` also leaves out the number of periods when it comes from the asset method, so it keeps following the method.
+
+### Status and transaction lines
+
+The status, sell date and transaction lines cannot be sent. A new asset has the status `ToBeActivated`. Transaction lines are the transactions with the asset code as dimension 3, e.g. the purchase on the investment account; Twinfield links them when you book such a transaction. Activating, selling and disposing of assets are done in Twinfield itself.
+
+### Differences with the documentation
+
+Live responses differ from the documented ones, and the SDK follows the live responses:
+
+- The asset status is lowercase (`tobeactivated`, `active`, `sold`), not `ToBeActivated`.
+- Every element in `<fixedassets>` has `@locked`, also `<method>`. The documented save response leaves `@locked` out on the elements of the request; they are read as not locked.
+- `<method>`, `<nrofperiods>`, `<beginperiod>`, `<purchasedate>` and `<lastdepreciation>` can be empty, and `<groups>` is left out when the asset is in no group.
+- The cost center is always on level 2 (`substitutionlevel`), with the name and dimension type on `<substitutewith>`.
 
 ## Asset methods
 
@@ -551,6 +630,11 @@ Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>`
 - [List dimension types](/examples/dimension-types/list-dimension-types/)
 - [Read dimension type](/examples/dimension-types/read-dimension-type/)
 - [Update dimension type](/examples/dimension-types/update-dimension-type/)
+- [List fixed assets](/examples/fixed-assets/list-fixed-assets/)
+- [Read fixed asset](/examples/fixed-assets/read-fixed-asset/)
+- [Create fixed asset](/examples/fixed-assets/create-fixed-asset/)
+- [Update fixed asset](/examples/fixed-assets/update-fixed-asset/)
+- [Delete fixed asset](/examples/fixed-assets/delete-fixed-asset/)
 - [List customers](/examples/customers/list-customers/)
 - [Read customer](/examples/customers/read-customer/)
 - [Create customer](/examples/customers/create-customer/)

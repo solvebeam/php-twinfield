@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Examples;
 
+use SolveBeam\Twinfield\AssetMethod\AssetMethodStatus;
 use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\Customer\CustomerSummary;
 use SolveBeam\Twinfield\Finder\FinderType;
@@ -151,6 +152,29 @@ final class Example
         }
 
         throw new \RuntimeException('Asset method codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
+     * The first active asset method of the company, for the examples that create a fixed asset.
+     */
+    public static function assetMethodCode(Twinfield $twinfield): string
+    {
+        foreach ($twinfield->assetMethods()->search()->limit(20)->get() as $summary) {
+            if ($twinfield->assetMethods()->get($summary->code)->status === AssetMethodStatus::Active) {
+                return $summary->code;
+            }
+        }
+
+        throw new \RuntimeException('The company has no active asset method: create one first.');
+    }
+
+    /**
+     * The first cost center of the company, for the examples that create a fixed asset.
+     */
+    public static function costCenterCode(Twinfield $twinfield): string
+    {
+        return $twinfield->costCenters()->search()->limit(1)->get()->items[0]->code
+            ?? throw new \RuntimeException('The company has no cost centers.');
     }
 
     /**
