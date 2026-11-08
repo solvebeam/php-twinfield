@@ -12,15 +12,21 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
  *
  * Every field is optional in Twinfield (an empty element), so each one is null when not set.
  *
- * To change it, call edit() and pass the result to `CustomerInput::bank()`.
+ * To change it, call edit() and pass the result to `CustomerInput::bank()` or
+ * `SupplierInput::bank()`.
  */
 final readonly class Bank
 {
     public function __construct(
-        /** Sequence number within the customer, e.g. `1`. */
+        /** Sequence number within the customer or supplier, e.g. `1`. */
         public int $id,
-        /** True for the default bank account; a customer has at most one. */
+        /** True for the default bank account; a customer or supplier has at most one. */
         public bool $default,
+        /**
+         * True when the bank account is blocked. Read-only; null when Twinfield leaves it out:
+         * it is not in the documented responses, but in every live one.
+         */
+        public ?bool $blocked,
         /** Account holder, e.g. `Example B.V.`. */
         public ?string $ascription,
         /** Account number, e.g. `417164300`. */
@@ -42,6 +48,10 @@ final readonly class Bank
         public ?string $state,
         /** ISO 3166-1 alpha-2 country code, e.g. `NL`. */
         public ?string $country,
+        /** Suppliers, payment type BTL91 only; null when not set. */
+        public ?WayOfPayment $wayOfPayment = null,
+        /** Suppliers, with WayOfPayment::Cheque only; null when not set. */
+        public ?PayAddress $payAddress = null,
     ) {
         if ($id < 1) {
             throw new InvalidArgumentException(sprintf('Bank id must be 1 or more, %d given.', $id));
@@ -59,6 +69,7 @@ final readonly class Bank
         return new self(
             id: $bank->intAttribute('id'),
             default: $bank->boolAttribute('default'),
+            blocked: $bank->hasAttribute('blocked') ? $bank->boolAttribute('blocked') : null,
             ascription: $bank->nullableString('ascription'),
             accountNumber: $bank->nullableString('accountnumber'),
             iban: $bank->nullableString('iban'),
@@ -71,12 +82,19 @@ final readonly class Bank
             city: $bank->nullableString('city'),
             state: $bank->nullableString('state'),
             country: $bank->nullableString('country'),
+            // Documented for suppliers, but left out of every live response seen so far.
+            wayOfPayment: $bank->nullableChild('wayofpayment') === null
+                ? null
+                : $bank->nullableEnum('wayofpayment', WayOfPayment::class),
+            payAddress: $bank->nullableChild('payaddress') === null
+                ? null
+                : $bank->nullableEnum('payaddress', PayAddress::class),
         );
     }
 
     /**
      * Input with all values of this bank account, including its id, to change and pass to
-     * `CustomerInput::bank()`.
+     * `CustomerInput::bank()` or `SupplierInput::bank()`. The read-only `blocked` is not part of it.
      */
     public function edit(): BankInput
     {
@@ -94,6 +112,7 @@ final readonly class Bank
             ->postcode($this->postcode)
             ->city($this->city)
             ->state($this->state)
-            ->country($this->country);
+            ->country($this->country)
+            ->wayOfPayment($this->wayOfPayment, $this->payAddress);
     }
 }

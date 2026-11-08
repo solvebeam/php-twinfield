@@ -46,6 +46,7 @@ use SolveBeam\Twinfield\Rate\RateResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
+use SolveBeam\Twinfield\Supplier\SupplierResource;
 
 /**
  * Entry point of the SDK.
@@ -160,6 +161,14 @@ final readonly class Twinfield
     public function customers(): CustomerResource
     {
         return new CustomerResource($this);
+    }
+
+    /**
+     * Suppliers (dimension type CRD) of the company: search, read, create, update and delete.
+     */
+    public function suppliers(): SupplierResource
+    {
+        return new SupplierResource($this);
     }
 
     /**

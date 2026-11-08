@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Unit\Dimension;
 
+use DOMDocument;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Dimension\PaymentCondition;
+use SolveBeam\Twinfield\Dimension\PostingRule;
 use SolveBeam\Twinfield\Dimension\PostingRuleInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleLine;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
+use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class PostingRuleTest extends TestCase
 {
@@ -51,6 +56,45 @@ final class PostingRuleTest extends TestCase
         PostingRuleLine::create('8000', '78,4');
     }
 
+    public function testReadsLinesWithoutRatioAndLeavesOutEmptyLines(): void
+    {
+        // As in live posting rules of suppliers: no ratio, the VAT code # (no VAT) and an empty line.
+        $rule = PostingRule::fromXml($this->element(
+            '<postingrule id="1" status="active"><currency name="Euro" shortname="Euro">EUR</currency><amount/>'
+            . '<description>Invoice</description><lines>'
+            . '<line><office name="" shortname=""/><dimension1 name="Purchases" dimensiontype="PNL">7000</dimension1>'
+            . '<dimension2 dimensiontype="KPL">00012</dimension2><ratio/><vatcode name="No VAT">#</vatcode>'
+            . '<description>Purchases</description></line>'
+            . '<line><office name="" shortname=""/><dimension1 name="" shortname="" dimensiontype=""/><ratio/>'
+            . '<vatcode/><description/></line>'
+            . '</lines></postingrule>',
+        ));
+
+        self::assertNull($rule->amount);
+        self::assertCount(1, $rule->lines);
+        self::assertSame('7000', $rule->lines[0]->generalLedger);
+        self::assertSame('00012', $rule->lines[0]->costCenter);
+        self::assertNull($rule->lines[0]->ratio);
+        self::assertSame('#', $rule->lines[0]->vatCode);
+
+        $xml = XmlBuilder::create('postingrules');
+        $rule->edit()->appendTo($xml, $xml->root());
+
+        self::assertStringContainsString('<ratio/><vatcode>#</vatcode>', $xml->toXml());
+    }
+
+    public function testRefusesAnInvalidRatioInAResponse(): void
+    {
+        $this->expectException(UnexpectedResponseException::class);
+        $this->expectExceptionMessage('postingrule/lines/line/ratio is "78,4", expected a ratio.');
+
+        PostingRule::fromXml($this->element(
+            '<postingrule id="1" status="active"><currency/><amount/><description/><lines>'
+            . '<line><office/><dimension1>7000</dimension1><ratio>78,4</ratio><vatcode/><description/></line>'
+            . '</lines></postingrule>',
+        ));
+    }
+
     public function testPaymentCondition(): void
     {
         $condition = PaymentCondition::of(8, '2.5');
@@ -65,5 +109,13 @@ final class PostingRuleTest extends TestCase
         $this->expectExceptionMessage('Discount days must be 0 or more, -1 given.');
 
         PaymentCondition::of(-1, '2');
+    }
+
+    private function element(string $xml): XmlElement
+    {
+        $document = new DOMDocument();
+        $document->loadXML($xml);
+
+        return new XmlElement($document->documentElement ?? throw new LogicException('No root.'), 'postingrule');
     }
 }

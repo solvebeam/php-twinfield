@@ -12,12 +12,12 @@ use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Customer\CollectionSchema;
 use SolveBeam\Twinfield\Customer\Customer;
 use SolveBeam\Twinfield\Customer\CustomerInput;
-use SolveBeam\Twinfield\Customer\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\Customer\SendReminder;
 use SolveBeam\Twinfield\Dimension\AddressInput;
 use SolveBeam\Twinfield\Dimension\BankInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleLine;
+use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
 final class CustomerInputTest extends TestCase

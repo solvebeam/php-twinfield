@@ -31,6 +31,9 @@ final class XmlAnonymizer
         'true', 'false', 'yes', 'no', 'normal', 'active', 'deleted', 'hide', 'error', 'warning', 'info',
         'DIM', 'DEB', 'CRD', 'KPL', 'PNL', 'BAS', 'ACT', 'PRJ', 'AST', 'OFF', 'EUR',
         'Error', 'Warning', 'Informational',
+        // Fixed values of customers and suppliers
+        'customersupplier', 'inherit', 'none', 'paymentfile', 'cheques', 'ToFileManager', 'ByEmail', 'core', 'b2b',
+        'invoice', 'postal', 'contact', 'purchase', 'sales',
     ];
 
     /** Elements whose text is kept as is. */
@@ -236,10 +239,17 @@ final class XmlAnonymizer
     }
 
     /**
-     * Shifts `YYYYMMDD`, `YYYY-MM-DD` and `YYYY-MM-DDTHH:MM:SS…` dates; returns null for other values.
+     * Shifts `YYYYMMDD`, `YYYYMMDDHHMMSS`, `YYYY-MM-DD` and `YYYY-MM-DDTHH:MM:SS…` dates; returns
+     * null for other values.
      */
     private function fakeDate(string $value): ?string
     {
+        if (preg_match('~^(\d{4})(\d{2})(\d{2})(\d{6})$~', $value, $matches) === 1) {
+            return $this->fakeDate($matches[1] . $matches[2] . $matches[3]) === null
+                ? null
+                : $this->fakeDate($matches[1] . $matches[2] . $matches[3]) . $matches[4];
+        }
+
         if (preg_match('~^(\d{4})(-?)(\d{2})\2(\d{2})(T.*)?$~', $value, $matches) !== 1) {
             return null;
         }

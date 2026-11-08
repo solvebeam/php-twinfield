@@ -7,12 +7,13 @@ namespace SolveBeam\Twinfield\Customer;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\Address;
-use SolveBeam\Twinfield\Dimension\AddressType;
 use SolveBeam\Twinfield\Dimension\Bank;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Dimension\PaymentCondition;
 use SolveBeam\Twinfield\Dimension\PostingRule;
+use SolveBeam\Twinfield\Dimension\RelationShortcuts;
+use SolveBeam\Twinfield\Dimension\RemittanceAdvice;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
@@ -31,6 +32,8 @@ use SolveBeam\Twinfield\Transaction\FinancialPeriod;
  */
 final readonly class Customer
 {
+    use RelationShortcuts;
+
     /**
      * @param list<Address> $addresses
      * @param list<Bank> $banks
@@ -142,91 +145,6 @@ final readonly class Customer
     }
 
     /**
-     * The default address, or null when the customer has no addresses.
-     */
-    public function defaultAddress(): ?Address
-    {
-        foreach ($this->addresses as $address) {
-            if ($address->default) {
-                return $address;
-            }
-        }
-
-        return $this->addresses[0] ?? null;
-    }
-
-    /**
-     * The address with this id, or null.
-     */
-    public function address(int $id): ?Address
-    {
-        foreach ($this->addresses as $address) {
-            if ($address->id === $id) {
-                return $address;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Addresses of one type, e.g. `addressesOfType(AddressType::Postal)`.
-     *
-     * @return list<Address>
-     */
-    public function addressesOfType(AddressType $type): array
-    {
-        return array_values(array_filter(
-            $this->addresses,
-            static fn (Address $address): bool => $address->type === $type,
-        ));
-    }
-
-    /**
-     * The default bank account, or null when the customer has no bank accounts.
-     */
-    public function defaultBank(): ?Bank
-    {
-        foreach ($this->banks as $bank) {
-            if ($bank->default) {
-                return $bank;
-            }
-        }
-
-        return $this->banks[0] ?? null;
-    }
-
-    /**
-     * The bank account with this id, or null.
-     */
-    public function bank(int $id): ?Bank
-    {
-        foreach ($this->banks as $bank) {
-            if ($bank->id === $id) {
-                return $bank;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * VAT number of the default address (field 4).
-     */
-    public function vatNumber(): ?string
-    {
-        return $this->defaultAddress()?->vatNumber();
-    }
-
-    /**
-     * Chamber of commerce number of the default address (field 5).
-     */
-    public function chamberOfCommerceNumber(): ?string
-    {
-        return $this->defaultAddress()?->chamberOfCommerceNumber();
-    }
-
-    /**
      * Input with all values of this customer, to change and pass to update() or save().
      *
      *   $customers->update($customer->edit()->dueDays(14));
@@ -296,16 +214,5 @@ final readonly class Customer
         }
 
         return $input;
-    }
-
-    /**
-     * A period from a year and period element; Twinfield uses 0 for "no limit".
-     */
-    private static function period(XmlElement $dimension, string $yearElement, string $periodElement): ?FinancialPeriod
-    {
-        $year = $dimension->int($yearElement);
-        $period = $dimension->int($periodElement);
-
-        return $year === 0 ? null : FinancialPeriod::of($year, $period);
     }
 }

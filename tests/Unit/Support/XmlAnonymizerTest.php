@@ -66,6 +66,26 @@ final class XmlAnonymizerTest extends TestCase
         self::assertSame($matches[2], $matches[3]);
     }
 
+    public function testShiftsTimestampsLikeDates(): void
+    {
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize('<r><a>20250131</a><modified>20250131093000</modified></r>');
+
+        self::assertMatchesRegularExpression('~^<r><a>(\d{8})</a><modified>\g{1}093000</modified></r>$~', $xml);
+        self::assertStringNotContainsString('20250131', $xml);
+    }
+
+    public function testKeepsFixedValuesOfCustomersAndSuppliers(): void
+    {
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize(
+            '<r><matchtype>customersupplier</matchtype><meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
+        );
+
+        self::assertSame(
+            '<r><matchtype>customersupplier</matchtype><meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
+            $xml,
+        );
+    }
+
     public function testAlwaysReplacesSecrets(): void
     {
         $xml = (new XmlAnonymizer(self::KEY))->anonymize(

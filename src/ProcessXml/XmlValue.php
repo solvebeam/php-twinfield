@@ -123,4 +123,12 @@ final class XmlValue
 
         return $code;
     }
+
+    /**
+     * VAT code: a code (see code()), or `#`, the VAT code "no VAT" (Geen btw) of Twinfield.
+     */
+    public static function vatCode(string $vatCode): string
+    {
+        return $vatCode === '#' ? $vatCode : self::code($vatCode);
+    }
 }

@@ -1,5 +1,33 @@
 # TODO
 
+## Suppliers: verify writing live
+
+The suppliers (`CRD`) are tested offline with fixtures and read-only live: all 184 suppliers of
+companies 1002 and 1002_3 parse, and `edit()` round-trips them. `supplier-read.xml` and
+`supplier-read-posting-rules.xml` are recorded live (anonymized); `supplier-read-full.xml` and
+`supplier-save.xml` are fictitious, based on the documentation. Creating, updating and deleting are
+not yet tested live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=Supplier
+```
+
+To check:
+
+- Does Twinfield accept `cheques()` (`meansofpayment` cheques) without a pay code? No live supplier
+  is paid by Twinfield (all have `none`), so `paymentfile` and `cheques` are only tested offline.
+- Do `relationsreference` and `<remittanceadvice>` with `ByEmail` stick?
+- `wayofpayment` and `payaddress` (BTL91) are documented, but never seen live. Does Twinfield accept
+  and return them?
+- What the bank attribute `destination` (always `0`) means, and whether `blocked` can be written.
+- Can a posting rule line without ratio be sent (`PostingRuleLine::create('4500', null)`)?
+- The shape of the live save response: record one (`TWINFIELD_RECORD=1`, then
+  `composer twinfield:anonymize`) and replace `supplier-save.xml`.
+- Record a supplier with groups and payment conditions and replace `supplier-read-full.xml`.
+
+Then run the write examples in `examples/suppliers/{create,update,delete}-supplier` and replace the
+illustrative output in their READMEs with the real output.
+
 ## Rates: verify writing live
 
 Rates (`projectrate`, Finder `TRT`) are tested offline with fixtures and read-only live on company

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\Customer;
+namespace SolveBeam\Twinfield\Dimension;
 
 /**
  * Where Twinfield puts the remittance advice (`remittanceadvice/sendtype`).

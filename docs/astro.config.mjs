@@ -40,6 +40,7 @@ export default defineConfig({
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
+						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 					],
 				},
 				{
@@ -105,6 +106,10 @@ export default defineConfig({
 				{
 					label: 'Rates',
 					items: [{ autogenerate: { directory: 'examples/rates' } }],
+				},
+				{
+					label: 'Suppliers',
+					items: [{ autogenerate: { directory: 'examples/suppliers' } }],
 				},
 				{
 					label: 'Cash transactions',

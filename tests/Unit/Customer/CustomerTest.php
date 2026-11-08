@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Unit\Customer;
 
-use DateTimeImmutable;
 use DOMDocument;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Customer\CollectionSchema;
 use SolveBeam\Twinfield\Customer\Customer;
 use SolveBeam\Twinfield\Customer\MeansOfPayment;
-use SolveBeam\Twinfield\Customer\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\Customer\SendReminder;
 use SolveBeam\Twinfield\Dimension\AddressType;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Dimension\PaymentCondition;
 use SolveBeam\Twinfield\Dimension\PostingRuleLine;
+use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\UnexpectedResponseException;

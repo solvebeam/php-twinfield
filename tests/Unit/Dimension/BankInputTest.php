@@ -9,6 +9,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Dimension\Bank;
 use SolveBeam\Twinfield\Dimension\BankInput;
+use SolveBeam\Twinfield\Dimension\PayAddress;
+use SolveBeam\Twinfield\Dimension\WayOfPayment;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 
 final class BankInputTest extends TestCase
@@ -73,10 +75,35 @@ final class BankInputTest extends TestCase
 
     public function testEditKeepsAStoredIbanEvenWhenItIsInvalid(): void
     {
-        $bank = new Bank(1, true, null, null, 'NL00INVALID0000', null, null, null, null, null, null, null, null, null);
+        $bank = new Bank(1, true, false, null, null, 'NL00INVALID0000', null, null, null, null, null, null, null, null, null);
 
         self::assertSame('NL00INVALID0000', $bank->edit()->iban);
         self::assertSame(1, $bank->edit()->id);
+    }
+
+    public function testWritesWayOfPaymentAndPayAddressOnlyWhenSet(): void
+    {
+        self::assertStringNotContainsString('wayofpayment', $this->xml(BankInput::create()));
+
+        $xml = $this->xml(BankInput::create()->wayOfPayment(WayOfPayment::Cheque, PayAddress::Beneficiary));
+
+        self::assertStringEndsWith('<state/><wayofpayment>1</wayofpayment><payaddress>3</payaddress></bank></banks>', $xml);
+    }
+
+    public function testRefusesAPayAddressWithoutCheque(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A pay address is only for payment by cheque (WayOfPayment::Cheque).');
+
+        BankInput::create()->wayOfPayment(WayOfPayment::Normal, PayAddress::Payer);
+    }
+
+    public function testEditKeepsWayOfPayment(): void
+    {
+        $bank = new Bank(2, false, null, null, null, null, null, null, null, null, null, null, null, null, null, WayOfPayment::Cheque, PayAddress::Payer);
+
+        self::assertSame(WayOfPayment::Cheque, $bank->edit()->wayOfPayment);
+        self::assertSame(PayAddress::Payer, $bank->edit()->payAddress);
     }
 
     private function xml(BankInput $bank): string

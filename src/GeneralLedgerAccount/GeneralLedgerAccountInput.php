@@ -176,7 +176,7 @@ final readonly class GeneralLedgerAccountInput
         }
 
         return $this->with([
-            'values' => [...$this->values, 'financials/vatcode' => $vatCode === null ? null : XmlValue::code($vatCode)],
+            'values' => [...$this->values, 'financials/vatcode' => $vatCode === null ? null : XmlValue::vatCode($vatCode)],
             'vatCodeFixed' => $fixed,
         ]);
     }

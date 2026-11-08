@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Customer;
 
 use DateTimeInterface;
-use DOMElement;
 use InvalidArgumentException;
-use LogicException;
 use SolveBeam\Twinfield\Dimension\AddressInput;
 use SolveBeam\Twinfield\Dimension\BankInput;
 use SolveBeam\Twinfield\Dimension\PaymentCondition;
 use SolveBeam\Twinfield\Dimension\PostingRuleInput;
+use SolveBeam\Twinfield\Dimension\RelationInput;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 use SolveBeam\Twinfield\Transaction\Amount;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
 /**
  * A customer to create or update. Immutable: every method returns a new input.
@@ -56,6 +54,11 @@ use SolveBeam\Twinfield\Transaction\FinancialPeriod;
  */
 final readonly class CustomerInput
 {
+    use RelationInput;
+
+    /** For messages. */
+    private const RELATION = 'customer';
+
     /**
      * Elements in the order of the documentation; `a/b` is element `b` in `a`.
      */
@@ -110,23 +113,7 @@ final readonly class CustomerInput
         public ?array $postingRules,
         public ?array $paymentConditions,
     ) {
-        if ($code !== null) {
-            XmlValue::code($code);
-        }
-
-        if ($name === '') {
-            throw new InvalidArgumentException('Customer name must not be empty.');
-        }
-
-        XmlValue::maxLength('customer name', $name, 80);
-
-        if (count(array_filter($addresses ?? [], static fn (AddressInput $address): bool => $address->default)) > 1) {
-            throw new InvalidArgumentException('A customer has at most one default address.');
-        }
-
-        if (count(array_filter($banks ?? [], static fn (BankInput $bank): bool => $bank->default)) > 1) {
-            throw new InvalidArgumentException('A customer has at most one default bank account.');
-        }
+        self::validate($code, $name, $addresses, $banks);
     }
 
     /**
@@ -135,73 +122,6 @@ final readonly class CustomerInput
     public static function create(string $name): self
     {
         return new self(null, $name, [], null, null, null, null, null);
-    }
-
-    /**
-     * Code in the format of the DEB dimension type of the company, e.g. `1100`; null lets
-     * Twinfield give the next free code.
-     */
-    public function code(?string $code): self
-    {
-        return $this->with(['code' => $code === '' ? null : $code]);
-    }
-
-    /**
-     * Name, at most 80 characters.
-     */
-    public function name(string $name): self
-    {
-        return $this->with(['name' => $name]);
-    }
-
-    /**
-     * Short name, at most 20 characters.
-     */
-    public function shortName(?string $shortName): self
-    {
-        return $this->set('shortname', self::maxLength('customer short name', $shortName, 20));
-    }
-
-    /**
-     * Website, at most 40 characters, e.g. `www.example.com`.
-     */
-    public function website(?string $website): self
-    {
-        return $this->set('website', self::maxLength('customer website', $website, 40));
-    }
-
-    /**
-     * First period the customer can be used in; null for no limit.
-     */
-    public function activeFrom(?FinancialPeriod $period): self
-    {
-        return $this->setMany([
-            'beginperiod' => (string) ($period->number ?? 0),
-            'beginyear' => (string) ($period->year ?? 0),
-        ]);
-    }
-
-    /**
-     * Last period the customer can be used in; null for no limit.
-     */
-    public function activeUntil(?FinancialPeriod $period): self
-    {
-        return $this->setMany([
-            'endperiod' => (string) ($period->number ?? 0),
-            'endyear' => (string) ($period->year ?? 0),
-        ]);
-    }
-
-    /**
-     * Payment term in days, e.g. `30`.
-     */
-    public function dueDays(int $days): self
-    {
-        if ($days < 0) {
-            throw new InvalidArgumentException(sprintf('Due days must be 0 or more, %d given.', $days));
-        }
-
-        return $this->set('financials/duedays', (string) $days);
     }
 
     /**
@@ -284,23 +204,6 @@ final readonly class CustomerInput
     }
 
     /**
-     * Balance sheet account of the customer, e.g. `1300`. By default the account of the
-     * DEB dimension type.
-     */
-    public function balanceAccount(string $account): self
-    {
-        return $this->set('financials/substitutewith', XmlValue::code($account));
-    }
-
-    /**
-     * Default VAT code on invoices, e.g. `VH`.
-     */
-    public function vatCode(?string $vatCode): self
-    {
-        return $this->set('financials/vatcode', self::nullableCode($vatCode));
-    }
-
-    /**
      * Credit manager (user code).
      */
     public function responsibleUser(?string $user): self
@@ -373,25 +276,6 @@ final readonly class CustomerInput
     }
 
     /**
-     * Where to put the remittance advice.
-     *
-     * @throws InvalidArgumentException For RemittanceAdviceSendType::ByEmail without email address.
-     */
-    public function remittanceAdvice(RemittanceAdviceSendType $sendType, ?string $email = null): self
-    {
-        $email = $email === '' ? null : $email;
-
-        if ($sendType === RemittanceAdviceSendType::ByEmail && $email === null) {
-            throw new InvalidArgumentException('A remittance advice by email needs an email address.');
-        }
-
-        return $this->setMany([
-            'remittanceadvice/sendtype' => $sendType->value,
-            'remittanceadvice/sendmail' => self::maxLength('remittance advice email', $email, 200),
-        ]);
-    }
-
-    /**
      * Article for discounts or premiums on invoices.
      */
     public function discountArticle(?string $article): self
@@ -400,274 +284,11 @@ final readonly class CustomerInput
     }
 
     /**
-     * Adds an address, or replaces the address with the same id. A default address makes the
-     * other addresses non-default.
-     */
-    public function address(AddressInput $address): self
-    {
-        $addresses = $this->addresses ?? [];
-
-        if ($address->default) {
-            $addresses = array_map(static fn (AddressInput $other): AddressInput => $other->default(false), $addresses);
-        }
-
-        return $this->with(['addresses' => self::replaceOrAppend($addresses, $address)]);
-    }
-
-    /**
-     * Replaces all addresses; addresses you leave out are removed.
-     */
-    public function addresses(AddressInput ...$addresses): self
-    {
-        return $this->with(['addresses' => array_values($addresses)]);
-    }
-
-    /**
-     * Removes the address with this id. Start from `$customer->edit()`.
-     *
-     * @throws InvalidArgumentException When there is no address with this id.
-     */
-    public function withoutAddress(int $id): self
-    {
-        return $this->with(['addresses' => self::remove($this->addresses, $id, 'address', 'addresses')]);
-    }
-
-    /**
-     * Adds a bank account, or replaces the account with the same id. A default account makes
-     * the other accounts non-default.
-     */
-    public function bank(BankInput $bank): self
-    {
-        $banks = $this->banks ?? [];
-
-        if ($bank->default) {
-            $banks = array_map(static fn (BankInput $other): BankInput => $other->default(false), $banks);
-        }
-
-        return $this->with(['banks' => self::replaceOrAppend($banks, $bank)]);
-    }
-
-    /**
-     * Replaces all bank accounts; accounts you leave out are removed.
-     */
-    public function banks(BankInput ...$banks): self
-    {
-        return $this->with(['banks' => array_values($banks)]);
-    }
-
-    /**
-     * Removes the bank account with this id. Start from `$customer->edit()`.
-     *
-     * @throws InvalidArgumentException When there is no bank account with this id.
-     */
-    public function withoutBank(int $id): self
-    {
-        return $this->with(['banks' => self::remove($this->banks, $id, 'bank account', 'bank accounts')]);
-    }
-
-    /**
-     * Adds the customer to a dimension group.
-     */
-    public function group(string $group): self
-    {
-        return $this->groups(...array_unique([...$this->groups ?? [], $group]));
-    }
-
-    /**
-     * Replaces all dimension groups.
-     */
-    public function groups(string ...$groups): self
-    {
-        foreach ($groups as $group) {
-            XmlValue::code($group);
-        }
-
-        return $this->with(['groups' => array_values($groups)]);
-    }
-
-    /**
-     * Adds a posting rule, or replaces the rule with the same id.
-     */
-    public function postingRule(PostingRuleInput $rule): self
-    {
-        return $this->with(['postingRules' => self::replaceOrAppend($this->postingRules ?? [], $rule)]);
-    }
-
-    /**
-     * Sets the posting rules to send. To delete an existing rule, use withoutPostingRule().
-     */
-    public function postingRules(PostingRuleInput ...$rules): self
-    {
-        return $this->with(['postingRules' => array_values($rules)]);
-    }
-
-    /**
-     * Deletes the posting rule with this id. Start from `$customer->edit()`.
-     *
-     * @throws InvalidArgumentException When there is no posting rule with this id.
-     */
-    public function withoutPostingRule(int $id): self
-    {
-        foreach ($this->postingRules ?? [] as $index => $rule) {
-            if ($rule->id === $id) {
-                $rules = $this->postingRules;
-                $rules[$index] = $rule->deleted();
-
-                return $this->with(['postingRules' => $rules]);
-            }
-        }
-
-        throw new InvalidArgumentException(sprintf('There is no posting rule %d: start from $customer->edit().', $id));
-    }
-
-    /**
-     * Adds a payment discount, e.g. `paymentCondition(8, '2')` for 2% within 8 days.
-     *
-     * @param numeric-string $discountPercentage
-     */
-    public function paymentCondition(int $discountDays, string $discountPercentage): self
-    {
-        return $this->paymentConditions(
-            ...[...$this->paymentConditions ?? [], PaymentCondition::of($discountDays, $discountPercentage)],
-        );
-    }
-
-    /**
-     * Replaces all payment discounts; `paymentConditions()` without arguments removes them.
-     */
-    public function paymentConditions(PaymentCondition ...$conditions): self
-    {
-        return $this->with(['paymentConditions' => array_values($conditions)]);
-    }
-
-    /**
-     * The value that will be sent for an element, e.g. `value('financials/duedays')`, or null
-     * when it is empty or not set. See has() to tell these apart.
-     */
-    public function value(string $element): ?string
-    {
-        return $this->values[$element] ?? null;
-    }
-
-    /**
-     * True when the element will be sent, e.g. `has('financials/duedays')`.
-     */
-    public function has(string $element): bool
-    {
-        return array_key_exists($element, $this->values);
-    }
-
-    /**
      * The `<dimension>` request to save this customer in a company.
      */
     public function toXml(string $company): XmlBuilder
     {
-        $xml = XmlBuilder::create('dimension');
-        $dimension = $xml->root();
-
-        $xml->add($dimension, 'office', $company);
-        $xml->add($dimension, 'type', 'DEB');
-
-        if ($this->code !== null) {
-            $xml->add($dimension, 'code', $this->code);
-        }
-
-        $xml->add($dimension, 'name', $this->name);
-
-        // Fixed values for customers, according to the documentation.
-        $financials = $xml->document()->createElement('financials');
-        $xml->add($financials, 'matchtype', 'customersupplier');
-        $xml->add($financials, 'accounttype', 'inherit');
-        $xml->add($financials, 'subanalyse', 'false');
-        $xml->add($financials, 'substitutionlevel', '1');
-
-        /** @var array<string, DOMElement> $parents */
-        $parents = ['financials' => $financials];
-
-        foreach (self::ELEMENTS as $path) {
-            if (!array_key_exists($path, $this->values)) {
-                continue;
-            }
-
-            // <financials> follows the dimension fields, also when none of its values are set.
-            if (str_contains($path, '/') && $financials->parentNode === null) {
-                $dimension->appendChild($financials);
-            }
-
-            $names = explode('/', $path);
-            $name = array_pop($names);
-            $parent = $dimension;
-            $parentPath = '';
-
-            foreach ($names as $parentName) {
-                $parentPath .= ($parentPath === '' ? '' : '/') . $parentName;
-                $parents[$parentPath] ??= $xml->add($parent, $parentName);
-                $parent = $parents[$parentPath];
-            }
-
-            $xml->add($parent, $name, $this->values[$path]);
-        }
-
-        if ($financials->parentNode === null) {
-            $dimension->appendChild($financials);
-        }
-
-        if ($this->addresses !== null) {
-            $element = $xml->add($dimension, 'addresses');
-
-            foreach ($this->addresses as $address) {
-                $address->appendTo($xml, $element);
-            }
-        }
-
-        if ($this->banks !== null) {
-            $element = $xml->add($dimension, 'banks');
-
-            foreach ($this->banks as $bank) {
-                $bank->appendTo($xml, $element);
-            }
-        }
-
-        if ($this->groups !== null) {
-            $element = $xml->add($dimension, 'groups');
-
-            foreach ($this->groups as $group) {
-                $xml->add($element, 'group', $group);
-            }
-        }
-
-        if ($this->postingRules !== null) {
-            $element = $xml->add($dimension, 'postingrules');
-
-            foreach ($this->postingRules as $rule) {
-                $rule->appendTo($xml, $element);
-            }
-        }
-
-        if ($this->paymentConditions !== null) {
-            $element = $xml->add($dimension, 'paymentconditions');
-
-            foreach ($this->paymentConditions as $condition) {
-                $item = $xml->add($element, 'paymentcondition');
-                $xml->add($item, 'discountdays', (string) $condition->discountDays);
-                $xml->add($item, 'discountpercentage', $condition->discountPercentage);
-            }
-        }
-
-        return $xml;
-    }
-
-    private function set(string $element, ?string $value): self
-    {
-        return $this->setMany([$element => $value]);
-    }
-
-    /**
-     * @param array<string, ?string> $values
-     */
-    private function setMany(array $values): self
-    {
-        return $this->with(['values' => [...$this->values, ...$values]]);
+        return $this->dimensionXml($company, 'DEB');
     }
 
     /**
@@ -676,65 +297,5 @@ final readonly class CustomerInput
     private function with(array $changes): self
     {
         return new self(...[...get_object_vars($this), ...$changes]);
-    }
-
-    private static function maxLength(string $field, ?string $value, int $max): ?string
-    {
-        return $value === null || $value === '' ? null : XmlValue::maxLength($field, $value, $max);
-    }
-
-    private static function nullableCode(?string $code): ?string
-    {
-        return $code === null || $code === '' ? null : XmlValue::code($code);
-    }
-
-    /**
-     * @template T of AddressInput|BankInput|PostingRuleInput
-     *
-     * @param list<T> $items
-     * @param T $item
-     *
-     * @return list<T>
-     */
-    private static function replaceOrAppend(array $items, AddressInput|BankInput|PostingRuleInput $item): array
-    {
-        if ($item->id !== null) {
-            foreach ($items as $index => $existing) {
-                if ($existing->id === $item->id) {
-                    $items[$index] = $item;
-
-                    return $items;
-                }
-            }
-        }
-
-        $items[] = $item;
-
-        return $items;
-    }
-
-    /**
-     * @template T of AddressInput|BankInput
-     *
-     * @param ?list<T> $items
-     *
-     * @return list<T>
-     */
-    private static function remove(?array $items, int $id, string $label, string $plural): array
-    {
-        if ($items === null) {
-            throw new LogicException(sprintf('There are no %s to remove from: start from $customer->edit().', $plural));
-        }
-
-        $remaining = array_values(array_filter(
-            $items,
-            static fn (AddressInput|BankInput $item): bool => $item->id !== $id,
-        ));
-
-        if (count($remaining) === count($items)) {
-            throw new InvalidArgumentException(sprintf('There is no %s %d.', $label, $id));
-        }
-
-        return $remaining;
     }
 }

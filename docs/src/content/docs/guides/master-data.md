@@ -13,7 +13,7 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
 | [General ledger accounts](#general-ledger-accounts) (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | [Projects](#projects) (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate |
-| Suppliers (`CRD`), … | – | Not yet; use [`processXml()`](/guides/process-xml/) |
+| [Suppliers](#suppliers) (`CRD`) | `$twinfield->suppliers()` | Search (also by bank account and address), read, create, update, delete, activate |
 
 Other master data works the same way, but is not a dimension:
 
@@ -214,7 +214,7 @@ The read model `Customer` groups the settings like Twinfield does:
 | `creditManagement` | `creditLimit` (an `Amount`), `sendReminder`, `reminderEmail`, `responsibleUser`, `blocked`, `rightOfUse`, `segmentCode`, `comment` |
 | `remittanceAdvice` | `sendType` and `email` |
 | `addresses` | `Address`es: `type` (`invoice`, `postal`, `contact`), `default`, `name`, `country`, `city`, `postcode`, `telephone`, `telefax`, `email` and the free fields `field1`–`field6` |
-| `banks` | `Bank`s: `iban`, `bic`, `accountNumber`, `ascription`, `bankName`, `nationalBankCode`, the bank address and `default` |
+| `banks` | `Bank`s: `iban`, `bic`, `accountNumber`, `ascription`, `bankName`, `nationalBankCode`, the bank address, `default` and the read-only `blocked` |
 | `groups`, `postingRules`, `paymentConditions`, `discountArticle` | Dimension groups, posting rules with lines, payment discounts, the discount article |
 
 - Optional values are `null` when they are not set; required values (such as the balance sheet account) are never `null`, and an unexpected response throws an `UnexpectedResponseException`.
@@ -224,7 +224,7 @@ The read model `Customer` groups the settings like Twinfield does:
 - Settings that belong together are set together, so they cannot contradict each other: `directDebit($payCode)` also sets the means of payment to a payment file, `withoutDirectDebit()` to none; `sendReminder(SendReminder::ByEmail, $email)` requires the email address.
 - Addresses, bank accounts, groups and payment conditions are sent as a whole once set. `address()` and `bank()` replace the entry with the same id, or add one; a new default makes the others non-default. `withoutAddress($id)` and `withoutBank($id)` remove one; `withoutPostingRule($id)` deletes a posting rule (`status="deleted"`).
 - IBANs are normalised (spaces removed, upper case) and checked with the ISO 13616 checksum. Amounts are numeric strings or `Amount`s, never floats.
-- `Address`, `Bank`, `PostingRule` and `PaymentCondition` live in `SolveBeam\Twinfield\Dimension`, as suppliers (`CRD`) have them too.
+- `Address`, `Bank`, `PostingRule`, `PaymentCondition` and `RemittanceAdvice` live in `SolveBeam\Twinfield\Dimension`, as [suppliers](#suppliers) (`CRD`) have them too.
 
 Differences with the [documentation](https://developers.twinfield.com/documentation/api/master-data/customers/) that the SDK handles:
 
@@ -235,6 +235,85 @@ Differences with the [documentation](https://developers.twinfield.com/documentat
 | A posting rule has a currency and amount | A rule can have an empty `<currency/>`, `<amount/>` and `<lines/>` |
 | An address has a name | The name can be empty |
 | `<remittanceadvice>` is not listed in the root elements | It is in every read response |
+| A posting rule line has a ratio and a VAT code | Seen on suppliers, which share the posting rules: the ratio can be empty and the VAT code can be `#` (no VAT); see [Suppliers](/guides/documentation-differences/#suppliers) |
+
+## Suppliers
+
+Suppliers (dimension type `CRD`, level 2) are the counterpart of customers: the same addresses, bank accounts, groups, posting rules and payment discounts, but with financials for paying instead of collecting. `$twinfield->suppliers()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\Dimension\AddressInput;
+use SolveBeam\Twinfield\Dimension\BankInput;
+use SolveBeam\Twinfield\Dimension\PostingRuleInput;
+use SolveBeam\Twinfield\Dimension\PostingRuleLine;
+use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
+use SolveBeam\Twinfield\Supplier\MeansOfPayment;
+use SolveBeam\Twinfield\Supplier\SupplierInput;
+
+$suppliers = $twinfield->suppliers();
+
+// Search on code and name, bank account number or address fields
+$suppliers->search('*Office*')->inName()->all();
+$suppliers->search('NL91ABNA*')->inBankAccount()->all();
+
+// Read
+$supplier = $suppliers->get('2000');
+echo $supplier->financials->dueDays, ' ', $supplier->defaultBank()?->iban, PHP_EOL;
+
+if ($supplier->financials->meansOfPayment === MeansOfPayment::PaymentFile) {
+    echo 'Paid by credit transfer with ', $supplier->financials->payCode, PHP_EOL;
+}
+
+// Create: without code(), Twinfield gives the next free code
+$supplier = $suppliers->create(
+    SupplierInput::create('Example Office Supplies B.V.')
+        ->dueDays(14)
+        ->vatCode('IH')
+        ->relationsReference('CUST-4711')      // your customer number at the supplier
+        ->creditTransfer('SEPANLCT')           // or cheques(), or withoutPayments()
+        ->remittanceAdvice(RemittanceAdviceSendType::ByEmail, 'accounts@example.com')
+        ->address(AddressInput::invoice('Example Office Supplies B.V.')->field(2, 'Oudegracht 1')->city('Utrecht')->country('NL')->default())
+        ->bank(BankInput::create()->iban('NL91 ABNA 0417 1643 00')->ascription('Example Office Supplies B.V.')->default())
+        ->postingRule(
+            PostingRuleInput::create('EUR', '121.00')
+                ->line(PostingRuleLine::create('4500', '80')->costCenter('100')->vatCode('IH'))
+                ->line(PostingRuleLine::create('4510', '20')->vatCode('IH')),
+        )
+        ->paymentCondition(5, '2'),
+);
+
+// Update: edit() carries every value, including addresses and banks with their ids
+$suppliers->update($supplier->edit()->withoutPayments()->withoutBank(1));
+
+$suppliers->delete($supplier->code); // DeleteResult::Hidden when it is used in a transaction
+```
+
+The read model `Supplier` has the same properties and shortcuts as `Customer` (`defaultAddress()`, `defaultBank()`, `address($id)`, `bank($id)`, `addressesOfType($type)`, `vatNumber()`, `chamberOfCommerceNumber()`), with these differences:
+
+| Property | Contents |
+|---|---|
+| `financials` | `dueDays`, `payAvailable`, `meansOfPayment` (`None`, `PaymentFile`, `Cheques`), `payCode`, `balanceAccount`, `relationsReference` (external supplier number), `vatCode` |
+| `remittanceAdvice` | `sendType` (`ToFileManager`, `ByEmail`) and `email` |
+| `banks` | `Bank`s as for customers, plus the read-only `blocked`, and `wayOfPayment` and `payAddress` (payment type BTL91 only) |
+| – | No credit management, e-invoicing, SEPA mandate or discount article: Twinfield does not use them for suppliers |
+
+- How the supplier is paid is set in one call, so the settings cannot contradict each other: `creditTransfer($payCode)` (`payavailable` true, `meansofpayment` paymentfile), `cheques()` (true, cheques, no pay code) and `withoutPayments()` (false, none, no pay code).
+- `BankInput::wayOfPayment(WayOfPayment::Cheque, PayAddress::Beneficiary)` sets the way of payment of a bank account for the payment type BTL91; a pay address is only accepted with a cheque. They are only sent when set.
+- A posting rule proposes how a purchase invoice is booked. A line without a fixed share has `ratio` null; `PostingRuleLine::create('4500', null)` creates one.
+- The VAT code `#` (no VAT) is accepted wherever a VAT code is, in `vatCode()` and in posting rule lines.
+- `SupplierInput` works like `CustomerInput`: immutable, only what you set is sent, null clears a value, and lists are sent as a whole once set.
+
+Differences with the [documentation](https://developers.twinfield.com/documentation/api/master-data/suppliers/) that the SDK handles, seen in 184 live suppliers. See [Differences with the documentation](/guides/documentation-differences/#suppliers) for how they were found, the mistakes in the documentation examples, and what is not yet verified:
+
+| Documentation | Twinfield |
+|---|---|
+| `<sendtype>` and `<sendmail>` are listed under `<dimension>` | They are in `<remittanceadvice>`, which is in every read response |
+| `<collectmandate>` and `<collectionschema>` are not in use | They are returned (the mandate id is the supplier code, the schema `core`); the SDK leaves them out |
+| A bank has `wayofpayment` and `payaddress` | Left out of every live response; a bank has the undocumented attributes `blocked` and `destination` (always `0`, not read) |
+| A posting rule line has a ratio | The ratio can be empty, for a line without fixed share |
+| – | A posting rule can hold a line with nothing in it; it is left out |
+| The VAT code is a code | It can be `#` (no VAT) |
+| `<groups>`, `<postingrules>` and `<paymentconditions>` | Left out of the response when empty |
 
 ## Fixed assets
 
@@ -895,3 +974,8 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - [Create customer](/examples/customers/create-customer/)
 - [Update customer](/examples/customers/update-customer/)
 - [Delete customer](/examples/customers/delete-customer/)
+- [List suppliers](/examples/suppliers/list-suppliers/)
+- [Read supplier](/examples/suppliers/read-supplier/)
+- [Create supplier](/examples/suppliers/create-supplier/)
+- [Update supplier](/examples/suppliers/update-supplier/)
+- [Delete supplier](/examples/suppliers/delete-supplier/)

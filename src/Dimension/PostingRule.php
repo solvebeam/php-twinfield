@@ -12,7 +12,8 @@ use SolveBeam\Twinfield\Transaction\Amount;
  * A posting rule of a customer or supplier, as Twinfield returns it: how an amount is split
  * over general ledger accounts, e.g. for a recurring invoice.
  *
- * To change it, call edit() and pass the result to `CustomerInput::postingRule()`.
+ * To change it, call edit() and pass the result to `CustomerInput::postingRule()` or
+ * `SupplierInput::postingRule()`.
  */
 final readonly class PostingRule
 {
@@ -53,7 +54,15 @@ final readonly class PostingRule
             currency: $rule->nullableString('currency'),
             amount: $value,
             description: $rule->nullableString('description'),
-            lines: array_map(PostingRuleLine::fromXml(...), $rule->child('lines')->list('line')),
+            lines: array_map(
+                PostingRuleLine::fromXml(...),
+                // Twinfield keeps an empty line (no account, ratio or anything else) in a rule
+                // whose lines were cleared; it holds nothing, so it is left out.
+                array_values(array_filter(
+                    $rule->child('lines')->list('line'),
+                    static fn (XmlElement $line): bool => trim($line->text()) !== '',
+                )),
+            ),
         );
     }
 

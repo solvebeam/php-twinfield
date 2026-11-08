@@ -81,7 +81,8 @@ final readonly class PostingRuleInput
     }
 
     /**
-     * This existing posting rule, to delete. `CustomerInput::withoutPostingRule()` uses it.
+     * This existing posting rule, to delete. `withoutPostingRule()` of the customer and supplier
+     * inputs uses it.
      */
     public function deleted(): self
     {

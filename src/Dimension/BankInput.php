@@ -40,6 +40,10 @@ final readonly class BankInput
         public ?string $city,
         public ?string $state,
         public ?string $country,
+        /** Suppliers, payment type BTL91 only. */
+        public ?WayOfPayment $wayOfPayment = null,
+        /** Suppliers, with WayOfPayment::Cheque only. */
+        public ?PayAddress $payAddress = null,
     ) {
         if ($id !== null && $id < 1) {
             throw new InvalidArgumentException(sprintf('Bank id must be 1 or more, %d given.', $id));
@@ -50,6 +54,10 @@ final readonly class BankInput
                 '"%s" is not a country code: use ISO 3166-1 alpha-2, e.g. "NL".',
                 $country,
             ));
+        }
+
+        if ($payAddress !== null && $wayOfPayment !== WayOfPayment::Cheque) {
+            throw new InvalidArgumentException('A pay address is only for payment by cheque (WayOfPayment::Cheque).');
         }
 
         foreach (
@@ -87,8 +95,8 @@ final readonly class BankInput
     }
 
     /**
-     * Makes this the default bank account. `CustomerInput::bank()` then unsets the default of
-     * the other accounts, as a customer has at most one.
+     * Makes this the default bank account. `bank()` of the customer or supplier input then
+     * unsets the default of the other accounts, as there is at most one.
      */
     public function default(bool $default = true): self
     {
@@ -181,6 +189,19 @@ final readonly class BankInput
     }
 
     /**
+     * How a supplier is paid to this account, and for a cheque where it is sent. Only for the
+     * payment type BTL91; null sends nothing.
+     *
+     *   ->wayOfPayment(WayOfPayment::Cheque, PayAddress::Beneficiary)
+     *
+     * @throws InvalidArgumentException For a pay address without WayOfPayment::Cheque.
+     */
+    public function wayOfPayment(?WayOfPayment $wayOfPayment, ?PayAddress $payAddress = null): self
+    {
+        return $this->with(['wayOfPayment' => $wayOfPayment, 'payAddress' => $payAddress]);
+    }
+
+    /**
      * Appends the `<bank>` element to `<banks>`.
      */
     public function appendTo(XmlBuilder $xml, DOMElement $banks): void
@@ -209,6 +230,15 @@ final readonly class BankInput
         $xml->add($bank, 'natbiccode', $this->nationalBankCode);
         $xml->add($bank, 'postcode', $this->postcode);
         $xml->add($bank, 'state', $this->state);
+
+        // Only sent when set: these are for suppliers with payment type BTL91.
+        if ($this->wayOfPayment !== null) {
+            $xml->add($bank, 'wayofpayment', $this->wayOfPayment->value);
+        }
+
+        if ($this->payAddress !== null) {
+            $xml->add($bank, 'payaddress', $this->payAddress->value);
+        }
     }
 
     /**

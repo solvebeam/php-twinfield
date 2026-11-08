@@ -198,6 +198,11 @@ final readonly class XmlElement
         ));
     }
 
+    public function hasAttribute(string $name): bool
+    {
+        return $this->element->hasAttribute($name);
+    }
+
     public function attribute(string $name): string
     {
         if (!$this->element->hasAttribute($name)) {

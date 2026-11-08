@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\Customer;
+namespace SolveBeam\Twinfield\Dimension;
 
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
- * Remittance advice of a customer (`remittanceadvice`).
+ * Remittance advice of a customer or supplier (`remittanceadvice`): where Twinfield puts the
+ * specification of a payment.
  */
 final readonly class RemittanceAdvice
 {

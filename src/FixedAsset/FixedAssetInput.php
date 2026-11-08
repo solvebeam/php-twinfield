@@ -132,7 +132,7 @@ final readonly class FixedAssetInput
      */
     public function vatCode(?string $vatCode): self
     {
-        $vatCode = $vatCode === null || $vatCode === '' ? null : XmlValue::code($vatCode);
+        $vatCode = $vatCode === null || $vatCode === '' ? null : XmlValue::vatCode($vatCode);
 
         return $this->set('financials/vatcode', $vatCode);
     }

@@ -13,17 +13,23 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
  * account, optionally with a cost center, project and VAT code.
  *
  *   PostingRuleLine::create('8000', '100')->vatCode('VH')->description('Monthly fee');
+ *
+ * A line without ratio only proposes the account, cost center and VAT code: the user enters
+ * the amount when booking. Twinfield returns such lines with an empty `<ratio/>`.
  */
 final readonly class PostingRuleLine
 {
     /**
-     * @param numeric-string $ratio
+     * @param ?numeric-string $ratio
      */
     private function __construct(
         /** General ledger account (dimension 1), e.g. `8000`. */
         public string $generalLedger,
-        /** Share of the posting rule, e.g. `78.4`; the ratios of a rule add up to 100. */
-        public string $ratio,
+        /**
+         * Share of the posting rule, e.g. `78.4`; the ratios of a rule add up to 100. Null for a
+         * line without fixed share.
+         */
+        public ?string $ratio,
         /** Cost center (dimension 2); null when not set. */
         public ?string $costCenter = null,
         /** Project or asset (dimension 3); null when not set. */
@@ -36,17 +42,21 @@ final readonly class PostingRuleLine
     ) {
         XmlValue::code($generalLedger);
 
-        if (preg_match('~^\d+(?:\.\d+)?$~', $ratio) !== 1) {
+        if ($ratio !== null && preg_match('~^\d+(?:\.\d+)?$~', $ratio) !== 1) {
             throw new InvalidArgumentException(sprintf(
                 '"%s" is not a ratio: use a positive numeric string with a dot, e.g. "78.4".',
                 $ratio,
             ));
         }
 
-        foreach (['cost center' => $costCenter, 'project' => $project, 'VAT code' => $vatCode] as $code) {
+        foreach ([$costCenter, $project] as $code) {
             if ($code !== null) {
                 XmlValue::code($code);
             }
+        }
+
+        if ($vatCode !== null) {
+            XmlValue::vatCode($vatCode);
         }
 
         if ($description !== null) {
@@ -60,9 +70,10 @@ final readonly class PostingRuleLine
 
     /**
      * @param string $generalLedger General ledger account (dimension 1), e.g. `8000`.
-     * @param numeric-string $ratio Share of the rule, e.g. `'100'` or `'78.4'`.
+     * @param ?numeric-string $ratio Share of the rule, e.g. `'100'` or `'78.4'`; null for a
+     *     line without fixed share.
      */
-    public static function create(string $generalLedger, string $ratio): self
+    public static function create(string $generalLedger, ?string $ratio): self
     {
         return new self($generalLedger, $ratio);
     }
@@ -74,13 +85,14 @@ final readonly class PostingRuleLine
     {
         $ratio = $line->child('ratio');
 
-        if (preg_match('~^\d+(?:\.\d+)?$~', $ratio->text()) !== 1) {
+        // Empty for a line without fixed share, as seen in live posting rules of suppliers.
+        if ($ratio->text() !== '' && preg_match('~^\d+(?:\.\d+)?$~', $ratio->text()) !== 1) {
             throw $ratio->invalid('a ratio');
         }
 
         return new self(
             generalLedger: $line->string('dimension1'),
-            ratio: $ratio->text(),
+            ratio: $ratio->text() === '' ? null : $ratio->text(),
             // Twinfield leaves out <dimension2> and <dimension3> when they are not set.
             costCenter: $line->nullableChild('dimension2')?->text() ?: null,
             project: $line->nullableChild('dimension3')?->text() ?: null,

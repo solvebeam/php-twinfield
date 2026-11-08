@@ -159,6 +159,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update rate price](rates/update-rate-price/): new prices from a date with `newPriceFrom()` (changes data).
 - [Delete rate](rates/delete-rate/): delete or hide a rate (changes data).
 
+## Suppliers
+
+- [List suppliers](suppliers/list-suppliers/): code and name of all suppliers, or those matching a pattern.
+- [Read supplier](suppliers/read-supplier/): payment term, how the supplier is paid, remittance advice, addresses, bank accounts and posting rules of one supplier.
+- [Create supplier](suppliers/create-supplier/): create a supplier paid by credit transfer, with an address and a bank account (changes data).
+- [Update supplier](suppliers/update-supplier/): change how the supplier is paid, a bank account, and add a bank account (changes data).
+- [Delete supplier](suppliers/delete-supplier/): delete or hide a supplier, and activate it again (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

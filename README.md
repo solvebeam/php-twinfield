@@ -45,7 +45,7 @@ See [examples/](examples/) for small, runnable examples, starting with [Authenti
 
 ## Master data
 
-Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/).
+Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/). Where live Twinfield responses differ from the API documentation, the SDK follows the live responses: see [Differences with the documentation](https://php-twinfield.solvebeam.com/guides/documentation-differences/).
 
 | Dimension type | Resource | Status |
 |---|---|---|
@@ -55,7 +55,7 @@ Master data such as customers, general ledger accounts, activities, cost centers
 | Fixed assets (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate; asset method, depreciation settings, free texts, transaction lines and locked settings. See [Read fixed asset](examples/fixed-assets/read-fixed-asset/) and [Create fixed asset](examples/fixed-assets/create-fixed-asset/). |
 | General ledger accounts (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate; sub-analysis, child validations, VAT code, groups. See [Read general ledger account](examples/general-ledger-accounts/read-general-ledger-account/) and [Create general ledger account](examples/general-ledger-accounts/create-general-ledger-account/). |
 | Projects (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate; valid dates, customer, rate, authoriser, billable, quantities and a VAT code for all activities. See [Read project](examples/projects/read-project/) and [Create project](examples/projects/create-project/). |
-| Suppliers (`CRD`), … | – | Not yet; use `processXml()` |
+| Suppliers (`CRD`) | `$twinfield->suppliers()` | Search (also by bank account and address), read, create, update, delete, activate; credit transfer or cheques, external supplier number, remittance advice, addresses, bank accounts, posting rules. See [Read supplier](examples/suppliers/read-supplier/) and [Create supplier](examples/suppliers/create-supplier/). |
 
 | Other master data | Resource | Status |
 |---|---|---|
