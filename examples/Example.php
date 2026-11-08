@@ -211,6 +211,23 @@ final class Example
     }
 
     /**
+     * The first rate code from EXAMPLE999 down that does not exist, for the examples that
+     * create a rate.
+     */
+    public static function unusedRateCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('EXAMPLE%03d', $number);
+
+            if ($twinfield->rates()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Rate codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
      * The first active asset method of the company, for the examples that create a fixed asset.
      */
     public static function assetMethodCode(Twinfield $twinfield): string

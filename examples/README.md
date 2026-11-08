@@ -150,6 +150,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update project](projects/update-project/): change an existing project (changes data).
 - [Delete project](projects/delete-project/): delete or hide a project (changes data).
 
+## Rates
+
+- [List rates](rates/list-rates/): code and name of all rates, or those matching a pattern.
+- [Search rates](rates/search-rates/): rates for hours or quantities, by name.
+- [Read rate](rates/read-rate/): type, unit, currency, all prices and the price today.
+- [Create rate](rates/create-rate/): create a kilometre rate (changes data).
+- [Update rate price](rates/update-rate-price/): new prices from a date with `newPriceFrom()` (changes data).
+- [Delete rate](rates/delete-rate/): delete or hide a rate (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

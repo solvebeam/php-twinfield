@@ -8,6 +8,7 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Rate\RateType;
 
 /**
  * Immutable Finder search on code and name, for Finder types with the columns code and name
@@ -178,6 +179,17 @@ final readonly class CodeNameSearch
     public function withoutTaxGroup(): self
     {
         return $this->option('withouttaxgroup', '1');
+    }
+
+    /**
+     * Only rates of this type: hours or quantities, e.g. `rateType(RateType::Quantity)`. Rate
+     * searches only.
+     *
+     * @return self<T>
+     */
+    public function rateType(RateType $type): self
+    {
+        return $this->option('ratetype', $type->value);
     }
 
     /**

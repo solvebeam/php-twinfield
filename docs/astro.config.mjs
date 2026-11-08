@@ -103,6 +103,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/projects' } }],
 				},
 				{
+					label: 'Rates',
+					items: [{ autogenerate: { directory: 'examples/rates' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

@@ -62,6 +62,9 @@ final class ExamplesTest extends TestCase
         'projects/create-project',
         'projects/delete-project',
         'projects/update-project',
+        'rates/create-rate',
+        'rates/delete-rate',
+        'rates/update-rate-price',
     ];
 
     /**

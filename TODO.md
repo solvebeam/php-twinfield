@@ -1,5 +1,35 @@
 # TODO
 
+## Rates: verify writing live
+
+Rates (`projectrate`, Finder `TRT`) are tested offline with fixtures and read-only live on company
+1002 (459 time rates; company 1002_3 has none). Creating, updating and deleting are not yet tested
+live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=Rate
+```
+
+To check:
+
+- Is `currency` required when creating a rate, or does Twinfield take the base currency? The SDK
+  leaves it out when it is not set.
+- Does an update with the line `id` change the existing line, and does a line without `id` add one?
+  The write test expects two lines after `newPriceFrom()`.
+- Does `<ratechange id="…" status="deleted">` remove a line (`removePrice()`)? The documentation
+  does not say how to remove a line.
+- What does `unit` mean? The documentation says `1` for a price per hour, but live time rates have
+  units such as 93, 120 and 882 (minutes?). Update the docblocks of `Rate::$unit` and
+  `RateInput::unit()` once known.
+- The shape of the live save response. `save()` reads the rate back, so this does not block anything,
+  but update `rate-save.xml` with a recorded response.
+- Delete gives `Deleted` (or `Hidden` when in use) and activate gives `active`.
+
+Then run the write examples in `examples/rates/{create-rate,update-rate-price,delete-rate}` and
+replace the illustrative output in their READMEs with the real output. Also replace the output of
+the read examples with real (anonymized) output, and add a quantity rate fixture recorded from a
+company that has one (`rate-read-quantity.xml` is fictitious).
+
 ## Fixed assets: verify creating and updating live
 
 The fixed assets (`AST`) are tested offline with fixtures, and read-only live on company 1002_3.

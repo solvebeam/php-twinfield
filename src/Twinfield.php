@@ -42,6 +42,7 @@ use SolveBeam\Twinfield\Project\ProjectResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
+use SolveBeam\Twinfield\Rate\RateResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
@@ -134,6 +135,15 @@ final readonly class Twinfield
     public function projects(): ProjectResource
     {
         return new ProjectResource($this);
+    }
+
+    /**
+     * Rates of Time & Expenses (hours and quantities such as kilometres) of the company:
+     * search, read, create, update and delete.
+     */
+    public function rates(): RateResource
+    {
+        return new RateResource($this);
     }
 
     /**

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;projectrate status="active" result="1"&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;CONSULT&lt;/code&gt;&lt;name&gt;Consultancy&lt;/name&gt;&lt;shortname&gt;Consult&lt;/shortname&gt;&lt;type&gt;time&lt;/type&gt;&lt;unit&gt;1&lt;/unit&gt;&lt;currency name="Euro" shortname="Euro"&gt;EUR&lt;/currency&gt;&lt;ratechanges&gt;&lt;ratechange id="2" lastused="" status="active"&gt;&lt;begindate&gt;20250101&lt;/begindate&gt;&lt;enddate&gt;29991231&lt;/enddate&gt;&lt;internalrate&gt;55.0000&lt;/internalrate&gt;&lt;externalrate&gt;95.0000&lt;/externalrate&gt;&lt;/ratechange&gt;&lt;/ratechanges&gt;&lt;user&gt;SUPER&lt;/user&gt;&lt;touched&gt;2&lt;/touched&gt;&lt;created&gt;20250128185455&lt;/created&gt;&lt;modified&gt;20260305101530&lt;/modified&gt;&lt;/projectrate&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

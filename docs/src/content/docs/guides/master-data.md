@@ -712,6 +712,56 @@ $types->update(
 
 Twinfield has no `<read>` for dimension types: `get()` sends a `<dimensiontype>` with only the company and the code, which returns the type without changing it. An unknown code is refused, so a read needs only one request. Twinfield's documentation shows the mask as `1####`; companies return masks like `1[0-9][0-9][0-9]`.
 
+## Rates
+
+A rate is the price of an hour or of a quantity such as a kilometre in Twinfield Time & Expenses: the internal rate (cost price) and the external rate (selling price) per unit, per date range. Activities, projects and their quantities refer to a rate by its code, e.g. `$activity->projects->rate->code`. Rates are no dimensions, but `$twinfield->rates()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\Rate\RateInput;
+use SolveBeam\Twinfield\Rate\RateType;
+
+$rates = $twinfield->rates();
+
+// Search: Finder type TRT, only rates for hours
+foreach ($rates->search()->rateType(RateType::Time)->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Read
+$rate = $rates->get('CONSULT');   // or find(): null when it does not exist
+echo $rate->priceOn(new DateTimeImmutable('2026-03-15'))?->external, ' ', $rate->currency, PHP_EOL;
+
+// Create
+$rates->create(
+    RateInput::quantity('KM', 'Kilometres')
+        ->currency('EUR')
+        ->price(new DateTimeImmutable('2026-01-01'), internal: '0.15', external: '0.23'),
+);
+
+// New prices from July: the current price ends on June 30
+$rates->update($rate->edit()->newPriceFrom(new DateTimeImmutable('2026-07-01'), '60', '105'));
+
+// Delete: DeleteResult::Hidden when the rate is in use
+$rates->delete('KM');
+```
+
+- `search()` gives `RateSummary` results with code and name. `rateType(RateType::Time)` or `rateType(RateType::Quantity)` keeps one type (Finder option `ratetype`).
+- `get()` sends a `<read>` of type `projectrate`. Not found is a `RateNotFoundException`, an existing code on `create()` a `RateAlreadyExistsException`. `create()`, `update()` and `save()` read the rate back after saving, so you always get the complete `Rate`.
+- A `Rate` has `type`, `unit` (the number of units the prices are for), `currency`, `inUse` and `prices`: `RatePrice` lines sorted by start date, each with its line `id`, `from`, `until` (null without end date), `internal` and `external`. `priceOn($date)` gives the line that covers the date, `latestPrice()` the line with the latest start date.
+- Prices are `UnitPrice` objects: numeric strings with four decimals, as Twinfield keeps them (`'0.1550'`), never floats.
+- `edit()` keeps the line ids, so an update changes the existing lines instead of adding them again. `price()` adds a line or changes the line with the same start date, `newPriceFrom()` ends the open line the day before and adds a new open line, and `removePrice($from)` deletes a line. The SDK refuses lines that overlap or end before they start, and an input without lines (Twinfield requires at least one).
+
+### Differences with the documentation
+
+The [documentation](https://developers.twinfield.com/documentation/api/master-data/rates/) is short. The read model is based on live responses:
+
+- A line without end date has `enddate` 2999-12-31. The SDK reads that as `until` null and sends it for an open line.
+- Prices have four decimals (`492.0000`).
+- The read response has `inuse` on `projectrate`, and a `user` with name. The documented save response does not, so the SDK reads the rate back.
+- Not found is `<projectrate msgtype="error" msg="…" result="0">` with only office and code.
+- The documentation says `unit` is `1` for a price per hour. Live time rates have units such as `93`, `120` and `882`, so the unit may be in minutes. The SDK returns the number as Twinfield sends it.
+- `TRT` is the Finder type for rates; transaction types are `TRS`.
+
 ## Offices
 
 `$twinfield->offices()` lists, searches and reads the offices (companies, administrations) the user has access to. Offices are read-only in the API: they cannot be created, changed or deleted. Twinfield is moving from the term "office" to "company"; the classes keep the name `Office` for now.
@@ -830,6 +880,12 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - [Create project](/examples/projects/create-project/)
 - [Update project](/examples/projects/update-project/)
 - [Delete project](/examples/projects/delete-project/)
+- [List rates](/examples/rates/list-rates/)
+- [Search rates](/examples/rates/search-rates/)
+- [Read rate](/examples/rates/read-rate/)
+- [Create rate](/examples/rates/create-rate/)
+- [Update rate price](/examples/rates/update-rate-price/)
+- [Delete rate](/examples/rates/delete-rate/)
 - [List offices](/examples/offices/list-offices/)
 - [Search offices](/examples/offices/search-offices/)
 - [Read office](/examples/offices/read-office/)

@@ -21,7 +21,13 @@ enum FinderType: string
     case DimensionTypes = 'DMT';
     case Dimensions = 'DIM';
     case Offices = 'OFF';
-    case TransactionTypes = 'TRT';
+
+    /** Rates of Time & Expenses (time project rates). */
+    case Rates = 'TRT';
+
+    /** Transaction types (daybooks). */
+    case TransactionTypes = 'TRS';
+
     case Users = 'USR';
     case VatCodes = 'VAT';
 }
