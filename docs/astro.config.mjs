@@ -16,9 +16,6 @@ export default defineConfig({
 				alt: 'Twinfield',
 			},
 			favicon: '/favicon.svg',
-			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/solvebeam/php-twinfield' },
-			],
 			editLink: {
 				baseUrl: 'https://github.com/solvebeam/php-twinfield/edit/main/docs/',
 			},
@@ -26,6 +23,7 @@ export default defineConfig({
 			customCss: ['./src/styles/custom.css'],
 			components: {
 				Footer: './src/components/Footer.astro',
+				SocialIcons: './src/components/SocialIcons.astro',
 			},
 			expressiveCode: {
 				themes: ['github-dark-default', 'github-light-default'],
@@ -47,11 +45,6 @@ export default defineConfig({
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
-						{
-							label: 'Twinfield API documentation',
-							link: 'https://developers.twinfield.com/documentation',
-							attrs: { target: '_blank', rel: 'noopener' },
-						},
 					],
 				},
 				{
@@ -119,6 +112,7 @@ export default defineConfig({
 					items: [
 						{ label: 'PSR standards', slug: 'reference/standards' },
 						{ label: 'Development and testing', slug: 'reference/development' },
+						{ label: 'Twinfield web services manuals', slug: 'reference/manuals' },
 					],
 				},
 			],

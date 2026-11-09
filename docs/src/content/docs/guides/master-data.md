@@ -7,11 +7,12 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 
 | Dimension type | Resource | Status |
 |---|---|---|
-| Activities (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
+| [Activities](#activities) (`ACT`) | `$twinfield->activities()` | Search, read, create, update, delete, activate |
+| [Balance sheet accounts](#general-ledger-accounts) (`BAS`) | `$twinfield->balanceSheetAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
 | [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
 | [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
-| [General ledger accounts](#general-ledger-accounts) (`BAS`, `PNL`) | `$twinfield->balanceSheetAccounts()`, `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
+| [Profit and loss accounts](#general-ledger-accounts) (`PNL`) | `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | [Projects](#projects) (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate |
 | [Suppliers](#suppliers) (`CRD`) | `$twinfield->suppliers()` | Search (also by bank account and address), read, create, update, delete, activate |
 
@@ -124,6 +125,15 @@ New activities and projects inherit every setting until you set it. Inherited se
 - `DeleteResult::Hidden`: the dimension is in use, so Twinfield hid it instead (status `hide`).
 
 `activate($code)` makes a deleted or hidden dimension active again. A deleted dimension keeps its code: `create()` with the same code throws `DimensionAlreadyExistsException`.
+
+## Activities
+
+Activities (dimension type `ACT`, level 4) are the work that hours and expenses are booked on in Twinfield Time & Expenses, always on an activity of a [project](#projects). `$twinfield->activities()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`; see [At a glance](#at-a-glance) for an example.
+
+- The **name** is at most 40 characters, the short name at most 20.
+- The default code format is `A[0-9][0-9][0-9]` (in Twinfield under dimension types, `ACT`).
+- The read model `Activity` has the dimension fields (`code`, `name`, `shortName`, `uid`, `status`, `inUse`, `behaviour`, `touched`, `modified`), the `vatCode` and the time & expenses settings in `$activity->projects` (a `ProjectSettings`): customer, rate, authoriser, billable, quantities and the valid period.
+- Settings with `ChangeMode::Inherit` come from the **project or user level**; see [ChangeMode](#who-may-change-a-setting-changemode).
 
 ## Cost centers
 

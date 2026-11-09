@@ -3,17 +3,39 @@ title: Organisations and companies
 description: Which organisation and company a model belongs to, and which keys to use when you store Twinfield data, e.g. in a shadow database.
 ---
 
-Twinfield has three levels:
+An **organisation** is the top of a Twinfield environment: usually an accountancy firm, or a business with its own Twinfield environment. An organisation has:
 
-- An **organisation**: usually an accountancy firm, or a business with its own Twinfield environment.
-- The **companies** (offices, administrations) of the organisation.
-- The **users** of the organisation.
+- **Companies** (offices, administrations): each company has its own data, such as dimensions (general ledger accounts, customers, suppliers, …), transactions, bank statements and VAT returns.
+- **Users**: they log in to the organisation and have access to one or more of its companies.
+
+```mermaid
+flowchart TD
+    tw["Twinfield"]
+    tw --> orgA["Organisation: Accountancy firm A"]
+    tw --> orgB["Organisation: Accountancy firm B"]
+
+    orgA --> a1000["Company 1000"]
+    orgA --> a2000["Company 2000"]
+    orgA --> aJDOE["User JDOE"]
+    a1000 --> d["Dimensions"]
+    a1000 --> t["Transactions"]
+    a1000 --> b["Bank statements"]
+    a1000 --> v["VAT returns"]
+    aJDOE -. access .-> a1000
+    aJDOE -. access .-> a2000
+
+    orgB --> b1000["Company 1000"]
+    orgB --> bJDOE["User JDOE"]
+    bJDOE -. access .-> b1000
+```
+
+Only the data of one company is shown; every company has its own.
 
 :::note[Spelling: organisation, not organization]
 Most developer tools use the American spelling *organization* (e.g. GitHub). Twinfield uses the British spelling *organisation* everywhere: in the scopes `twf.organisation` and `twf.organisationUser`, the claims `twf.organisationId`, `twf.organisationCode` and `twf.organisationUserCode`, and error codes such as `OrganisationInactive`. The SDK follows Twinfield, so its names match what Twinfield returns and you can search for one spelling: `Organisation`, `$twinfield->organisation()`, `$office->organisation`.
 :::
 
-Company and user codes are only unique within their organisation. Company `1000` or user `JDOE` can exist in two organisations, and they are then different companies and users. A system that stores data of more than one organisation therefore needs the organisation in every key.
+Company and user codes are only unique within their organisation: company `1000` and user `JDOE` exist in both organisations above, but they are different companies and users. A system that stores data of more than one organisation therefore needs the organisation in every key.
 
 ## Where the SDK gets it from
 

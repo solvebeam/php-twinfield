@@ -1,0 +1,58 @@
+---
+// The header links: GitHub and the Twinfield API documentation, each with an icon, a label and an external link icon.
+import { Icon } from '@astrojs/starlight/components';
+import twinfieldIcon from '../assets/brand/twinfield/twinfield-icon.svg';
+---
+
+<a href="https://github.com/solvebeam/php-twinfield" rel="me">
+	<Icon name="github" />
+	<span class="label">GitHub</span>
+	<Icon name="external" class="external" size="0.875em" />
+</a>
+<a href="https://developers.twinfield.com/documentation">
+	<img src={twinfieldIcon.src} alt="" width="16" height="16" />
+	<span class="label">Twinfield API</span>
+	<Icon name="external" class="external" size="0.875em" />
+</a>
+
+<style>
+	a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		color: var(--sl-color-text-accent);
+		font-size: var(--sl-text-sm);
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	a:hover {
+		color: var(--sl-color-white);
+	}
+
+	img {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.external {
+		opacity: 0.6;
+	}
+
+	/* Icons only where the header has little room; the label stays for screen readers. */
+	@media (min-width: 50rem) and (max-width: 72rem) {
+		.label {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+
+		.external {
+			display: none;
+		}
+	}
+</style>
