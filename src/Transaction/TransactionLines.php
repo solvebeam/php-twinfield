@@ -78,6 +78,16 @@ final readonly class TransactionLines
         return InvoiceTotalLine::fromXml($this->requireTotalElement($lines));
     }
 
+    /**
+     * Checks that there is no total line, as for a journal transaction.
+     */
+    public function requireNoTotal(XmlElement $lines): void
+    {
+        if ($this->total !== null) {
+            throw new UnexpectedResponseException(sprintf('%s has a total line, expected none.', $lines->path));
+        }
+    }
+
     private function requireTotalElement(XmlElement $lines): XmlElement
     {
         return $this->total ?? throw new UnexpectedResponseException(sprintf('%s has no total line.', $lines->path));

@@ -15,8 +15,9 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
  * What every transaction to create or update has: the header values, detail and VAT lines, and
  * how to save it. Immutable: every method returns a new input.
  *
- * Subclasses add their own header values and the total line, which they calculate from the
- * lines so the transaction always balances.
+ * Subclasses add their own header values and, when the kind of transaction has one, the total
+ * line, which they calculate from the lines so the transaction always balances. Journal
+ * transactions have no total line: their lines balance by themselves.
  */
 abstract class AbstractTransactionInput implements TransactionInput
 {
@@ -267,7 +268,8 @@ abstract class AbstractTransactionInput implements TransactionInput
 
     /**
      * Sum of all detail and VAT lines including VAT, signed: credit positive, debit negative.
-     * The total line takes the other side, so the transaction balances.
+     * The total line takes the other side, so the transaction balances; without a total line it
+     * must be zero.
      */
     protected function linesTotal(): Amount
     {
@@ -294,9 +296,19 @@ abstract class AbstractTransactionInput implements TransactionInput
     abstract protected function appendHeader(XmlBuilder $xml, DOMElement $header): void;
 
     /**
-     * The total line, with ID 1.
+     * The total line, with ID 1, when the kind of transaction has one. The other lines get the
+     * IDs after it.
      */
     abstract protected function appendTotalLine(XmlBuilder $xml, DOMElement $lines): void;
+
+    /**
+     * Checks the input before the XML is built, e.g. that a journal transaction balances.
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function validate(): void
+    {
+    }
 
     /**
      * @return array<string, string>
@@ -330,13 +342,15 @@ abstract class AbstractTransactionInput implements TransactionInput
             if ($this->vatLines === [] && $line->vatCode() !== null && $line->vatValue() === null) {
                 throw new InvalidArgumentException(sprintf(
                     'Line %d has VAT code %s without VAT amount: give the amount, e.g. vat(\'%s\', \'2.10\'), '
-                        . 'so the total line includes it.',
+                        . 'so the transaction balances.',
                     $index + 1,
                     $line->vatCode(),
                     $line->vatCode(),
                 ));
             }
         }
+
+        $this->validate();
 
         $header = $xml->add($transaction, 'header');
 
@@ -362,7 +376,7 @@ abstract class AbstractTransactionInput implements TransactionInput
 
         $this->appendTotalLine($xml, $lines);
 
-        $id = 2;
+        $id = $lines->childNodes->length + 1;
 
         foreach ($this->lines as $line) {
             $line->appendTo($xml, $lines, $id++);

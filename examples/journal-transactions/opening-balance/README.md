@@ -1,0 +1,91 @@
+# Opening balance
+
+Books an opening balance in day book `BEGINBALANS`, period 0 of this year, then deletes it again. Without `--save` it only shows the request. With `--save` it changes data in Twinfield.
+
+Twinfield has several kinds of journal: memorial, wages, opening balance and year end. They are all journal transactions; the day book decides the kind. An opening balance can only be booked in period 0, a year end booking only in period 55. Give the period with `period(FinancialPeriod::of($year, 0))`: without it Twinfield derives the period from the date.
+
+The day book codes differ per company: look them up in Twinfield, or with Finder `TRS` (`$twinfield->finder(FinderType::TransactionTypes)`).
+
+The example uses the first two balance sheet accounts of the company.
+
+## Code
+
+```php
+$twinfield = Example::twinfield();
+$journal = $twinfield->journalTransactions();
+
+// In your own application: your opening balance day book and balance sheet accounts, e.g. the
+// bank account and equity.
+[$bank, $equity] = Example::generalLedgerAccounts($twinfield, 'BAS', 2);
+$year = (int) date('Y');
+
+// An opening balance goes in period 0 of the year. Twinfield refuses it in another period.
+$input = JournalTransactionInput::create('BEGINBALANS', new DateTimeImmutable($year . '-01-01'))
+    ->period(FinancialPeriod::of($year, 0))
+    ->debit($bank, '2500.00', description: 'Opening balance')
+    ->credit($equity, '2500.00', description: 'Opening balance');
+
+if (!in_array('--save', $argv ?? [], true)) {
+    echo 'Dry run; add --save to create it as provisional transaction and delete it again:', PHP_EOL, PHP_EOL;
+    echo Example::xml($input->toXml((string) $twinfield->companyCode())), PHP_EOL;
+
+    exit(0);
+}
+
+try {
+    $transaction = $journal->create($input);
+} catch (ProcessXmlException $exception) {
+    foreach ($exception->result->messages() as $message) {
+        echo $message->type->value, ' at ', $message->path, ': ', $message->text, PHP_EOL;
+    }
+
+    exit(1);
+}
+
+echo 'Created: ', $transaction->dayBook(), ' ', $transaction->number(), ', period ', $transaction->header->period,
+    PHP_EOL;
+
+// Clean up: delete the provisional example transaction again.
+$journal->delete($transaction->dayBook(), $transaction->number(), 'php-twinfield example');
+
+echo 'Deleted: ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;
+```
+
+## Run
+
+```sh
+php examples/journal-transactions/opening-balance/example.php
+```
+
+```text
+Dry run; add --save to create it as provisional transaction and delete it again:
+
+<transaction destiny="temporary">
+  <header>
+    <office>1002</office>
+    <code>BEGINBALANS</code>
+    <period>2026/00</period>
+    <date>20260101</date>
+  </header>
+  <lines>
+    <line type="detail" id="1">
+      <dim1>01000</dim1>
+      <debitcredit>debit</debitcredit>
+      <value>2500.00</value>
+      <description>Opening balance</description>
+    </line>
+    <line type="detail" id="2">
+      <dim1>01001</dim1>
+      <debitcredit>credit</debitcredit>
+      <value>2500.00</value>
+      <description>Opening balance</description>
+    </line>
+  </lines>
+</transaction>
+```
+
+Add `--save` to send it. This creates a provisional transaction and deletes it again:
+
+```sh
+php examples/journal-transactions/opening-balance/example.php --save
+```

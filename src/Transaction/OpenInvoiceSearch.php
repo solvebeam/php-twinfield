@@ -19,10 +19,11 @@ use SolveBeam\Twinfield\Finder\FinderQuery;
  *       echo $invoice->invoiceNumber, ' ', $invoice->amount, PHP_EOL;
  *   }
  *
- * Without customer() or account(), the Finder also gives open purchase invoices. Every method
- * returns a new search, so a base search can be reused.
+ * The Finder gives open sales and purchase invoices together: customer(), supplier() or account()
+ * narrows it down. Every method returns a new search, so a base search can be reused.
  *
  * @see https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/
+ * @see https://developers.twinfield.com/documentation/api/transaction-data/purchase-transactions/
  */
 final readonly class OpenInvoiceSearch
 {
@@ -32,8 +33,8 @@ final readonly class OpenInvoiceSearch
     }
 
     /**
-     * Search pattern on customer code, name, outstanding amount and invoice number; `*` matches anything,
-     * `?` one character. Default `*`.
+     * Search pattern on customer or supplier code, name, outstanding amount and invoice number;
+     * `*` matches anything, `?` one character. Default `*`.
      */
     public function pattern(string $pattern): self
     {
@@ -41,7 +42,7 @@ final readonly class OpenInvoiceSearch
     }
 
     /**
-     * Only invoices of this customer (or supplier): Finder option `dim2`.
+     * Only invoices of this customer: Finder option `dim2`.
      */
     public function customer(string $code): self
     {
@@ -51,8 +52,18 @@ final readonly class OpenInvoiceSearch
     }
 
     /**
-     * Only invoices on this accounts receivable account, e.g. `1300`: Finder option `dim1`. This
-     * leaves out the purchase invoices.
+     * Only invoices of this supplier: Finder option `dim2`.
+     */
+    public function supplier(string $code): self
+    {
+        TransactionXmlWriter::dimension('supplier (dim2)', $code);
+
+        return new self($this->query->option('dim2', $code));
+    }
+
+    /**
+     * Only invoices on this accounts receivable (e.g. `1300`) or payable (e.g. `1600`) account:
+     * Finder option `dim1`. This leaves out the invoices of the other kind.
      */
     public function account(string $code): self
     {

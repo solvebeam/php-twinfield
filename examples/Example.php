@@ -196,6 +196,15 @@ final class Example
     }
 
     /**
+     * Code of the first supplier of the company, for the purchase transaction examples.
+     */
+    public static function supplierCode(Twinfield $twinfield): string
+    {
+        return $twinfield->suppliers()->search()->limit(1)->get()->items[0]->code
+            ?? throw new \RuntimeException('The examples need at least one supplier.');
+    }
+
+    /**
      * An asset method code that is not in use yet, from EXAMPLE999 down to EXAMPLE900, for the
      * examples that create an asset method.
      */
@@ -272,6 +281,20 @@ final class Example
     }
 
     /**
+     * VAT code IH, or the first purchase VAT code of the company.
+     */
+    public static function purchaseVatCode(Twinfield $twinfield): string
+    {
+        $codes = array_map(
+            static fn (VatCodeSummary $vatCode): string => $vatCode->code,
+            $twinfield->vatCodes()->search()->vatType(VatCodeType::Purchase)->get()->items,
+        );
+
+        return in_array('IH', $codes, true) ? 'IH' : $codes[0]
+            ?? throw new \RuntimeException('The company has no purchase VAT code.');
+    }
+
+    /**
      * The first active asset method of the company, for the examples that create a fixed asset.
      */
     public static function assetMethodCode(Twinfield $twinfield): string
@@ -322,6 +345,28 @@ final class Example
             ->rows[0] ?? throw new \RuntimeException('The company has no profit and loss accounts.');
 
         return $row[0];
+    }
+
+    /**
+     * Codes of the first general ledger accounts of a type, e.g. two balance sheet accounts
+     * (`BAS`) for the journal transaction examples.
+     *
+     * @param 'BAS'|'PNL' $type
+     *
+     * @return list<string>
+     */
+    public static function generalLedgerAccounts(Twinfield $twinfield, string $type, int $count): array
+    {
+        $codes = array_map(
+            static fn (array $row): string => $row[0],
+            $twinfield->finder(FinderType::Dimensions)->option('dimtype', $type)->limit($count)->get()->rows,
+        );
+
+        if (count($codes) < $count) {
+            throw new \RuntimeException(sprintf('The examples need at least %d %s accounts.', $count, $type));
+        }
+
+        return $codes;
     }
 
     /**

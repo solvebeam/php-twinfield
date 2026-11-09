@@ -78,6 +78,37 @@ delete. Nothing is tested live yet.
   `examples/cash-transactions/daily-cash-register` and replace the illustrative output in its README
   with the real output.
 
+## Journal transactions: verify writing live
+
+Journal transactions (`transaction`, day books `MEMO`, `BEGINBALANS`, `SALARIS`, …) are tested
+offline with fixtures that follow the live read responses (`journal-transaction-*.xml`, fictitious
+values) and read-only live: 33 transactions of companies 1002 and 1002_3 parse and `edit()` gives
+an input that balances; 50 deleted ones give a `TransactionNotFoundException`. Creating, updating,
+`saveMany()`, posting and deleting are not yet tested live: the write test needs an interactive
+confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=JournalTransaction
+```
+
+To check:
+
+- The shape of the live save, save many, post and delete responses, to replace the fixtures. Record
+  one (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`).
+- VAT: does Twinfield accept a detail line with `vatcode` and `vatvalue`, and book the VAT line on
+  the same side (as the SDK's balance check assumes)? What does it do with a VAT code without
+  `vatvalue`: calculate the VAT and refuse the unbalanced transaction, or something else? Is an
+  update with `edit()` accepted with the VAT lines of the response?
+- Does `regime` change anything in a company with one regime? Is `Commercial` or `Economic`
+  refused there?
+- Opening balance and year end: is a booking in `BEGINBALANS` outside period 0, or in `VJP`
+  outside period 55, refused? With which message?
+- Matching: `DetailLineInput::match()` on a journal line, e.g. to write off a payment difference
+  against an open invoice (see the bank transaction items above).
+
+Then run the write examples in `examples/journal-transactions/{create-journal-transaction,opening-balance}`
+with `--save`.
+
 ## VAT codes: verify writing live
 
 VAT codes (`vat`, Finder `VAT`) are tested offline with fixtures recorded live (`vat-read*.xml`,
@@ -341,7 +372,6 @@ To check:
 - Is `duedate` required on create, and what does Twinfield set without it?
 - Does `changepaystatus` work on a provisional transaction, or only on a final one? What does the
   response look like?
-- Is the amount of Finder `IVT` the open or the original amount? Check with a partly paid invoice.
 - Record a paid invoice (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to check the
   `<matches>` of the total line; `sales-transaction-read-credit-note.xml` is fictitious.
 
@@ -350,6 +380,35 @@ Not yet implemented: the exchange rate and base and reporting amounts of the tot
 
 Then run the examples in `examples/sales-transactions/{create-sales-transaction,credit-note}` with
 `--save`, and replace the dry-run output in their READMEs with the real output.
+
+## Purchase transactions: verify writing live
+
+Purchase transactions (`transaction`, day book `INK`) are read live: 25 transactions of companies
+1002 and 1002_3 parse and give an input with `edit()` with the same total, and Finder `IVT` with
+`supplier()` works (see
+[Differences with the documentation](docs/src/content/docs/guides/documentation-differences.md#purchase-transactions)).
+They share their input code with sales transactions (`AbstractInvoiceTransactionInput`). Writing
+is only tested offline: the fixtures (`purchase-transaction-*.xml`) follow the live read responses
+and the documentation, with fictitious values. Recording with `TWINFIELD_RECORD=1` and
+`composer twinfield:anonymize` did not give usable fixtures: the anonymizer also replaces fixed
+values such as `debitcredit`, `matchstatus` and `@location`.
+
+```sh
+composer test:write -- --company=1002_3 --filter=PurchaseTransaction
+```
+
+To check:
+
+- The shape of the save, post, delete and change pay status responses, to replace the fixtures.
+- Does an update with `edit()` work for an imported invoice with negative discount lines (`debit`
+  `-11.72`)? `edit()` sends them back as Twinfield returned them.
+- Is `duedate` required on create? One purchase invoice entered by hand has none.
+- Does `changepaystatus` work on a provisional transaction? Is it the same setting as `freechar` `N`
+  on the total line (`excludeFromPaymentRuns()` on the input)?
+- Keep the fixed values in `XmlAnonymizer`, so a recorded transaction can replace the fixtures.
+
+Then run the examples in `examples/purchase-transactions/{create-purchase-transaction,credit-note}`
+with `--save`, and replace the dry-run output in their READMEs with the real output.
 
 ## Sales invoices: verify writing live
 

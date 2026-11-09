@@ -21,7 +21,7 @@ final readonly class OpenInvoice
         /** Company the Finder searched in, with its organisation. */
         public CompanyReference $company,
         public string $invoiceNumber,
-        /** The amount the Finder gives; the documentation calls it the outstanding amount. Always positive. */
+        /** The open (outstanding) amount, always positive: 10.00 for a partly paid invoice of 15.00. */
         public Amount $amount,
         /** Code of the customer or supplier. */
         public string $relation,

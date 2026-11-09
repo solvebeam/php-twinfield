@@ -46,7 +46,7 @@ final readonly class TransactionClient
     /**
      * @return T
      *
-     * @throws TransactionNotFoundException
+     * @throws TransactionNotFoundException Also when the transaction was deleted.
      */
     public function get(string $dayBook, int $number): object
     {
@@ -60,6 +60,11 @@ final readonly class TransactionClient
             $result = $this->twinfield->processXml($xml->toXml());
         } catch (ProcessXmlException $exception) {
             throw TransactionNotFoundException::fromProcessXml($exception, $dayBook, $number) ?? $exception;
+        }
+
+        // Not documented: a deleted transaction comes back with location="deleted" and no lines.
+        if ($result->root()->getAttribute('location') === 'deleted') {
+            throw TransactionNotFoundException::deleted($dayBook, $number);
         }
 
         return $this->mapRoot($result);

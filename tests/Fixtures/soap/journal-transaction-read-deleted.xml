@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;transaction location="deleted" result="1"&gt;&lt;header&gt;&lt;office name="Example Holding B.V." shortname=""&gt;1000&lt;/office&gt;&lt;code name="Memoriaal" shortname="Memo"&gt;MEMO&lt;/code&gt;&lt;number&gt;202600002&lt;/number&gt;&lt;period&gt;2026/11&lt;/period&gt;&lt;currency name="Euro" shortname="Euro"&gt;EUR&lt;/currency&gt;&lt;regime&gt;Generic&lt;/regime&gt;&lt;date&gt;20261127&lt;/date&gt;&lt;origin&gt;import&lt;/origin&gt;&lt;originreference/&gt;&lt;modificationdate&gt;20261201091200&lt;/modificationdate&gt;&lt;user name="Example user" shortname="User"&gt;EXAMPLE&lt;/user&gt;&lt;inputdate&gt;20261130101530&lt;/inputdate&gt;&lt;/header&gt;&lt;lines /&gt;&lt;/transaction&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

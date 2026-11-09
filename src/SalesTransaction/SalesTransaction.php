@@ -97,11 +97,11 @@ final readonly class SalesTransaction
     }
 
     /**
-     * Shortcut for `$transaction->total->customer`.
+     * Shortcut for `$transaction->total->dim2`.
      */
     public function customer(): DimensionReference
     {
-        return $this->total->customer;
+        return $this->total->dim2;
     }
 
     /**
@@ -117,7 +117,9 @@ final readonly class SalesTransaction
      */
     public function value(): Amount
     {
-        return $this->total->signedValue();
+        $value = $this->total->amounts->value;
+
+        return $this->total->debitCredit === DebitCredit::Debit ? $value : $value->negate();
     }
 
     /**
@@ -137,7 +139,7 @@ final readonly class SalesTransaction
         $total = $this->total;
         $create = $this->isCreditNote() ? SalesTransactionInput::creditNote(...) : SalesTransactionInput::invoice(...);
 
-        return $create($header->dayBook, $total->customer->code, $this->invoiceNumber, $header->date)
+        return $create($header->dayBook, $total->dim2->code, $this->invoiceNumber, $header->date)
             ->number($header->number)
             ->currency($header->currency)
             ->period($header->period)

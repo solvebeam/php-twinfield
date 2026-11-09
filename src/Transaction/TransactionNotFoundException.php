@@ -11,7 +11,8 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 /**
  * The transaction does not exist in the company, e.g. `BNK` 202699999.
  *
- * Also thrown when the day book does not exist, because the transaction then cannot exist.
+ * Also thrown when the day book does not exist, because the transaction then cannot exist, and
+ * when the transaction was deleted: see deleted().
  */
 final class TransactionNotFoundException extends RuntimeException
 {
@@ -21,8 +22,19 @@ final class TransactionNotFoundException extends RuntimeException
         /** Message of Twinfield, in the language of the user. */
         public readonly string $reason,
         ?ProcessXmlException $previous = null,
+        /** The transaction existed but was deleted. */
+        public readonly bool $deleted = false,
     ) {
         parent::__construct(sprintf('Transaction %s %d not found: %s', $dayBook, $number, $reason), 0, $previous);
+    }
+
+    /**
+     * The transaction was deleted. Twinfield still returns it, with `location="deleted"`, the
+     * header and no lines; `$twinfield->deletedTransactions()` has the reason and who deleted it.
+     */
+    public static function deleted(string $dayBook, int $number): self
+    {
+        return new self($dayBook, $number, 'the transaction was deleted.', deleted: true);
     }
 
     /**

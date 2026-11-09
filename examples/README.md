@@ -94,6 +94,19 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Credit note](sales-transactions/credit-note/): book a credit note: the same positive amounts, the sides turned around (changes data with `--save`).
 - [Open invoices](sales-transactions/open-invoices/): unpaid invoices of a customer, with Finder `IVT`.
 
+## Purchase transactions
+
+- [Read purchase transaction](purchase-transactions/read-purchase-transaction/): invoice number, supplier, cost and VAT lines, payment status and payments of one purchase transaction.
+- [Create purchase transaction](purchase-transactions/create-purchase-transaction/): book a received invoice, with the VAT calculated from the VAT code (changes data with `--save`).
+- [Credit note](purchase-transactions/credit-note/): book a credit note of a supplier: the same positive amounts, the sides turned around (changes data with `--save`).
+- [Open invoices](purchase-transactions/open-invoices/): unpaid invoices of a supplier, with Finder `IVT`.
+
+## Journal transactions
+
+- [Read journal transaction](journal-transactions/read-journal-transaction/): header, regime, and detail and VAT lines of one journal transaction.
+- [Create journal transaction](journal-transactions/create-journal-transaction/): book a correction; the lines balance by themselves, without total line (changes data with `--save`).
+- [Opening balance](journal-transactions/opening-balance/): book an opening balance in period 0 (changes data with `--save`).
+
 ## Sales invoices
 
 - [List invoice types](sales-invoices/list-invoice-types/): the invoice types of the company, with Finder `INV`.

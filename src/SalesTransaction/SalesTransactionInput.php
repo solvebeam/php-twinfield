@@ -6,16 +6,9 @@ namespace SolveBeam\Twinfield\SalesTransaction;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use DOMElement;
-use InvalidArgumentException;
-use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
-use SolveBeam\Twinfield\ProcessXml\XmlValue;
-use SolveBeam\Twinfield\Transaction\AbstractTransactionInput;
+use SolveBeam\Twinfield\Transaction\AbstractInvoiceTransactionInput;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
-use SolveBeam\Twinfield\Transaction\DetailLineInput;
-use SolveBeam\Twinfield\Transaction\LineType;
-use SolveBeam\Twinfield\Transaction\TransactionXmlWriter;
 use SolveBeam\Twinfield\VatCode\VatCode;
 
 /**
@@ -36,40 +29,8 @@ use SolveBeam\Twinfield\VatCode\VatCode;
  *
  * @see https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/
  */
-final class SalesTransactionInput extends AbstractTransactionInput
+final class SalesTransactionInput extends AbstractInvoiceTransactionInput
 {
-    private ?string $account = null;
-
-    private ?DateTimeImmutable $dueDate = null;
-
-    private ?string $paymentReference = null;
-
-    private ?bool $duplicateInvoiceWarning = null;
-
-    private ?string $description = null;
-
-    private ?string $comment = null;
-
-    private ?string $freeChar = null;
-
-    private function __construct(
-        string $dayBook,
-        private readonly string $customer,
-        private readonly string $invoiceNumber,
-        DateTimeImmutable $date,
-        private readonly bool $creditNote,
-    ) {
-        parent::__construct($dayBook, $date);
-
-        TransactionXmlWriter::dimension('customer (dim2 of the total line)', $customer);
-
-        if ($invoiceNumber === '') {
-            throw new InvalidArgumentException('A sales transaction needs an invoice number.');
-        }
-
-        XmlValue::maxLength('invoice number', $invoiceNumber, 40);
-    }
-
     /**
      * A sales invoice: revenue() adds credit lines, the total line is debit.
      *
@@ -128,53 +89,7 @@ final class SalesTransactionInput extends AbstractTransactionInput
         ?string $project = null,
         ?string $description = null,
     ): self {
-        $amount = Amount::of($amount);
-
-        if ($vatCode instanceof VatCode) {
-            $vatValue ??= $vatCode->vatOn($amount, $this->date());
-            $vatCode = $vatCode->code;
-        }
-
-        $line = DetailLineInput::create($this->creditNote ? DebitCredit::Debit : DebitCredit::Credit, $account, $amount)
-            ->costCenter($costCenter)
-            ->project($project)
-            ->description($description)
-            ->vat($vatCode, $vatValue);
-
-        return $this->line($line);
-    }
-
-    /**
-     * Due date of the invoice, e.g. the invoice date plus the payment term.
-     */
-    public function dueDate(?DateTimeInterface $date): self
-    {
-        $input = clone $this;
-        $input->dueDate = $date === null ? null : DateTimeImmutable::createFromInterface($date);
-
-        return $input;
-    }
-
-    /**
-     * Payment reference, at most 50 characters, e.g. a structured reference `+++100/0160/01495+++`.
-     */
-    public function paymentReference(?string $reference): self
-    {
-        $input = clone $this;
-        $input->paymentReference = TransactionXmlWriter::optionalText('payment reference', $reference, 50);
-
-        return $input;
-    }
-
-    /**
-     * No warning when the invoice number is already used (`invoicenumber/@raisewarning`).
-     */
-    public function ignoreDuplicateInvoiceWarning(): self
-    {
-        $input = clone $this;
-        $input->duplicateInvoiceWarning = false;
-
-        return $input;
+        return $this->invoiceLine($account, $amount, $vatCode, $vatValue, $costCenter, $project, $description);
     }
 
     /**
@@ -183,36 +98,7 @@ final class SalesTransactionInput extends AbstractTransactionInput
      */
     public function receivablesAccount(?string $account): self
     {
-        if ($account !== null) {
-            TransactionXmlWriter::dimension('receivables account (dim1 of the total line)', $account);
-        }
-
-        $input = clone $this;
-        $input->account = $account;
-
-        return $input;
-    }
-
-    /**
-     * Description of the total line, at most 40 characters.
-     */
-    public function description(?string $description): self
-    {
-        $input = clone $this;
-        $input->description = TransactionXmlWriter::optionalText('total line description', $description, 40);
-
-        return $input;
-    }
-
-    /**
-     * Comment on the total line, at most 255 characters.
-     */
-    public function comment(?string $comment): self
-    {
-        $input = clone $this;
-        $input->comment = TransactionXmlWriter::optionalText('total line comment', $comment, 255);
-
-        return $input;
+        return $this->withAccount('receivables account', $account);
     }
 
     /**
@@ -223,37 +109,9 @@ final class SalesTransactionInput extends AbstractTransactionInput
         return $this->freeChar($exclude ? 'N' : null);
     }
 
-    /**
-     * Free character field of the total line: one character. `N` leaves the invoice out of the
-     * direct debit runs; see excludeFromDirectDebit().
-     */
-    public function freeChar(?string $freeChar): self
-    {
-        $freeChar = $freeChar === '' ? null : $freeChar;
-
-        if ($freeChar !== null && mb_strlen($freeChar) !== 1) {
-            throw new InvalidArgumentException(sprintf('Free character must be one character, "%s" given.', $freeChar));
-        }
-
-        $input = clone $this;
-        $input->freeChar = $freeChar;
-
-        return $input;
-    }
-
     public function customer(): string
     {
-        return $this->customer;
-    }
-
-    public function invoiceNumber(): string
-    {
-        return $this->invoiceNumber;
-    }
-
-    public function isCreditNote(): bool
-    {
-        return $this->creditNote;
+        return $this->dim2();
     }
 
     /**
@@ -265,37 +123,23 @@ final class SalesTransactionInput extends AbstractTransactionInput
         return $this->linesTotal();
     }
 
+    protected static function kind(): string
+    {
+        return 'sales';
+    }
+
+    protected static function dim2Name(): string
+    {
+        return 'customer';
+    }
+
+    protected static function lineSide(): DebitCredit
+    {
+        return DebitCredit::Credit;
+    }
+
     protected function lineMethods(): string
     {
         return 'revenue() or line()';
-    }
-
-    protected function appendHeader(XmlBuilder $xml, DOMElement $header): void
-    {
-        TransactionXmlWriter::add($xml, $header, 'duedate', TransactionXmlWriter::date($this->dueDate));
-        $xml->add(
-            $header,
-            'invoicenumber',
-            $this->invoiceNumber,
-            $this->duplicateInvoiceWarning === null
-                ? []
-                : ['raisewarning' => XmlValue::boolean($this->duplicateInvoiceWarning)],
-        );
-        // The documentation: leave the element out when there is no payment reference.
-        TransactionXmlWriter::add($xml, $header, 'paymentreference', $this->paymentReference);
-    }
-
-    protected function appendTotalLine(XmlBuilder $xml, DOMElement $lines): void
-    {
-        $total = $this->total();
-
-        $line = $xml->add($lines, 'line', null, ['type' => LineType::Total->value, 'id' => '1']);
-        TransactionXmlWriter::add($xml, $line, 'dim1', $this->account);
-        $xml->add($line, 'dim2', $this->customer);
-        $xml->add($line, 'debitcredit', ($total->isNegative() ? DebitCredit::Credit : DebitCredit::Debit)->value);
-        $xml->add($line, 'value', $total->absolute()->value);
-        TransactionXmlWriter::add($xml, $line, 'description', $this->description);
-        TransactionXmlWriter::add($xml, $line, 'freechar', $this->freeChar);
-        TransactionXmlWriter::add($xml, $line, 'comment', $this->comment);
     }
 }

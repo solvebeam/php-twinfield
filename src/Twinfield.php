@@ -34,6 +34,7 @@ use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
+use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeResource;
@@ -42,6 +43,7 @@ use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Period\PeriodResource;
 use SolveBeam\Twinfield\Project\ProjectResource;
+use SolveBeam\Twinfield\PurchaseTransaction\PurchaseTransactionResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
@@ -349,6 +351,23 @@ final readonly class Twinfield
     public function salesTransactions(): SalesTransactionResource
     {
         return new SalesTransactionResource($this);
+    }
+
+    /**
+     * Purchase transactions of the company: read, create, update, post, delete, change the pay
+     * status and search open invoices.
+     */
+    public function purchaseTransactions(): PurchaseTransactionResource
+    {
+        return new PurchaseTransactionResource($this);
+    }
+
+    /**
+     * Journal transactions of the company: read, create, update, post and delete.
+     */
+    public function journalTransactions(): JournalTransactionResource
+    {
+        return new JournalTransactionResource($this);
     }
 
     /**

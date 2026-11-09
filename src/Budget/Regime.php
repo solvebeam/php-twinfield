@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Budget;
 
 /**
- * Reporting regime of a budget query (`RegimeType`).
+ * Reporting regime, for companies that report under more than one regime (e.g. fiscal and
+ * commercial).
  *
- * Not in the Twinfield documentation, only in the WSDL of the BudgetService. It is meant for
- * companies that report under more than one regime (e.g. fiscal and commercial). Without a
- * regime Twinfield uses the default of the company.
+ * Used by budget queries (`RegimeType`, only in the WSDL of the BudgetService; without a regime
+ * Twinfield uses the default of the company) and journal transactions (`regime`; without one
+ * Twinfield books `Generic`, which is visible in all regimes).
  */
 enum Regime: string
 {

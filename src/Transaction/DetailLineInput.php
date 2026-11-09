@@ -63,10 +63,11 @@ final class DetailLineInput
         private readonly DebitCredit $debitCredit,
         private readonly string $account,
         private readonly Amount $value,
+        bool $allowNegative = false,
     ) {
         TransactionXmlWriter::dimension('account (dim1)', $account);
 
-        if ($value->isNegative()) {
+        if ($value->isNegative() && !$allowNegative) {
             throw new InvalidArgumentException(sprintf(
                 'Line amount must not be negative, %s given: use the other side (debit or credit) instead.',
                 $value,
@@ -104,10 +105,13 @@ final class DetailLineInput
      * Input with the values of a line from a response. Base and reporting amounts are left out:
      * Twinfield calculates them again from the rates. Match sets are left out too: they are
      * already matched, so sending them again would match twice.
+     *
+     * A negative amount is kept as Twinfield returns it: imported purchase invoices have discount
+     * lines with a negative amount on the side of the costs, e.g. `debit` `-11.72`.
      */
     public static function fromLine(DetailLine $line): self
     {
-        $input = new self($line->debitCredit, $line->account->code, $line->amounts->value);
+        $input = new self($line->debitCredit, $line->account->code, $line->amounts->value, allowNegative: true);
 
         $input->dim2 = $line->dim2?->code;
         $input->dim3 = $line->dim3?->code;

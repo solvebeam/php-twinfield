@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Transaction;
 
+use DateTimeImmutable;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
- * The total line (`type="total"`) of a sales transaction: what the customer owes, including VAT.
+ * The total line (`type="total"`) of a sales or purchase transaction: what the customer owes or
+ * what is owed to the supplier, including VAT.
  *
  * Optional values are null when Twinfield leaves them out of the response.
  *
  * @see https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/
+ * @see https://developers.twinfield.com/documentation/api/transaction-data/purchase-transactions/
  */
 final readonly class InvoiceTotalLine
 {
@@ -20,11 +23,11 @@ final readonly class InvoiceTotalLine
      */
     public function __construct(
         public int $id,
-        /** `dim1`: the accounts receivable balance account, e.g. `1300`. */
+        /** `dim1`: the accounts receivable (e.g. `1300`) or payable (e.g. `1600`) balance account. */
         public DimensionReference $account,
-        /** `dim2`: the customer. */
-        public DimensionReference $customer,
-        /** Debit for an invoice, credit for a credit note. */
+        /** `dim2`: the customer or supplier. */
+        public DimensionReference $dim2,
+        /** Sales: debit for an invoice, credit for a credit note. Purchase: the other way round. */
         public DebitCredit $debitCredit,
         /** Total including VAT. */
         public LineAmounts $amounts,
@@ -34,16 +37,21 @@ final readonly class InvoiceTotalLine
         public ?Amount $vatRepTotal,
         /** Payment status: `available` while (partly) unpaid, `matched` when paid. */
         public MatchStatus $matchStatus,
-        /** Level of the matchable dimension, e.g. 2 for the customer. */
+        /** Level of the matchable dimension, e.g. 2 for the customer or supplier. */
         public ?int $matchLevel,
         public ?int $relation,
+        /** Date on which the invoice was matched; null while it is not (fully) matched. */
+        public ?DateTimeImmutable $matchDate,
         /** Amount still open in the transaction currency. */
         public ?Amount $openValue,
-        /** Amount still open in the base currency. */
+        /**
+         * Amount still open in the base currency, signed: positive for a debit total line (sales
+         * invoice), negative for a credit total line (purchase invoice).
+         */
         public ?Amount $openBaseValue,
         /** Amount still open in the reporting currency. */
         public ?Amount $openRepValue,
-        /** `N`: the invoice is left out of the direct debit runs of Twinfield. */
+        /** `N`: the invoice is left out of the direct debit runs (sales) or payment runs (purchase) of Twinfield. */
         public ?string $freeChar,
         public ?string $comment,
         /** Payments matched with this invoice; empty when nothing is matched. */
@@ -56,7 +64,7 @@ final readonly class InvoiceTotalLine
         return new self(
             id: (int) $line->attribute('id'),
             account: TransactionXml::dimension($line, 'dim1'),
-            customer: TransactionXml::dimension($line, 'dim2'),
+            dim2: TransactionXml::dimension($line, 'dim2'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),
             amounts: LineAmounts::fromXml($line),
             description: TransactionXml::optionalString($line, 'description'),
@@ -66,6 +74,7 @@ final readonly class InvoiceTotalLine
             matchStatus: $line->enum('matchstatus', MatchStatus::class),
             matchLevel: TransactionXml::optionalInt($line, 'matchlevel'),
             relation: TransactionXml::optionalInt($line, 'relation'),
+            matchDate: TransactionXml::optionalDate($line, 'matchdate'),
             // Live responses only have basevalueopen. The reference table names valueopen,
             // basevalueopen and repvalueopen, the response example openvalue, openbasevalue and
             // openrepvalue: read both.
@@ -79,13 +88,5 @@ final readonly class InvoiceTotalLine
             comment: TransactionXml::optionalString($line, 'comment'),
             matches: MatchSet::listFromLine($line),
         );
-    }
-
-    /**
-     * Total as signed amount: positive for an invoice (debit), negative for a credit note.
-     */
-    public function signedValue(): Amount
-    {
-        return $this->debitCredit === DebitCredit::Debit ? $this->amounts->value : $this->amounts->value->negate();
     }
 }
