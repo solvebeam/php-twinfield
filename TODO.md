@@ -53,6 +53,31 @@ Then add matching to the write test (it needs an open sales invoice) and run the
 - Total line fields `invoicenumber`, `freechar`, `comment`, `repvalue`, `reprate` and detail line
   fields `vatbasevalue`, `vatrepvalue` can't be sent yet. Probably rarely needed.
 
+## Cash transactions: add live tests and verify live
+
+Cash transactions (`transaction`, day book `KAS`) share their code with bank transactions
+(`StatementTransaction`, `StatementTransactionInput`, `TransactionClient`), so the bank items above
+apply to them too: matching, browse and the fields that can't be sent yet. They are only tested
+offline, with `cash-transaction-read.xml` (fictitious) and the bank fixtures for save, post and
+delete. Nothing is tested live yet.
+
+- Add an integration test (`tests/Integration/CashTransaction`) and a write test
+  (`tests/Write/CashTransaction`), like the bank transaction tests, then run them:
+
+  ```sh
+  composer test:live -- --filter=CashTransaction
+  composer test:write -- --company=1002_3 --filter=CashTransaction
+  ```
+
+- Read an existing cash transaction and record it (`TWINFIELD_RECORD=1`, then
+  `composer twinfield:anonymize`) to replace `cash-transaction-read.xml`. Is the response the same as
+  for bank transactions, or does it differ (e.g. no `<matches>`, other elements in the header)?
+- Does `CashTransactionInput::forCashBook()` work with a live cash book, and does Twinfield accept
+  `statement()` (number, opening and closing balance) for a cash book?
+- Add write examples like the bank ones (`create`, `update`, `post`, `delete`), and run
+  `examples/cash-transactions/daily-cash-register` and replace the illustrative output in its README
+  with the real output.
+
 ## VAT codes: verify writing live
 
 VAT codes (`vat`, Finder `VAT`) are tested offline with fixtures recorded live (`vat-read*.xml`,
@@ -293,14 +318,45 @@ Then run the write examples in `examples/projects/{create,update,delete}-project
 illustrative output in their READMEs (and in `list-projects`, `search-projects` and
 `read-project`) with the real output.
 
-## Sales transactions and sales invoices: verify the ProcessXml examples live
+## Sales transactions: verify writing live
 
-`examples/process-xml/create-sales-transaction` and `create-sales-invoice` are built from the
-Twinfield documentation and only run as dry run so far.
+Sales transactions (`transaction`, day book `VRK`) are read live: 7 transactions of company 1002
+parse and give an input with `edit()`, and Finder `IVT` works (see
+[Differences with the documentation](docs/src/content/docs/guides/documentation-differences.md#sales-transactions)).
+Writing is only tested offline: the save, save many, post, delete and change pay status fixtures
+follow the live read responses and the documentation, with fictitious values.
 
-- Run both with `--save` against a test company and replace the dry-run output in their READMEs with
-  the real output.
-- Sales transaction: does a total line without `dim1` work, and does the delete request work for
-  `VRK`?
-- Sales invoice: does invoice type `FACTUUR` with article `0` and `unitspriceexcl` work in a default
-  company? Can a concept invoice be deleted with the API, so the example can clean up?
+```sh
+composer test:write -- --company=1002_3 --filter=SalesTransaction
+```
+
+To check:
+
+- The shape of the save response. The documented response example has no `matchstatus` on the VAT
+  line; the live read responses have it. If the save response leaves it out, `create()` throws after
+  Twinfield saved the transaction: then make `VatLine::$matchStatus` nullable for that case.
+- Does a total line without `dim1` work (Twinfield takes the account of the customer)?
+- Does an update with `edit()` work? It sends the VAT lines of the response back (with `baseline`
+  1, as Twinfield returns it).
+- Is `duedate` required on create, and what does Twinfield set without it?
+- Does `changepaystatus` work on a provisional transaction, or only on a final one? What does the
+  response look like?
+- Is the amount of Finder `IVT` the open or the original amount? Check with a partly paid invoice.
+- Record a paid invoice (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to check the
+  `<matches>` of the total line; `sales-transaction-read-credit-note.xml` is fictitious.
+
+Not yet implemented: the exchange rate and base and reporting amounts of the total line (`rate`,
+`basevalue`, `repvalue`, `reprate`) can't be sent yet.
+
+Then run the examples in `examples/sales-transactions/{create-sales-transaction,credit-note}` with
+`--save`, and replace the dry-run output in their READMEs with the real output.
+
+## Sales invoices: verify the ProcessXml example live
+
+`examples/process-xml/create-sales-invoice` is built from the Twinfield documentation and only run
+as dry run so far.
+
+- Run it with `--save` against a test company and replace the dry-run output in its README with the
+  real output.
+- Does invoice type `FACTUUR` with article `0` and `unitspriceexcl` work in a default company? Can
+  a concept invoice be deleted with the API, so the example can clean up?

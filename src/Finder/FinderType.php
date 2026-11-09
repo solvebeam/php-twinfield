@@ -22,6 +22,9 @@ enum FinderType: string
     case Dimensions = 'DIM';
     case Offices = 'OFF';
 
+    /** Open (unpaid) invoices: sales and purchase; see SalesTransactionResource::openInvoices(). */
+    case OpenInvoices = 'IVT';
+
     /** Rates of Time & Expenses (time project rates). */
     case Rates = 'TRT';
 

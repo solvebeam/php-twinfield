@@ -44,6 +44,7 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Rate\RateResource;
+use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
@@ -292,6 +293,15 @@ final readonly class Twinfield
     public function cashTransactions(): CashTransactionResource
     {
         return new CashTransactionResource($this);
+    }
+
+    /**
+     * Sales transactions of the company: read, create, update, post, delete, change the pay
+     * status and search open invoices.
+     */
+    public function salesTransactions(): SalesTransactionResource
+    {
+        return new SalesTransactionResource($this);
     }
 
     /**

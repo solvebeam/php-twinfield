@@ -102,7 +102,8 @@ final class TransactionXml
 
         return new DimensionReference(
             code: $child->text(),
-            // The documentation names it `dimensiontype`; responses use `type`.
+            // The bank transaction documentation shows `type`; the sales documentation and live sales
+            // responses have `dimensiontype`.
             type: $attribute('type') ?? $attribute('dimensiontype'),
             name: $attribute('name'),
         );

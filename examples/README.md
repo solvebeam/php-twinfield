@@ -87,6 +87,13 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Read cash transaction](cash-transactions/read-cash-transaction/): header and lines of one cash transaction.
 - [Daily cash register](cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
 
+## Sales transactions
+
+- [Read sales transaction](sales-transactions/read-sales-transaction/): invoice number, customer, revenue and VAT lines, payment status and payments of one sales transaction.
+- [Create sales transaction](sales-transactions/create-sales-transaction/): book an invoice from your own software, with the VAT calculated from the VAT code (changes data with `--save`).
+- [Credit note](sales-transactions/credit-note/): book a credit note: the same positive amounts, the sides turned around (changes data with `--save`).
+- [Open invoices](sales-transactions/open-invoices/): unpaid invoices of a customer, with Finder `IVT`.
+
 ## Deleted transactions
 
 - [List deleted transactions](deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why, of all day books.
@@ -211,5 +218,4 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List companies](process-xml/list-companies/): all companies, with a request without company.
 - [Read dimension](process-xml/read-dimension/): read a customer and handle errors.
-- [Create sales transaction](process-xml/create-sales-transaction/): book an invoice from your own software in the sales day book (changes data with `--save`).
 - [Create sales invoice](process-xml/create-sales-invoice/): let Twinfield make a concept invoice from articles (changes data with `--save`).

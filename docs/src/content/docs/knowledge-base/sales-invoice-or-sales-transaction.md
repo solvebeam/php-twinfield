@@ -52,53 +52,38 @@ The links in the article go to the old API reference. The current documentation 
 
 ## With this SDK
 
-The SDK has no resources for sales transactions and sales invoices yet. Send them with [`processXml()`](/guides/process-xml/) and build the XML with `XmlBuilder`, so values are escaped.
+The SDK has no resource for sales invoices yet: send them with [`processXml()`](/guides/process-xml/) and build the XML with `XmlBuilder`, so values are escaped.
 
 ### Sales transaction
 
-The invoice is made in your own software: send a `<transaction>` with a total line for the customer (including VAT) and a detail line per revenue account (without VAT). Twinfield adds the VAT lines. See [Transactions](/guides/transactions/#how-a-transaction-is-built) for the debit and credit sides.
+The invoice is made in your own software: `$twinfield->salesTransactions()` books it. `SalesTransactionInput` calculates the total line for the customer (including VAT) from the revenue lines (without VAT), so the transaction always balances. Twinfield adds the VAT lines. See [Sales transactions](/guides/transactions/#sales-transactions) in the transactions guide.
 
 ```php
-use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
-use SolveBeam\Twinfield\ProcessXml\XmlValue;
+use SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput;
 
-$xml = XmlBuilder::create('transaction', ['destiny' => 'temporary']);
+$date = new DateTimeImmutable('2026-11-09');
 
-$header = $xml->add($xml->root(), 'header');
-$xml->add($header, 'office', '1000');
-$xml->add($header, 'code', 'VRK');
-$xml->add($header, 'date', XmlValue::date(new DateTimeImmutable('2026-11-09')));
-$xml->add($header, 'invoicenumber', '2026-0042');
+$transaction = $twinfield->salesTransactions()->create(
+    SalesTransactionInput::invoice('VRK', customer: '1000', invoiceNumber: '2026-0042', date: $date)
+        ->dueDate($date->modify('+30 days'))
+        // 100.00 revenue without VAT; the VAT comes from the percentage of VH on the date.
+        ->revenue('8000', '100.00', vatCode: $twinfield->vatCodes()->get('VH')),
+);
 
-$lines = $xml->add($xml->root(), 'lines');
-
-// The customer owes 121.00 including VAT.
-$total = $xml->add($lines, 'line', attributes: ['type' => 'total', 'id' => '1']);
-$xml->add($total, 'dim2', '1000');
-$xml->add($total, 'debitcredit', 'debit');
-$xml->add($total, 'value', '121.00');
-
-// 100.00 revenue without VAT, with 21% VAT (VH).
-$detail = $xml->add($lines, 'line', attributes: ['type' => 'detail', 'id' => '2']);
-$xml->add($detail, 'dim1', '8000');
-$xml->add($detail, 'debitcredit', 'credit');
-$xml->add($detail, 'value', '100.00');
-$xml->add($detail, 'vatcode', 'VH');
-
-$result = $twinfield->processXml($xml->toXml());
-
-echo 'VRK ', $result->xpath()->evaluate('string(/transaction/header/number)'), PHP_EOL;
+echo $transaction->dayBook(), ' ', $transaction->number(), ': ', $transaction->value(), PHP_EOL;
 ```
 
-`destiny="temporary"` saves it as provisional, so you can still check it in Twinfield. Use `destiny="final"` to put it in the general ledger at once, as the article describes.
+New transactions are provisional, so you can still check them in Twinfield. Call `final()` on the input to put it in the general ledger at once, as the article describes.
 
-Full example, with the VAT calculated from the VAT code and a dry run: [Create sales transaction](/examples/process-xml/create-sales-transaction/).
+Full examples: [Create sales transaction](/examples/sales-transactions/create-sales-transaction/) and [Credit note](/examples/sales-transactions/credit-note/).
 
 ### Sales invoice
 
 Twinfield makes the invoice: send a `<salesinvoice>` with an invoice type, the customer and a line per article. Twinfield calculates the amounts and VAT. With status `concept` the invoice can still be changed. With `final` Twinfield books the sales transaction and returns it in `financials`.
 
 ```php
+use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
+
 $xml = XmlBuilder::create('salesinvoice');
 
 $header = $xml->add($xml->root(), 'header');

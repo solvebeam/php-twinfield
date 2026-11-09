@@ -1,6 +1,6 @@
 ---
 title: Transactions
-description: Read, create, update, post and delete bank and cash transactions, with exact amounts and a total line that always balances.
+description: Read, create, update, post and delete bank, cash and sales transactions, with exact amounts and a total line that always balances.
 ---
 
 Transactions are the bookings in Twinfield: bank and cash statements, sales and purchase invoices, and journal entries. The SDK reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
@@ -9,7 +9,8 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 |---|---|---|
 | Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete |
 | Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete |
-| Sales, purchase, journal | – | Not yet; use [`processXml()`](/guides/process-xml/), see [Create sales transaction](/examples/process-xml/create-sales-transaction/) |
+| Sales | `$twinfield->salesTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices |
+| Purchase, journal | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Sales transaction or sales invoice? See [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/) in the Twinfield knowledge base.
 
@@ -45,13 +46,13 @@ $result = $bank->saveMany($monday, $tuesday, $wednesday);
 
 ## How a transaction is built
 
-A transaction has a **header** and **lines**. The header has the day book (`code`, e.g. `BNK`), the date, the currency and, for bank and cash, the statement number with the opening and closing balance. Each line has a type:
+A transaction has a **header** and **lines**. The header has the day book (`code`, e.g. `BNK`), the date, the currency and, for bank and cash, the statement number with the opening and closing balance. For sales, it has the invoice number, the due date and the payment reference. Each line has a type:
 
-| Line type | What it is | Bank and cash |
-|---|---|---|
-| `total` | The balance side, including VAT | The bank or cash account, with the sum of all other lines |
-| `detail` | What the money is for, without VAT | A customer paying, a supplier being paid, a cost |
-| `vat` | VAT per VAT code (optional) | The VAT of detail lines with a VAT code |
+| Line type | What it is | Bank and cash | Sales |
+|---|---|---|---|
+| `total` | The balance side, including VAT | The bank or cash account, with the sum of all other lines | The customer, with what they owe |
+| `detail` | What the money is for, without VAT | A customer paying, a supplier being paid, a cost | The revenue |
+| `vat` | VAT per VAT code (optional) | The VAT of detail lines with a VAT code | The VAT of the revenue |
 
 Amounts are always positive; `debitcredit` gives the side. That is where most mistakes happen, because the side depends on the line type and on the kind of transaction:
 
@@ -97,6 +98,41 @@ $input = $input->line(
 ```
 
 The bank account of the total line comes from `create($dayBook, $account, $date)`. For bank transactions, `BankTransactionInput::forBankBook($bankBook, $date)` takes the code and the ledger account of a bank book from `$twinfield->bankBooks()->get('BNK')`. For cash transactions, `CashTransactionInput::forCashBook($cashBook, $date)` does the same with a cash book from `$twinfield->cashBooks()->get('KAS')`.
+
+## Sales transactions
+
+A sales transaction books an invoice made in your own software. (To let Twinfield make the invoice, see [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/).) Start with `invoice()` or `creditNote()`, and add the revenue with `revenue()`:
+
+```php
+use SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput;
+
+$sales = $twinfield->salesTransactions();
+$date = new DateTimeImmutable('2026-11-09');
+
+$transaction = $sales->create(
+    SalesTransactionInput::invoice('VRK', customer: '1000', invoiceNumber: '2026-0042', date: $date)
+        ->dueDate($date->modify('+30 days'))
+        ->paymentReference('2026-0042')
+        ->revenue('8000', '100.00', vatCode: 'VH', vatValue: '21.00', description: 'Consultancy')
+        ->revenue('8010', '50.00', vatCode: $twinfield->vatCodes()->get('VL'), costCenter: '00100', project: 'P0001'),
+);
+
+echo $transaction->invoiceNumber, ': ', $transaction->value(), ', open ', $transaction->total->openBaseValue, PHP_EOL;
+```
+
+- `revenue($account, $amount, …)` adds a detail line without VAT: `credit` for an invoice, `debit` for a credit note. Amounts stay positive.
+- With a `VatCode` from `$twinfield->vatCodes()->get()`, the VAT is calculated with its percentage on the transaction date. With a VAT code as string, give `vatValue` too.
+- The input calculates the **total line** with the customer: the sum including VAT, `debit` when the customer owes it. `total()` gives it before anything is sent; it is negative for a credit note.
+- Without `receivablesAccount()`, Twinfield takes the accounts receivable account of the customer.
+- `ignoreDuplicateInvoiceWarning()` turns off the warning for an invoice number that is already used. `excludeFromDirectDebit()` leaves the invoice out of the direct debit runs of Twinfield.
+
+The SDK requires an invoice number, although the Twinfield documentation does not: without one, a payment can't be matched by invoice number.
+
+`get()` returns a `SalesTransaction` with `invoiceNumber`, `dueDate`, `paymentReference` and a `total` with the `customer`, the payment status (`matchStatus`, `isPaid()`), the open amount (`openBaseValue`) and the payments it is matched with (`matches`).
+
+`excludeFromCollection($dayBook, $number)` and `includeInCollection()` change whether Twinfield collects the invoice (`changepaystatus`).
+
+`openInvoices()` searches unpaid invoices with Finder `IVT`, e.g. `$sales->openInvoices()->customer('1000')->get()`. Without `customer()` or `account()`, the results include open purchase invoices too. See [Open invoices](/examples/sales-transactions/open-invoices/).
 
 ## Amounts
 
@@ -159,7 +195,7 @@ The match value of the set is the sum of its lines. `withMatches()` replaces the
 
 ## Reading
 
-`get($dayBook, $number)` returns a `BankTransaction` or `CashTransaction`:
+`get($dayBook, $number)` returns a `BankTransaction` or `CashTransaction` (for sales: a `SalesTransaction`, see [Sales transactions](#sales-transactions)):
 
 - `header`: company, day book, number, status, period, date, currency, origin, user and dates;
 - `statementNumber`, `startValue`, `closeValue`;
@@ -183,8 +219,6 @@ $bank->update(
 
 `update()` reads the transaction first, so it throws a `TransactionNotFoundException` when it does not exist. `save()` sends the input without that check: it creates the transaction when it has no number, and updates it otherwise.
 
-## Saving many transactions
-
 ## Deleted transactions
 
 `delete($dayBook, $number, $reason)` removes a provisional transaction. Twinfield remembers what was deleted, also when that happened in Twinfield itself, for all day books (bank, cash, sales, purchase, journal, …). `$twinfield->deletedTransactions()` reads that list, newest deletion first:
@@ -207,6 +241,8 @@ Each `DeletedTransaction` has `dayBook`, `number`, `transactionDate`, `deletionD
 - `from` and `to`: the days of deletion. Only the date counts, not the time, and both days are included: `from` and `to` on the same day give everything deleted on that day. `from` after `to` throws an `InvalidArgumentException`.
 
 Use it to keep a copy of the transactions in sync: ask for what was deleted since the last sync, and remove those transactions on your side. Without filters you get every deleted transaction of the company, which can be thousands (Twinfield has no paging), so filter on a date when you can.
+
+## Saving many transactions
 
 `saveMany(...$inputs)` saves several transactions in one request. Twinfield saves the valid ones and refuses the others, so it does not throw: it returns a `SaveManyResult` with, per input in the same order, a `SavedTransaction` or a `FailedTransaction`:
 
@@ -243,6 +279,8 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Split payment over invoices](/examples/bank-transactions/split-payment-over-invoices/): one payment for several open invoices.
 - [Bulk import with errors](/examples/bank-transactions/bulk-import-with-errors/): `saveMany()` and its result.
 - [Daily cash register](/examples/cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
-
-See the Twinfield documentation of [bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/) and [cash transactions](https://developers.twinfield.com/documentation/api/transaction-data/cash-transactions/) for all fields.
 - [List deleted transactions](/examples/deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why.
+- [Read sales transaction](/examples/sales-transactions/read-sales-transaction/), [create](/examples/sales-transactions/create-sales-transaction/) and [credit note](/examples/sales-transactions/credit-note/).
+- [Open invoices](/examples/sales-transactions/open-invoices/): unpaid invoices of a customer.
+
+See the Twinfield documentation of [bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/), [cash transactions](https://developers.twinfield.com/documentation/api/transaction-data/cash-transactions/) and [sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/) for all fields.

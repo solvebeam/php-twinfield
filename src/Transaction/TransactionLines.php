@@ -19,7 +19,7 @@ final readonly class TransactionLines
      * @param list<VatLine> $vat
      */
     private function __construct(
-        public ?TotalLine $total,
+        private ?XmlElement $total,
         public array $details,
         public array $vat,
     ) {
@@ -48,7 +48,7 @@ final readonly class TransactionLines
                         );
                     }
 
-                    $total = TotalLine::fromXml($line);
+                    $total = $line;
                     break;
                 case LineType::Detail:
                     $details[] = DetailLine::fromXml($line);
@@ -62,7 +62,23 @@ final readonly class TransactionLines
         return new self($total, $details, $vat);
     }
 
+    /**
+     * The total line of a bank or cash transaction.
+     */
     public function requireTotal(XmlElement $lines): TotalLine
+    {
+        return TotalLine::fromXml($this->requireTotalElement($lines));
+    }
+
+    /**
+     * The total line of a sales transaction, with the customer.
+     */
+    public function requireInvoiceTotal(XmlElement $lines): InvoiceTotalLine
+    {
+        return InvoiceTotalLine::fromXml($this->requireTotalElement($lines));
+    }
+
+    private function requireTotalElement(XmlElement $lines): XmlElement
     {
         return $this->total ?? throw new UnexpectedResponseException(sprintf('%s has no total line.', $lines->path));
     }

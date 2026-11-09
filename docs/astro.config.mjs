@@ -76,6 +76,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},
 				{
+					label: 'Sales transactions',
+					items: [{ autogenerate: { directory: 'examples/sales-transactions' } }],
+				},
+				{
 					label: 'Deleted transactions',
 					items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }],
 				},

@@ -211,14 +211,27 @@ final readonly class TransactionClient
     }
 
     /**
-     * @param array<string, string> $attributes
+     * Includes the transaction in the collect process of Twinfield, or excludes it (`paystatus` `N`).
      */
-    private function action(string $action, string $dayBook, int $number, array $attributes): void
+    public function changePayStatus(string $dayBook, int $number, bool $collect): void
+    {
+        $this->action('changepaystatus', $dayBook, $number, [], $collect ? [] : ['paystatus' => 'N']);
+    }
+
+    /**
+     * @param array<string, string> $attributes
+     * @param array<string, string> $children Elements after the number, e.g. `paystatus`.
+     */
+    private function action(string $action, string $dayBook, int $number, array $attributes, array $children = []): void
     {
         $xml = XmlBuilder::create('transaction', ['action' => $action, ...$attributes]);
         $xml->add($xml->root(), 'office', $this->company());
         $xml->add($xml->root(), 'code', XmlValue::code($dayBook));
         $xml->add($xml->root(), 'number', (string) $number);
+
+        foreach ($children as $name => $value) {
+            $xml->add($xml->root(), $name, $value);
+        }
 
         $this->twinfield->processXml($xml->toXml());
     }

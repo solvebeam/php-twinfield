@@ -67,6 +67,44 @@ Checked live (November 2026) on two test companies, one with 19 and one with 381
 - **Order and size.** The list is sorted by deletion date, newest first, and has no paging.
 - **Values.** `DeletionDate` has milliseconds (`2025-09-03T11:55:10.883`), `TransactionDate` is midnight, `TransactionNumber` is an `xs:decimal` without fraction, `User` is the user code, and the day book code is not case sensitive. No field was empty or nil, so the SDK requires them all.
 
+## Sales transactions
+
+[Sales transactions](/guides/transactions/#sales-transactions) (`transaction`, day book `VRK`) were checked on 9 November 2026, read-only: 7 transactions of one test company (2015–2022; entered by hand and from sales invoices), each read with the SDK and turned into an input with `edit()`, and Finder `IVT`. Documentation: [Sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/).
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| No field is marked as mandatory | `invoicenumber` and `duedate` are in all 7 transactions | `SalesTransaction::$invoiceNumber` and `$dueDate` are required: a response without them throws |
+| `paymentreference` | Left out of all 7 (none was set) | `$paymentReference` is null when left out |
+| `matchstatus` of a VAT line is "always notmatchable"; the response example has no `matchstatus` on the VAT line | Every VAT line has `matchstatus` `available`, with `matchlevel` 1, `relation` 0 and a negative `basevalueopen` | `VatLine::$matchStatus` stays required |
+| Open amounts on the total line: `valueopen`, `basevalueopen`, `repvalueopen` in the table; `openvalue`, `openbasevalue`, `openrepvalue` in the response example | Only `basevalueopen` | `InvoiceTotalLine` reads both names; `$openValue` and `$openRepValue` are null in the live responses |
+| The response example has `customersupplier` on the total line | `relation`, as in the table | `InvoiceTotalLine::$relation` |
+| Dimension attributes `name`, `shortname`, `dimensiontype` | As documented (the bank transaction documentation shows `type` instead) | Both are read |
+| – | An extra header element `<regime>Generic</regime>` | Not read: its meaning is unknown |
+| – | Empty `<freetext1/>`, `<freetext3/>` and `<originreference/>` | Null |
+
+### Finder `IVT`
+
+The documentation lists the search field and the options, not the columns. Live, the columns are: invoice number, amount, customer code, name and debit/credit (`D` or `C`); the names depend on the user's language.
+
+- The results include open **purchase** invoices, with the supplier code in the customer column. Option `dim1` (the accounts receivable account) or `dim2` (a customer) leaves them out.
+- The side is the opposite of the total line: a sales invoice (total `debit`) is `C`.
+- The options `dim1`, `dim2`, `value` and `openvalue` work as documented.
+- The Finder gives no day book or transaction number.
+
+`OpenInvoice` reads the columns by position and throws on anything else.
+
+### Not yet verified
+
+These need a live write on a test company (`composer test:write -- --company=… --filter=SalesTransaction`):
+
+- The shape of the save, post, delete and change pay status responses. The fixtures follow the live read responses and the documentation, with fictitious values. The documented save response has no `matchstatus` on the VAT line: if a live save response leaves it out, `create()` throws after Twinfield saved the transaction.
+- Whether a total line without `dim1` works, and whether `edit()` with the VAT lines of the response is accepted on update.
+- Whether a missing `duedate` is accepted on create, and what Twinfield then sets.
+- Whether `changepaystatus` works on a provisional transaction, or only on a final one.
+- Whether the amount of Finder `IVT` is the open or the original amount: all invoices seen were fully open.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

@@ -29,6 +29,8 @@ final readonly class TransactionHeader
         public DateTimeImmutable $date,
         /** Where the transaction comes from, e.g. `import`. */
         public ?string $origin,
+        /** ID (GUID) of the origin; null when Twinfield leaves it empty. */
+        public ?string $originReference,
         /** Code of the user who created the transaction. */
         public ?string $user,
         public ?DateTimeImmutable $inputDate,
@@ -64,6 +66,7 @@ final readonly class TransactionHeader
             currency: $header->string('currency'),
             date: TransactionXml::date($header, 'date'),
             origin: TransactionXml::optionalString($header, 'origin'),
+            originReference: TransactionXml::optionalString($header, 'originreference'),
             user: TransactionXml::optionalString($header, 'user'),
             inputDate: TransactionXml::optionalDateTime($header, 'inputdate'),
             modificationDate: TransactionXml::optionalDateTime($header, 'modificationdate'),
