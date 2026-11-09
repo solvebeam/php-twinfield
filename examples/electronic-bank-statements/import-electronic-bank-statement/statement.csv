@@ -1,0 +1,8 @@
+statement,opening,closing
+245,1000.00,1703.90
+date,amount,name,iban,description
+2026-11-03,121.00,Example customer,NL91ABNA0417164300,Invoice 2026-0042
+2026-11-03,-605.00,Example supplier,NL20INGB0001234567,INV-778 office chairs
+2026-11-03,1250.00,Another customer,DE89370400440532013000,Invoices 2026-0040 and 2026-0041
+2026-11-03,-12.10,Example bank,,Monthly fee November
+2026-11-03,-50.00,Unknown,NL02RABO0123456789,Refund?

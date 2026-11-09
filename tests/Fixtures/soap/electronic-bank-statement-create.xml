@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;statements importduplicate="0" result="1"&gt;&lt;statement target="electronicstatements" result="1"&gt;&lt;iban&gt;NL91ABNA0417164300&lt;/iban&gt;&lt;date&gt;20261109&lt;/date&gt;&lt;currency&gt;EUR&lt;/currency&gt;&lt;statementnumber&gt;2&lt;/statementnumber&gt;&lt;startvalue&gt;7.68&lt;/startvalue&gt;&lt;closevalue&gt;151.18&lt;/closevalue&gt;&lt;transactions count="2"&gt;&lt;transaction&gt;&lt;type&gt;N100&lt;/type&gt;&lt;reference&gt;&lt;/reference&gt;&lt;debitcredit&gt;credit&lt;/debitcredit&gt;&lt;value&gt;151.00&lt;/value&gt;&lt;description&gt;Invoice 2026-0042&lt;/description&gt;&lt;dim1 name="Debtors control" shortname="Debtors control" dimensiontype="BAS"&gt;1300&lt;/dim1&gt;&lt;dim2 name="Example customer" shortname="Example customer" dimensiontype="DEB"&gt;1000&lt;/dim2&gt;&lt;/transaction&gt;&lt;transaction&gt;&lt;type&gt;N999&lt;/type&gt;&lt;reference&gt;&lt;/reference&gt;&lt;debitcredit&gt;debit&lt;/debitcredit&gt;&lt;value&gt;7.50&lt;/value&gt;&lt;description&gt;Bank costs&lt;/description&gt;&lt;dim1 name="Suspense account" shortname="Suspense account" dimensiontype="BAS"&gt;2300&lt;/dim1&gt;&lt;/transaction&gt;&lt;/transactions&gt;&lt;office name="Example company" shortname="Example company"&gt;1000&lt;/office&gt;&lt;code name="Bank" shortname="Bank"&gt;BNK&lt;/code&gt;&lt;/statement&gt;&lt;/statements&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

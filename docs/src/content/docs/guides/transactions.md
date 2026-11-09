@@ -16,7 +16,7 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 | Reversal transactions | [Reversal transactions](https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/) | `$twinfield->reversalTransactions()` | Read, post final, post provisional, undo; see [Reversal transactions](#reversal-transactions) |
 | Deleted transactions | [Deleted transactions](https://developers.twinfield.com/documentation/api/transaction-data/deleted-transactions/) | `$twinfield->deletedTransactions()` | List; see [Deleted transactions](#deleted-transactions) |
 | Transaction blocked value | [Transaction blocked value](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/) | `$twinfield->transactionBlockedValues()` | Register, unregister; see [Blocked values](#blocked-values) |
-| Electronic bank statements | [Electronic bank statements](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/) |  | Not supported yet |
+| Electronic bank statements | [Electronic bank statements](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/) | `$twinfield->electronicBankStatements()` | Create, create many; see [Electronic bank statements](#electronic-bank-statements). Reading ([BankStatementService](https://developers.twinfield.com/documentation/api/request-data/electronic-bank-statements/)) is not supported yet |
 | Spread transactions | [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/) |  | Not supported yet |
 | Time entry | [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/) |  | Not supported yet |
 
@@ -376,6 +376,36 @@ Each `DeletedTransaction` has `dayBook`, `number`, `transactionDate`, `deletionD
 
 Use it to keep a copy of the transactions in sync: ask for what was deleted since the last sync, and remove those transactions on your side. Without filters you get every deleted transaction of the company, which can be thousands (Twinfield has no paging), so filter on a date when you can.
 
+## Electronic bank statements
+
+An electronic bank statement is a bank statement as the bank reports it: the bank account, the balances and the lines, without ledger accounts. Twinfield allocates the lines itself with the allocation rules of the bank book, as it does with a statement downloaded from the bank. A [bank transaction](#receive-and-pay), on the other hand, is already booked: you choose the account of each line.
+
+```php
+use SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementInput;
+
+$statement = $twinfield->electronicBankStatements()->create(
+    ElectronicBankStatementInput::forIban('NL91ABNA0417164300')
+        ->date(new DateTimeImmutable('2026-11-09'))
+        ->number(2, startValue: '7.68', closeValue: '151.18')
+        ->receive('151.00', 'Invoice 2026-0042', contraIban: 'NL20INGB0001234567', type: 'N100')
+        ->pay('7.50', 'Bank costs', type: 'N999'),
+);
+
+foreach ($statement->lines as $line) {
+    echo $line->description, ': ', $line->dimension(1)?->code, ' ', $line->dimension(2)?->code, PHP_EOL;
+}
+```
+
+- Twinfield finds the bank book by its IBAN (`forIban()`), account number (`forAccount()`) or code (`forBankBook()`).
+- Everything else is optional. Without a `date()` Twinfield uses today, without a `currency()` the currency of the bank book, and without a number the last statement number plus one. Without an opening balance it takes the closing balance of the previous statement, and without a closing balance it adds the lines to the opening balance. With both balances, the input checks that the lines add up.
+- `receive()` is money received by the bank (`credit`), `pay()` money paid by the bank (`debit`). The amount is always more than zero. A line can have a `contraIban` or a `contraAccount` (BBAN, with `contraName`), a bank `type` (at most 4 characters), a `reference` (40), a `description` (500), an `endToEndId` and a `returnReason`.
+- The result is an `ElectronicBankStatement` with what Twinfield filled in, and per line the dimensions it allocated the line to, e.g. dim1 `1300` and dim2 customer `1000`, or the suspense account.
+- A statement can't be changed after it is created, so there is no update or delete.
+- Duplicates: by default (`importduplicate="0"`) Twinfield does not import a statement it already has. Pass `importDuplicate: true` to `create()` or `createMany()` to import it anyway.
+- `createMany([$input, …])` imports several statements in one request, like [`saveMany()`](#saving-many-transactions): it does not throw when some fail, and `failed()` has the errors per statement.
+
+Not yet verified live: the shape of the response, and what Twinfield answers for a duplicate. See [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md). Example: [Import electronic bank statement](/examples/electronic-bank-statements/import-electronic-bank-statement/).
+
 ## Blocked values
 
 A blocked value is an amount associated with one line of a transaction, through the [TransactionBlockedValueService](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/). It works for every day book: the documentation example uses a memorial transaction (`MEMO`).
@@ -430,6 +460,7 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Read bank transaction](/examples/bank-transactions/read-bank-transaction/), [create](/examples/bank-transactions/create-bank-transaction/), [update](/examples/bank-transactions/update-bank-transaction/), [delete](/examples/bank-transactions/delete-bank-transaction/) and [post](/examples/bank-transactions/post-bank-transaction/).
 - [Import bank statement](/examples/bank-transactions/import-bank-statement/): a CSV statement to one transaction, with rules per line and a balance check.
 - [Bank costs with VAT](/examples/bank-transactions/bank-costs-with-vat/): split an amount including VAT, exactly.
+- [Import electronic bank statement](/examples/electronic-bank-statements/import-electronic-bank-statement/): the same CSV statement, but Twinfield allocates the lines.
 - [Register blocked value](/examples/transaction-blocked-values/register-blocked-value/) and [unregister](/examples/transaction-blocked-values/unregister-blocked-value/).
 - [Split payment over invoices](/examples/bank-transactions/split-payment-over-invoices/): one payment for several open invoices.
 - [Bulk import with errors](/examples/bank-transactions/bulk-import-with-errors/): `saveMany()` and its result.

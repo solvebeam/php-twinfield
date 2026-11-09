@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;statements importduplicate="0" result="0"&gt;&lt;statement target="electronicstatements" result="0"&gt;&lt;iban msgtype="error" msg="Er is geen bankboek met dit rekeningnummer."&gt;NL02ABNA0123456789&lt;/iban&gt;&lt;date&gt;20261109&lt;/date&gt;&lt;transactions&gt;&lt;transaction&gt;&lt;debitcredit&gt;credit&lt;/debitcredit&gt;&lt;value&gt;10.00&lt;/value&gt;&lt;description&gt;Payment&lt;/description&gt;&lt;/transaction&gt;&lt;/transactions&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/statement&gt;&lt;/statements&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

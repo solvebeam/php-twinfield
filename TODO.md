@@ -480,6 +480,39 @@ To check:
 - Does posting a provisional transaction with reversal settings create the reversed transaction?
 - `<reverse>` without `action`: is it really a read, as the documentation example suggests?
 
+## Electronic bank statements: verify live
+
+`electronicBankStatements()` (`<statements>` with `<statement target="electronicstatements">`) is only
+tested offline, with fixtures based on the response example of the documentation
+(`electronic-bank-statement-create*.xml`, fictitious values). Nothing is tested live yet.
+
+```sh
+composer test:write -- --company=1002_3 --filter=ElectronicBankStatement
+```
+
+The write test leaves a statement (0.01 in, 0.01 out) in the company: a statement can't be changed
+or deleted through the API.
+
+To check:
+
+- The SDK always sends the `<statements importduplicate="…">` root, also for one statement; the
+  request example of the documentation has only `<statement>`. Does the response root
+  `<statements>` have `result`, and does each `<statement>` have its own `result` (needed by
+  `createMany()`)? Record the response (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`)
+  to replace the fixtures.
+- The shape of the response: are `account`/`iban`, `office` and `code` (with `@name`) always there,
+  are `contraaccount`/`contraiban`, `endtoendid` and `returnreason` really left out (as in the
+  example), and do the dimensions use `@dimensiontype`?
+- Duplicates with `importduplicate="0"`: error, warning, or silently skipped? When is a statement a
+  duplicate (same number, same lines)? The write test prints what Twinfield answers.
+- Is a statement without lines accepted? The SDK refuses it now.
+- A bank book without allocation rules, or with a clearing code and no `sortcode`: which errors?
+- Run `examples/electronic-bank-statements/import-electronic-bank-statement` with `--save` once and
+  replace the illustrative line in its README with the real output.
+- Reading: the documentation refers to the `BankStatementService` (Request Data, Command & Query),
+  not supported yet. See
+  https://developers.twinfield.com/documentation/api/request-data/electronic-bank-statements/.
+
 ## Transaction blocked value: verify live
 
 `transactionBlockedValues()` (TransactionBlockedValueService) sends both commands in the WSDL order;

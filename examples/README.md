@@ -123,6 +123,10 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List deleted transactions](deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why, of all day books.
 
+## Electronic bank statements
+
+- [Import electronic bank statement](electronic-bank-statements/import-electronic-bank-statement/): a CSV statement as the bank reports it; Twinfield allocates the lines (changes data with `--save`).
+
 ## Transaction blocked values
 
 - [Register blocked value](transaction-blocked-values/register-blocked-value/): block part of a line of an existing transaction, e.g. the total line of a purchase invoice (changes data).

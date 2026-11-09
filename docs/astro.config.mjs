@@ -93,6 +93,7 @@ export default defineConfig({
 						{ label: 'Bank transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-transactions' } }] },
 						{ label: 'Cash transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/cash-transactions' } }] },
 						{ label: 'Deleted transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }] },
+						{ label: 'Electronic bank statements', collapsed: true, items: [{ autogenerate: { directory: 'examples/electronic-bank-statements' } }] },
 						{ label: 'Journal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/journal-transactions' } }] },
 						{ label: 'Purchase transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/purchase-transactions' } }] },
 						{ label: 'Reversal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/reversal-transactions' } }] },

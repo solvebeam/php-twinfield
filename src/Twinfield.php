@@ -30,6 +30,7 @@ use SolveBeam\Twinfield\Customer\CustomerResource;
 use SolveBeam\Twinfield\DeletedTransaction\DeletedTransactionResource;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
+use SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
@@ -396,6 +397,15 @@ final readonly class Twinfield
     public function deletedTransactions(): DeletedTransactionResource
     {
         return new DeletedTransactionResource($this);
+    }
+
+    /**
+     * Electronic bank statements of the company: import bank statements and let Twinfield
+     * allocate the lines. Create only; a statement can't be changed.
+     */
+    public function electronicBankStatements(): ElectronicBankStatementResource
+    {
+        return new ElectronicBankStatementResource($this);
     }
 
     /**
