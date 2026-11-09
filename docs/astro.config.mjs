@@ -45,6 +45,7 @@ export default defineConfig({
 						{ label: 'Dimensions', slug: 'guides/dimensions' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
+						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 						{
 							label: 'Twinfield API documentation',

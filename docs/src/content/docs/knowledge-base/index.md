@@ -15,6 +15,8 @@ Each page has two parts:
 
 ## Articles
 
+- [API best practices](/knowledge-base/api-best-practices/): _API Best Practices - Introduction_, the overview of Twinfield's series
+- [Rate limits and concurrency limits](/knowledge-base/rate-limits-and-concurrency-limits/): _Rate limiting and concurrency limits_
 - [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/): _Hoe maak ik via webservices een verkoopfactuur of een verkoopboeking aan?_
 
 ## Adding an article

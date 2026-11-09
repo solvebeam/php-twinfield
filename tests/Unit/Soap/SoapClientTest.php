@@ -120,14 +120,60 @@ final class SoapClientTest extends TestCase
 
     public function testThrowsOnRateLimit(): void
     {
-        $http = new ReplayClient(new Response(429, ['Retry-After' => '30'], 'Too Many Requests'));
+        $http = new ReplayClient(new Response(429, [
+            'Retry-After' => '30',
+            'X-RateLimit-Limit' => '1000',
+            'X-RateLimit-Remaining' => '0',
+            'X-RateLimit-ClientId-Limit' => '1000',
+            'X-RateLimit-ClientId-Remaining' => '400',
+            'X-RateLimit-Credited' => '1',
+        ], 'Too Many Requests'));
 
         try {
             $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
             self::fail('Expected a RateLimitExceededException.');
         } catch (RateLimitExceededException $exception) {
             self::assertSame(30, $exception->retryAfterSeconds);
+            self::assertSame(1000, $exception->rateLimitLimit);
+            self::assertSame(0, $exception->rateLimitRemaining);
+            self::assertSame(1000, $exception->rateLimitClientIdLimit);
+            self::assertSame(400, $exception->rateLimitClientIdRemaining);
+            self::assertSame(1, $exception->rateLimitCredited);
+            self::assertFalse($exception->concurrencyLimitExceeded);
             self::assertStringContainsString('Retry after 30 seconds', $exception->getMessage());
+        }
+    }
+
+    public function testThrowsOnRateLimitWithoutHeaders(): void
+    {
+        $http = new ReplayClient(new Response(429, [], 'Too Many Requests'));
+
+        try {
+            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            self::fail('Expected a RateLimitExceededException.');
+        } catch (RateLimitExceededException $exception) {
+            self::assertNull($exception->retryAfterSeconds);
+            self::assertNull($exception->rateLimitLimit);
+            self::assertNull($exception->rateLimitRemaining);
+            self::assertNull($exception->rateLimitClientIdLimit);
+            self::assertNull($exception->rateLimitClientIdRemaining);
+            self::assertNull($exception->rateLimitCredited);
+            self::assertFalse($exception->concurrencyLimitExceeded);
+            self::assertStringContainsString('Wait a moment and try again', $exception->getMessage());
+        }
+    }
+
+    public function testThrowsOnConcurrencyLimit(): void
+    {
+        $http = new ReplayClient(new Response(429, [], 'Concurrency limit exceeded.'));
+
+        try {
+            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            self::fail('Expected a RateLimitExceededException.');
+        } catch (RateLimitExceededException $exception) {
+            self::assertTrue($exception->concurrencyLimitExceeded);
+            self::assertNull($exception->retryAfterSeconds);
+            self::assertStringContainsString('concurrency limit exceeded', $exception->getMessage());
         }
     }
 
