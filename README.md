@@ -88,7 +88,7 @@ $transaction = $twinfield->bankTransactions()->create(
 
 | Transactions | Resource | Status |
 |---|---|---|
-| Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete. See [Create bank transaction](examples/bank-transactions/create-bank-transaction/) and [Import bank statement](examples/bank-transactions/import-bank-statement/). |
+| Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete, match with other transactions. See [Create bank transaction](examples/bank-transactions/create-bank-transaction/) and [Import bank statement](examples/bank-transactions/import-bank-statement/). |
 | Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete. See [Daily cash register](examples/cash-transactions/daily-cash-register/). |
 | Sales, purchase, journal | – | Not yet; use `processXml()` |
 

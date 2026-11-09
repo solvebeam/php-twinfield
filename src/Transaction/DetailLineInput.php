@@ -56,6 +56,9 @@ final class DetailLineInput
 
     private ?string $freeChar = null;
 
+    /** @var list<MatchSetInput> */
+    private array $matches = [];
+
     private function __construct(
         private readonly DebitCredit $debitCredit,
         private readonly string $account,
@@ -99,7 +102,8 @@ final class DetailLineInput
 
     /**
      * Input with the values of a line from a response. Base and reporting amounts are left out:
-     * Twinfield calculates them again from the rates.
+     * Twinfield calculates them again from the rates. Match sets are left out too: they are
+     * already matched, so sending them again would match twice.
      */
     public static function fromLine(DetailLine $line): self
     {
@@ -375,6 +379,40 @@ final class DetailLineInput
         return $line;
     }
 
+    /**
+     * Matches this line with lines of other transactions, e.g. the invoice it pays:
+     *
+     *   ->match(MatchSetInput::create(new DateTimeImmutable('2026-11-03'))->line('VRK', 202600012, 1, '435.55'))
+     *
+     * Without a match set, Twinfield can still match the line by its invoice number.
+     */
+    public function match(MatchSetInput $set): self
+    {
+        $line = clone $this;
+        $line->matches[] = $set;
+
+        return $line;
+    }
+
+    /**
+     * Replaces all match sets; without arguments it removes them.
+     */
+    public function withMatches(MatchSetInput ...$sets): self
+    {
+        $line = clone $this;
+        $line->matches = array_values($sets);
+
+        return $line;
+    }
+
+    /**
+     * @return list<MatchSetInput>
+     */
+    public function matches(): array
+    {
+        return $this->matches;
+    }
+
     public function debitCredit(): DebitCredit
     {
         return $this->debitCredit;
@@ -443,5 +481,13 @@ final class DetailLineInput
         TransactionXmlWriter::performance($xml, $line, $this->performance);
         TransactionXmlWriter::add($xml, $line, 'freechar', $this->freeChar);
         TransactionXmlWriter::add($xml, $line, 'comment', $this->comment);
+
+        if ($this->matches !== []) {
+            $matches = $xml->add($line, 'matches');
+
+            foreach ($this->matches as $set) {
+                $set->appendTo($xml, $matches);
+            }
+        }
     }
 }

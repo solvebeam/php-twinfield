@@ -8,8 +8,8 @@ use DateTimeImmutable;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
- * Lines that are matched with each other, e.g. a payment and the invoice it paid.
- * Only in responses: you cannot match in a transaction request.
+ * Lines that are matched with each other, e.g. a payment and the invoice it paid, as Twinfield
+ * returns them. To match a line in a request, use DetailLineInput::match() with a MatchSetInput.
  */
 final readonly class MatchSet
 {

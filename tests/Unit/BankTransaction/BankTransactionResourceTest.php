@@ -141,6 +141,8 @@ final class BankTransactionResourceTest extends TestCase
         self::assertSame('IH', $xpath->evaluate('string(//line[@id="3"]/vatcode)'));
         self::assertSame('vat', $xpath->evaluate('string(//line[@id="4"]/@type)'));
         self::assertSame(0.0, $xpath->evaluate('count(//basevalue)'), 'Twinfield calculates base amounts again.');
+        self::assertCount(1, $transaction->details[0]->matches);
+        self::assertSame(0.0, $xpath->evaluate('count(//matches)'), 'Matched lines are not matched again.');
     }
 
     public function testReadThrowsNotFound(): void

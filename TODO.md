@@ -1,5 +1,55 @@
 # TODO
 
+## Bank transactions: verify reading and writing live
+
+Bank transactions (`transaction`, day book `BNK`) are tested offline with fixtures that follow the
+documentation (`bank-transaction-*.xml`, fictitious values). Live, only the not found responses are
+tested: no existing transaction is read yet. Creating, updating, `saveMany()`, posting and deleting
+are not yet tested live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=BankTransaction
+```
+
+To check:
+
+- Read a few existing bank transactions (one imported by Twinfield, one entered by hand) and record
+  one (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to replace
+  `bank-transaction-read.xml`. Are the extra elements of the documented response (`customersupplier`,
+  `openvalue`, `matchlevel`, `@inuse`, `@vatobligatory`) really there, and does `<matches>` look as
+  documented (`set/@status`, `method` always `payment`)?
+- The shape of the live save, save many, post and delete responses, to replace the other fixtures.
+- Does an update with `$transaction->edit()` change nothing? `edit()` leaves out the base and
+  reporting amounts and the match sets: does Twinfield keep the matches of a line, or undo them?
+
+### Matching
+
+`DetailLineInput::match()` sends a `<matches><set>` with a detail line (`MatchSetInput`). It follows
+the request structure of the documentation, but the documentation has no request example with
+matches and does not say what is required. Only tested offline.
+
+- Does Twinfield accept a match set in a create request? And in an update of a provisional transaction?
+- Which lines go in the set: only the lines of the other transactions (as the SDK does now, like the
+  documented response), or also the line itself?
+- Is `matchdate` required, and is the set `matchvalue` the sum of the lines (the SDK calculates it)?
+- The sign of `matchvalue`: always positive, or negative for a credit note or a payment to a supplier?
+  The SDK only refuses zero.
+- Does matching a provisional transaction give a `temporary` set, and does posting make it `final`?
+- What error does Twinfield give for a wrong line ID or a match value above the open amount? Add it
+  to the write test, and to the [Matching](docs/src/content/docs/guides/transactions.md) section.
+
+Then add matching to the write test (it needs an open sales invoice) and run the write examples in
+`examples/bank-transactions/{create,update,delete,post}-bank-transaction` and
+`bulk-import-with-errors`, and replace the illustrative output in their READMEs with the real output.
+
+## Bank transactions: not yet implemented
+
+- Browse (searching transactions, e.g. by date, customer or invoice number): Browse Data API, not
+  on the bank transactions page.
+- The `BankStatementService`: bank statements imported by Twinfield itself (see the README).
+- Total line fields `invoicenumber`, `freechar`, `comment`, `repvalue`, `reprate` and detail line
+  fields `vatbasevalue`, `vatrepvalue` can't be sent yet. Probably rarely needed.
+
 ## VAT codes: verify writing live
 
 VAT codes (`vat`, Finder `VAT`) are tested offline with fixtures recorded live (`vat-read*.xml`,

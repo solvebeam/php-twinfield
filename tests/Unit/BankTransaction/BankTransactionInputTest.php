@@ -9,6 +9,7 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\BankBook\AutomaticBankProcessing;
 use SolveBeam\Twinfield\BankBook\AutomaticBankProcessingSignUpState;
@@ -17,6 +18,7 @@ use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Transaction\MatchSetInput;
 use SolveBeam\Twinfield\Transaction\Performance;
 use SolveBeam\Twinfield\Transaction\PerformanceType;
 use SolveBeam\Twinfield\Transaction\TransactionStatus;
@@ -184,6 +186,69 @@ final class BankTransactionInputTest extends TestCase
             'freechar' => 'N',
             'comment' => 'Paid in USD',
         ], $values);
+    }
+
+    public function testWritesMatchSets(): void
+    {
+        $line = DetailLineInput::credit('1300', '635.55')
+            ->customer('1000')
+            ->match(
+                MatchSetInput::create(new DateTimeImmutable('2026-11-03'))
+                    ->line('VRK', 202600012, 1, '435.55')
+                    ->line('VRK', 202600013, 1, '200.00'),
+            );
+
+        $xpath = $this->xpath(BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line));
+
+        self::assertSame(
+            '<line type="detail" id="2"><dim1>1300</dim1><dim2>1000</dim2><debitcredit>credit</debitcredit><value>635.55</value>'
+            . '<matches><set><matchdate>20261103</matchdate><lines>'
+            . '<line><code>VRK</code><number>202600012</number><line>1</line><method>payment</method><matchvalue>435.55</matchvalue></line>'
+            . '<line><code>VRK</code><number>202600013</number><line>1</line><method>payment</method><matchvalue>200.00</matchvalue></line>'
+            . '</lines><matchvalue>635.55</matchvalue></set></matches>'
+            . '</line>',
+            $xpath->document->saveXML($xpath->query('//line[@id="2"]')->item(0)),
+        );
+    }
+
+    public function testWithMatchesReplacesMatchSets(): void
+    {
+        $set = MatchSetInput::create(new DateTimeImmutable('2026-11-03'))->line('VRK', 202600012, 1, '10.00');
+        $line = DetailLineInput::credit('1300', '10.00')->match($set)->match($set);
+
+        self::assertCount(2, $line->matches());
+        self::assertCount(1, $line->withMatches($set)->matches());
+        self::assertSame([], $line->withMatches()->matches());
+    }
+
+    public function testMatchSetNeedsALine(): void
+    {
+        $line = DetailLineInput::credit('1300', '10.00')->match(MatchSetInput::create(new DateTimeImmutable()));
+
+        $this->expectException(LogicException::class);
+
+        BankTransactionInput::create('BNK', '1010', new DateTimeImmutable())->line($line)->toXml('1000');
+    }
+
+    public function testMatchSetRefusesInvalidLines(): void
+    {
+        $set = MatchSetInput::create(new DateTimeImmutable());
+
+        $calls = [
+            static fn () => $set->line('vrk', 202600012, 1, '10.00'),
+            static fn () => $set->line('VRK', 0, 1, '10.00'),
+            static fn () => $set->line('VRK', 202600012, 0, '10.00'),
+            static fn () => $set->line('VRK', 202600012, 1, '0.00'),
+        ];
+
+        foreach ($calls as $index => $call) {
+            try {
+                $call();
+                self::fail(sprintf('Case %d did not throw.', $index));
+            } catch (InvalidArgumentException) {
+                $this->addToAssertionCount(1);
+            }
+        }
     }
 
     public function testInputsAreImmutable(): void

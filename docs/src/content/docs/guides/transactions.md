@@ -133,6 +133,28 @@ New transactions are **provisional** (`destiny="temporary"`). You can still chan
 
 `$transaction->header->status` is `TransactionStatus::Provisional` or `TransactionStatus::Final`.
 
+## Matching
+
+A line with a customer or supplier and an invoice number can be matched by Twinfield itself. To match it with specific lines of other transactions, e.g. line 1 of sales invoice `VRK` 202600012, add a `MatchSetInput` to the detail line:
+
+```php
+use SolveBeam\Twinfield\Transaction\DetailLineInput;
+use SolveBeam\Twinfield\Transaction\MatchSetInput;
+
+$input = BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))
+    ->line(
+        DetailLineInput::credit('1300', '435.55')
+            ->customer('1000')
+            ->invoice('2026-0042')
+            ->match(
+                MatchSetInput::create(new DateTimeImmutable('2026-11-03'))
+                    ->line('VRK', 202600012, 1, '435.55'),
+            ),
+    );
+```
+
+The match value of the set is the sum of its lines. `withMatches()` replaces the sets of a line. `edit()` leaves the match sets of a transaction out, because those lines are already matched.
+
 ## Reading
 
 `get($dayBook, $number)` returns a `BankTransaction` or `CashTransaction`:
