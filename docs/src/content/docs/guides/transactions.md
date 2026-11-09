@@ -5,14 +5,22 @@ description: Read, create, update, post and delete bank, cash, sales, purchase a
 
 Transactions are the bookings in Twinfield: bank and cash statements, sales and purchase invoices, and journal entries. The SDK reads and writes them with the [XML web services](/guides/process-xml/). You work with typed objects and never write XML yourself.
 
-| Transactions | Resource | Status |
-|---|---|---|
-| Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete |
-| Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete |
-| Sales | `$twinfield->salesTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices |
-| Sales invoices | `$twinfield->salesInvoices()` | Read, create, update, calculate, make final, invoice types; see [Sales invoices](#sales-invoices) |
-| Journal | `$twinfield->journalTransactions()` | Read, create, update, save many, post, delete; see [Journal transactions](#journal-transactions) |
-| Purchase | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices; see [Purchase transactions](#purchase-transactions) |
+| Transactions | Twinfield documentation | Resource | Status |
+|---|---|---|---|
+| Bank | [Bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/) | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete |
+| Cash | [Cash transactions](https://developers.twinfield.com/documentation/api/transaction-data/cash-transactions/) | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete |
+| Sales | [Sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/) | `$twinfield->salesTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices |
+| Sales invoices | [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/) | `$twinfield->salesInvoices()` | Read, create, update, calculate, make final, invoice types; see [Sales invoices](#sales-invoices) |
+| Journal | [Journal transactions](https://developers.twinfield.com/documentation/api/transaction-data/journal-transactions/) | `$twinfield->journalTransactions()` | Read, create, update, save many, post, delete; see [Journal transactions](#journal-transactions) |
+| Purchase | [Purchase transactions](https://developers.twinfield.com/documentation/api/transaction-data/purchase-transactions/) | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices; see [Purchase transactions](#purchase-transactions) |
+| Deleted transactions | [Deleted transactions](https://developers.twinfield.com/documentation/api/transaction-data/deleted-transactions/) | `$twinfield->deletedTransactions()` | List; see [Deleted transactions](#deleted-transactions) |
+| Transaction blocked value | [Transaction blocked value](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/) | `$twinfield->transactionBlockedValues()` | Register, unregister; see [Blocked values](#blocked-values) |
+| Electronic bank statements | [Electronic bank statements](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/) |  | Not supported yet |
+| Reversal transactions | [Reversal transactions](https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/) |  | Not supported yet |
+| Spread transactions | [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/) |  | Not supported yet |
+| Time entry | [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/) |  | Not supported yet |
+
+The Twinfield documentation lists all fields of each transaction type. Where the SDK deviates from it, see [Differences with the documentation](/guides/documentation-differences/).
 
 Sales transaction or sales invoice? See [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/) in the Twinfield knowledge base.
 
@@ -408,5 +416,3 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Read purchase transaction](/examples/purchase-transactions/read-purchase-transaction/), [create](/examples/purchase-transactions/create-purchase-transaction/) and [credit note](/examples/purchase-transactions/credit-note/).
 - [Open invoices](/examples/purchase-transactions/open-invoices/): unpaid invoices of a supplier.
 - [Read journal transaction](/examples/journal-transactions/read-journal-transaction/), [create](/examples/journal-transactions/create-journal-transaction/) and [opening balance](/examples/journal-transactions/opening-balance/).
-
-See the Twinfield documentation of [bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/), [cash transactions](https://developers.twinfield.com/documentation/api/transaction-data/cash-transactions/), [sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/), [purchase transactions](https://developers.twinfield.com/documentation/api/transaction-data/purchase-transactions/) and [journal transactions](https://developers.twinfield.com/documentation/api/transaction-data/journal-transactions/) for all fields.

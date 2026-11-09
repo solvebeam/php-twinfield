@@ -42,131 +42,66 @@ export default defineConfig({
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
+						{
+							label: 'Twinfield API documentation',
+							link: 'https://developers.twinfield.com/documentation',
+							attrs: { target: '_blank', rel: 'noopener' },
+						},
 					],
 				},
 				{
 					label: 'Getting started',
 					items: [{ autogenerate: { directory: 'examples/getting-started' } }],
 				},
+				// The groups below follow the API reference on developers.twinfield.com/documentation, with the same names and order.
 				{
-					label: 'Offices',
-					items: [{ autogenerate: { directory: 'examples/offices' } }],
+					label: 'XML Web Services',
+					items: [
+						{ label: 'ProcessXml', collapsed: true, items: [{ autogenerate: { directory: 'examples/process-xml' } }] },
+					],
 				},
 				{
-					label: 'Activities',
-					items: [{ autogenerate: { directory: 'examples/activities' } }],
+					label: 'Master Data',
+					items: [
+						{ label: 'Activities', collapsed: true, items: [{ autogenerate: { directory: 'examples/activities' } }] },
+						{ label: 'Asset methods', collapsed: true, items: [{ autogenerate: { directory: 'examples/asset-methods' } }] },
+						{ label: 'Bank book', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-books' } }] },
+						{ label: 'Budget', collapsed: true, items: [{ autogenerate: { directory: 'examples/budgets' } }] },
+						{ label: 'Cash book', collapsed: true, items: [{ autogenerate: { directory: 'examples/cash-books' } }] },
+						{ label: 'Cost centers', collapsed: true, items: [{ autogenerate: { directory: 'examples/cost-centers' } }] },
+						{ label: 'Currencies', collapsed: true, items: [{ autogenerate: { directory: 'examples/currencies' } }] },
+						{ label: 'Customers', collapsed: true, items: [{ autogenerate: { directory: 'examples/customers' } }] },
+						{ label: 'Dimension groups', collapsed: true, items: [{ autogenerate: { directory: 'examples/dimension-groups' } }] },
+						{ label: 'Dimension types', collapsed: true, items: [{ autogenerate: { directory: 'examples/dimension-types' } }] },
+						{ label: 'Fixed assets', collapsed: true, items: [{ autogenerate: { directory: 'examples/fixed-assets' } }] },
+						{ label: 'General ledger accounts', collapsed: true, items: [{ autogenerate: { directory: 'examples/general-ledger-accounts' } }] },
+						{ label: 'Offices', collapsed: true, items: [{ autogenerate: { directory: 'examples/offices' } }] },
+						{ label: 'Projects', collapsed: true, items: [{ autogenerate: { directory: 'examples/projects' } }] },
+						{ label: 'Rates', collapsed: true, items: [{ autogenerate: { directory: 'examples/rates' } }] },
+						{ label: 'Suppliers', collapsed: true, items: [{ autogenerate: { directory: 'examples/suppliers' } }] },
+						{ label: 'Users', collapsed: true, items: [{ autogenerate: { directory: 'examples/users' } }] },
+						{ label: 'VAT', collapsed: true, items: [{ autogenerate: { directory: 'examples/vat-codes' } }] },
+					],
 				},
 				{
-					label: 'Asset methods',
-					items: [{ autogenerate: { directory: 'examples/asset-methods' } }],
+					label: 'Transaction Data',
+					items: [
+						{ label: 'Bank transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-transactions' } }] },
+						{ label: 'Cash transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/cash-transactions' } }] },
+						{ label: 'Deleted transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }] },
+						{ label: 'Journal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/journal-transactions' } }] },
+						{ label: 'Purchase transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/purchase-transactions' } }] },
+						{ label: 'Sales invoices', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-invoices' } }] },
+						{ label: 'Sales transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-transactions' } }] },
+						{ label: 'Transaction blocked value', collapsed: true, items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }] },
+					],
 				},
 				{
-					label: 'Bank books',
-					items: [{ autogenerate: { directory: 'examples/bank-books' } }],
-				},
-				{
-					label: 'Bank transactions',
-					items: [{ autogenerate: { directory: 'examples/bank-transactions' } }],
-				},
-				{
-					label: 'Cash books',
-					items: [{ autogenerate: { directory: 'examples/cash-books' } }],
-				},
-				{
-					label: 'Cash transactions',
-					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
-				},
-				{
-					label: 'Sales transactions',
-					items: [{ autogenerate: { directory: 'examples/sales-transactions' } }],
-				},
-				{
-					label: 'Purchase transactions',
-					items: [{ autogenerate: { directory: 'examples/purchase-transactions' } }],
-				},
-				{
-					label: 'Sales invoices',
-					items: [{ autogenerate: { directory: 'examples/sales-invoices' } }],
-				},
-				{
-					label: 'Journal transactions',
-					items: [{ autogenerate: { directory: 'examples/journal-transactions' } }],
-				},
-				{
-					label: 'Deleted transactions',
-					items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }],
-				},
-				{
-					label: 'Transaction blocked values',
-					items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }],
-				},
-				{
-					label: 'Cost centers',
-					items: [{ autogenerate: { directory: 'examples/cost-centers' } }],
-				},
-				{
-					label: 'Currencies',
-					items: [{ autogenerate: { directory: 'examples/currencies' } }],
-				},
-				{
-					label: 'Customers',
-					items: [{ autogenerate: { directory: 'examples/customers' } }],
-				},
-				{
-					label: 'Dimension groups',
-					items: [{ autogenerate: { directory: 'examples/dimension-groups' } }],
-				},
-				{
-					label: 'Dimension types',
-					items: [{ autogenerate: { directory: 'examples/dimension-types' } }],
-				},
-				{
-					label: 'Fixed assets',
-					items: [{ autogenerate: { directory: 'examples/fixed-assets' } }],
-				},
-				{
-					label: 'General ledger accounts',
-					items: [{ autogenerate: { directory: 'examples/general-ledger-accounts' } }],
-				},
-				{
-					label: 'Projects',
-					items: [{ autogenerate: { directory: 'examples/projects' } }],
-				},
-				{
-					label: 'Rates',
-					items: [{ autogenerate: { directory: 'examples/rates' } }],
-				},
-				{
-					label: 'Suppliers',
-					items: [{ autogenerate: { directory: 'examples/suppliers' } }],
-				},
-				{
-					label: 'Users',
-					items: [{ autogenerate: { directory: 'examples/users' } }],
-				},
-				{
-					label: 'VAT codes',
-					items: [{ autogenerate: { directory: 'examples/vat-codes' } }],
-				},
-				{
-					label: 'Cash transactions',
-					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
-				},
-				{
-					label: 'Budgets',
-					items: [{ autogenerate: { directory: 'examples/budgets' } }],
-				},
-				{
-					label: 'Finder',
-					items: [{ autogenerate: { directory: 'examples/finder' } }],
-				},
-				{
-					label: 'Periods',
-					items: [{ autogenerate: { directory: 'examples/periods' } }],
-				},
-				{
-					label: 'ProcessXml',
-					items: [{ autogenerate: { directory: 'examples/process-xml' } }],
+					label: 'Miscellaneous',
+					items: [
+						{ label: 'Finder', collapsed: true, items: [{ autogenerate: { directory: 'examples/finder' } }] },
+						{ label: 'Periods', collapsed: true, items: [{ autogenerate: { directory: 'examples/periods' } }] },
+					],
 				},
 				{
 					label: 'Twinfield knowledge base',
