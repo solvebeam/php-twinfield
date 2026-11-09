@@ -35,6 +35,7 @@ jobs:
             "BudgetService.svc"
             "CashBookService.svc"
             "declarations.asmx"
+            "DeletedTransactionsService.svc"
             "DocumentService.svc"
             "ebankstatements.asmx"
             "finder.asmx"

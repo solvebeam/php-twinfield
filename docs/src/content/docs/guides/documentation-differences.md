@@ -57,6 +57,16 @@ These need a live write on a test company (`composer test:write -- --company=…
 - Whether `wayofpayment` and `payaddress` are accepted and returned, and what `destination` means.
 - The shape of the save response. The fixture `supplier-save.xml` follows the documentation; `supplier-read-full.xml` (groups, payment conditions, credit transfer) is fictitious.
 
+## Deleted transactions
+
+Checked live (November 2026) on two test companies, one with 19 and one with 3819 deleted transactions, against the [documentation](https://developers.twinfield.com/documentation/api/transaction-data/deleted-transactions/) and the WSDL. The fields, types and fault codes match. The documentation leaves out:
+
+- **Only the date counts.** `DateFrom` and `DateTo` are `xs:dateTime`, but Twinfield ignores the time and includes both days. `list()` sends the dates at midnight, so the request shows what Twinfield does.
+- **A from date one day after the to date is accepted.** Twinfield gives an empty list then; from two days on it gives `InvalidDates` ("De 'van datum' moet ouder zijn dan de 'tot datum'."). `list()` refuses any from date after the to date before sending.
+- **The company comes from the query, not the header.** With `CompanyCode` 1002_3 in the query and 1002 in the authentication header, Twinfield returns the transactions of 1002_3. `list()` always sends the company of the client.
+- **Order and size.** The list is sorted by deletion date, newest first, and has no paging.
+- **Values.** `DeletionDate` has milliseconds (`2025-09-03T11:55:10.883`), `TransactionDate` is midnight, `TransactionNumber` is an `xs:decimal` without fraction, `User` is the user code, and the day book code is not case sensitive. No field was empty or nil, so the SDK requires them all.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

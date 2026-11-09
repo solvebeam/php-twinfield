@@ -183,6 +183,29 @@ $bank->update(
 
 ## Saving many transactions
 
+## Deleted transactions
+
+`delete($dayBook, $number, $reason)` removes a provisional transaction. Twinfield remembers what was deleted, also when that happened in Twinfield itself, for all day books (bank, cash, sales, purchase, journal, …). `$twinfield->deletedTransactions()` reads that list, newest deletion first:
+
+```php
+$deleted = $twinfield->deletedTransactions()->list(
+    dayBook: 'BNK',
+    from: new DateTimeImmutable('2026-11-01'),
+    to: new DateTimeImmutable('2026-11-09'),
+);
+
+foreach ($deleted as $transaction) {
+    echo $transaction->dayBook, ' ', $transaction->number, ' deleted by ', $transaction->user, ': ', $transaction->reason, PHP_EOL;
+}
+```
+
+Each `DeletedTransaction` has `dayBook`, `number`, `transactionDate`, `deletionDate` (with time), `user` (the user code) and `reason`. All filters are optional:
+
+- `dayBook`: one day book, in any case. An unknown code gives a `CommandQueryFaultException` with `errorCode` `InvalidDaybook`.
+- `from` and `to`: the days of deletion. Only the date counts, not the time, and both days are included: `from` and `to` on the same day give everything deleted on that day. `from` after `to` throws an `InvalidArgumentException`.
+
+Use it to keep a copy of the transactions in sync: ask for what was deleted since the last sync, and remove those transactions on your side. Without filters you get every deleted transaction of the company, which can be thousands (Twinfield has no paging), so filter on a date when you can.
+
 `saveMany(...$inputs)` saves several transactions in one request. Twinfield saves the valid ones and refuses the others, so it does not throw: it returns a `SaveManyResult` with, per input in the same order, a `SavedTransaction` or a `FailedTransaction`:
 
 ```php
@@ -220,3 +243,4 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Daily cash register](/examples/cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
 
 See the Twinfield documentation of [bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/) and [cash transactions](https://developers.twinfield.com/documentation/api/transaction-data/cash-transactions/) for all fields.
+- [List deleted transactions](/examples/deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why.

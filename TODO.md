@@ -21,6 +21,9 @@ To check:
 - The shape of the live save, save many, post and delete responses, to replace the other fixtures.
 - Does an update with `$transaction->edit()` change nothing? `edit()` leaves out the base and
   reporting amounts and the match sets: does Twinfield keep the matches of a line, or undo them?
+- After deleting, `testLifecycle()` looks the transaction up in `deletedTransactions()->list()`. Does
+  it show up right away, with the reason, the user code of the access token (same case?) and the
+  transaction date? The list itself is verified live (read-only); only this round trip is not.
 
 ### Matching
 

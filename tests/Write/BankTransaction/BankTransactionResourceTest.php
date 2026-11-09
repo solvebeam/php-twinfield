@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Tests\Write\BankTransaction;
 use DateTimeImmutable;
 use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
+use SolveBeam\Twinfield\DeletedTransaction\DeletedTransaction;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
@@ -57,6 +58,20 @@ final class BankTransactionResourceTest extends WriteTestCase
         }
 
         self::assertNull($bank->find($created->dayBook(), $created->number()));
+
+        $deleted = $this->twinfield->deletedTransactions()->list(
+            dayBook: $created->dayBook(),
+            from: new DateTimeImmutable(),
+        );
+        $matches = array_values(array_filter(
+            $deleted,
+            static fn (DeletedTransaction $transaction): bool => $transaction->number === $created->number(),
+        ));
+
+        self::assertCount(1, $matches, 'The deleted transaction is in the deleted transactions.');
+        self::assertSame('PHP SDK write test', $matches[0]->reason);
+        self::assertSame(strtoupper($this->twinfield->userCode()), strtoupper($matches[0]->user));
+        self::assertEquals($created->header->date, $matches[0]->transactionDate);
     }
 
     public function testSaveManySavesTheValidTransactions(): void

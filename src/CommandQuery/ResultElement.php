@@ -141,6 +141,23 @@ final readonly class ResultElement
         return $text;
     }
 
+    /**
+     * An `xs:decimal` that holds a whole number, e.g. a transaction number `202600045`.
+     * A fraction other than zeros (`202600045.5`) is invalid.
+     */
+    public function wholeNumber(string $name): int
+    {
+        $child = $this->child($name);
+
+        if (preg_match('~^(-?\d+)(\.0+)?$~', $child->text(), $matches) !== 1) {
+            throw $child->invalid('a whole number');
+        }
+
+        $number = filter_var($matches[1], FILTER_VALIDATE_INT);
+
+        return is_int($number) ? $number : throw $child->invalid('a whole number');
+    }
+
     public function bool(string $name): bool
     {
         $child = $this->child($name);

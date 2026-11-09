@@ -87,6 +87,10 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Read cash transaction](cash-transactions/read-cash-transaction/): header and lines of one cash transaction.
 - [Daily cash register](cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.
 
+## Deleted transactions
+
+- [List deleted transactions](deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why, of all day books.
+
 ## Cost centers
 
 - [List cost centers](cost-centers/list-cost-centers/): code and name of all cost centers, or those matching a pattern.

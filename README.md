@@ -102,7 +102,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 | BudgetService | `$twinfield->budgets()` | All queries: `totals()->byProfitAndLoss()`, `byCostCenter()`, `byProject()`. See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 | BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
 | CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |
-| DeletedTransactionsService | – | Not yet |
+| DeletedTransactionsService | `$twinfield->deletedTransactions()` | The only query: `list()`, filtered by day book and deletion date. See [List deleted transactions](examples/deleted-transactions/list-deleted-transactions/). |
 | BankStatementService | – | Not yet |
 | TransactionBlockedValueService | – | Not yet |
 

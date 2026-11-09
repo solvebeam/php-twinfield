@@ -27,6 +27,7 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Currency\CurrencyResource;
 use SolveBeam\Twinfield\Customer\CustomerResource;
+use SolveBeam\Twinfield\DeletedTransaction\DeletedTransactionResource;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
@@ -291,6 +292,14 @@ final readonly class Twinfield
     public function cashTransactions(): CashTransactionResource
     {
         return new CashTransactionResource($this);
+    }
+
+    /**
+     * Deleted transactions of the company (DeletedTransactionsService), of all day books. Read-only.
+     */
+    public function deletedTransactions(): DeletedTransactionResource
+    {
+        return new DeletedTransactionResource($this);
     }
 
     /**
