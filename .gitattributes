@@ -1,0 +1,18 @@
+# Keep the Composer package small: only src/, composer.json and README.md are shipped.
+/.gitattributes     export-ignore
+/.github            export-ignore
+/.gitignore         export-ignore
+/AGENTS.md          export-ignore
+/TODO.md            export-ignore
+/bin                export-ignore
+/browse-definitions export-ignore
+/composer.lock      export-ignore
+/config             export-ignore
+/docs               export-ignore
+/examples           export-ignore
+/images             export-ignore
+/manuals            export-ignore
+/phpcs.xml.dist     export-ignore
+/phpunit.xml.dist   export-ignore
+/tests              export-ignore
+/wsdl               export-ignore
