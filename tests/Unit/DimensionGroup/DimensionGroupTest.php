@@ -11,6 +11,7 @@ use SolveBeam\Twinfield\DimensionGroup\DimensionGroupDimension;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupStatus;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class DimensionGroupTest extends TestCase
 {
@@ -47,7 +48,7 @@ final class DimensionGroupTest extends TestCase
         $group = DimensionGroup::fromXml(XmlElement::root(ProcessXmlResult::fromXml(
             '<dimensiongroup status="deleted" result="1"><office>1000</office><code>NL</code>'
             . '<name>Dutch customers</name><shortname></shortname><touched>2</touched></dimensiongroup>',
-        )));
+        )), TestTokens::organisation());
 
         self::assertSame(DimensionGroupStatus::Deleted, $group->status);
         self::assertSame([], $group->dimensions);
@@ -70,20 +71,20 @@ final class DimensionGroupTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Dimension group name must not be empty.');
 
-        new DimensionGroup('1000', 'NL', '', null, DimensionGroupStatus::Active, 0, []);
+        new DimensionGroup(TestTokens::company('1000'), 'NL', '', null, DimensionGroupStatus::Active, 0, []);
     }
 
     public function testRejectsANegativeTouchedCount(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new DimensionGroup('1000', 'NL', 'Dutch customers', null, DimensionGroupStatus::Active, -1, []);
+        new DimensionGroup(TestTokens::company('1000'), 'NL', 'Dutch customers', null, DimensionGroupStatus::Active, -1, []);
     }
 
     private function group(): DimensionGroup
     {
         return new DimensionGroup(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: 'NL',
             name: 'Dutch customers',
             shortName: 'NL customers',

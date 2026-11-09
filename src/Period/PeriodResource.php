@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -60,8 +61,11 @@ final readonly class PeriodResource
             'GetPeriodsResult',
         );
 
+        $company = $this->twinfield->companyReference();
+
         return array_map(
             static fn (ResultElement $period): Period => new Period(
+                company: $company,
                 number: $period->int('Number'),
                 name: $period->string('Name'),
                 endDate: $period->nullableDateTime('EndDate'),

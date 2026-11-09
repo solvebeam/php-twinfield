@@ -31,7 +31,7 @@ final class CurrencyResourceTest extends WriteTestCase
 
             self::assertSame($summary->code, $currency->code);
             self::assertSame($summary->name, $currency->name);
-            self::assertSame($this->company(), $currency->company);
+            self::assertSame($this->company(), $currency->company->code);
             $count++;
         }
 

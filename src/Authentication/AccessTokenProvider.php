@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Authentication;
 
+use SolveBeam\Twinfield\Organisation\Organisation;
+
 /**
- * Supplies a valid access token, the cluster URL of the organisation and the user the token
- * belongs to.
+ * Supplies a valid access token, the cluster URL of the organisation, the organisation and the
+ * user the token belongs to.
  *
  * Implementations:
  * - StaticAccessTokenProvider: a token you already have.
@@ -26,4 +28,10 @@ interface AccessTokenProvider
      * access token validation), e.g. `JDOE`. `$twinfield->users()->current()` reads this user.
      */
     public function userCode(): string;
+
+    /**
+     * Organisation the access token belongs to (`twf.organisationId` and `twf.organisationCode` of
+     * the access token validation). Every model the SDK reads carries it.
+     */
+    public function organisation(): Organisation;
 }

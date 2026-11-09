@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\Transaction;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -16,8 +18,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 final readonly class TransactionHeader
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Day book (transaction type) code, e.g. `BNK`. */
         public string $dayBook,
         /** Transaction number, e.g. `202600045`. */
@@ -39,7 +41,7 @@ final readonly class TransactionHeader
         public ?string $freeText2,
         public ?string $freeText3,
     ) {
-        foreach (['company' => $company, 'day book' => $dayBook, 'currency' => $currency] as $field => $value) {
+        foreach (['day book' => $dayBook, 'currency' => $currency] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Transaction %s must not be empty.', $field));
             }
@@ -53,12 +55,12 @@ final readonly class TransactionHeader
     /**
      * From a `<transaction>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $transaction): self
+    public static function fromXml(XmlElement $transaction, Organisation $organisation): self
     {
         $header = $transaction->child('header');
 
         return new self(
-            company: $header->string('office'),
+            company: new CompanyReference($organisation, $header->string('office')),
             dayBook: $header->string('code'),
             number: $header->int('number'),
             status: $transaction->enumAttribute('location', TransactionStatus::class),

@@ -7,6 +7,8 @@ namespace SolveBeam\Twinfield\Rate;
 use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -31,8 +33,8 @@ final readonly class Rate
      * @param list<RatePrice> $prices In any order; at least one, without overlapping dates.
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         public string $code,
         public string $name,
         /** Short name; null when not set. */
@@ -54,7 +56,6 @@ final readonly class Rate
         array $prices,
     ) {
         $required = [
-            'company' => $company,
             'code' => $code,
             'name' => $name,
             'currency' => $currency,
@@ -103,7 +104,7 @@ final readonly class Rate
     /**
      * From a `<projectrate>` element of a read response.
      */
-    public static function fromXml(XmlElement $rate): self
+    public static function fromXml(XmlElement $rate, Organisation $organisation): self
     {
         $prices = array_map(RatePrice::fromXml(...), $rate->child('ratechanges')->list('ratechange'));
 
@@ -114,7 +115,7 @@ final readonly class Rate
 
         try {
             return new self(
-                company: $rate->string('office'),
+                company: new CompanyReference($organisation, $rate->string('office')),
                 code: $rate->string('code'),
                 name: $rate->string('name'),
                 // Optional in Twinfield: empty when no short name is set.

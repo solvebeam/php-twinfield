@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\CashBook;
 
 use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 
 /**
  * A cash book as Twinfield returns it (CashBookService GetCashBook).
@@ -21,8 +22,8 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 final readonly class CashBook
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code of the cash book (a transaction type), e.g. `KAS`. */
         public string $code,
         public string $name,
@@ -31,7 +32,7 @@ final readonly class CashBook
         /** Balance sheet account of the cash, e.g. `1000`. Null when not set. */
         public ?string $generalLedgerAccount,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Cash book %s must not be empty.', $field));
             }
@@ -41,7 +42,7 @@ final readonly class CashBook
     /**
      * From a `GetCashBookResult`. The result has no code: it is the code of the request.
      */
-    public static function fromResult(ResultElement $result, string $company, string $code): self
+    public static function fromResult(ResultElement $result, CompanyReference $company, string $code): self
     {
         return new self(
             company: $company,

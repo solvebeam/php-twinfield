@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Budget\BudgetAmounts;
 use SolveBeam\Twinfield\Budget\BudgetTotal;
 use SolveBeam\Twinfield\Budget\BudgetTotals;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class BudgetTotalsTest extends TestCase
 {
@@ -36,6 +37,6 @@ final class BudgetTotalsTest extends TestCase
     {
         $amounts = new BudgetAmounts('0', '0', '0');
 
-        return new BudgetTotal(2025, $period, $account, [], $dimension2, $dimension3, $amounts, $amounts);
+        return new BudgetTotal(TestTokens::company(), 2025, $period, $account, [], $dimension2, $dimension3, $amounts, $amounts);
     }
 }

@@ -10,12 +10,12 @@ use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\ProcessXml\MessageType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -179,7 +179,7 @@ final class ProcessXmlTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        $tokens = new StaticAccessTokenProvider('token-123', 'https://example.test');
+        $tokens = TestTokens::provider('https://example.test');
 
         return Twinfield::create($tokens, $http, $psr17, $psr17);
     }

@@ -62,7 +62,7 @@ final readonly class ProjectResource
      */
     public function get(string $code): Project
     {
-        return Project::fromXml($this->requests->read($code));
+        return Project::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -109,7 +109,10 @@ final readonly class ProjectResource
      */
     public function save(ProjectInput $project): Project
     {
-        return Project::fromXml($this->requests->save($project->toXml($this->requests->company())));
+        return Project::fromXml(
+            $this->requests->save($project->toXml($this->requests->company())),
+            $this->requests->organisation(),
+        );
     }
 
     /**

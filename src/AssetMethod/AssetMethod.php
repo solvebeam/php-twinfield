@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\AssetMethod;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -25,8 +27,8 @@ final readonly class AssetMethod
      * @param list<FreeTextField> $freeTexts The five free text fields, by id 1 to 5.
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         public string $code,
         public string $name,
         /** Short name; null when not set. */
@@ -50,7 +52,7 @@ final readonly class AssetMethod
         public ProfitLossAccounts $profitLossAccounts,
         public array $freeTexts,
     ) {
-        $required = ['company' => $company, 'code' => $code, 'name' => $name, 'modifiedBy' => $modifiedBy];
+        $required = ['code' => $code, 'name' => $name, 'modifiedBy' => $modifiedBy];
 
         foreach ($required as $field => $value) {
             if ($value === '') {
@@ -79,7 +81,7 @@ final readonly class AssetMethod
     /**
      * From an `<assetmethod>` element of a read response.
      */
-    public static function fromXml(XmlElement $method): self
+    public static function fromXml(XmlElement $method, Organisation $organisation): self
     {
         $freeTexts = array_map(FreeTextField::fromXml(...), $method->child('freetexts')->list('freetext'));
         $ids = array_map(static fn (FreeTextField $field): int => $field->id, $freeTexts);
@@ -100,7 +102,7 @@ final readonly class AssetMethod
         }
 
         return new self(
-            company: $method->string('office'),
+            company: new CompanyReference($organisation, $method->string('office')),
             code: $method->string('code'),
             name: $method->string('name'),
             // Optional in Twinfield: empty when no short name is set.

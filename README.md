@@ -43,6 +43,16 @@ $activity = $twinfield->activities()->create(
 
 See [examples/](examples/) for small, runnable examples, starting with [Authentication](examples/getting-started/authentication/).
 
+## Organisations and companies
+
+Company and user codes are only unique within a Twinfield organisation: company `1000` can exist in several organisations. Every model the SDK reads therefore carries the organisation of the access token, either as `$office->organisation` and `$user->organisation`, or as `$customer->company` (a `CompanyReference` with the organisation and the company code). `$twinfield->company($customer->company)` refuses a company of another organisation. See [Organisations and companies](https://php-twinfield.solvebeam.com/guides/organisations/) for the keys to use in a shadow database.
+
+```php
+$customer = $twinfield->customers()->get('1000');
+
+echo $customer->company->organisation->code, ' ', $customer->company->code, ' ', $customer->code, PHP_EOL;
+```
+
 ## Master data
 
 Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/). Where live Twinfield responses differ from the API documentation, the SDK follows the live responses: see [Differences with the documentation](https://php-twinfield.solvebeam.com/guides/documentation-differences/).

@@ -8,7 +8,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\BankBook\AutomaticBankProcessing;
 use SolveBeam\Twinfield\BankBook\AutomaticBankProcessingSignUpState;
 use SolveBeam\Twinfield\BankBook\BankAccount;
@@ -21,6 +20,7 @@ use SolveBeam\Twinfield\BankBook\BankBookServiceFaultCode;
 use SolveBeam\Twinfield\BankBook\BankBookSummary;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -36,8 +36,8 @@ final class BankBookResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new BankBookSummary('ING', 'ING 3255112'),
-            new BankBookSummary('RABO', 'Rabobank 123456789'),
+            new BankBookSummary(TestTokens::company(), 'ING', 'ING 3255112'),
+            new BankBookSummary(TestTokens::company(), 'RABO', 'Rabobank 123456789'),
         ], iterator_to_array($page));
 
         $body = $this->body($http->lastRequest());
@@ -55,7 +55,7 @@ final class BankBookResourceTest extends TestCase
         $bankBook = $this->twinfield($http)->bankBooks()->get('ING');
 
         self::assertEquals(new BankBook(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: 'ING',
             name: 'ING 3255112',
             shortName: 'ING',
@@ -262,7 +262,7 @@ final class BankBookResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
 
@@ -278,6 +278,6 @@ final class BankBookResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 }

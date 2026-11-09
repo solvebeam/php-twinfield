@@ -76,7 +76,7 @@ final readonly class GeneralLedgerAccountResource
      */
     public function get(string $code): GeneralLedgerAccount
     {
-        return GeneralLedgerAccount::fromXml($this->requests->read($code));
+        return GeneralLedgerAccount::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -136,7 +136,7 @@ final readonly class GeneralLedgerAccountResource
 
         $xml = $account->toXml($this->requests->company());
 
-        return GeneralLedgerAccount::fromXml($this->requests->save($xml));
+        return GeneralLedgerAccount::fromXml($this->requests->save($xml), $this->requests->organisation());
     }
 
     /**

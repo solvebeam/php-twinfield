@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\DeletedTransaction;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 
 /**
  * A deleted transaction, as returned by the DeletedTransactionsService.
@@ -17,6 +18,8 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 final readonly class DeletedTransaction
 {
     public function __construct(
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Day book (transaction type) code, e.g. `BNK`, `INK` or `MEMO`. */
         public string $dayBook,
         /** Transaction number, e.g. `202600045`. */
@@ -44,9 +47,10 @@ final readonly class DeletedTransaction
     /**
      * From a `DeletedTransaction` element of the `GetDeletedTransactions` result.
      */
-    public static function fromResult(ResultElement $transaction): self
+    public static function fromResult(ResultElement $transaction, CompanyReference $company): self
     {
         return new self(
+            company: $company,
             dayBook: $transaction->string('Daybook'),
             number: $transaction->wholeNumber('TransactionNumber'),
             transactionDate: $transaction->dateTime('TransactionDate'),

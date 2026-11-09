@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\Currency;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -28,8 +30,8 @@ final readonly class Currency
      * @param list<CurrencyRate> $rates In any order; at most one rate per start date.
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Currency code, e.g. `USD`. */
         public string $code,
         public string $name,
@@ -38,7 +40,7 @@ final readonly class Currency
         public CurrencyStatus $status,
         array $rates,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Currency %s must not be empty.', $field));
             }
@@ -64,13 +66,13 @@ final readonly class Currency
     /**
      * From a `<currency>` element of a save response.
      */
-    public static function fromXml(XmlElement $currency): self
+    public static function fromXml(XmlElement $currency, Organisation $organisation): self
     {
         // A currency without rates (such as the base currency) may leave out <rates>.
         $rates = $currency->nullableChild('rates')?->list('rate') ?? [];
 
         return new self(
-            company: $currency->string('office'),
+            company: new CompanyReference($organisation, $currency->string('office')),
             code: $currency->string('code'),
             name: $currency->string('name'),
             shortName: $currency->nullableString('shortname'),

@@ -257,8 +257,10 @@ final readonly class BudgetTotalsQuery
             throw $exception;
         }
 
+        $company = $this->twinfield->companyReference();
+
         return new BudgetTotals(array_map(
-            BudgetTotal::fromResult(...),
+            static fn (ResultElement $total): BudgetTotal => BudgetTotal::fromResult($total, $company),
             $result->list('BudgetTotals', 'GetBudgetTotalResult'),
         ));
     }

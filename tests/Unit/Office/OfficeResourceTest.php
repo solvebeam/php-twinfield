@@ -11,12 +11,12 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Office\OfficeNotFoundException;
 use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Soap\ClassicServiceFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -33,9 +33,9 @@ final class OfficeResourceTest extends TestCase
         $offices = $this->twinfield($http)->offices()->list();
 
         self::assertEquals([
-            new OfficeSummary('1000', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21),
-            new OfficeSummary('1001', 'Example Retail & Co B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 0, 30),
-            new OfficeSummary('1002', 'Example Services B.V.', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'BE', 2, 21),
+            new OfficeSummary(TestTokens::organisation(), '1000', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21),
+            new OfficeSummary(TestTokens::organisation(), '1001', 'Example Retail & Co B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 0, 30),
+            new OfficeSummary(TestTokens::organisation(), '1002', 'Example Services B.V.', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'BE', 2, 21),
         ], $offices);
 
         $xpath = $this->soapXpath($http->requests[1]);
@@ -185,7 +185,7 @@ final class OfficeResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        $accessTokenProvider = new StaticAccessTokenProvider('token-123', 'https://example.test');
+        $accessTokenProvider = TestTokens::provider('https://example.test');
 
         return Twinfield::create($accessTokenProvider, $http, $psr17, $psr17);
     }

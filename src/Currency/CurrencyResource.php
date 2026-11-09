@@ -60,7 +60,7 @@ final readonly class CurrencyResource
     {
         $query = $this->twinfield->finder(FinderType::Currencies);
 
-        return (new CodeNameSearch($query, CurrencySummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, CurrencySummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -181,7 +181,10 @@ final readonly class CurrencyResource
         $xml->add($xml->root(), 'office', $this->company());
         $xml->add($xml->root(), 'code', $code);
 
-        return Currency::fromXml(self::currency($this->twinfield->processXml($xml->toXml())));
+        return Currency::fromXml(
+            self::currency($this->twinfield->processXml($xml->toXml())),
+            $this->twinfield->organisation(),
+        );
     }
 
     /**

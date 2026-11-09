@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\Office;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -28,6 +30,8 @@ final readonly class Office
      * @param list<OfficeField> $lockedFields
      */
     public function __construct(
+        /** Organisation the office belongs to; the office code is only unique within it. */
+        public Organisation $organisation,
         /** Office code, e.g. `1000`; pass it (or this object) to `$twinfield->company()`. */
         public string $code,
         public string $name,
@@ -63,8 +67,11 @@ final readonly class Office
 
     /**
      * From the `<office>` root of a read response.
+     *
+     * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
+     *                                   of the response.
      */
-    public static function fromXml(XmlElement $office): self
+    public static function fromXml(XmlElement $office, Organisation $organisation): self
     {
         $lockedFields = array_values(array_filter(
             OfficeField::cases(),
@@ -75,6 +82,7 @@ final readonly class Office
         $shortName = $office->nullableString('shortname');
 
         return new self(
+            organisation: $organisation,
             code: $office->string('code'),
             name: $office->string('name'),
             shortName: $shortName,
@@ -93,6 +101,14 @@ final readonly class Office
             regional: RegionalSettings::fromXml($office->child('regional')),
             lockedFields: $lockedFields,
         );
+    }
+
+    /**
+     * The organisation and code of the office.
+     */
+    public function reference(): CompanyReference
+    {
+        return new CompanyReference($this->organisation, $this->code);
     }
 
     public function isLocked(OfficeField $field): bool

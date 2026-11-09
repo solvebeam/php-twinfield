@@ -57,7 +57,7 @@ final readonly class CostCenterResource
      */
     public function get(string $code): CostCenter
     {
-        return CostCenter::fromXml($this->requests->read($code));
+        return CostCenter::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -105,7 +105,7 @@ final readonly class CostCenterResource
     {
         $xml = $costCenter->toXml($this->requests->company());
 
-        return CostCenter::fromXml($this->requests->save($xml));
+        return CostCenter::fromXml($this->requests->save($xml), $this->requests->organisation());
     }
 
     /**

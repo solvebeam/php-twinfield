@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\DimensionGroup;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -27,8 +29,8 @@ final readonly class DimensionGroup
      * @param list<DimensionGroupDimension> $dimensions In the order of Twinfield; each type and code once.
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Dimension group code, e.g. `NL-CUSTOMERS`. */
         public string $code,
         /** Name, at most 40 characters. */
@@ -41,7 +43,7 @@ final readonly class DimensionGroup
         /** Dimensions in the group, of one or more dimension types. */
         public array $dimensions,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Dimension group %s must not be empty.', $field));
             }
@@ -69,13 +71,13 @@ final readonly class DimensionGroup
     /**
      * From a `<dimensiongroup>` element of a save response.
      */
-    public static function fromXml(XmlElement $group): self
+    public static function fromXml(XmlElement $group, Organisation $organisation): self
     {
         // A group without dimensions has an empty <dimensions />, or (right after a delete) none.
         $dimensions = $group->nullableChild('dimensions')?->list('dimension') ?? [];
 
         return new self(
-            company: $group->string('office'),
+            company: new CompanyReference($organisation, $group->string('office')),
             code: $group->string('code'),
             name: $group->string('name'),
             shortName: $group->nullableString('shortname'),

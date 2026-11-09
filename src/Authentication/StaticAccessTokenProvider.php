@@ -5,27 +5,44 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Authentication;
 
 use InvalidArgumentException;
-use LogicException;
+use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
+use SolveBeam\Twinfield\Organisation\Organisation;
 
 /**
  * Uses an access token you already have. It is not refreshed: once it
  * expires (after about an hour), calls fail.
  *
- *   $tokens = new StaticAccessTokenProvider($accessToken, $validation->clusterUrl, $validation->organisationUserCode);
+ *   $validation = $provider->getAccessTokenValidation($token);
+ *   $tokens = StaticAccessTokenProvider::fromValidation($accessToken, $validation);
  *
- * The user code is only needed for `$twinfield->userCode()` and `$twinfield->users()->current()`;
- * get it from the access token validation (see examples/getting-started/token-info).
+ * The access token validation gives the cluster URL, the organisation and the user of the
+ * token; see examples/getting-started/token-info.
  */
 final readonly class StaticAccessTokenProvider implements AccessTokenProvider
 {
     public function __construct(
         private string $accessToken,
+        private Organisation $organisation,
+        /** Code of the user the token belongs to (`twf.organisationUserCode`), e.g. `JDOE`. */
+        private string $userCode,
         private string $clusterUrl = 'https://api.accounting.twinfield.com',
-        private ?string $userCode = null,
     ) {
-        if ($userCode === '') {
-            throw new InvalidArgumentException('User code must not be empty; leave it out when unknown.');
+        if ($accessToken === '' || $userCode === '' || $clusterUrl === '') {
+            throw new InvalidArgumentException('Access token, user code and cluster URL must not be empty.');
         }
+    }
+
+    /**
+     * With the organisation, user and cluster URL of the access token validation.
+     */
+    public static function fromValidation(string $accessToken, AccessTokenValidation $validation): self
+    {
+        return new self(
+            $accessToken,
+            $validation->organisation,
+            $validation->organisationUserCode,
+            $validation->clusterUrl,
+        );
     }
 
     public function accessToken(): string
@@ -38,14 +55,13 @@ final readonly class StaticAccessTokenProvider implements AccessTokenProvider
         return rtrim($this->clusterUrl, '/');
     }
 
-    /**
-     * @throws LogicException When no user code was given.
-     */
     public function userCode(): string
     {
-        return $this->userCode ?? throw new LogicException(
-            'The user of the access token is unknown: pass userCode to StaticAccessTokenProvider, '
-            . 'e.g. $validation->organisationUserCode of the access token validation.',
-        );
+        return $this->userCode;
+    }
+
+    public function organisation(): Organisation
+    {
+        return $this->organisation;
     }
 }

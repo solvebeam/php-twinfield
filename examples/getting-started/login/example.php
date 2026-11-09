@@ -85,7 +85,7 @@ if ($token->getRefreshToken() === null) {
 
 // 4. Store the refresh token, for example with the user or organisation in your database.
 echo 'Logged in to Twinfield.', PHP_EOL, PHP_EOL;
-echo 'Organisation:  ', $validation->organisationCode, PHP_EOL;
+echo 'Organisation:  ', $validation->organisation->code, PHP_EOL;
 echo 'User:          ', $validation->organisationUserCode, PHP_EOL;
 echo 'Cluster:       ', $validation->clusterUrl, PHP_EOL;
 echo 'Access token:  valid until ', date('Y-m-d H:i:s', (int) $token->getExpires()), PHP_EOL;

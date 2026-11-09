@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\CashBook\CashBook;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionInput;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class CashTransactionInputTest extends TestCase
 {
@@ -30,6 +31,6 @@ final class CashTransactionInputTest extends TestCase
 
     private function cashBook(?string $account): CashBook
     {
-        return new CashBook(company: '1000', code: 'KAS', name: 'Kas', shortName: null, generalLedgerAccount: $account);
+        return new CashBook(company: TestTokens::company('1000'), code: 'KAS', name: 'Kas', shortName: null, generalLedgerAccount: $account);
     }
 }

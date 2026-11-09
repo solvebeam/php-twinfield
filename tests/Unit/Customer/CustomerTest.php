@@ -19,15 +19,16 @@ use SolveBeam\Twinfield\Dimension\PostingRuleLine;
 use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class CustomerTest extends TestCase
 {
     public function testReadsAllFields(): void
     {
-        $customer = Customer::fromXml(self::fixture('customer-read'));
+        $customer = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation());
 
-        self::assertSame('1000', $customer->company);
+        self::assertEquals(TestTokens::company('1000'), $customer->company);
         self::assertSame('1000', $customer->code);
         self::assertSame('3f1c9a2e-5b7d-4c8e-9f0a-1b2c3d4e5f60', $customer->uid);
         self::assertSame('Example Trading & Co B.V.', $customer->name);
@@ -46,7 +47,7 @@ final class CustomerTest extends TestCase
 
     public function testReadsFinancials(): void
     {
-        $financials = Customer::fromXml(self::fixture('customer-read'))->financials;
+        $financials = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation())->financials;
 
         self::assertSame(30, $financials->dueDays);
         self::assertTrue($financials->directDebit);
@@ -63,7 +64,7 @@ final class CustomerTest extends TestCase
 
     public function testReadsCreditManagementAndRemittanceAdvice(): void
     {
-        $customer = Customer::fromXml(self::fixture('customer-read'));
+        $customer = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation());
         $credit = $customer->creditManagement;
 
         self::assertSame('JANSEN', $credit->responsibleUser);
@@ -81,7 +82,7 @@ final class CustomerTest extends TestCase
 
     public function testReadsAddressesAndBanks(): void
     {
-        $customer = Customer::fromXml(self::fixture('customer-read'));
+        $customer = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation());
 
         self::assertCount(2, $customer->addresses);
 
@@ -122,7 +123,7 @@ final class CustomerTest extends TestCase
 
     public function testReadsPostingRulesAndPaymentConditions(): void
     {
-        $customer = Customer::fromXml(self::fixture('customer-read'));
+        $customer = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation());
 
         self::assertCount(1, $customer->postingRules);
 
@@ -142,7 +143,7 @@ final class CustomerTest extends TestCase
 
     public function testReadsAMinimalCustomer(): void
     {
-        $customer = Customer::fromXml(self::fixture('customer-read-minimal'));
+        $customer = Customer::fromXml(self::fixture('customer-read-minimal'), TestTokens::organisation());
 
         self::assertNull($customer->shortName);
         self::assertNull($customer->website);
@@ -169,7 +170,7 @@ final class CustomerTest extends TestCase
 
     public function testEditSendsWhatTwinfieldReturned(): void
     {
-        $xml = Customer::fromXml(self::fixture('customer-read'))->edit()->toXml('1000')->toXml();
+        $xml = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
 
         self::assertSame(self::pretty(<<<'XML'
             <dimension>
@@ -311,7 +312,7 @@ final class CustomerTest extends TestCase
 
     public function testEditOfAMinimalCustomerLeavesOutWhatTwinfieldLeftOut(): void
     {
-        $xml = Customer::fromXml(self::fixture('customer-read-minimal'))->edit()->toXml('1000')->toXml();
+        $xml = Customer::fromXml(self::fixture('customer-read-minimal'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
 
         self::assertStringNotContainsString('<invoicing>', $xml);
         self::assertStringNotContainsString('<groups', $xml);
@@ -327,7 +328,7 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/type is "CRD", expected DEB.');
 
-        Customer::fromXml(self::fixture('customer-read', ['<type name="Debiteuren" shortname="Debiteuren">DEB</type>' => '<type>CRD</type>']));
+        Customer::fromXml(self::fixture('customer-read', ['<type name="Debiteuren" shortname="Debiteuren">DEB</type>' => '<type>CRD</type>']), TestTokens::organisation());
     }
 
     public function testThrowsOnAnUnknownReminderSetting(): void
@@ -335,7 +336,7 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/creditmanagement/sendreminder is "sms", expected one of true, email, false.');
 
-        Customer::fromXml(self::fixture('customer-read', ['<sendreminder>email</sendreminder>' => '<sendreminder>sms</sendreminder>']));
+        Customer::fromXml(self::fixture('customer-read', ['<sendreminder>email</sendreminder>' => '<sendreminder>sms</sendreminder>']), TestTokens::organisation());
     }
 
     public function testThrowsOnAnInvalidCreditLimit(): void
@@ -343,7 +344,7 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/creditmanagement/basecreditlimit is "5.000,00", expected an amount.');
 
-        Customer::fromXml(self::fixture('customer-read', ['<basecreditlimit>5000.00</basecreditlimit>' => '<basecreditlimit>5.000,00</basecreditlimit>']));
+        Customer::fromXml(self::fixture('customer-read', ['<basecreditlimit>5000.00</basecreditlimit>' => '<basecreditlimit>5.000,00</basecreditlimit>']), TestTokens::organisation());
     }
 
     public function testThrowsOnAMissingBalanceAccount(): void
@@ -351,7 +352,7 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/financials/substitutewith is missing.');
 
-        Customer::fromXml(self::fixture('customer-read', ['~<substitutewith[^>]*>1300</substitutewith>~' => '']));
+        Customer::fromXml(self::fixture('customer-read', ['~<substitutewith[^>]*>1300</substitutewith>~' => '']), TestTokens::organisation());
     }
 
     /**

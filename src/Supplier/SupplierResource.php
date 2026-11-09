@@ -65,7 +65,7 @@ final readonly class SupplierResource
      */
     public function get(string $code): Supplier
     {
-        return Supplier::fromXml($this->requests->read($code));
+        return Supplier::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -123,7 +123,7 @@ final readonly class SupplierResource
     {
         $xml = $supplier->toXml($this->requests->company());
 
-        return Supplier::fromXml($this->requests->save($xml));
+        return Supplier::fromXml($this->requests->save($xml), $this->requests->organisation());
     }
 
     /**

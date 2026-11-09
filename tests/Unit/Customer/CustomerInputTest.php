@@ -18,6 +18,7 @@ use SolveBeam\Twinfield\Dimension\BankInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleLine;
 use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
 final class CustomerInputTest extends TestCase
@@ -164,7 +165,7 @@ final class CustomerInputTest extends TestCase
 
     public function testAnAddressWithAnIdReplacesThatAddress(): void
     {
-        $edit = Customer::fromXml(CustomerTest::fixture('customer-read'))->edit();
+        $edit = Customer::fromXml(CustomerTest::fixture('customer-read'), TestTokens::organisation())->edit();
         $address = $edit->addresses[1] ?? self::fail('Expected a second address.');
 
         $input = $edit->address($address->city('Rotterdam'));
@@ -175,7 +176,7 @@ final class CustomerInputTest extends TestCase
 
     public function testRemovesAnAddressAndABank(): void
     {
-        $input = Customer::fromXml(CustomerTest::fixture('customer-read'))->edit()->withoutAddress(2)->withoutBank(1);
+        $input = Customer::fromXml(CustomerTest::fixture('customer-read'), TestTokens::organisation())->edit()->withoutAddress(2)->withoutBank(1);
 
         self::assertSame([1], array_map(static fn (AddressInput $address): ?int => $address->id, $input->addresses ?? []));
         self::assertSame([], $input->banks);
@@ -187,7 +188,7 @@ final class CustomerInputTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('There is no address 9.');
 
-        Customer::fromXml(CustomerTest::fixture('customer-read'))->edit()->withoutAddress(9);
+        Customer::fromXml(CustomerTest::fixture('customer-read'), TestTokens::organisation())->edit()->withoutAddress(9);
     }
 
     public function testRemovingNeedsTheCurrentAddresses(): void
@@ -200,7 +201,7 @@ final class CustomerInputTest extends TestCase
 
     public function testDeletesAPostingRule(): void
     {
-        $xml = Customer::fromXml(CustomerTest::fixture('customer-read'))->edit()->withoutPostingRule(1)->toXml('1000')->toXml();
+        $xml = Customer::fromXml(CustomerTest::fixture('customer-read'), TestTokens::organisation())->edit()->withoutPostingRule(1)->toXml('1000')->toXml();
 
         self::assertStringContainsString('<postingrule id="1" status="deleted"><currency>EUR</currency>', $xml);
     }

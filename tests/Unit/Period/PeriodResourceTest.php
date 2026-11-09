@@ -8,11 +8,11 @@ use DateTimeImmutable;
 use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Period\PeriodServiceFaultCode;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -38,10 +38,10 @@ final class PeriodResourceTest extends TestCase
         $periods = $this->twinfield($http)->periods()->list(2025);
 
         self::assertEquals([
-            new Period(0, 'Openingsbalans 2025', null, true),
-            new Period(1, 'januari 2025', new DateTimeImmutable('2025-01-31T00:00:00'), false),
-            new Period(2, 'februari 2025', new DateTimeImmutable('2025-02-28T00:00:00'), true),
-            new Period(55, 'Voorafgaande journaalposten 2025', null, true),
+            new Period(TestTokens::company(), 0, 'Openingsbalans 2025', null, true),
+            new Period(TestTokens::company(), 1, 'januari 2025', new DateTimeImmutable('2025-01-31T00:00:00'), false),
+            new Period(TestTokens::company(), 2, 'februari 2025', new DateTimeImmutable('2025-02-28T00:00:00'), true),
+            new Period(TestTokens::company(), 55, 'Voorafgaande journaalposten 2025', null, true),
         ], $periods);
 
         self::assertStringContainsString('<a:Year>2025</a:Year>', (string) $http->lastRequest()->getBody());
@@ -107,7 +107,7 @@ final class PeriodResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
 
@@ -118,6 +118,6 @@ final class PeriodResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 }

@@ -9,11 +9,11 @@ use InvalidArgumentException;
 use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\DeletedTransaction\DeletedTransaction;
 use SolveBeam\Twinfield\DeletedTransaction\DeletedTransactionsServiceFaultCode;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -28,6 +28,7 @@ final class DeletedTransactionResourceTest extends TestCase
         self::assertCount(19, $transactions);
         self::assertEquals(
             new DeletedTransaction(
+                company: TestTokens::company(),
                 dayBook: 'HGSF',
                 number: 965764205,
                 transactionDate: new DateTimeImmutable('2024-07-27T00:00:00'),
@@ -39,6 +40,7 @@ final class DeletedTransactionResourceTest extends TestCase
         );
         self::assertEquals(
             new DeletedTransaction(
+                company: TestTokens::company(),
                 dayBook: 'GWPO',
                 number: 752708213,
                 transactionDate: new DateTimeImmutable('2023-02-16T00:00:00'),
@@ -154,7 +156,7 @@ final class DeletedTransactionResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
 
@@ -170,6 +172,6 @@ final class DeletedTransactionResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 }

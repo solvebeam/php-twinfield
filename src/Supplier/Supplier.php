@@ -14,6 +14,8 @@ use SolveBeam\Twinfield\Dimension\PaymentCondition;
 use SolveBeam\Twinfield\Dimension\PostingRule;
 use SolveBeam\Twinfield\Dimension\RelationShortcuts;
 use SolveBeam\Twinfield\Dimension\RemittanceAdvice;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
@@ -42,8 +44,8 @@ final readonly class Supplier
      * @param list<PaymentCondition> $paymentConditions
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code in the format of the CRD dimension type of the company, e.g. `2000`. */
         public string $code,
         /** Unique ID of the dimension, e.g. `c6c05844-c075-4b51-a4ca-6f30f45d5a12`. */
@@ -77,7 +79,7 @@ final readonly class Supplier
         public array $postingRules,
         public array $paymentConditions,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Supplier %s must not be empty.', $field));
             }
@@ -91,7 +93,7 @@ final readonly class Supplier
     /**
      * From a `<dimension>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $dimension): self
+    public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {
         $type = $dimension->string('type');
 
@@ -102,7 +104,7 @@ final readonly class Supplier
         $remittanceAdvice = $dimension->nullableChild('remittanceadvice');
 
         return new self(
-            company: $dimension->string('office'),
+            company: new CompanyReference($organisation, $dimension->string('office')),
             code: $dimension->string('code'),
             uid: $dimension->string('uid'),
             name: $dimension->string('name'),

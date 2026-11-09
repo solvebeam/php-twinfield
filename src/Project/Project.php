@@ -9,6 +9,8 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Dimension\ProjectSettings;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -25,8 +27,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 final readonly class Project
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code in the format of the PRJ dimension type, e.g. `P0001`. */
         public string $code,
         /** Unique ID of the dimension, e.g. `6d7bfbf1-58ce-4699-9a78-4fb50bc545be`. */
@@ -51,7 +53,7 @@ final readonly class Project
         /** Time & expenses settings: valid dates, customer, rate, billable, quantities, … */
         public ProjectSettings $projects,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Project %s must not be empty.', $field));
             }
@@ -65,7 +67,7 @@ final readonly class Project
     /**
      * From a `<dimension>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $dimension): self
+    public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {
         $type = $dimension->string('type');
 
@@ -74,7 +76,7 @@ final readonly class Project
         }
 
         return new self(
-            company: $dimension->string('office'),
+            company: new CompanyReference($organisation, $dimension->string('office')),
             code: $dimension->string('code'),
             uid: $dimension->string('uid'),
             name: $dimension->string('name'),

@@ -34,7 +34,7 @@ final class DimensionGroupResourceTest extends WriteTestCase
 
             self::assertSame($summary->code, $group->code);
             self::assertSame($summary->name, $group->name);
-            self::assertSame($this->company(), $group->company);
+            self::assertSame($this->company(), $group->company->code);
             self::assertSame(DimensionGroupStatus::Active, $group->status);
             $count++;
         }

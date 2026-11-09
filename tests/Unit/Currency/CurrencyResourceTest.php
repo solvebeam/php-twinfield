@@ -11,7 +11,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Currency\CurrencyAlreadyExistsException;
 use SolveBeam\Twinfield\Currency\CurrencyInput;
 use SolveBeam\Twinfield\Currency\CurrencyNotFoundException;
@@ -19,6 +18,7 @@ use SolveBeam\Twinfield\Currency\CurrencyStatus;
 use SolveBeam\Twinfield\Currency\CurrencySummary;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -32,8 +32,8 @@ final class CurrencyResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new CurrencySummary('EUR', 'Euro'),
-            new CurrencySummary('USD', 'US dollar'),
+            new CurrencySummary(TestTokens::company(), 'EUR', 'Euro'),
+            new CurrencySummary(TestTokens::company(), 'USD', 'US dollar'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -65,7 +65,7 @@ final class CurrencyResourceTest extends TestCase
             $this->xmlRequest($http->requests[1]),
         );
 
-        self::assertSame('1000', $usd->company);
+        self::assertEquals(TestTokens::company('1000'), $usd->company);
         self::assertSame('USD', $usd->code);
         self::assertSame('US dollar', $usd->name);
         self::assertSame('$', $usd->shortName);
@@ -266,7 +266,7 @@ final class CurrencyResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
         $http = new ReplayClient();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Currencies belong to a company: use company() first.');
@@ -278,7 +278,7 @@ final class CurrencyResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

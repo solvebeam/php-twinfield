@@ -65,7 +65,7 @@ final readonly class OfficeResource
         // With includeid the columns are always the same: code, name, ID, country, VAT period, quarter.
         $query = $this->twinfield->finder(FinderType::Offices)->pattern($pattern)->option('includeid', '1');
 
-        return new CodeNameSearch($query, OfficeSummary::fromFinderRow(...));
+        return CodeNameSearch::forOrganisation($query, OfficeSummary::fromFinderRow(...));
     }
 
     /**
@@ -99,7 +99,7 @@ final readonly class OfficeResource
             throw $exception;
         }
 
-        return Office::fromXml(XmlElement::root($result));
+        return Office::fromXml(XmlElement::root($result), $this->twinfield->organisation());
     }
 
     /**

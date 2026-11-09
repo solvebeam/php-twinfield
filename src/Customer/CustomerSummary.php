@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Customer;
 
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -12,6 +13,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 final readonly class CustomerSummary
 {
     public function __construct(
+        /** Company the Finder searched in, with its organisation. */
+        public CompanyReference $company,
         public string $code,
         public string $name,
     ) {
@@ -23,7 +26,7 @@ final readonly class CustomerSummary
      *
      * @param list<string> $row
      */
-    public static function fromFinderRow(array $row, int $index): self
+    public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {
         $code = $row[0] ?? '';
         $name = $row[1] ?? '';
@@ -36,6 +39,6 @@ final readonly class CustomerSummary
             ));
         }
 
-        return new self($code, $name);
+        return new self($company, $code, $name);
     }
 }

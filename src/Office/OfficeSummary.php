@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Office;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -12,13 +14,17 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  * settings.
  *
  *   foreach ($twinfield->offices()->list() as $office) {
- *       echo $office->code, ' ', $office->name, ' ', $office->companyId, PHP_EOL;
+ *       echo $office->organisation->code, ' ', $office->code, ' ', $office->name, PHP_EOL;
  *   }
+ *
+ * The code is only unique within the organisation; `companyId` is unique over all organisations.
  */
 final readonly class OfficeSummary
 {
     public function __construct(
-        /** Office code, e.g. `1000`; pass it to `$twinfield->company()`. */
+        /** Organisation the office belongs to. */
+        public Organisation $organisation,
+        /** Office code, e.g. `1000`; pass it (or this object) to `$twinfield->company()`. */
         public string $code,
         public string $name,
         /** Unique ID of the company, e.g. `ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9`. */
@@ -45,7 +51,7 @@ final readonly class OfficeSummary
      *
      * @param list<string> $row
      */
-    public static function fromFinderRow(array $row, int $index): self
+    public static function fromFinderRow(array $row, int $index, Organisation $organisation): self
     {
         if (count($row) !== 6) {
             throw self::invalidRow($index, $row, sprintf('has %d columns, expected 6', count($row)));
@@ -61,7 +67,15 @@ final readonly class OfficeSummary
             throw self::invalidRow($index, $row, 'has a VAT period or starting quarter that is not a number');
         }
 
-        return new self($code, $name, $companyId, $country, (int) $vatPeriod, (int) $startingQuarter);
+        return new self($organisation, $code, $name, $companyId, $country, (int) $vatPeriod, (int) $startingQuarter);
+    }
+
+    /**
+     * The organisation and code of the office.
+     */
+    public function reference(): CompanyReference
+    {
+        return new CompanyReference($this->organisation, $this->code);
     }
 
     /**

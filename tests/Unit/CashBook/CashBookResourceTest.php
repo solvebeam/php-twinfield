@@ -9,7 +9,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\CashBook\CashBook;
 use SolveBeam\Twinfield\CashBook\CashBookAlreadyExistsException;
 use SolveBeam\Twinfield\CashBook\CashBookInput;
@@ -18,6 +17,7 @@ use SolveBeam\Twinfield\CashBook\CashBookServiceFaultCode;
 use SolveBeam\Twinfield\CashBook\CashBookSummary;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -33,8 +33,8 @@ final class CashBookResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new CashBookSummary('KAS', 'Kas'),
-            new CashBookSummary('VRK_1', 'Verkopen pin'),
+            new CashBookSummary(TestTokens::company(), 'KAS', 'Kas'),
+            new CashBookSummary(TestTokens::company(), 'VRK_1', 'Verkopen pin'),
         ], iterator_to_array($page));
 
         $body = $this->body($http->lastRequest());
@@ -52,7 +52,7 @@ final class CashBookResourceTest extends TestCase
         $cashBook = $this->twinfield($http)->cashBooks()->get('KAS');
 
         self::assertEquals(new CashBook(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: 'KAS',
             name: 'Kas',
             shortName: 'Kas',
@@ -239,7 +239,7 @@ final class CashBookResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
 
@@ -255,6 +255,6 @@ final class CashBookResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 }

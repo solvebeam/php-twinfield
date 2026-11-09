@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\DimensionType;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -22,8 +24,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 final readonly class DimensionType
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Dimension type code, e.g. `DEB`; see DimensionTypeCode for the standard ones. */
         public string $code,
         public string $name,
@@ -36,7 +38,7 @@ final readonly class DimensionType
         /** Number of times the dimension type was changed. */
         public int $touched,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Dimension type %s must not be empty.', $field));
             }
@@ -50,14 +52,14 @@ final readonly class DimensionType
     /**
      * From a `<dimensiontype>` element of a response.
      */
-    public static function fromXml(XmlElement $type): self
+    public static function fromXml(XmlElement $type, Organisation $organisation): self
     {
         if ($type->element->localName !== 'dimensiontype') {
             throw $type->invalid('<dimensiontype>');
         }
 
         return new self(
-            company: $type->string('office'),
+            company: new CompanyReference($organisation, $type->string('office')),
             code: $type->string('code'),
             name: $type->string('name'),
             shortName: $type->nullableString('shortname'),

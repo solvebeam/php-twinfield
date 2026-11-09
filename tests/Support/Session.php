@@ -9,6 +9,7 @@ use RuntimeException;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield;
+use SolveBeam\Twinfield\Organisation\Organisation;
 
 /**
  * Keeps a valid Twinfield access token around for tests and dev scripts.
@@ -87,6 +88,19 @@ final class Session implements AccessTokenProvider
         return (string) ($this->load()['organisation_code'] ?? '');
     }
 
+    public function organisation(): Organisation
+    {
+        $this->accessToken();
+        $data = $this->load();
+
+        // Token files of older versions have no organisation ID: refresh once to get it.
+        if (!is_string($data['organisation_id'] ?? null) || $data['organisation_id'] === '') {
+            $data = $this->refresh();
+        }
+
+        return new Organisation((string) $data['organisation_id'], (string) $data['organisation_code']);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -118,7 +132,8 @@ final class Session implements AccessTokenProvider
             'refresh_token' => $token->getRefreshToken() ?? $previousRefreshToken,
             'expires' => $token->getExpires() ?? $validation->exp,
             'cluster_url' => $validation->clusterUrl,
-            'organisation_code' => $validation->organisationCode,
+            'organisation_id' => $validation->organisation->id,
+            'organisation_code' => $validation->organisation->code,
             'organisation_user_code' => $validation->organisationUserCode,
             'updated_at' => date(DATE_ATOM),
         ];

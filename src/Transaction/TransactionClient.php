@@ -9,6 +9,7 @@ use DOMElement;
 use DOMNode;
 use InvalidArgumentException;
 use LogicException;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\MessageType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlMessage;
@@ -30,7 +31,9 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 final readonly class TransactionClient
 {
     /**
-     * @param Closure(XmlElement): T $map Maps a `<transaction>` element of a response to the model.
+     * @param Closure(XmlElement, Organisation): T $map Maps a `<transaction>` element of a response
+     *                                                to the model, with the organisation of the
+     *                                                access token.
      * @param string $kind For messages, e.g. `Bank transactions`.
      */
     public function __construct(
@@ -177,7 +180,12 @@ final readonly class TransactionClient
             $warnings = self::ofType($own, MessageType::Warning);
 
             $results[] = match ($element->attribute('result')) {
-                '1' => new SavedTransaction($index, $inputs[$index], ($this->map)($element), $warnings),
+                '1' => new SavedTransaction(
+                    $index,
+                    $inputs[$index],
+                    ($this->map)($element, $this->twinfield->organisation()),
+                    $warnings,
+                ),
                 '0' => new FailedTransaction($index, $inputs[$index], $errors, $warnings),
                 default => throw new UnexpectedResponseException(sprintf(
                     '%s/@result is "%s", expected 1 or 0.',
@@ -250,7 +258,7 @@ final readonly class TransactionClient
             ));
         }
 
-        return ($this->map)($root);
+        return ($this->map)($root, $this->twinfield->organisation());
     }
 
     private function company(): string

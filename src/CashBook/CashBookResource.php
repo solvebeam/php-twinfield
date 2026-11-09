@@ -12,6 +12,7 @@ use SolveBeam\Twinfield\CommandQuery\Nil;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\Finder\CodeNameSearch;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Twinfield;
 
@@ -58,7 +59,7 @@ final readonly class CashBookResource
         // banktype 1: cash books only; 0 gives only bank books, -1 both.
         $query = $this->twinfield->finder(FinderType::CashbooksAndBanks)->option('banktype', '1');
 
-        return (new CodeNameSearch($query, CashBookSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, CashBookSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -78,7 +79,7 @@ final readonly class CashBookResource
             throw $this->map($exception, $code);
         }
 
-        return CashBook::fromResult($result, $company, $code);
+        return CashBook::fromResult($result, new CompanyReference($this->twinfield->organisation(), $company), $code);
     }
 
     /**

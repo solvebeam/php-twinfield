@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\BankBook;
 
 use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 
 /**
  * A bank book as Twinfield returns it (BankBookService GetBankBook).
@@ -20,8 +21,8 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 final readonly class BankBook
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code of the bank book (a transaction type), e.g. `ING`. */
         public string $code,
         public string $name,
@@ -32,7 +33,7 @@ final readonly class BankBook
         public BankAccount $bankAccount,
         public AutomaticBankProcessing $automaticBankProcessing,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Bank book %s must not be empty.', $field));
             }
@@ -42,7 +43,7 @@ final readonly class BankBook
     /**
      * From a `GetBankBookResult`. The result has no code: it is the code of the request.
      */
-    public static function fromResult(ResultElement $result, string $company, string $code): self
+    public static function fromResult(ResultElement $result, CompanyReference $company, string $code): self
     {
         return new self(
             company: $company,

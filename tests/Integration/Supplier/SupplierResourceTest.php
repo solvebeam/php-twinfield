@@ -30,7 +30,7 @@ final class SupplierResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $supplier->code);
         self::assertSame($summary->name, $supplier->name);
-        self::assertSame($this->environment->config->company(), $supplier->company);
+        self::assertSame($this->environment->config->company(), $supplier->company->code);
         self::assertNotSame('', $supplier->uid);
         self::assertNotNull($supplier->modified, 'A read response has <modified>.');
         self::assertNotSame('', $supplier->financials->balanceAccount);

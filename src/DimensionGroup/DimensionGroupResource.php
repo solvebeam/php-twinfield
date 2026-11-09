@@ -60,7 +60,7 @@ final readonly class DimensionGroupResource
     {
         $query = $this->twinfield->finder(FinderType::DimensionGroups);
 
-        return (new CodeNameSearch($query, DimensionGroupSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, DimensionGroupSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -205,7 +205,7 @@ final readonly class DimensionGroupResource
             ));
         }
 
-        return DimensionGroup::fromXml($root);
+        return DimensionGroup::fromXml($root, $this->twinfield->organisation());
     }
 
     private function company(): string

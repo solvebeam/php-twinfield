@@ -64,7 +64,7 @@ final readonly class CustomerResource
      */
     public function get(string $code): Customer
     {
-        return Customer::fromXml($this->requests->read($code));
+        return Customer::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -122,7 +122,7 @@ final readonly class CustomerResource
     {
         $xml = $customer->toXml($this->requests->company());
 
-        return Customer::fromXml($this->requests->save($xml));
+        return Customer::fromXml($this->requests->save($xml), $this->requests->organisation());
     }
 
     /**

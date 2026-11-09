@@ -8,6 +8,7 @@ use LogicException;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Finder\CodeNameSearch;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
@@ -62,7 +63,7 @@ final readonly class VatCodeResource
     {
         $query = $this->twinfield->finder(FinderType::VatCodes);
 
-        return (new CodeNameSearch($query, VatCodeSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, VatCodeSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -79,7 +80,10 @@ final readonly class VatCodeResource
         $xml->add($xml->root(), 'type', 'vat');
         $xml->add($xml->root(), 'code', $code);
 
-        return VatCode::fromXml(XmlElement::root($this->send($xml, $code)), $company);
+        return VatCode::fromXml(
+            XmlElement::root($this->send($xml, $code)),
+            new CompanyReference($this->twinfield->organisation(), $company),
+        );
     }
 
     /**

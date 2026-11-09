@@ -13,7 +13,6 @@ use Nyholm\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Rate\RateAlreadyExistsException;
@@ -23,6 +22,7 @@ use SolveBeam\Twinfield\Rate\RateStatus;
 use SolveBeam\Twinfield\Rate\RateSummary;
 use SolveBeam\Twinfield\Rate\RateType;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -36,8 +36,8 @@ final class RateResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new RateSummary('CONSULT', 'Consultancy'),
-            new RateSummary('KM', 'Kilometres'),
+            new RateSummary(TestTokens::company(), 'CONSULT', 'Consultancy'),
+            new RateSummary(TestTokens::company(), 'KM', 'Kilometres'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -75,7 +75,7 @@ final class RateResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertSame('1000', $rate->company);
+        self::assertEquals(TestTokens::company('1000'), $rate->company);
         self::assertSame('CONSULT', $rate->code);
         self::assertSame('Consultancy', $rate->name);
         self::assertSame('Consult', $rate->shortName);
@@ -364,7 +364,7 @@ final class RateResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
         $twinfield = Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test'),
+            TestTokens::provider('https://example.test'),
             new ReplayClient(),
             $psr17,
             $psr17,
@@ -381,7 +381,7 @@ final class RateResourceTest extends TestCase
         $psr17 = new Psr17Factory();
 
         return Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test'),
+            TestTokens::provider('https://example.test'),
             $http,
             $psr17,
             $psr17,

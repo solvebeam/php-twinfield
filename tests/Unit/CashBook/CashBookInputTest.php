@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\CashBook\CashBook;
 use SolveBeam\Twinfield\CashBook\CashBookInput;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class CashBookInputTest extends TestCase
 {
@@ -48,7 +49,7 @@ final class CashBookInputTest extends TestCase
 
     public function testEditKeepsAllValues(): void
     {
-        $input = (new CashBook('1000', 'KAS', 'Kas', 'Winkel', '1000'))->edit();
+        $input = (new CashBook(TestTokens::company('1000'), 'KAS', 'Kas', 'Winkel', '1000'))->edit();
 
         self::assertEquals(CashBookInput::create('KAS', 'Kas')->shortName('Winkel')->generalLedgerAccount('1000'), $input);
     }
@@ -58,6 +59,6 @@ final class CashBookInputTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cash book name must not be empty.');
 
-        new CashBook('1000', 'KAS', '', null, null);
+        new CashBook(TestTokens::company('1000'), 'KAS', '', null, null);
     }
 }

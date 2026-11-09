@@ -11,7 +11,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Customer\CustomerInput;
 use SolveBeam\Twinfield\Customer\CustomerSummary;
 use SolveBeam\Twinfield\Dimension\AddressInput;
@@ -20,6 +19,7 @@ use SolveBeam\Twinfield\Dimension\DimensionAlreadyExistsException;
 use SolveBeam\Twinfield\Dimension\DimensionNotFoundException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -33,8 +33,8 @@ final class CustomerResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new CustomerSummary('1000', 'Example Trading & Co B.V.'),
-            new CustomerSummary('1001', 'Sample Retail'),
+            new CustomerSummary(TestTokens::company(), '1000', 'Example Trading & Co B.V.'),
+            new CustomerSummary(TestTokens::company(), '1001', 'Sample Retail'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -43,6 +43,29 @@ final class CustomerResourceTest extends TestCase
         self::assertSame('NL91*', $xpath->evaluate('string(//tw:Search/tw:pattern)'));
         self::assertSame('3', $xpath->evaluate('string(//tw:Search/tw:field)'));
         self::assertSame('DEB', $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString[tw:string[1]="dimtype"]/tw:string[2])'));
+    }
+
+    public function testSearchesCustomersOfTheCompanyOption(): void
+    {
+        $http = ReplayClient::fixture('finder-customers');
+
+        $page = $this->twinfield($http)->customers()->search()->option('company', '1001')->get();
+
+        self::assertEquals(TestTokens::company('1001'), $page->items[0]->company);
+    }
+
+    public function testSearchNeedsACompany(): void
+    {
+        $http = ReplayClient::fixture('finder-customers');
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('needs a company');
+
+        try {
+            $this->twinfield($http)->withoutCompany()->customers()->search()->get();
+        } finally {
+            self::assertCount(0, $http->requests, 'Without company, nothing is sent.');
+        }
     }
 
     public function testSearchesInAddresses(): void
@@ -59,7 +82,7 @@ final class CustomerResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Finder customer row 3 has no code or name: ["1000",""].');
 
-        CustomerSummary::fromFinderRow(['1000', ''], 3);
+        CustomerSummary::fromFinderRow(['1000', ''], 3, TestTokens::company());
     }
 
     public function testReadsACustomer(): void
@@ -227,7 +250,7 @@ final class CustomerResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Customers belong to a company: use company() first.');
@@ -239,7 +262,7 @@ final class CustomerResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

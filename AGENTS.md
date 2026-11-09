@@ -29,3 +29,4 @@
 
 - Twinfield is moving from the term "office" to "company" (administration). In the Finder the `company` option is preferred and `office` is deprecated but still supported; don't pass both. See https://developers.twinfield.com/documentation/api/miscellaneous/finder/.
 - Use "company" for new code and options. The existing `Office` classes keep their name for now, but keep the rename in mind.
+- Spell "organisation" the British way, as Twinfield does in its scopes (`twf.organisation`), claims (`twf.organisationId`) and error codes (`OrganisationInactive`). Never use "organization" in class names, methods, properties or docs, even though it is the more common spelling among developers (e.g. GitHub). See `docs/src/content/docs/guides/organisations.md`.

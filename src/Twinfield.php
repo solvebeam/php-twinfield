@@ -38,6 +38,8 @@ use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Office\OfficeSummary;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Period\PeriodResource;
 use SolveBeam\Twinfield\Project\ProjectResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
@@ -91,12 +93,31 @@ final readonly class Twinfield
     }
 
     /**
-     * Client for another office (company), e.g. `company('1000')`, or an office from
-     * `offices()->list()` or `offices()->get()`.
+     * Client for another office (company), e.g. `company('1000')`, an office from
+     * `offices()->list()` or `offices()->get()`, or the `company` of a model.
+     *
+     * @throws InvalidArgumentException When an office or company reference belongs to another
+     *                                  organisation than the access token.
      */
-    public function company(string|Office|OfficeSummary $company): self
+    public function company(string|CompanyReference|Office|OfficeSummary $company): self
     {
-        $code = is_string($company) ? $company : $company->code;
+        if (is_string($company)) {
+            $code = $company;
+        } else {
+            $reference = $company instanceof CompanyReference ? $company : $company->reference();
+            $organisation = $this->organisation();
+
+            if (!$reference->organisation->equals($organisation)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Company %s belongs to organisation %s, but the access token to organisation %s.',
+                    $reference->code,
+                    $reference->organisation->code,
+                    $organisation->code,
+                ));
+            }
+
+            $code = $reference->code;
+        }
 
         if ($code === '') {
             throw new InvalidArgumentException('Company code must not be empty.');
@@ -116,6 +137,31 @@ final readonly class Twinfield
     public function companyCode(): ?string
     {
         return $this->companyCode;
+    }
+
+    /**
+     * The company of the client, with its organisation.
+     *
+     * @throws LogicException When the client has no company.
+     */
+    public function companyReference(): CompanyReference
+    {
+        if ($this->companyCode === null) {
+            throw new LogicException('The client has no company: use company() first.');
+        }
+
+        return new CompanyReference($this->organisation(), $this->companyCode);
+    }
+
+    /**
+     * Organisation the access token belongs to. Company and user codes are only unique within an
+     * organisation; every model the SDK reads carries it.
+     *
+     * @see AccessTokenProvider::organisation()
+     */
+    public function organisation(): Organisation
+    {
+        return $this->accessTokenProvider->organisation();
     }
 
     /**

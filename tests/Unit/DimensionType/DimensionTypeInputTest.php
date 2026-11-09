@@ -10,6 +10,7 @@ use SolveBeam\Twinfield\DimensionType\AddressLabels;
 use SolveBeam\Twinfield\DimensionType\CodeMask;
 use SolveBeam\Twinfield\DimensionType\DimensionType;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeLevels;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class DimensionTypeInputTest extends TestCase
 {
@@ -71,7 +72,7 @@ final class DimensionTypeInputTest extends TestCase
     private static function customers(): DimensionType
     {
         return new DimensionType(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: 'DEB',
             name: 'Debiteuren',
             shortName: 'Debiteuren',

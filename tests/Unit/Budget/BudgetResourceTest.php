@@ -8,7 +8,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Budget\BudgetAmounts;
 use SolveBeam\Twinfield\Budget\BudgetNotFoundException;
 use SolveBeam\Twinfield\Budget\BudgetSummary;
@@ -16,6 +15,7 @@ use SolveBeam\Twinfield\Budget\BudgetTotal;
 use SolveBeam\Twinfield\Budget\Regime;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -29,8 +29,8 @@ final class BudgetResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new BudgetSummary('001', 'Budget 2025'),
-            new BudgetSummary('002', 'Forecast 2025'),
+            new BudgetSummary(TestTokens::company(), '001', 'Budget 2025'),
+            new BudgetSummary(TestTokens::company(), '002', 'Forecast 2025'),
         ], iterator_to_array($page));
 
         $body = $this->body($http->lastRequest());
@@ -65,6 +65,7 @@ final class BudgetResourceTest extends TestCase
         self::assertCount(4, $totals);
         self::assertEquals([
             new BudgetTotal(
+                company: TestTokens::company(),
                 year: 2025,
                 period: 1,
                 generalLedgerAccount: '8000',
@@ -75,6 +76,7 @@ final class BudgetResourceTest extends TestCase
                 actual: new BudgetAmounts('0.0000', '12500.0000', '-12500.0000'),
             ),
             new BudgetTotal(
+                company: TestTokens::company(),
                 year: 2025,
                 period: 1,
                 generalLedgerAccount: '4000',
@@ -85,6 +87,7 @@ final class BudgetResourceTest extends TestCase
                 actual: new BudgetAmounts('2100.5000', '0.0000', '2100.5000'),
             ),
             new BudgetTotal(
+                company: TestTokens::company(),
                 year: 2025,
                 period: 2,
                 generalLedgerAccount: '1600',
@@ -95,6 +98,7 @@ final class BudgetResourceTest extends TestCase
                 actual: new BudgetAmounts('0.0000', '-318.0200', '318.0200'),
             ),
             new BudgetTotal(
+                company: TestTokens::company(),
                 year: 2025,
                 period: 2,
                 generalLedgerAccount: '4000',
@@ -215,7 +219,7 @@ final class BudgetResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        $tokens = new StaticAccessTokenProvider('token-123', 'https://example.test');
+        $tokens = TestTokens::provider('https://example.test');
 
         return Twinfield::create($tokens, $http, $psr17, $psr17)->company('1000');
     }

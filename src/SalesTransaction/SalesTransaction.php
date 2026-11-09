@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\SalesTransaction;
 
 use DateTimeImmutable;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
@@ -57,15 +58,18 @@ final readonly class SalesTransaction
 
     /**
      * From a `<transaction>` element of a read or save response.
+     *
+     * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
+     *                                   of the response.
      */
-    public static function fromXml(XmlElement $transaction): self
+    public static function fromXml(XmlElement $transaction, Organisation $organisation): self
     {
         $header = $transaction->child('header');
         $linesElement = $transaction->child('lines');
         $lines = TransactionLines::fromXml($linesElement);
 
         return new self(
-            header: TransactionHeader::fromXml($transaction),
+            header: TransactionHeader::fromXml($transaction, $organisation),
             invoiceNumber: $header->string('invoicenumber'),
             dueDate: TransactionXml::date($header, 'duedate'),
             // Left out when the transaction has none.

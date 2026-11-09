@@ -67,7 +67,7 @@ final readonly class FixedAssetResource
      */
     public function get(string $code): FixedAsset
     {
-        return FixedAsset::fromXml($this->requests->read($code));
+        return FixedAsset::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -125,7 +125,7 @@ final readonly class FixedAssetResource
     {
         $xml = $asset->toXml($this->requests->company());
 
-        return FixedAsset::fromXml($this->requests->save($xml));
+        return FixedAsset::fromXml($this->requests->save($xml), $this->requests->organisation());
     }
 
     /**

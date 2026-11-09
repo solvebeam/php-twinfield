@@ -10,10 +10,10 @@ use DOMXPath;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\CashTransaction\CashTransaction;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionInput;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\TransactionNotFoundException;
 use SolveBeam\Twinfield\Twinfield;
 
@@ -71,7 +71,7 @@ final class CashTransactionResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function xmlRequest(RequestInterface $request): string

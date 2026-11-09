@@ -28,7 +28,7 @@ final class AssetMethodResourceTest extends IntegrationTestCase
 
             self::assertSame($summary->code, $method->code);
             self::assertSame($summary->name, $method->name);
-            self::assertSame($this->twinfield->companyCode(), $method->company);
+            self::assertSame($this->twinfield->companyCode(), $method->company->code);
             self::assertCount(5, $method->freeTexts);
 
             // edit() must give an input that Twinfield accepts; here only that it builds.

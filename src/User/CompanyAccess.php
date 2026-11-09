@@ -7,6 +7,8 @@ namespace SolveBeam\Twinfield\User;
 use SolveBeam\Twinfield\Office\NamedReference;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeSummary;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -23,6 +25,8 @@ final readonly class CompanyAccess
      * @param list<NamedReference> $companies
      */
     public function __construct(
+        /** Organisation of the user: the companies are companies of this organisation. */
+        public Organisation $organisation,
         /** True when the user only has access to $companies; false for access to all companies. */
         public bool $restricted,
         /** The companies of a restricted user, with their name. Empty when not restricted. */
@@ -33,11 +37,12 @@ final readonly class CompanyAccess
     ) {
     }
 
-    public static function fromXml(XmlElement $office): self
+    public static function fromXml(XmlElement $office, Organisation $organisation): self
     {
         $templateCompanyAccess = $office->child('templatecompanyaccess');
 
         return new self(
+            organisation: $organisation,
             // Documented as "not in use"; live it is false with an empty list for users with access to all companies.
             restricted: $office->bool('restricted'),
             companies: array_map(
@@ -51,11 +56,24 @@ final readonly class CompanyAccess
     }
 
     /**
-     * True when the user may open the company: always for a user that is not restricted.
+     * True when the user may open the company: always for a user that is not restricted. Never
+     * for a company of another organisation.
      */
-    public function hasAccessTo(string|Office|OfficeSummary $company): bool
+    public function hasAccessTo(string|CompanyReference|Office|OfficeSummary $company): bool
     {
-        return !$this->restricted || in_array(is_string($company) ? $company : $company->code, $this->codes(), true);
+        if (is_string($company)) {
+            $code = $company;
+        } else {
+            $reference = $company instanceof CompanyReference ? $company : $company->reference();
+
+            if (!$reference->organisation->equals($this->organisation)) {
+                return false;
+            }
+
+            $code = $reference->code;
+        }
+
+        return !$this->restricted || in_array($code, $this->codes(), true);
     }
 
     /**

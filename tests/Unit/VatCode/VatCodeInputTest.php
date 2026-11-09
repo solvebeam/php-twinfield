@@ -14,6 +14,7 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Soap\SoapResponse;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\VatCode\Percentage;
 use SolveBeam\Twinfield\VatCode\VatAccountInput;
 use SolveBeam\Twinfield\VatCode\VatAccountLineType;
@@ -248,6 +249,6 @@ final class VatCodeInputTest extends TestCase
             SoapResponse::fromHttpResponse(ReplayClient::response($fixture)),
         );
 
-        return VatCode::fromXml(XmlElement::root($result), '1000');
+        return VatCode::fromXml(XmlElement::root($result), TestTokens::company('1000'));
     }
 }

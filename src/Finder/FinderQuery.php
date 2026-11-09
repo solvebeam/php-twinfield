@@ -6,8 +6,11 @@ namespace SolveBeam\Twinfield\Finder;
 
 use Generator;
 use InvalidArgumentException;
+use LogicException;
 use SolveBeam\Twinfield\Data\ArrayOfArrayOfString;
 use SolveBeam\Twinfield\Data\ArrayOfString;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -115,6 +118,34 @@ final readonly class FinderQuery
             // Advance by the rows received, so a short page never skips rows.
             $query = $query->offset($query->offset + count($page->rows));
         } while ($page->rows !== [] && $query->offset < $page->totalRows);
+    }
+
+    /**
+     * The company the Finder searches in: the `company` option (or the deprecated `office`
+     * option) when set, otherwise the company of the client.
+     *
+     * @throws LogicException When there is neither.
+     */
+    public function companyReference(): CompanyReference
+    {
+        $code = $this->options['company'] ?? $this->options['office'] ?? $this->twinfield->companyCode();
+
+        if ($code === null) {
+            throw new LogicException(sprintf(
+                'Finder search %s needs a company: use company() first, or the company option.',
+                $this->type->value,
+            ));
+        }
+
+        return new CompanyReference($this->twinfield->organisation(), $code);
+    }
+
+    /**
+     * The organisation of the access token.
+     */
+    public function organisation(): Organisation
+    {
+        return $this->twinfield->organisation();
     }
 
     public function toSearch(): Search

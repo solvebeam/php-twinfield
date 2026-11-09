@@ -32,7 +32,7 @@ final class FixedAssetResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $asset->code);
         self::assertSame($summary->name, $asset->name);
-        self::assertSame($this->environment->config->company(), $asset->company);
+        self::assertSame($this->environment->config->company(), $asset->company->code);
         self::assertNotSame('', $asset->uid);
         self::assertNotNull($asset->modified, 'A read response has <modified>.');
         self::assertSame('KPL', $asset->costCenter->type);

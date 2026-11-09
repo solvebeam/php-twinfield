@@ -30,7 +30,7 @@ final class ProjectResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $project->code);
         self::assertSame($summary->name, $project->name);
-        self::assertSame($this->environment->config->company(), $project->company);
+        self::assertSame($this->environment->config->company(), $project->company->code);
         self::assertNotSame('', $project->uid);
     }
 

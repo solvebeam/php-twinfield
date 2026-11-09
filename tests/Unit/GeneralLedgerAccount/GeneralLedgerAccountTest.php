@@ -15,6 +15,7 @@ use SolveBeam\Twinfield\GeneralLedgerAccount\ChildValidationType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccount;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\SubAnalysis;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\VatCode\VatCodeReference;
 use SolveBeam\Twinfield\VatCode\VatCodeType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
@@ -28,7 +29,7 @@ final class GeneralLedgerAccountTest extends TestCase
     {
         $account = self::account('general-ledger-account-read-balance-sheet');
 
-        self::assertSame('1000', $account->company);
+        self::assertEquals(TestTokens::company('1000'), $account->company);
         self::assertSame(GeneralLedgerAccountType::BalanceSheet, $account->type);
         self::assertTrue($account->isBalanceSheet());
         self::assertFalse($account->isProfitAndLoss());
@@ -206,7 +207,7 @@ final class GeneralLedgerAccountTest extends TestCase
 
         $xml = strtr((string) $soap->getElementsByTagName('ProcessXmlStringResult')->item(0)?->textContent, $replace);
 
-        return GeneralLedgerAccount::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)));
+        return GeneralLedgerAccount::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)), TestTokens::organisation());
     }
 
     private static function element(string $xml): XmlElement

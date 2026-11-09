@@ -30,7 +30,7 @@ final class CustomerResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $customer->code);
         self::assertSame($summary->name, $customer->name);
-        self::assertSame($this->environment->config->company(), $customer->company);
+        self::assertSame($this->environment->config->company(), $customer->company->code);
         self::assertNotSame('', $customer->uid);
         self::assertNotNull($customer->modified, 'A read response has <modified>.');
         self::assertNotSame('', $customer->financials->balanceAccount);

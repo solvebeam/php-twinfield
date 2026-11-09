@@ -57,7 +57,7 @@ final readonly class DimensionTypeResource
     {
         $query = $this->twinfield->finder(FinderType::DimensionTypes);
 
-        return (new CodeNameSearch($query, DimensionTypeSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, DimensionTypeSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -92,7 +92,7 @@ final readonly class DimensionTypeResource
         $xml->add($xml->root(), 'office', $this->company());
         $xml->add($xml->root(), 'code', $code);
 
-        return DimensionType::fromXml(XmlElement::root($this->send($xml, $code)));
+        return DimensionType::fromXml(XmlElement::root($this->send($xml, $code)), $this->twinfield->organisation());
     }
 
     /**
@@ -115,7 +115,10 @@ final readonly class DimensionTypeResource
      */
     public function update(DimensionTypeInput $type): DimensionType
     {
-        return DimensionType::fromXml(XmlElement::root($this->send($type->toXml($this->company()), $type->code)));
+        return DimensionType::fromXml(
+            XmlElement::root($this->send($type->toXml($this->company()), $type->code)),
+            $this->twinfield->organisation(),
+        );
     }
 
     private function send(XmlBuilder $xml, string $code): ProcessXmlResult

@@ -8,6 +8,8 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Rate\RateType;
 use SolveBeam\Twinfield\VatCode\VatCodeType;
 
@@ -33,12 +35,55 @@ final readonly class CodeNameSearch
 {
     /**
      * @param FinderQuery $query Finder query with the type and its fixed options, e.g. `dimtype`.
-     * @param Closure(list<string>, int): T $mapRow Maps a Finder row (columns code, name, …) to a summary.
+     * @param Closure(FinderQuery): (Closure(list<string>, int): T) $mapper Gives the row mapper
+     *                                                                     for a query, with the
+     *                                                                     context it needs.
      */
-    public function __construct(
+    private function __construct(
         private FinderQuery $query,
-        private Closure $mapRow,
+        private Closure $mapper,
     ) {
+    }
+
+    /**
+     * Search for items of a company, e.g. dimensions or VAT codes. The summaries get the company
+     * the Finder searches in: the `company` option, or else the company of the client.
+     *
+     * @template TSummary of object
+     *
+     * @param FinderQuery $query Finder query with the type and its fixed options, e.g. `dimtype`.
+     * @param Closure(list<string>, int, CompanyReference): TSummary $mapRow Maps a Finder row
+     *                                                                       (columns code, name,
+     *                                                                       …) to a summary.
+     *
+     * @return self<TSummary>
+     */
+    public static function forCompany(FinderQuery $query, Closure $mapRow): self
+    {
+        return new self($query, static function (FinderQuery $query) use ($mapRow): Closure {
+            $company = $query->companyReference();
+
+            return static fn (array $row, int $index): object => $mapRow($row, $index, $company);
+        });
+    }
+
+    /**
+     * Search for items of the organisation: offices and users. The summaries get the
+     * organisation of the access token.
+     *
+     * @template TSummary of object
+     *
+     * @param Closure(list<string>, int, Organisation): TSummary $mapRow
+     *
+     * @return self<TSummary>
+     */
+    public static function forOrganisation(FinderQuery $query, Closure $mapRow): self
+    {
+        return new self($query, static function (FinderQuery $query) use ($mapRow): Closure {
+            $organisation = $query->organisation();
+
+            return static fn (array $row, int $index): object => $mapRow($row, $index, $organisation);
+        });
     }
 
     /**
@@ -48,7 +93,7 @@ final readonly class CodeNameSearch
      */
     public function pattern(string $pattern): self
     {
-        return new self($this->query->pattern($pattern), $this->mapRow);
+        return new self($this->query->pattern($pattern), $this->mapper);
     }
 
     /**
@@ -58,7 +103,7 @@ final readonly class CodeNameSearch
      */
     public function inCodeAndName(): self
     {
-        return new self($this->query->field(0), $this->mapRow);
+        return new self($this->query->field(0), $this->mapper);
     }
 
     /**
@@ -68,7 +113,7 @@ final readonly class CodeNameSearch
      */
     public function inCode(): self
     {
-        return new self($this->query->field(1), $this->mapRow);
+        return new self($this->query->field(1), $this->mapper);
     }
 
     /**
@@ -78,7 +123,7 @@ final readonly class CodeNameSearch
      */
     public function inName(): self
     {
-        return new self($this->query->field(2), $this->mapRow);
+        return new self($this->query->field(2), $this->mapper);
     }
 
     /**
@@ -89,7 +134,7 @@ final readonly class CodeNameSearch
      */
     public function inBankAccount(): self
     {
-        return new self($this->query->field(3), $this->mapRow);
+        return new self($this->query->field(3), $this->mapper);
     }
 
     /**
@@ -100,7 +145,7 @@ final readonly class CodeNameSearch
      */
     public function inAddress(): self
     {
-        return new self($this->query->field(4), $this->mapRow);
+        return new self($this->query->field(4), $this->mapper);
     }
 
     /**
@@ -110,7 +155,7 @@ final readonly class CodeNameSearch
      */
     public function modifiedSince(DateTimeInterface $since): self
     {
-        return new self($this->query->option('modifiedsince', $since->format('YmdHis')), $this->mapRow);
+        return new self($this->query->option('modifiedsince', $since->format('YmdHis')), $this->mapper);
     }
 
     /**
@@ -235,7 +280,7 @@ final readonly class CodeNameSearch
      */
     public function option(string $name, string $value): self
     {
-        return new self($this->query->option($name, $value), $this->mapRow);
+        return new self($this->query->option($name, $value), $this->mapper);
     }
 
     /**
@@ -245,7 +290,7 @@ final readonly class CodeNameSearch
      */
     public function limit(int $limit): self
     {
-        return new self($this->query->limit($limit), $this->mapRow);
+        return new self($this->query->limit($limit), $this->mapper);
     }
 
     /**
@@ -255,7 +300,7 @@ final readonly class CodeNameSearch
      */
     public function offset(int $offset): self
     {
-        return new self($this->query->offset($offset), $this->mapRow);
+        return new self($this->query->offset($offset), $this->mapper);
     }
 
     /**
@@ -265,11 +310,13 @@ final readonly class CodeNameSearch
      */
     public function get(): CodeNameSearchResult
     {
+        // The context first: a search without company fails before the request.
+        $mapRow = ($this->mapper)($this->query);
         $page = $this->query->get();
 
         return new CodeNameSearchResult(
             $page->totalRows,
-            array_map($this->mapRow, $page->rows, array_keys($page->rows)),
+            array_map($mapRow, $page->rows, array_keys($page->rows)),
         );
     }
 
@@ -280,8 +327,10 @@ final readonly class CodeNameSearch
      */
     public function all(): Generator
     {
+        $mapRow = ($this->mapper)($this->query);
+
         foreach ($this->query->all() as $index => $row) {
-            yield $index => ($this->mapRow)($row, $index);
+            yield $index => $mapRow($row, $index);
         }
     }
 

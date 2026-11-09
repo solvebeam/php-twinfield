@@ -7,12 +7,13 @@ namespace SolveBeam\Twinfield\Tests\Unit\Finder;
 use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;
+use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 
 final class FinderQueryTest extends TestCase
@@ -125,6 +126,29 @@ final class FinderQueryTest extends TestCase
         self::assertCount(5, $result->rows[0]);
     }
 
+    public function testSearchesInTheCompanyOfTheClient(): void
+    {
+        $query = $this->twinfield(new ReplayClient())->company('1002')->finder(FinderType::Dimensions);
+
+        self::assertEquals(TestTokens::company('1002'), $query->companyReference());
+    }
+
+    public function testSearchesInTheCompanyOfTheCompanyOption(): void
+    {
+        $query = $this->twinfield(new ReplayClient())->company('1002')->finder(FinderType::Dimensions);
+
+        self::assertEquals(TestTokens::company('1003'), $query->option('company', '1003')->companyReference());
+        self::assertEquals(TestTokens::company('1004'), $query->option('office', '1004')->companyReference(), 'Deprecated office option.');
+    }
+
+    public function testCompanyReferenceNeedsACompany(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Finder search DIM needs a company');
+
+        $this->twinfield(new ReplayClient())->finder(FinderType::Dimensions)->companyReference();
+    }
+
     public function testRejectsInvalidPaging(): void
     {
         $query = $this->twinfield(new ReplayClient())->finder(FinderType::Offices);
@@ -138,7 +162,7 @@ final class FinderQueryTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test/'), $http, $psr17, $psr17);
+        return Twinfield::create(TestTokens::provider('https://example.test/'), $http, $psr17, $psr17);
     }
 
     private function xpath(RequestInterface $request): DOMXPath

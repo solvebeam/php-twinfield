@@ -7,7 +7,7 @@ Shows which Twinfield user the access token belongs to.
 | Access token provider | Where the user code comes from |
 |---|---|
 | `RefreshTokenAccessTokenProvider` | The access token validation, cached together with the access token. |
-| `StaticAccessTokenProvider` | The `userCode` argument: `new StaticAccessTokenProvider($token, $clusterUrl, $validation->organisationUserCode)`. Without it, `userCode()` throws a `LogicException`. |
+| `StaticAccessTokenProvider` | The required `userCode` argument, e.g. with `StaticAccessTokenProvider::fromValidation($token, $validation)`. |
 
 See [Token info](../../getting-started/token-info/) for the access token validation itself.
 

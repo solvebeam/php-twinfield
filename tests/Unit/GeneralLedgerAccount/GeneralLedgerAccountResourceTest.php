@@ -11,7 +11,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Dimension\DimensionAlreadyExistsException;
 use SolveBeam\Twinfield\Dimension\DimensionNotFoundException;
@@ -22,6 +21,7 @@ use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\SubAnalysis;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -43,8 +43,8 @@ final class GeneralLedgerAccountResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new GeneralLedgerAccountSummary('8000', 'Omzet'),
-            new GeneralLedgerAccountSummary('8010', 'Omzet diensten'),
+            new GeneralLedgerAccountSummary(TestTokens::company(), '8000', 'Omzet'),
+            new GeneralLedgerAccountSummary(TestTokens::company(), '8010', 'Omzet diensten'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -62,8 +62,8 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $accounts = iterator_to_array($this->twinfield($http)->balanceSheetAccounts()->search()->includeHidden()->all(), false);
 
         self::assertEquals([
-            new GeneralLedgerAccountSummary('8000', 'Omzet', hidden: false),
-            new GeneralLedgerAccountSummary('8090', 'Omzet oud', hidden: true),
+            new GeneralLedgerAccountSummary(TestTokens::company(), '8000', 'Omzet', hidden: false),
+            new GeneralLedgerAccountSummary(TestTokens::company(), '8090', 'Omzet oud', hidden: true),
         ], $accounts);
         self::assertSame(
             ['dimtype' => 'BAS', 'includehidden' => '1'],
@@ -76,7 +76,7 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Finder general ledger account row 3 has no code or name: ["8000",""].');
 
-        GeneralLedgerAccountSummary::fromFinderRow(['8000', ''], 3);
+        GeneralLedgerAccountSummary::fromFinderRow(['8000', ''], 3, TestTokens::company());
     }
 
     public function testThrowsOnAnUnknownSearchStatus(): void
@@ -84,7 +84,7 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Finder general ledger account row 0 has status "deleted", expected active or hidden.');
 
-        GeneralLedgerAccountSummary::fromFinderRow(['8000', 'Omzet', 'deleted'], 0);
+        GeneralLedgerAccountSummary::fromFinderRow(['8000', 'Omzet', 'deleted'], 0, TestTokens::company());
     }
 
     public function testReadsAnAccount(): void
@@ -280,7 +280,7 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Balance sheet accounts belong to a company: use company() first.');
@@ -292,7 +292,7 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

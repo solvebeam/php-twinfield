@@ -936,16 +936,16 @@ echo $office->vatManagement->taxGroup?->code ?? 'no fiscal unity', PHP_EOL;
 $office->isLocked(OfficeField::DeclarationTimeframe);
 
 // A client for the office
-$company = $twinfield->company($office);           // also takes an OfficeSummary
+$company = $twinfield->company($office);           // also takes an OfficeSummary or a CompanyReference
 ```
 
-- `list()` and `search()` return `OfficeSummary` objects with `code`, `name`, `companyId` (the GUID of the company), `country`, `vatPeriod` and `startingQuarter`. Searches can match `inCode()`, `inName()` or `inCodeAndName()` (default). `withoutTaxGroup()` keeps only offices that are not in a fiscal unity, are no template and have no VAT declaration in progress.
+- `list()` and `search()` return `OfficeSummary` objects with `organisation`, `code`, `name`, `companyId` (the GUID of the company), `country`, `vatPeriod` and `startingQuarter`. Searches can match `inCode()`, `inName()` or `inCodeAndName()` (default). `withoutTaxGroup()` keeps only offices that are not in a fiscal unity, are no template and have no VAT declaration in progress.
 - `get()` returns an `Office`, `find()` returns null instead of throwing `OfficeNotFoundException` for an unknown code or an office the user has no access to. `current()` reads the office of the client and throws a `LogicException` when the client has no company.
 - `get()` also works on a client without company: Twinfield only reads an office with a company in the request, so the SDK uses the office itself.
 
 ### Read model
 
-An `Office` has `code`, `name`, `shortName`, `status`, `created`, `modified`, `touched`, the `user` who last changed it, and a section per part of the settings:
+An `Office` has `organisation`, `code`, `name`, `shortName`, `status`, `created`, `modified`, `touched`, the `user` who last changed it, and a section per part of the settings:
 
 | Property | Class | Contents |
 |---|---|---|
@@ -1032,9 +1032,11 @@ $users->delete('JSMITH', UserDeleteReason::NoLongerOperative, 'Left the company'
 The access token validation already says which user the token belongs to (`twf.organisationUserCode`). `AccessTokenProvider::userCode()` exposes it, so the SDK does not ask for it again:
 
 - `RefreshTokenAccessTokenProvider` takes it from the validation it calls anyway to find the cluster URL, and caches it with the access token.
-- `StaticAccessTokenProvider` takes it as third argument: `new StaticAccessTokenProvider($token, $validation->clusterUrl, $validation->organisationUserCode)`. Without it, `userCode()` and `users()->current()` throw a `LogicException`.
+- `StaticAccessTokenProvider` requires it, with the organisation: `StaticAccessTokenProvider::fromValidation($token, $validation)` takes both from the validation.
 
-Your own `AccessTokenProvider` implementation needs a `userCode()` method too.
+Your own `AccessTokenProvider` implementation needs `userCode()` and `organisation()` methods too.
+
+`User` and `UserSummary` carry the `organisation` of the access token: user codes are only unique within an organisation. See [Organisations](/guides/organisations/).
 
 ### Differences with the documentation
 

@@ -54,7 +54,7 @@ final readonly class AssetMethodResource
     {
         $query = $this->twinfield->finder(FinderType::AssetMethods);
 
-        return (new CodeNameSearch($query, AssetMethodSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, AssetMethodSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -69,7 +69,7 @@ final readonly class AssetMethodResource
         $xml->add($xml->root(), 'office', $this->company());
         $xml->add($xml->root(), 'code', $code);
 
-        return AssetMethod::fromXml(XmlElement::root($this->send($xml, $code)));
+        return AssetMethod::fromXml(XmlElement::root($this->send($xml, $code)), $this->twinfield->organisation());
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Integration\Office;
 
+use League\OAuth2\Client\Token\AccessToken;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\OfficeStatus;
 use SolveBeam\Twinfield\Office\OfficeSummary;
@@ -21,6 +22,24 @@ final class OfficeResourceTest extends IntegrationTestCase
 
         self::assertContains($this->environment->config->company(), $codes);
         self::assertSame(count($codes), count(array_unique($codes)), 'Every office is listed once.');
+    }
+
+    public function testOfficesBelongToTheOrganisationOfTheAccessToken(): void
+    {
+        $validation = $this->environment->session->provider()->getAccessTokenValidation(
+            new AccessToken(['access_token' => $this->environment->session->accessToken()]),
+        );
+        $organisation = $this->twinfield->organisation();
+
+        self::assertEquals($validation->organisation, $organisation);
+
+        foreach ($this->twinfield->offices()->list() as $office) {
+            self::assertTrue($office->organisation->equals($organisation));
+        }
+
+        $office = $this->twinfield->offices()->get($this->environment->config->company());
+
+        self::assertTrue($office->reference()->equals($this->twinfield->companyReference()));
     }
 
     public function testSearchesWithoutTaxGroup(): void

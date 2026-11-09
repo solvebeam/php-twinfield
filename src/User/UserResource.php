@@ -70,7 +70,7 @@ final readonly class UserResource
 
         $query = $this->twinfield->finder(FinderType::Users);
 
-        return (new CodeNameSearch($query, UserSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forOrganisation($query, UserSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -84,7 +84,7 @@ final readonly class UserResource
         $xml->add($xml->root(), 'type', 'user');
         $xml->add($xml->root(), 'code', $code);
 
-        return User::fromXml(XmlElement::root($this->send($xml, $code)));
+        return User::fromXml(XmlElement::root($this->send($xml, $code)), $this->twinfield->organisation());
     }
 
     /**

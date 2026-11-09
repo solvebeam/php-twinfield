@@ -31,8 +31,8 @@ final class AccessTokenValidationTest extends TestCase
 
         self::assertSame(1794165191, $validation->exp);
         self::assertSame('JDOE', $validation->organisationUserCode);
-        self::assertSame('EXAMPLE', $validation->organisationCode);
-        self::assertSame('0b6a5f6e-1111-2222-3333-444455556666', $validation->organisationId);
+        self::assertSame('EXAMPLE', $validation->organisation->code);
+        self::assertSame('0b6a5f6e-1111-2222-3333-444455556666', $validation->organisation->id);
         self::assertSame('https://api.accounting.twinfield.com', $validation->clusterUrl);
         self::assertEquals($validation, AccessTokenValidation::fromArray($validation->toArray()));
     }

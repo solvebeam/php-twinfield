@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\VatCode;
 use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\UnexpectedResponseException;
@@ -33,8 +34,8 @@ final readonly class VatCode
      * @param list<VatPercentage> $percentages In any order; at least one, each with its own start date.
      */
     public function __construct(
-        /** Company (office) code. The read response has none: it is the company of the request. */
-        public string $company,
+        /** Company (office) with its organisation. The read response has no company: it is the company of the request. */
+        public CompanyReference $company,
         /** VAT code, e.g. `VH`. */
         public string $code,
         public string $name,
@@ -53,7 +54,6 @@ final readonly class VatCode
         array $percentages,
     ) {
         $required = [
-            'company' => $company,
             'code' => $code,
             'name' => $name,
             'uid' => $uid,
@@ -100,9 +100,9 @@ final readonly class VatCode
     /**
      * From the `<vat>` element of a read response.
      *
-     * @param string $company The company of the request: the response does not have it.
+     * @param CompanyReference $company The company of the request: the response does not have it.
      */
-    public static function fromXml(XmlElement $vat, string $company): self
+    public static function fromXml(XmlElement $vat, CompanyReference $company): self
     {
         $percentages = array_map(VatPercentage::fromXml(...), $vat->child('percentages')->list('percentage'));
 

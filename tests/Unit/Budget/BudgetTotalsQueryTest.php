@@ -8,10 +8,10 @@ use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Budget\BudgetTotalsQuery;
 use SolveBeam\Twinfield\Budget\Regime;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 
 final class BudgetTotalsQueryTest extends TestCase
@@ -106,7 +106,7 @@ final class BudgetTotalsQueryTest extends TestCase
     private function query(string $code = '001', int $year = 2025): BudgetTotalsQuery
     {
         $psr17 = new Psr17Factory();
-        $tokens = new StaticAccessTokenProvider('token-123', 'https://example.test');
+        $tokens = TestTokens::provider('https://example.test');
         $twinfield = Twinfield::create($tokens, new ReplayClient(), $psr17, $psr17);
 
         return $twinfield->company('1000')->budgets()->totals($code, $year);

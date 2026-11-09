@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use LogicException;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -84,8 +85,11 @@ final readonly class DeletedTransactionResource
             'GetDeletedTransactionsResult',
         );
 
+        $company = $this->twinfield->companyReference();
+
         return array_map(
-            DeletedTransaction::fromResult(...),
+            static fn (ResultElement $transaction): DeletedTransaction
+                => DeletedTransaction::fromResult($transaction, $company),
             $result->list('DeletedTransactions', 'DeletedTransaction'),
         );
     }

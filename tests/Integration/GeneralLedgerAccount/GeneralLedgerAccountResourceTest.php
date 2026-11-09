@@ -41,7 +41,7 @@ final class GeneralLedgerAccountResourceTest extends IntegrationTestCase
         self::assertSame($type, $account->type);
         self::assertSame($summary->code, $account->code);
         self::assertSame($summary->name, $account->name);
-        self::assertSame($this->environment->config->company(), $account->company);
+        self::assertSame($this->environment->config->company(), $account->company->code);
         self::assertNotSame('', $account->uid);
         self::assertNotNull($account->modified, 'A read response has <modified>.');
     }

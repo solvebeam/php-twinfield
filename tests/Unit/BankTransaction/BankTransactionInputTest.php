@@ -16,6 +16,7 @@ use SolveBeam\Twinfield\BankBook\AutomaticBankProcessingSignUpState;
 use SolveBeam\Twinfield\BankBook\BankAccount;
 use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 use SolveBeam\Twinfield\Transaction\MatchSetInput;
@@ -371,7 +372,7 @@ final class BankTransactionInputTest extends TestCase
     private function bankBook(?string $account): BankBook
     {
         return new BankBook(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: 'ING',
             name: 'ING',
             shortName: null,

@@ -11,7 +11,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupAlreadyExistsException;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupDimension;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupInput;
@@ -20,6 +19,7 @@ use SolveBeam\Twinfield\DimensionGroup\DimensionGroupStatus;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupSummary;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -37,8 +37,8 @@ final class DimensionGroupResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new DimensionGroupSummary('KEY-ACCOUNTS', 'Key accounts'),
-            new DimensionGroupSummary('NL-CUSTOMERS', 'Dutch customers & partners'),
+            new DimensionGroupSummary(TestTokens::company(), 'KEY-ACCOUNTS', 'Key accounts'),
+            new DimensionGroupSummary(TestTokens::company(), 'NL-CUSTOMERS', 'Dutch customers & partners'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -68,7 +68,7 @@ final class DimensionGroupResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Finder dimension group row 3 has no code or name: ["NL",""].');
 
-        DimensionGroupSummary::fromFinderRow(['NL', ''], 3);
+        DimensionGroupSummary::fromFinderRow(['NL', ''], 3, TestTokens::company());
     }
 
     public function testReadsADimensionGroupAfterCheckingTheFinder(): void
@@ -92,7 +92,7 @@ final class DimensionGroupResourceTest extends TestCase
             $this->xmlRequest($http->requests[1]),
         );
 
-        self::assertSame('1000', $group->company);
+        self::assertEquals(TestTokens::company('1000'), $group->company);
         self::assertSame('NL-CUSTOMERS', $group->code);
         self::assertSame('Dutch customers & partners', $group->name);
         self::assertSame('NL customers', $group->shortName);
@@ -340,7 +340,7 @@ final class DimensionGroupResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
         $http = new ReplayClient();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Dimension groups belong to a company: use company() first.');
@@ -352,7 +352,7 @@ final class DimensionGroupResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

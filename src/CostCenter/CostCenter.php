@@ -8,6 +8,8 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -23,8 +25,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 final readonly class CostCenter
 {
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code in the format of the KPL dimension type of the company, e.g. `100`. */
         public string $code,
         /** Unique ID of the dimension, e.g. `5f3c2a1e-7b4d-4e8f-9a6b-1c2d3e4f5a6b`. */
@@ -40,7 +42,7 @@ final readonly class CostCenter
         /** Last change. Null when Twinfield leaves it out: it is not in every documented response. */
         public ?DateTimeImmutable $modified,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Cost center %s must not be empty.', $field));
             }
@@ -54,7 +56,7 @@ final readonly class CostCenter
     /**
      * From a `<dimension>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $dimension): self
+    public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {
         $type = $dimension->string('type');
 
@@ -63,7 +65,7 @@ final readonly class CostCenter
         }
 
         return new self(
-            company: $dimension->string('office'),
+            company: new CompanyReference($organisation, $dimension->string('office')),
             code: $dimension->string('code'),
             uid: $dimension->string('uid'),
             name: $dimension->string('name'),

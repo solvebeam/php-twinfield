@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use SolveBeam\Twinfield\Project\ProjectInput;
 use SolveBeam\Twinfield\Project\ProjectSummary;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\BillableSetting;
 use SolveBeam\Twinfield\Dimension\ChangeMode;
 use SolveBeam\Twinfield\Dimension\CodeSetting;
@@ -25,6 +24,7 @@ use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Dimension\Quantity;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -45,8 +45,8 @@ final class ProjectResourceTest extends TestCase
         self::assertSame(2, $page->totalRows);
         self::assertCount(2, $page);
         self::assertEquals([
-            new ProjectSummary('P0001', 'Website redesign'),
-            new ProjectSummary('P0002', 'Internal projects & overhead'),
+            new ProjectSummary(TestTokens::company(), 'P0001', 'Website redesign'),
+            new ProjectSummary(TestTokens::company(), 'P0002', 'Internal projects & overhead'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -104,7 +104,7 @@ final class ProjectResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Finder project row 0 has no code or name: ["1000"].');
 
-        ProjectSummary::fromFinderRow(['1000'], 0);
+        ProjectSummary::fromFinderRow(['1000'], 0, TestTokens::company());
     }
 
     public function testReadsAProjectWithAllSettings(): void
@@ -118,7 +118,7 @@ final class ProjectResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertSame('1000', $project->company);
+        self::assertEquals(TestTokens::company('1000'), $project->company);
         self::assertSame('P0001', $project->code);
         self::assertSame('6d7bfbf1-58ce-4699-9a78-4fb50bc545be', $project->uid);
         self::assertSame('Website redesign and API documentation for Example Holding', $project->name);
@@ -424,7 +424,7 @@ final class ProjectResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Projects belong to a company: use company() first.');
@@ -436,7 +436,7 @@ final class ProjectResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

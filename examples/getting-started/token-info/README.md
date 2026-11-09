@@ -5,10 +5,10 @@ Shows who an access token belongs to. Twinfield has two endpoints for this:
 - **Access token validation** (`getAccessTokenValidation()`): the organisation, the user, the expiry time and the **cluster URL** that API calls go to. `RefreshTokenAccessTokenProvider` uses it to find the cluster for you.
 - **User info** (`getResourceOwner()`): the claims of the scopes requested at login, as a `TwinfieldResourceOwner`.
 
-The SDK client reuses the user code of the validation: `$twinfield->userCode()` returns it without a request, and `$twinfield->users()->current()` reads that user (see [Current user](../../users/current-user/)). With a `StaticAccessTokenProvider`, pass it yourself:
+The SDK client reuses the organisation and user code of the validation: `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads that user (see [Current user](../../users/current-user/)). Every model the SDK reads carries the organisation, see [Organisations](/guides/organisations/). With a `StaticAccessTokenProvider`, take them from the validation:
 
 ```php
-$tokens = new StaticAccessTokenProvider($accessToken, $validation->clusterUrl, $validation->organisationUserCode);
+$tokens = StaticAccessTokenProvider::fromValidation($accessToken, $validation);
 ```
 
 ## Code
@@ -17,7 +17,7 @@ $tokens = new StaticAccessTokenProvider($accessToken, $validation->clusterUrl, $
 $token = new AccessToken(['access_token' => $accessToken]);
 
 $validation = $provider->getAccessTokenValidation($token);
-echo $validation->organisationCode, ' ', $validation->clusterUrl, PHP_EOL;
+echo $validation->organisation->code, ' ', $validation->clusterUrl, PHP_EOL;
 
 $user = $provider->getResourceOwner($token);
 echo $user->organisationUserCode, ' ', $user->organisationId, PHP_EOL;
@@ -48,6 +48,7 @@ Access token validation
   Expires:            2026-11-06 15:04:05
 
 Twinfield user
+  Organisation:       EXAMPLE
   Code:               JDOE
   Name:               John Doe
   Role:               Level 1

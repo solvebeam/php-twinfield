@@ -17,8 +17,11 @@ use Psr\Http\Message\RequestInterface;
 use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Office\NamedReference;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 use SolveBeam\Twinfield\User\InvitationStatus;
@@ -43,7 +46,7 @@ final class UserResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals(
-            [new UserSummary('ADMIN', 'Example Admin'), new UserSummary('JDOE', 'John Doe')],
+            [new UserSummary(TestTokens::organisation(), 'ADMIN', 'Example Admin'), new UserSummary(TestTokens::organisation(), 'JDOE', 'John Doe')],
             iterator_to_array($page),
         );
 
@@ -102,6 +105,12 @@ final class UserResourceTest extends TestCase
         self::assertSame(TemplateCompanyAccess::UseAndManage, $user->companies->templateCompanyAccess);
         self::assertTrue($user->hasAccessTo('1001'));
         self::assertFalse($user->hasAccessTo('2000'));
+        self::assertTrue($user->hasAccessTo(TestTokens::company('1001')));
+        self::assertFalse(
+            $user->hasAccessTo(new CompanyReference(new Organisation('7c9e6679-7425-40de-944b-e07fc1f90ae7', 'OTHER'), '1001')),
+            'Company 1001 of another organisation is another company.',
+        );
+        self::assertEquals(TestTokens::organisation(), $user->organisation);
 
         self::assertFalse($user->account->locked);
         self::assertEquals(new DateTimeImmutable('2026-11-06 15:51:35'), $user->account->lastLogon);
@@ -179,20 +188,6 @@ final class UserResourceTest extends TestCase
 
         self::assertSame('API', $user->code);
         self::assertSame('<read><type>user</type><code>API</code></read>', $this->xmlRequest($http->lastRequest()));
-    }
-
-    public function testCurrentNeedsTheUserCodeOfTheAccessToken(): void
-    {
-        $http = ReplayClient::fixture('user-read');
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('pass userCode to StaticAccessTokenProvider');
-
-        try {
-            $this->twinfield($http)->users()->current();
-        } finally {
-            self::assertCount(0, $http->requests);
-        }
     }
 
     public function testNeedsACompany(): void
@@ -414,7 +409,7 @@ final class UserResourceTest extends TestCase
         $psr17 = new Psr17Factory();
 
         return Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test', $userCode),
+            TestTokens::provider('https://example.test', $userCode ?? 'JDOE'),
             $http,
             $psr17,
             $psr17,

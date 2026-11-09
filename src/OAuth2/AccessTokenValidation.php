@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\OAuth2;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -19,18 +20,14 @@ final readonly class AccessTokenValidation
     public function __construct(
         /** Expiry time of the access token, as a Unix timestamp. */
         public int $exp,
-        /** Code of the organisation, e.g. `EXAMPLE`. */
-        public string $organisationCode,
-        /** GUID of the organisation. */
-        public string $organisationId,
+        /** The organisation of the token (`twf.organisationId` and `twf.organisationCode`). */
+        public Organisation $organisation,
         /** Code of the Twinfield user the token belongs to, e.g. `JDOE`: `$twinfield->users()->get()` reads it. */
         public string $organisationUserCode,
         /** Base URL of the cluster, e.g. `https://api.accounting.twinfield.com`. */
         public string $clusterUrl,
     ) {
         $required = [
-            'organisation code' => $organisationCode,
-            'organisation ID' => $organisationId,
             'organisation user code' => $organisationUserCode,
             'cluster URL' => $clusterUrl,
         ];
@@ -59,8 +56,10 @@ final readonly class AccessTokenValidation
 
         return new self(
             exp: $exp,
-            organisationCode: self::claim($data, 'twf.organisationCode'),
-            organisationId: self::claim($data, 'twf.organisationId'),
+            organisation: new Organisation(
+                id: self::claim($data, 'twf.organisationId'),
+                code: self::claim($data, 'twf.organisationCode'),
+            ),
             organisationUserCode: self::claim($data, 'twf.organisationUserCode'),
             clusterUrl: self::claim($data, 'twf.clusterUrl'),
         );
@@ -73,8 +72,8 @@ final readonly class AccessTokenValidation
     {
         return [
             'exp' => $this->exp,
-            'twf.organisationCode' => $this->organisationCode,
-            'twf.organisationId' => $this->organisationId,
+            'twf.organisationCode' => $this->organisation->code,
+            'twf.organisationId' => $this->organisation->id,
             'twf.organisationUserCode' => $this->organisationUserCode,
             'twf.clusterUrl' => $this->clusterUrl,
         ];

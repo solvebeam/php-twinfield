@@ -59,7 +59,7 @@ final readonly class RateResource
     {
         $query = $this->twinfield->finder(FinderType::Rates);
 
-        return (new CodeNameSearch($query, RateSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, RateSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**
@@ -74,7 +74,7 @@ final readonly class RateResource
         $xml->add($xml->root(), 'office', $this->company());
         $xml->add($xml->root(), 'code', $code);
 
-        return Rate::fromXml(XmlElement::root($this->send($xml, $code)));
+        return Rate::fromXml(XmlElement::root($this->send($xml, $code)), $this->twinfield->organisation());
     }
 
     /**

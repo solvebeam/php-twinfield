@@ -10,9 +10,9 @@ use DOMXPath;
 use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 use SolveBeam\Twinfield\Transaction\TransactionStatus;
@@ -281,7 +281,7 @@ final class SalesTransactionInputTest extends TestCase
         $psr17 = new Psr17Factory();
 
         return Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test'),
+            TestTokens::provider('https://example.test'),
             ReplayClient::fixture('vat-read'),
             $psr17,
             $psr17,

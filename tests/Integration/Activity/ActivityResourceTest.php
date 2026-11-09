@@ -30,7 +30,7 @@ final class ActivityResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $activity->code);
         self::assertSame($summary->name, $activity->name);
-        self::assertSame($this->environment->config->company(), $activity->company);
+        self::assertSame($this->environment->config->company(), $activity->company->code);
         self::assertNotSame('', $activity->uid);
     }
 

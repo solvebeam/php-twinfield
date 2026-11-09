@@ -10,7 +10,6 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\DimensionType\AddressLabels;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeCode;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeLevels;
@@ -18,6 +17,7 @@ use SolveBeam\Twinfield\DimensionType\DimensionTypeNotFoundException;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeSummary;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 
 final class DimensionTypeResourceTest extends TestCase
@@ -29,8 +29,8 @@ final class DimensionTypeResourceTest extends TestCase
         $page = $this->twinfield($http)->dimensionTypes()->search('*')->inName()->limit(10)->offset(20)->get();
 
         self::assertSame(8, $page->totalRows);
-        self::assertEquals(new DimensionTypeSummary('ACT', 'Activiteiten'), $page->items[0]);
-        self::assertEquals(new DimensionTypeSummary('PNL', 'Winst & verlies'), $page->items[6]);
+        self::assertEquals(new DimensionTypeSummary(TestTokens::company(), 'ACT', 'Activiteiten'), $page->items[0]);
+        self::assertEquals(new DimensionTypeSummary(TestTokens::company(), 'PNL', 'Winst & verlies'), $page->items[6]);
         self::assertSame(DimensionTypeCode::Projects, $page->items[7]->standardCode());
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -85,7 +85,7 @@ final class DimensionTypeResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertSame('1000', $type->company);
+        self::assertEquals(TestTokens::company('1000'), $type->company);
         self::assertSame('DEB', $type->code);
         self::assertSame(DimensionTypeCode::AccountsReceivable, $type->standardCode());
         self::assertSame('Debiteuren', $type->name);
@@ -169,7 +169,7 @@ final class DimensionTypeResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Dimension types belong to a company: use company() first.');
@@ -181,7 +181,7 @@ final class DimensionTypeResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

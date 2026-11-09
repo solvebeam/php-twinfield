@@ -17,18 +17,19 @@ $token = new AccessToken(['access_token' => $environment->session->accessToken()
 $validation = $provider->getAccessTokenValidation($token);
 
 echo 'Access token validation', PHP_EOL;
-echo '  Organisation code:  ', $validation->organisationCode, PHP_EOL;
-echo '  Organisation ID:    ', $validation->organisationId, PHP_EOL;
+echo '  Organisation code:  ', $validation->organisation->code, PHP_EOL;
+echo '  Organisation ID:    ', $validation->organisation->id, PHP_EOL;
 echo '  User code:          ', $validation->organisationUserCode, PHP_EOL;
 echo '  Cluster URL:        ', $validation->clusterUrl, PHP_EOL;
 echo '  Expires:            ', date('Y-m-d H:i:s', $validation->exp), PHP_EOL, PHP_EOL;
 
-// The SDK client knows the same user code, without another request:
-// RefreshTokenAccessTokenProvider keeps it from this validation.
+// The SDK client knows the same organisation and user code, without another request:
+// RefreshTokenAccessTokenProvider keeps them from this validation.
 $twinfield = $environment->client();
 $me = $twinfield->users()->current();
 
 echo 'Twinfield user', PHP_EOL;
+echo '  Organisation:       ', $twinfield->organisation()->code, PHP_EOL;
 echo '  Code:               ', $twinfield->userCode(), PHP_EOL;
 echo '  Name:               ', $me->name, PHP_EOL;
 echo '  Role:               ', $me->role->name, PHP_EOL, PHP_EOL;

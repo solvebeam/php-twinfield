@@ -30,7 +30,7 @@ final class RateResourceTest extends IntegrationTestCase
 
             self::assertSame($summary->code, $rate->code);
             self::assertSame($summary->name, $rate->name);
-            self::assertSame($this->twinfield->companyCode(), $rate->company);
+            self::assertSame($this->twinfield->companyCode(), $rate->company->code);
             self::assertNotEmpty($rate->prices);
 
             // edit() must give an input that Twinfield accepts; here only that it builds.

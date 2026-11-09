@@ -104,11 +104,16 @@ final readonly class OpenInvoiceSearch
      */
     public function get(): CodeNameSearchResult
     {
+        $company = $this->query->companyReference();
         $page = $this->query->get();
 
         return new CodeNameSearchResult(
             $page->totalRows,
-            array_map(OpenInvoice::fromFinderRow(...), $page->rows, array_keys($page->rows)),
+            array_map(
+                static fn (array $row, int $index): OpenInvoice => OpenInvoice::fromFinderRow($row, $index, $company),
+                $page->rows,
+                array_keys($page->rows),
+            ),
         );
     }
 
@@ -119,8 +124,10 @@ final readonly class OpenInvoiceSearch
      */
     public function all(): Generator
     {
+        $company = $this->query->companyReference();
+
         foreach ($this->query->all() as $index => $row) {
-            yield $index => OpenInvoice::fromFinderRow($row, $index);
+            yield $index => OpenInvoice::fromFinderRow($row, $index, $company);
         }
     }
 

@@ -49,7 +49,7 @@ final readonly class BudgetResource
     {
         $query = $this->twinfield->finder(FinderType::Budgets);
 
-        return (new CodeNameSearch($query, BudgetSummary::fromFinderRow(...)))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, BudgetSummary::fromFinderRow(...))->pattern($pattern);
     }
 
     /**

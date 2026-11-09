@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use LogicException;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeSummary;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 
@@ -226,7 +227,7 @@ final readonly class UserInput
     /**
      * Company opened after logging in; null lets the user choose a company after logging in.
      */
-    public function defaultCompany(string|Office|OfficeSummary|null $company): self
+    public function defaultCompany(string|CompanyReference|Office|OfficeSummary|null $company): self
     {
         return $this->set('office/default', $company === null ? null : self::companyCode($company));
     }
@@ -237,7 +238,7 @@ final readonly class UserInput
      *   $input->companies('1000', '1001');
      *   $input->companies(...$twinfield->offices()->list());
      */
-    public function companies(string|Office|OfficeSummary ...$companies): self
+    public function companies(string|CompanyReference|Office|OfficeSummary ...$companies): self
     {
         if ($companies === []) {
             throw new InvalidArgumentException('Give at least one company.');
@@ -253,7 +254,7 @@ final readonly class UserInput
      *     user, or set the full list with companies(). Sending only the new companies would
      *     take away access to the others.
      */
-    public function grantAccessTo(string|Office|OfficeSummary ...$companies): self
+    public function grantAccessTo(string|CompanyReference|Office|OfficeSummary ...$companies): self
     {
         return $this->companies(...$this->companyList('grantAccessTo'), ...$companies);
     }
@@ -263,7 +264,7 @@ final readonly class UserInput
      *
      * @throws LogicException When the company list is not set, see grantAccessTo().
      */
-    public function revokeAccessTo(string|Office|OfficeSummary ...$companies): self
+    public function revokeAccessTo(string|CompanyReference|Office|OfficeSummary ...$companies): self
     {
         $revoked = array_map(self::companyCode(...), $companies);
 
@@ -474,7 +475,7 @@ final readonly class UserInput
         ));
     }
 
-    private static function companyCode(string|Office|OfficeSummary $company): string
+    private static function companyCode(string|CompanyReference|Office|OfficeSummary $company): string
     {
         $code = is_string($company) ? $company : $company->code;
 

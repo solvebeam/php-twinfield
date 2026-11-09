@@ -13,11 +13,11 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\BankTransaction\BankTransaction;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
 use SolveBeam\Twinfield\Transaction\FailedTransaction;
@@ -43,7 +43,7 @@ final class BankTransactionResourceTest extends TestCase
         );
 
         $header = $transaction->header;
-        self::assertSame('1000', $header->company);
+        self::assertEquals(TestTokens::company('1000'), $header->company);
         self::assertSame('BNK', $header->dayBook);
         self::assertSame(202600045, $transaction->number());
         self::assertSame(TransactionStatus::Provisional, $header->status);
@@ -343,7 +343,7 @@ final class BankTransactionResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Bank transactions belong to a company');
@@ -445,7 +445,7 @@ final class BankTransactionResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function xmlRequest(RequestInterface $request): string

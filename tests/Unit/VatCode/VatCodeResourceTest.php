@@ -14,11 +14,11 @@ use Nyholm\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Office\NamedReference;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 use SolveBeam\Twinfield\VatCode\VatAccountInput;
@@ -46,8 +46,8 @@ final class VatCodeResourceTest extends TestCase
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
-            new VatCodeSummary('VH', 'BTW Hoog'),
-            new VatCodeSummary('VL', 'BTW 9%'),
+            new VatCodeSummary(TestTokens::company(), 'VH', 'BTW Hoog'),
+            new VatCodeSummary(TestTokens::company(), 'VL', 'BTW 9%'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -85,7 +85,7 @@ final class VatCodeResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertSame('1000', $vatCode->company, 'The response has no office: it is the company of the request.');
+        self::assertEquals(TestTokens::company('1000'), $vatCode->company, 'The response has no office: it is the company of the request.');
         self::assertSame('VH', $vatCode->code);
         self::assertSame('BTW Hoog', $vatCode->name);
         self::assertSame('V Hoog', $vatCode->shortName);
@@ -385,7 +385,7 @@ final class VatCodeResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
         $twinfield = Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test'),
+            TestTokens::provider('https://example.test'),
             new ReplayClient(),
             $psr17,
             $psr17,
@@ -402,7 +402,7 @@ final class VatCodeResourceTest extends TestCase
         $psr17 = new Psr17Factory();
 
         return Twinfield::create(
-            new StaticAccessTokenProvider('token-123', 'https://example.test'),
+            TestTokens::provider('https://example.test'),
             $http,
             $psr17,
             $psr17,

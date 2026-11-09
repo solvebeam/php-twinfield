@@ -23,10 +23,10 @@ use SolveBeam\Twinfield\AssetMethod\CalculationMethod;
 use SolveBeam\Twinfield\AssetMethod\DepreciationStart;
 use SolveBeam\Twinfield\AssetMethod\FreeTextField;
 use SolveBeam\Twinfield\AssetMethod\FreeTextType;
-use SolveBeam\Twinfield\Authentication\StaticAccessTokenProvider;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -41,8 +41,8 @@ final class AssetMethodResourceTest extends TestCase
         self::assertSame(2, $page->totalRows);
         self::assertCount(2, $page);
         self::assertEquals([
-            new AssetMethodSummary('CARS', 'Cars reducing balance'),
-            new AssetMethodSummary('MACHINE', 'Machines 5 jaar lineair'),
+            new AssetMethodSummary(TestTokens::company(), 'CARS', 'Cars reducing balance'),
+            new AssetMethodSummary(TestTokens::company(), 'MACHINE', 'Machines 5 jaar lineair'),
         ], iterator_to_array($page));
 
         $xpath = $this->soapXpath($http->lastRequest());
@@ -90,7 +90,7 @@ final class AssetMethodResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertSame('1000', $method->company);
+        self::assertEquals(TestTokens::company('1000'), $method->company);
         self::assertSame('MACHINE', $method->code);
         self::assertSame('Machines 5 jaar lineair', $method->name);
         self::assertSame('Machines', $method->shortName);
@@ -361,7 +361,7 @@ final class AssetMethodResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Asset methods belong to a company: use company() first.');
@@ -373,7 +373,7 @@ final class AssetMethodResourceTest extends TestCase
     {
         $psr17 = new Psr17Factory();
 
-        return Twinfield::create(new StaticAccessTokenProvider('token-123', 'https://example.test'), $http, $psr17, $psr17)->company('1000');
+        return Twinfield::create(TestTokens::provider('https://example.test'), $http, $psr17, $psr17)->company('1000');
     }
 
     private function soapXpath(RequestInterface $request): DOMXPath

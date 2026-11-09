@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\Period;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 
 /**
  * A period of a financial year, as returned by the PeriodService.
@@ -13,6 +14,8 @@ use InvalidArgumentException;
 final readonly class Period
 {
     public function __construct(
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Period number: 1–12 for a year with 12 periods, plus special periods such as 0 (opening balance). */
         public int $number,
         /** Name in the language of the company, e.g. `januari 2025`. */

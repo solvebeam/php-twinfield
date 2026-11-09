@@ -30,8 +30,10 @@ try {
 
 echo PHP_EOL;
 
-// 2. A classic service with an invalid access token.
-$invalid = Twinfield::create(new StaticAccessTokenProvider('invalid-token'));
+// 2. A classic service with an invalid access token (for the same organisation and user).
+$invalid = Twinfield::create(
+    new StaticAccessTokenProvider('invalid-token', $twinfield->organisation(), $twinfield->userCode()),
+);
 
 try {
     $invalid->offices()->list();

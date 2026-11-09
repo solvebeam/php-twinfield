@@ -84,7 +84,7 @@ final readonly class LoopbackLogin
         $this->prompt->line('[4/4] Saved ' . $this->config->tokenFile());
         $this->prompt->line();
         $this->prompt->line('Logged in to Twinfield.');
-        $this->prompt->line('  Organisation:  ' . $validation->organisationCode);
+        $this->prompt->line('  Organisation:  ' . $validation->organisation->code);
         $this->prompt->line('  User:          ' . $validation->organisationUserCode);
         $this->prompt->line('  Cluster:       ' . $validation->clusterUrl);
         $this->prompt->line();

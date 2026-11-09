@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\User;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -13,6 +14,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 final readonly class UserSummary
 {
     public function __construct(
+        /** Organisation the user belongs to; the user code is only unique within it. */
+        public Organisation $organisation,
         /** User code, e.g. `JDOE`. */
         public string $code,
         public string $name,
@@ -27,7 +30,7 @@ final readonly class UserSummary
      *
      * @param list<string> $row
      */
-    public static function fromFinderRow(array $row, int $index): self
+    public static function fromFinderRow(array $row, int $index, Organisation $organisation): self
     {
         if (count($row) !== 2 || $row[0] === '' || $row[1] === '') {
             throw new UnexpectedResponseException(sprintf(
@@ -37,6 +40,6 @@ final readonly class UserSummary
             ));
         }
 
-        return new self($row[0], $row[1]);
+        return new self($organisation, $row[0], $row[1]);
     }
 }

@@ -17,6 +17,7 @@ use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\Dimension\WayOfPayment;
 use SolveBeam\Twinfield\Supplier\Supplier;
 use SolveBeam\Twinfield\Supplier\SupplierInput;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Tests\Unit\Customer\CustomerTest;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 
@@ -137,7 +138,7 @@ final class SupplierInputTest extends TestCase
 
     public function testABankWithAnIdReplacesThatBank(): void
     {
-        $edit = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'))->edit();
+        $edit = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit();
         $bank = $edit->banks[1] ?? self::fail('Expected a second bank account.');
 
         $input = $edit->bank($bank->wayOfPayment(WayOfPayment::Cheque, PayAddress::Payer));
@@ -148,7 +149,7 @@ final class SupplierInputTest extends TestCase
 
     public function testRemovesAnAddressAndABank(): void
     {
-        $input = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'))->edit()->withoutAddress(2)->withoutBank(2);
+        $input = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit()->withoutAddress(2)->withoutBank(2);
 
         self::assertSame([1], array_map(static fn (AddressInput $address): ?int => $address->id, $input->addresses ?? []));
         self::assertSame([1], array_map(static fn (BankInput $bank): ?int => $bank->id, $input->banks ?? []));
@@ -156,7 +157,7 @@ final class SupplierInputTest extends TestCase
 
     public function testDeletesAPostingRule(): void
     {
-        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'))->edit()->withoutPostingRule(1)->toXml('1000')->toXml();
+        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit()->withoutPostingRule(1)->toXml('1000')->toXml();
 
         self::assertStringContainsString('<postingrule id="1" status="deleted"><currency>EUR</currency>', $xml);
     }

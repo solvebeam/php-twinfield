@@ -8,6 +8,8 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
 use SolveBeam\Twinfield\VatCode\VatCodeReference;
@@ -36,8 +38,8 @@ final readonly class GeneralLedgerAccount
      * @param list<string> $groups
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         public GeneralLedgerAccountType $type,
         /** Code in the format of the BAS or PNL dimension type of the company, e.g. `8000`. */
         public string $code,
@@ -74,7 +76,7 @@ final readonly class GeneralLedgerAccount
         /** Dimension group codes. */
         public array $groups,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('General ledger account %s must not be empty.', $field));
             }
@@ -94,7 +96,7 @@ final readonly class GeneralLedgerAccount
     /**
      * From a `<dimension>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $dimension): self
+    public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {
         $type = $dimension->enum('type', GeneralLedgerAccountType::class);
         $financials = $dimension->child('financials');
@@ -108,7 +110,7 @@ final readonly class GeneralLedgerAccount
         $vatCode = $financials->child('vatcode');
 
         return new self(
-            company: $dimension->string('office'),
+            company: new CompanyReference($organisation, $dimension->string('office')),
             type: $type,
             code: $dimension->string('code'),
             uid: $dimension->string('uid'),

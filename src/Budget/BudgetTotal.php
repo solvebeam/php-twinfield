@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\Budget;
 
 use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -20,6 +21,8 @@ final readonly class BudgetTotal
      * @param list<string> $groups
      */
     public function __construct(
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         public int $year,
         /** Period number, including special periods such as 0 (opening balance). */
         public int $period,
@@ -56,9 +59,10 @@ final readonly class BudgetTotal
     /**
      * From a `GetBudgetTotalResult` element.
      */
-    public static function fromResult(ResultElement $result): self
+    public static function fromResult(ResultElement $result, CompanyReference $company): self
     {
         return new self(
+            company: $company,
             year: $result->int('Year'),
             period: $result->int('Period'),
             generalLedgerAccount: $result->string('Dim1'),

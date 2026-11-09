@@ -30,7 +30,7 @@ final class VatCodeResourceTest extends IntegrationTestCase
 
             self::assertSame($summary->code, $vatCode->code);
             self::assertSame($summary->name, $vatCode->name);
-            self::assertSame($this->twinfield->companyCode(), $vatCode->company);
+            self::assertSame($this->twinfield->companyCode(), $vatCode->company->code);
             self::assertNotEmpty($vatCode->percentages);
 
             // edit() must give an input that Twinfield accepts; here only that it builds.

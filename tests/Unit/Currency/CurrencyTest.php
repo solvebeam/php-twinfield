@@ -11,6 +11,7 @@ use SolveBeam\Twinfield\Currency\Currency;
 use SolveBeam\Twinfield\Currency\CurrencyRate;
 use SolveBeam\Twinfield\Currency\CurrencyStatus;
 use SolveBeam\Twinfield\Currency\ExchangeRate;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class CurrencyTest extends TestCase
 {
@@ -58,7 +59,7 @@ final class CurrencyTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Currency USD has more than one rate on 2026-01-01.');
 
-        new Currency('1000', 'USD', 'US dollar', null, CurrencyStatus::Active, [
+        new Currency(TestTokens::company('1000'), 'USD', 'US dollar', null, CurrencyStatus::Active, [
             new CurrencyRate(new DateTimeImmutable('2026-01-01'), ExchangeRate::of('1.085')),
             new CurrencyRate(new DateTimeImmutable('2026-01-01'), ExchangeRate::of('1.09')),
         ]);
@@ -68,7 +69,7 @@ final class CurrencyTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new Currency('1000', 'USD', '', null, CurrencyStatus::Active, []);
+        new Currency(TestTokens::company('1000'), 'USD', '', null, CurrencyStatus::Active, []);
     }
 
     /**
@@ -82,6 +83,6 @@ final class CurrencyTest extends TestCase
             $list[] = new CurrencyRate(new DateTimeImmutable($startDate), ExchangeRate::of($rate));
         }
 
-        return new Currency('1000', 'USD', 'US dollar', '$', CurrencyStatus::Active, $list);
+        return new Currency(TestTokens::company('1000'), 'USD', 'US dollar', '$', CurrencyStatus::Active, $list);
     }
 }

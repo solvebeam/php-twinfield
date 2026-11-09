@@ -10,6 +10,7 @@ use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\Office\OfficeSummary;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\User\SingleSignOn;
 use SolveBeam\Twinfield\User\TemplateCompanyAccess;
 use SolveBeam\Twinfield\User\UserCulture;
@@ -34,12 +35,12 @@ final class UserInputTest extends TestCase
             ->federation('example.com', 'jdoe@example.com')
             ->expenseDefaults(generalLedgerAccount: '8000', activity: 'A001')
             ->weekHours(32)
-            ->timeAuthoriser(new UserSummary('JSMITH', 'Jane Smith'))
+            ->timeAuthoriser(new UserSummary(TestTokens::organisation(), 'JSMITH', 'Jane Smith'))
             ->disable(new DateTimeImmutable('2026-07-01 08:00'), new DateTimeImmutable('2026-08-01'))
             ->passwordExpires(new DateTimeImmutable('2027-12-31'))
             ->singleSignOn(SingleSignOn::Disabled)
             ->templateCompanyAccess(TemplateCompanyAccess::CompanyCreationOnly)
-            ->companies('1000', new OfficeSummary('1001', 'Example Trading B.V.', 'id', 'NL', 1, 21), '1000')
+            ->companies('1000', new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', 'id', 'NL', 1, 21), '1000')
             ->defaultCompany('1000')
             ->smsLogin('+31612345678')
             ->invite()

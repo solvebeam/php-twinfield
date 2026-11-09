@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Transaction;
 
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -36,15 +37,18 @@ abstract readonly class StatementTransaction
 
     /**
      * From a `<transaction>` element of a read or save response.
+     *
+     * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
+     *                                   of the response.
      */
-    public static function fromXml(XmlElement $transaction): static
+    public static function fromXml(XmlElement $transaction, Organisation $organisation): static
     {
         $header = $transaction->child('header');
         $linesElement = $transaction->child('lines');
         $lines = TransactionLines::fromXml($linesElement);
 
         return new static(
-            header: TransactionHeader::fromXml($transaction),
+            header: TransactionHeader::fromXml($transaction, $organisation),
             statementNumber: TransactionXml::optionalInt($header, 'statementnumber'),
             startValue: TransactionXml::optionalAmount($header, 'startvalue') ?? Amount::zero(),
             closeValue: TransactionXml::optionalAmount($header, 'closevalue') ?? Amount::zero(),

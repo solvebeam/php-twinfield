@@ -16,6 +16,7 @@ use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetStatus;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DimensionReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -25,7 +26,7 @@ final class FixedAssetTest extends TestCase
     {
         $asset = self::fixture('fixed-asset-read');
 
-        self::assertSame('1000', $asset->company);
+        self::assertEquals(TestTokens::company('1000'), $asset->company);
         self::assertSame('60010', $asset->code);
         self::assertSame('a3b86cfc-62ed-44cf-b1fe-bfb1ddb30e37', $asset->uid);
         self::assertSame('Delivery van', $asset->name);
@@ -251,6 +252,6 @@ final class FixedAssetTest extends TestCase
         $xml = (string) $document->getElementsByTagName('ProcessXmlStringResult')->item(0)?->textContent;
         $xml = $change === null ? $xml : $change($xml);
 
-        return FixedAsset::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)));
+        return FixedAsset::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)), TestTokens::organisation());
     }
 }

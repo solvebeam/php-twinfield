@@ -57,7 +57,7 @@ final readonly class ActivityResource
      */
     public function get(string $code): Activity
     {
-        return Activity::fromXml($this->requests->read($code));
+        return Activity::fromXml($this->requests->read($code), $this->requests->organisation());
     }
 
     /**
@@ -104,7 +104,10 @@ final readonly class ActivityResource
      */
     public function save(ActivityInput $activity): Activity
     {
-        return Activity::fromXml($this->requests->save($activity->toXml($this->requests->company())));
+        return Activity::fromXml(
+            $this->requests->save($activity->toXml($this->requests->company())),
+            $this->requests->organisation(),
+        );
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Transaction;
 
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -17,6 +18,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 final readonly class OpenInvoice
 {
     public function __construct(
+        /** Company the Finder searched in, with its organisation. */
+        public CompanyReference $company,
         public string $invoiceNumber,
         /** The amount the Finder gives; the documentation calls it the outstanding amount. Always positive. */
         public Amount $amount,
@@ -38,7 +41,7 @@ final readonly class OpenInvoice
      *
      * @param list<string> $row
      */
-    public static function fromFinderRow(array $row, int $index): self
+    public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {
         if (count($row) !== 5) {
             throw self::invalid($index, $row, 'expected 5 columns');
@@ -60,7 +63,7 @@ final readonly class OpenInvoice
             default => throw self::invalid($index, $row, 'debit/credit is not D or C'),
         };
 
-        return new self($invoiceNumber, Amount::fromString($amount), $relation, $name, $debitCredit);
+        return new self($company, $invoiceNumber, Amount::fromString($amount), $relation, $name, $debitCredit);
     }
 
     /**

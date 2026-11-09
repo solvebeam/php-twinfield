@@ -8,6 +8,8 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\Transaction\DimensionReference;
@@ -36,8 +38,8 @@ final readonly class FixedAsset
      * @param list<FixedAssetField> $lockedFields
      */
     public function __construct(
-        /** Company (office) code. */
-        public string $company,
+        /** Company (office) with its organisation; `$company->code` is the office code. */
+        public CompanyReference $company,
         /** Code in the format of the AST dimension type of the company, e.g. `60000`. */
         public string $code,
         /** Unique ID of the dimension, e.g. `a3b86cfc-62ed-44cf-b1fe-bfb1ddb30e37`. */
@@ -91,7 +93,7 @@ final readonly class FixedAsset
         /** Settings Twinfield does not allow to change now, e.g. the begin period of an active asset. */
         public array $lockedFields,
     ) {
-        foreach (['company' => $company, 'code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
+        foreach (['code' => $code, 'uid' => $uid, 'name' => $name] as $field => $value) {
             if ($value === '') {
                 throw new InvalidArgumentException(sprintf('Fixed asset %s must not be empty.', $field));
             }
@@ -125,7 +127,7 @@ final readonly class FixedAsset
     /**
      * From a `<dimension>` element of a read or save response.
      */
-    public static function fromXml(XmlElement $dimension): self
+    public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {
         $type = $dimension->string('type');
 
@@ -163,7 +165,7 @@ final readonly class FixedAsset
         $periods = $fixedAssets->child('nrofperiods');
 
         return new self(
-            company: $dimension->string('office'),
+            company: new CompanyReference($organisation, $dimension->string('office')),
             code: $dimension->string('code'),
             uid: $dimension->string('uid'),
             name: $dimension->string('name'),

@@ -8,6 +8,8 @@ use Closure;
 use LogicException;
 use SolveBeam\Twinfield\Finder\CodeNameSearch;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
@@ -39,7 +41,7 @@ final readonly class DimensionRequests
      *
      * @template T of object
      *
-     * @param Closure(list<string>, int): T $mapRow
+     * @param Closure(list<string>, int, CompanyReference): T $mapRow
      *
      * @return CodeNameSearch<T>
      */
@@ -47,7 +49,7 @@ final readonly class DimensionRequests
     {
         $query = $this->twinfield->finder(FinderType::Dimensions)->option('dimtype', $this->type);
 
-        return (new CodeNameSearch($query, $mapRow))->pattern($pattern);
+        return CodeNameSearch::forCompany($query, $mapRow)->pattern($pattern);
     }
 
     /**
@@ -118,6 +120,14 @@ final readonly class DimensionRequests
     {
         return $this->twinfield->companyCode()
             ?? throw new LogicException(sprintf('%s belong to a company: use company() first.', $this->plural));
+    }
+
+    /**
+     * The organisation of the access token, for the models of the responses.
+     */
+    public function organisation(): Organisation
+    {
+        return $this->twinfield->organisation();
     }
 
     private function changeStatus(string $code, DimensionStatus $status): DimensionStatus

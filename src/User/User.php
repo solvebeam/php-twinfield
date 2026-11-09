@@ -9,6 +9,8 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\Office\NamedReference;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeSummary;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -27,6 +29,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 final readonly class User
 {
     public function __construct(
+        /** Organisation the user belongs to; the user code is only unique within it. */
+        public Organisation $organisation,
         /** User code, e.g. `JDOE`. */
         public string $code,
         public string $name,
@@ -81,13 +85,17 @@ final readonly class User
 
     /**
      * From a `<user>` element of a read response.
+     *
+     * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
+     *                                   of the response.
      */
-    public static function fromXml(XmlElement $user): self
+    public static function fromXml(XmlElement $user, Organisation $organisation): self
     {
         $federation = $user->nullableChild('federation');
 
         try {
             return new self(
+                organisation: $organisation,
                 code: $user->string('code'),
                 name: $user->string('name'),
                 // Optional in Twinfield: empty when no short name is set.
@@ -105,7 +113,7 @@ final readonly class User
                 // Not documented; empty for users that are not invited.
                 accountEmail: $user->nullableString('wkemailaddress'),
                 smsLogin: SmsLogin::fromXml($user->child('smslogin')),
-                companies: CompanyAccess::fromXml($user->child('office')),
+                companies: CompanyAccess::fromXml($user->child('office'), $organisation),
                 account: UserAccount::fromXml($user->child('account')),
                 time: TimeSettings::fromXml($user->child('time')),
                 expenseDefaults: ExpenseDefaults::fromXml($user->child('expenses')),
@@ -128,7 +136,7 @@ final readonly class User
     /**
      * True when the user may open the company: always for a user with access to all companies.
      */
-    public function hasAccessTo(string|Office|OfficeSummary $company): bool
+    public function hasAccessTo(string|CompanyReference|Office|OfficeSummary $company): bool
     {
         return $this->companies->hasAccessTo($company);
     }

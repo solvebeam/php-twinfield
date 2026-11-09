@@ -25,6 +25,7 @@ use SolveBeam\Twinfield\Office\VatContact;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DimensionReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 use SolveBeam\Twinfield\Soap\SoapResponse;
@@ -298,7 +299,7 @@ final class OfficeTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new OfficeSummary('', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21);
+        new OfficeSummary(TestTokens::organisation(), '', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21);
     }
 
     public function testReferenceRejectsAnEmptyCode(): void
@@ -313,6 +314,6 @@ final class OfficeTest extends TestCase
         $http = ReplayClient::response($name);
         $result = ProcessXmlResult::fromSoapResponse(SoapResponse::fromHttpResponse($http));
 
-        return Office::fromXml(XmlElement::root($result));
+        return Office::fromXml(XmlElement::root($result), TestTokens::organisation());
     }
 }

@@ -12,6 +12,7 @@ use SolveBeam\Twinfield\CostCenter\CostCenter;
 use SolveBeam\Twinfield\CostCenter\CostCenterInput;
 use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
+use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class CostCenterInputTest extends TestCase
 {
@@ -41,7 +42,7 @@ final class CostCenterInputTest extends TestCase
     public function testEditKeepsCodeAndName(): void
     {
         $costCenter = new CostCenter(
-            company: '1000',
+            company: TestTokens::company('1000'),
             code: '100',
             uid: '5f3c2a1e-7b4d-4e8f-9a6b-1c2d3e4f5a6b',
             name: 'Sales',
@@ -88,6 +89,6 @@ final class CostCenterInputTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cost center uid must not be empty.');
 
-        new CostCenter('1000', '100', '', 'Sales', DimensionStatus::Active, false, DimensionBehaviour::Normal, 0, null);
+        new CostCenter(TestTokens::company('1000'), '100', '', 'Sales', DimensionStatus::Active, false, DimensionBehaviour::Normal, 0, null);
     }
 }

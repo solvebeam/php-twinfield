@@ -31,7 +31,7 @@ final class CostCenterResourceTest extends IntegrationTestCase
 
         self::assertSame($summary->code, $costCenter->code);
         self::assertSame($summary->name, $costCenter->name);
-        self::assertSame($this->environment->config->company(), $costCenter->company);
+        self::assertSame($this->environment->config->company(), $costCenter->company->code);
         self::assertNotSame('', $costCenter->uid);
         self::assertNotNull($costCenter->modified, 'A read response has <modified>.');
     }
