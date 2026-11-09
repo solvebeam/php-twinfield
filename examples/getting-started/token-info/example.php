@@ -23,6 +23,16 @@ echo '  User code:          ', $validation->organisationUserCode, PHP_EOL;
 echo '  Cluster URL:        ', $validation->clusterUrl, PHP_EOL;
 echo '  Expires:            ', date('Y-m-d H:i:s', $validation->exp), PHP_EOL, PHP_EOL;
 
+// The SDK client knows the same user code, without another request:
+// RefreshTokenAccessTokenProvider keeps it from this validation.
+$twinfield = $environment->client();
+$me = $twinfield->users()->current();
+
+echo 'Twinfield user', PHP_EOL;
+echo '  Code:               ', $twinfield->userCode(), PHP_EOL;
+echo '  Name:               ', $me->name, PHP_EOL;
+echo '  Role:               ', $me->role->name, PHP_EOL, PHP_EOL;
+
 // User info: the claims of the scopes you requested at login.
 $user = $provider->getResourceOwner($token);
 

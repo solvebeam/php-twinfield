@@ -165,8 +165,9 @@ final readonly class User
                 activity: $this->expenseDefaults->activity?->code,
             );
 
-        $disabledFrom = $this->account->disabledFrom;
-        $input = $disabledFrom === null ? $input->enable() : $input->disable($disabledFrom, $this->account->disabledUntil);
+        $input = $this->account->disabledFrom === null
+            ? $input->enable()
+            : $input->disable($this->account->disabledFrom, $this->account->disabledUntil);
 
         if ($this->type === UserType::AccountantCustomer) {
             $input = $input->demo($this->demo);

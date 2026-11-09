@@ -34,6 +34,10 @@ final class XmlAnonymizer
         // Fixed values of customers and suppliers
         'customersupplier', 'inherit', 'none', 'paymentfile', 'cheques', 'ToFileManager', 'ByEmail', 'core', 'b2b',
         'invoice', 'postal', 'contact', 'purchase', 'sales',
+        // Fixed values of users
+        'accountant', 'accountantcustomer', 'regular', 'nouse', 'useandmanage', 'useonlyforcompanycreation',
+        'NotInvited', 'Invited', 'Supervisor', 'primary', 'name', 'dropdown',
+        'cs-CZ', 'da-DK', 'de-DE', 'en-GB', 'fr-FR', 'hu-HU', 'nl-NL',
     ];
 
     /** Elements whose text is kept as is. */
@@ -45,6 +49,7 @@ final class XmlAnonymizer
     /** Attributes whose value is kept as is. */
     private const KEEP_ATTRIBUTES = [
         'result', 'msgtype', 'type', 'status', 'inuse', 'behaviour', 'field', 'label', 'hideforuser',
+        'iscurrentuser', 'level', 'locked', 'CurrentInvitationStatus',
     ];
 
     /** Elements whose text is always replaced, overriding all keep rules. */

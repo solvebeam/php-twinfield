@@ -5,6 +5,12 @@ Shows who an access token belongs to. Twinfield has two endpoints for this:
 - **Access token validation** (`getAccessTokenValidation()`): the organisation, the user, the expiry time and the **cluster URL** that API calls go to. `RefreshTokenAccessTokenProvider` uses it to find the cluster for you.
 - **User info** (`getResourceOwner()`): the claims of the scopes requested at login, as a `TwinfieldResourceOwner`.
 
+The SDK client reuses the user code of the validation: `$twinfield->userCode()` returns it without a request, and `$twinfield->users()->current()` reads that user (see [Current user](../../users/current-user/)). With a `StaticAccessTokenProvider`, pass it yourself:
+
+```php
+$tokens = new StaticAccessTokenProvider($accessToken, $validation->clusterUrl, $validation->organisationUserCode);
+```
+
 ## Code
 
 ```php
@@ -40,6 +46,11 @@ Access token validation
   User code:          JDOE
   Cluster URL:        https://api.accounting.twinfield.com
   Expires:            2026-11-06 15:04:05
+
+Twinfield user
+  Code:               JDOE
+  Name:               John Doe
+  Role:               Level 1
 
 User info
   sub:                      9d2e…

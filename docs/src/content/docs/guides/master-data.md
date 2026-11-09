@@ -27,6 +27,7 @@ Other master data works the same way, but is not a dimension:
 | [Dimension types](#dimension-types) | `$twinfield->dimensionTypes()` | Search, read, update (no create or delete) |
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 | [Offices](#offices) | `$twinfield->offices()` | List, search, read (read-only) |
+| [Users](#users) | `$twinfield->users()` | List, search, read (also the user of the access token), create, update, delete, activate |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 
@@ -905,6 +906,86 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - Outgoing intercompany relations have an `indirectoffice`, incoming ones a `transaction` instead. The name of the other office is empty when the user has no access to it.
 - The values of the declaration and ICP timeframes are not documented. Live offices have `0`, `1` (most) or `2`, and a starting quarter of `21` or `30`; the SDK returns them as numbers.
 
+## Users
+
+`$twinfield->users()` searches, reads, creates, updates and deletes the users of the organisation: who may log in, with which role, and to which companies. `current()` reads the user the access token belongs to.
+
+```php
+use SolveBeam\Twinfield\User\UserCulture;
+use SolveBeam\Twinfield\User\UserDeleteReason;
+use SolveBeam\Twinfield\User\UserInput;
+use SolveBeam\Twinfield\User\UserType;
+
+$users = $twinfield->users();
+
+// List and search (Finder type USR)
+foreach ($users->list() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+$users->search('*_AI')->inCode()->get();
+$users->search()->withMutualCompanies()->count();   // users that share a company with you
+
+// The user of the access token
+echo $twinfield->userCode(), PHP_EOL;              // no request
+$me = $users->current();
+
+// Read
+$user = $users->get('JDOE');                       // or find(): null when it does not exist
+$user->hasAccessTo('1000');
+$user->account->isDisabledAt(new DateTimeImmutable());
+
+// Create and invite (can cost money: Twinfield charges per user)
+$users->create(
+    UserInput::create('JSMITH', 'Jane Smith')
+        ->email('jane.smith@example.com')
+        ->type(UserType::Regular)
+        ->culture(UserCulture::Dutch)
+        ->role('LVL1')
+        ->companies('1000', '1001')
+        ->invite(),
+);
+
+// Update
+$users->update($user->edit()->weekHours(32)->grantAccessTo('1002'));
+
+// Delete: DeleteResult::Hidden when the user is used in transactions
+$users->delete('JSMITH', UserDeleteReason::NoLongerOperative, 'Left the company');
+```
+
+- Users belong to the organisation, not to a company, but Twinfield refuses user requests without a company in the header (SOAP fault 359). Any company works; the SDK throws a `LogicException` before sending when the client has none.
+- `search()` gives `UserSummary` results with code and name. `withMutualCompanies()` (option `mutualoffices=1`) and `withoutAccessRules()` (option `accessrules=0`, only with access to user management) widen the search.
+- Not found is a `UserNotFoundException`, an existing code on `create()` a `UserAlreadyExistsException`. `create()`, `update()` and `save()` read the user back after saving.
+- A `User` has `role` (`UserRole` with code, name and level), `type`, `culture`, `invitationStatus`, `companies` (`CompanyAccess`), `account` (`UserAccount`: locked, last logon, single sign-on, password expiry, disabled period), `smsLogin`, `time`, `expenseDefaults`, `federation` and who changed it last. The password is never returned.
+- A user is either `restricted` to the listed companies, or has access to all companies of the organisation with an empty list.
+- `UserInput` sends only what you set. `edit()` leaves out what Twinfield locks or what would change access by accident: the password, the invitation status, `demo` for users that are no client of an accountant, the password expiry with single sign-on, and the company list of users with access to all companies. `grantAccessTo()` and `revokeAccessTo()` therefore need a company list, and throw a `LogicException` without one.
+- Inconsistent input throws before sending: `invite()` without `culture()` and `role()`, `demo()` for another type than `UserType::AccountantCustomer`, or a password expiry date with single sign-on.
+
+### The user of the access token
+
+The access token validation already says which user the token belongs to (`twf.organisationUserCode`). `AccessTokenProvider::userCode()` exposes it, so the SDK does not ask for it again:
+
+- `RefreshTokenAccessTokenProvider` takes it from the validation it calls anyway to find the cluster URL, and caches it with the access token.
+- `StaticAccessTokenProvider` takes it as third argument: `new StaticAccessTokenProvider($token, $validation->clusterUrl, $validation->organisationUserCode)`. Without it, `userCode()` and `users()->current()` throw a `LogicException`.
+
+Your own `AccessTokenProvider` implementation needs a `userCode()` method too.
+
+### Differences with the documentation
+
+The read model is based on the responses of all 18 users of a live organisation (9 November 2026). Documentation: [Users](https://developers.twinfield.com/documentation/api/master-data/users/).
+
+- Reads and Finder searches without company are refused with SOAP fault 359, although users are not part of a company.
+- `restricted` in `<office>` is documented as "not in use". Live it is `false` with an empty `<offices>` for users with access to all companies, and `true` with the list for the others.
+- `templatecompanyaccess` is returned in lower case (`nouse`, `useandmanage`), not as documented (`NoUse`, `UseAndManage`). The SDK reads both and sends lower case.
+- The response has `acceptExtraCost` in camel case; the documentation writes `acceptextracost`, which the SDK sends. It is not part of the read model: it only matters when changing the role.
+- Not in the documentation: `wkemailaddress` (the email address of the Wolters Kluwer account, read as `accountEmail`), `account/expireperiod` (always `0`), `invitationstatus/@CurrentInvitationStatus` (same as the text), and `touched`, `created` and `modified` a second time at the end.
+- `support` ("not in use") is `none` or `primary`, and `@level` on `<user>` is `Supervisor` for every user. Their meaning is unknown, so the SDK does not read them.
+- `<password>` and `<federation>` are never returned: federation is only enabled on request.
+- The Finder returns two columns, code and name. With `mutualoffices=1` it returned 31 users instead of 18; the extra users can be read, so the default search leaves out users of the organisation.
+- Not found is `<user status="default" msgtype="error" msg="…" result="0">` with only the code.
+
+Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+
 ## Examples
 
 - [List activities](/examples/activities/list-activities/)
@@ -979,3 +1060,10 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - [Create supplier](/examples/suppliers/create-supplier/)
 - [Update supplier](/examples/suppliers/update-supplier/)
 - [Delete supplier](/examples/suppliers/delete-supplier/)
+- [List users](/examples/users/list-users/)
+- [Search users](/examples/users/search-users/)
+- [Read user](/examples/users/read-user/)
+- [Current user](/examples/users/current-user/)
+- [Create user](/examples/users/create-user/)
+- [Update user](/examples/users/update-user/)
+- [Delete user](/examples/users/delete-user/)

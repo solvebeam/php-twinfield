@@ -44,6 +44,8 @@ Twinfield supports the following OAuth 2.0 scopes:
 | `readVat` | Grants read access to VAT Codes API endpoints. | - |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
 
+The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL and the user the token belongs to; `$twinfield->userCode()` returns that user code without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/).
+
 ## Example with scopes
 
 ```php

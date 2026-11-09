@@ -22,6 +22,7 @@ final class RefreshTokenAccessTokenProviderTest extends TestCase
 
         self::assertSame('access-1', $tokens->accessToken());
         self::assertSame('https://api.accounting.twinfield.com', $tokens->clusterUrl());
+        self::assertSame('JDOE', $tokens->userCode(), 'The user code comes from the same validation.');
         self::assertSame('access-1', $tokens->accessToken());
         self::assertSame(0, $mock->count(), 'Token and validation requests were both used, and only once.');
         self::assertSame('refresh-2', $tokens->refreshToken(), 'A new refresh token from Twinfield is kept.');
@@ -37,17 +38,32 @@ final class RefreshTokenAccessTokenProviderTest extends TestCase
         $second = new RefreshTokenAccessTokenProvider($this->provider($emptyMock), 'refresh-1', $cache);
 
         self::assertSame('access-1', $second->accessToken(), 'Second instance uses the cached access token.');
+        self::assertSame('JDOE', $second->userCode(), 'The user code is cached with the access token.');
     }
 
     public function testRefreshesWhenCachedTokenIsAboutToExpire(): void
     {
         $cache = new ArrayAdapter();
         $item = $cache->getItem('twinfield.access_token.' . hash('sha256', 'refresh-1'));
-        $item->set(['token' => 'old', 'expires' => time() + 10, 'clusterUrl' => 'https://example.test']);
+        $item->set(['token' => 'old', 'expires' => time() + 10, 'clusterUrl' => 'https://example.test', 'userCode' => 'JDOE']);
         $cache->save($item);
 
         $tokens = new RefreshTokenAccessTokenProvider($this->provider($this->mock()), 'refresh-1', $cache);
 
+        self::assertSame('access-1', $tokens->accessToken());
+    }
+
+    public function testRefreshesACachedTokenWithoutUserCode(): void
+    {
+        $cache = new ArrayAdapter();
+        $item = $cache->getItem('twinfield.access_token.' . hash('sha256', 'refresh-1'));
+        // Cache entry of a version before userCode().
+        $item->set(['token' => 'old', 'expires' => time() + 3600, 'clusterUrl' => 'https://example.test']);
+        $cache->save($item);
+
+        $tokens = new RefreshTokenAccessTokenProvider($this->provider($this->mock()), 'refresh-1', $cache);
+
+        self::assertSame('JDOE', $tokens->userCode());
         self::assertSame('access-1', $tokens->accessToken());
     }
 
@@ -64,6 +80,8 @@ final class RefreshTokenAccessTokenProviderTest extends TestCase
                 'exp' => time() + 3600,
                 'twf.clusterUrl' => 'https://api.accounting.twinfield.com/',
                 'twf.organisationCode' => 'EXAMPLE',
+                'twf.organisationId' => '0b6a5f6e-1111-2222-3333-444455556666',
+                'twf.organisationUserCode' => 'JDOE',
             ])),
         ]);
     }

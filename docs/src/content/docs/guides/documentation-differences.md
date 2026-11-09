@@ -66,3 +66,4 @@ The differences for the other resources are in the [master data guide](/guides/m
 | [General ledger accounts](/guides/master-data/#general-ledger-accounts) (`BAS`, `PNL`) | Empty child validations and groups left out; VAT code without attributes; hidden accounts | About 230 accounts on two test companies |
 | [Rates](/guides/master-data/#rates) | Open end date 2999-12-31; prices with four decimals; `unit` not as documented; Finder type `TRT` | 459 live time rates |
 | [Offices](/guides/master-data/#offices) | The responses are not documented; booleans `True`/`False`; undocumented timeframe values | 247 live offices |
+| [Users](/guides/master-data/#users) | Needs a company; `restricted` is in use; lower case `templatecompanyaccess`; `acceptExtraCost` in camel case; undocumented `wkemailaddress` | All 18 users of a live organisation |

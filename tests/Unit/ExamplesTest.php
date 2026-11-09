@@ -68,6 +68,9 @@ final class ExamplesTest extends TestCase
         'suppliers/create-supplier',
         'suppliers/delete-supplier',
         'suppliers/update-supplier',
+        'users/create-user',
+        'users/delete-user',
+        'users/update-user',
     ];
 
     /**

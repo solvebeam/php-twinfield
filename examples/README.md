@@ -159,6 +159,16 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update rate price](rates/update-rate-price/): new prices from a date with `newPriceFrom()` (changes data).
 - [Delete rate](rates/delete-rate/): delete or hide a rate (changes data).
 
+## Users
+
+- [List users](users/list-users/): code and name of all users of the organisation.
+- [Search users](users/search-users/): search by code, and the users that share a company with you.
+- [Read user](users/read-user/): role, login status, companies and Time & Expenses settings of one user.
+- [Current user](users/current-user/): the user of the access token, with `userCode()` and `users()->current()`.
+- [Create user](users/create-user/): create and invite a user (changes data, can cost money).
+- [Update user](users/update-user/): change a user with `edit()`, and grant or revoke company access (changes data).
+- [Delete user](users/delete-user/): delete or hide a user with a reason (changes data).
+
 ## Suppliers
 
 - [List suppliers](suppliers/list-suppliers/): code and name of all suppliers, or those matching a pattern.

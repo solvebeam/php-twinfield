@@ -1,5 +1,35 @@
 # TODO
 
+## Users: verify writing live
+
+Users (Finder `USR`, XML `user`) are read-only tested live: all 18 users of the organisation parse,
+`current()` matches `@iscurrentuser`, and `edit()` builds for every user. The fixtures follow the
+live structure with fictitious values. Creating, updating and deleting are not yet tested live.
+
+```sh
+composer test:write -- --company=1002_3 --filter=User
+```
+
+The write test only updates the user of the access token and restores it: creating a user can cost
+money (Twinfield charges per user). Create and delete a user by hand with
+`examples/users/{create,delete}-user` on a test organisation, if possible.
+
+To check:
+
+- Does an update with `$user->edit()` change nothing? Does Twinfield clear elements that are left
+  out (the write test compares `edit()` before and after)?
+- Does Twinfield accept `acceptextracost` (documented) or only `acceptExtraCost` (as returned)?
+- Does it accept the lower case `templatecompanyaccess` that it returns (`useandmanage`), or only the
+  documented `UseAndManage`?
+- Does sending `<offices>` set `restricted` to true, and how do you give a restricted user access to
+  all companies again? The SDK never sends a list for users with access to all companies.
+- What is the save response and the delete response? `save()` reads the user back, so it does not
+  depend on it; `delete()` reads `@status` (`deleted` or `hide`).
+- Do `invite()`, `password()`, `disable()` and `deletereason` work as documented?
+- What do `support` (`none`, `primary`) and `@level` (`Supervisor`) mean? Not read yet.
+
+Then run the write examples and replace the illustrative output in their READMEs with the real output.
+
 ## Suppliers: verify writing live
 
 The suppliers (`CRD`) are tested offline with fixtures and read-only live: all 184 suppliers of

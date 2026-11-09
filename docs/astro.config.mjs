@@ -112,6 +112,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/suppliers' } }],
 				},
 				{
+					label: 'Users',
+					items: [{ autogenerate: { directory: 'examples/users' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

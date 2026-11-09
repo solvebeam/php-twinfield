@@ -111,9 +111,11 @@ final readonly class UserInput
      */
     public function shortName(?string $shortName): self
     {
-        $shortName = $shortName === '' ? null : $shortName;
+        if ($shortName === null || $shortName === '') {
+            return $this->set('shortname', null);
+        }
 
-        return $this->set('shortname', $shortName === null ? null : XmlValue::maxLength('user short name', $shortName, 20));
+        return $this->set('shortname', XmlValue::maxLength('user short name', $shortName, 20));
     }
 
     /**
@@ -425,14 +427,21 @@ final readonly class UserInput
             throw new LogicException(sprintf('Inviting user %s needs culture() and role().', $this->code));
         }
 
-        if ($value('demo') === 'true' && $value('type') !== null && $value('type') !== UserType::AccountantCustomer->value) {
+        $type = $value('type');
+
+        if ($value('demo') === 'true' && $type !== null && $type !== UserType::AccountantCustomer->value) {
             throw new LogicException(sprintf('User %s: demo() is only for UserType::AccountantCustomer.', $this->code));
         }
 
         $singleSignOn = $value('account/sso');
 
-        if ($value('account/expire') !== null && $singleSignOn !== null && $singleSignOn !== SingleSignOn::Disabled->value) {
-            throw new LogicException(sprintf('User %s: a password expiry date does not go with single sign-on.', $this->code));
+        $withSingleSignOn = $singleSignOn !== null && $singleSignOn !== SingleSignOn::Disabled->value;
+
+        if ($value('account/expire') !== null && $withSingleSignOn) {
+            throw new LogicException(sprintf(
+                'User %s: a password expiry date does not go with single sign-on.',
+                $this->code,
+            ));
         }
     }
 
