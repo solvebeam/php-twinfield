@@ -20,6 +20,10 @@ enum FinderType: string
     case DimensionGroups = 'GRP';
     case DimensionTypes = 'DMT';
     case Dimensions = 'DIM';
+
+    /** Invoice types of the Classic invoicing module; see SalesInvoiceResource::invoiceTypes(). */
+    case InvoiceTypes = 'INV';
+
     case Offices = 'OFF';
 
     /** Open (unpaid) invoices: sales and purchase; see SalesTransactionResource::openInvoices(). */

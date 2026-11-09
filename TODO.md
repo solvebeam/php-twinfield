@@ -351,12 +351,47 @@ Not yet implemented: the exchange rate and base and reporting amounts of the tot
 Then run the examples in `examples/sales-transactions/{create-sales-transaction,credit-note}` with
 `--save`, and replace the dry-run output in their READMEs with the real output.
 
-## Sales invoices: verify the ProcessXml example live
+## Sales invoices: verify writing live
 
-`examples/process-xml/create-sales-invoice` is built from the Twinfield documentation and only run
-as dry run so far.
+Sales invoices (`salesinvoice`, Classic invoicing module) are read live: 40 invoices of type
+`FACTUUR` of one test company (2010–2011, concept and final), each read with the SDK and turned into
+an input with `edit()`, plus Finder `INV` and the not found response (`composer test:live --
+--filter=SalesInvoice` with `TWINFIELD_SALES_INVOICES=FACTUUR:1,FACTUUR:5`). Writing is only tested
+offline: the save, calculate and error fixtures follow the documented response, with fictitious
+values.
 
-- Run it with `--save` against a test company and replace the dry-run output in its README with the
-  real output.
-- Does invoice type `FACTUUR` with article `0` and `unitspriceexcl` work in a default company? Can
-  a concept invoice be deleted with the API, so the example can clean up?
+```sh
+composer test:write -- --company=1002 --filter=SalesInvoice
+```
+
+The write test leaves a concept invoice behind: the API can't delete sales invoices. Set
+`TWINFIELD_WRITE_FINAL_INVOICE=1` to also make it final; that books a sales transaction that can't
+be deleted either.
+
+To check:
+
+- The shape of the save response: does it have all elements of the read response (`SalesInvoice`
+  requires them), with the invoice number? Record it to replace `sales-invoice-save.xml`.
+- `calculateonly="true"`: does Twinfield really save nothing, and what does the response look like
+  (no invoice number)? Replace `sales-invoice-calculate.xml`. If it saves nothing, the write guard
+  could allow it, so `calculate()` can be tested with `composer test:live`.
+- The one-off item `0`: what are `subarticle` and `description` in the response?
+  `SalesInvoiceLine::$subarticle` is required, as in all live lines so far.
+- Prices: is a `unitspriceexcl` ignored or refused when the price of the article can't be changed?
+  The documentation example sends `83.94` for 2 units and gets `41.97` back. `edit()` sends the
+  prices back: does an update with an unchanged price work?
+- Update: are lines left out of the request removed (`removeLine()`), or kept?
+- Are `invoicedate`, `duedate`, `bank` and `paymentmethod` really optional on create? What does
+  Twinfield set without them?
+- Credit invoice: a negative `quantity`, or an invoice type of its own?
+- An invoice type with prices including VAT (`unitspriceinc`): none in the test companies.
+- Performance type and date on lines and header (ICT): never seen live.
+- Is the sub-article in the documentation (`501.01`) a valid code? The SDK only checks the length
+  of article codes.
+
+Then run `examples/sales-invoices/create-sales-invoice` with `--calculate` and `--save`, and
+`finalize-sales-invoice` with `--save`, and replace the illustrative output in their READMEs with
+the real output.
+
+Not yet implemented: articles (items) themselves (`<article>`, Finder `ART`). The old manual (`manuals/Webservices-Manual-Sales-Invoices.pdf`) is not read yet: it needs
+`pdftotext` (`brew install poppler`).

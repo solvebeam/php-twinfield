@@ -81,6 +81,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/sales-transactions' } }],
 				},
 				{
+					label: 'Sales invoices',
+					items: [{ autogenerate: { directory: 'examples/sales-invoices' } }],
+				},
+				{
 					label: 'Deleted transactions',
 					items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }],
 				},

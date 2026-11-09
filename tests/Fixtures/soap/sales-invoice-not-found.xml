@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><ProcessXmlStringResponse xmlns="http://www.twinfield.com/"><ProcessXmlStringResult>&lt;salesinvoice msgtype="error" msg="Factuur 999999999 van type FACTUUR bestaat niet." result="0"/&gt;</ProcessXmlStringResult></ProcessXmlStringResponse></soap:Body></soap:Envelope>

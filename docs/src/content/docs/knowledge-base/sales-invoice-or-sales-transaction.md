@@ -44,6 +44,7 @@ When your software sends sales to Twinfield, there are two options: book a **sal
 | What Twinfield gets | The booking: customer, revenue, VAT | Customer, articles, quantities |
 | In the general ledger | Right after the import | After the invoice is final (_gejournaliseerd_) |
 | Request | `<transaction>` with day book `VRK` | `<salesinvoice>` |
+| With this SDK | `$twinfield->salesTransactions()` | `$twinfield->salesInvoices()` |
 | Module | – | The Classic invoicing module only, not the new sales module (the blue tiles) |
 
 Either way, the result is a sales transaction in the general ledger. You can then match payments against it, report open items, and send reminders.
@@ -51,8 +52,6 @@ Either way, the result is a sales transaction in the general ledger. You can the
 The links in the article go to the old API reference. The current documentation is on the Twinfield developer portal: [sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/) and [sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/).
 
 ## With this SDK
-
-The SDK has no resource for sales invoices yet: send them with [`processXml()`](/guides/process-xml/) and build the XML with `XmlBuilder`, so values are escaped.
 
 ### Sales transaction
 
@@ -79,33 +78,35 @@ Full examples: [Create sales transaction](/examples/sales-transactions/create-sa
 
 ### Sales invoice
 
-Twinfield makes the invoice: send a `<salesinvoice>` with an invoice type, the customer and a line per article. Twinfield calculates the amounts and VAT. With status `concept` the invoice can still be changed. With `final` Twinfield books the sales transaction and returns it in `financials`.
+Twinfield makes the invoice: `$twinfield->salesInvoices()` sends a `<salesinvoice>` with an invoice type, the customer and a line per article. Twinfield gives the invoice number and calculates the amounts and VAT. The invoice is a concept, so it can still be changed. Making it final is the _journaliseren_ of the article: Twinfield then books the sales transaction. See [Sales invoices](/guides/transactions/#sales-invoices) in the transactions guide.
 
 ```php
-use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
+use SolveBeam\Twinfield\SalesInvoice\PaymentMethod;
+use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceInput;
 
-$xml = XmlBuilder::create('salesinvoice');
+$invoices = $twinfield->salesInvoices();
 
-$header = $xml->add($xml->root(), 'header');
-$xml->add($header, 'office', '1000');
-$xml->add($header, 'invoicetype', 'FACTUUR');
-$xml->add($header, 'customer', '1000');
-$xml->add($header, 'status', 'concept');
-$xml->add($header, 'paymentmethod', 'bank');
+$input = SalesInvoiceInput::create('FACTUUR', customer: '1000')
+    ->paymentMethod(PaymentMethod::Bank)
+    // The one-off item 0: your own description and price, without VAT.
+    ->oneOff('Consultancy November', '100.00', vatCode: 'VH');
 
-$line = $xml->add($xml->add($xml->root(), 'lines'), 'line', attributes: ['id' => '1']);
-$xml->add($line, 'article', '0');
-$xml->add($line, 'quantity', '1');
-$xml->add($line, 'units', '1');
-$xml->add($line, 'unitspriceexcl', '100.00');
+// Check and calculate it first, without saving.
+echo 'Total: ', $invoices->calculate($input)->totals->valueInc, PHP_EOL;
 
-$result = $twinfield->processXml($xml->toXml());
+$invoice = $invoices->create($input);
+$invoice = $invoices->finalize($invoice->invoiceType, $invoice->invoiceNumber);
 
-echo 'Invoice ', $result->xpath()->evaluate('string(/salesinvoice/header/invoicenumber)'), PHP_EOL;
+// The sales transaction in the general ledger.
+$transaction = $invoices->salesTransaction($invoice);
+
+echo 'Invoice ', $invoice->invoiceNumber, ' booked as ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;
 ```
 
-Full example: [Create sales invoice](/examples/process-xml/create-sales-invoice/).
+Call `final()` on the input to make the invoice final when you create it. A final invoice can't be changed, and the API can't delete sales invoices. As the article says, this only works for the Classic invoicing module: there is no web service for the new sales module (the blue tiles).
+
+Full examples: [Create sales invoice](/examples/sales-invoices/create-sales-invoice/), [Finalize sales invoice](/examples/sales-invoices/finalize-sales-invoice/), [Read sales invoice](/examples/sales-invoices/read-sales-invoice/) and [List invoice types](/examples/sales-invoices/list-invoice-types/).
 
 ### After the booking
 
-With the sales transaction in the general ledger, the SDK can already match a payment on the bank statement against it. Give the customer and invoice number to `receive()`. See [Split payment over invoices](/examples/bank-transactions/split-payment-over-invoices/).
+With the sales transaction in the general ledger, the SDK can match a payment on the bank statement against it: give the customer and invoice number to `receive()`. See [Split payment over invoices](/examples/bank-transactions/split-payment-over-invoices/). Unpaid invoices are in `salesTransactions()->openInvoices()`: see [Open invoices](/examples/sales-transactions/open-invoices/).

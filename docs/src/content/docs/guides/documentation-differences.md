@@ -105,6 +105,42 @@ These need a live write on a test company (`composer test:write -- --company=…
 - Whether `changepaystatus` works on a provisional transaction, or only on a final one.
 - Whether the amount of Finder `IVT` is the open or the original amount: all invoices seen were fully open.
 
+## Sales invoices
+
+[Sales invoices](/guides/transactions/#sales-invoices) (`salesinvoice`, Classic invoicing module) were checked on 9 November 2026, read-only: 40 invoices of type `FACTUUR` of one test company (2010–2011; 8 concept, 32 final), each read with the SDK and turned into an input with `edit()`, the not found response, Finder `INV`, and for a final invoice the sales transaction it refers to. A second test company and the invoice type `UREN` had no invoices. Documentation: [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/).
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| The structure shows `<transaction calculateonly="" raisewarning="">` as root, the table says "Element name: salesinvoice" | `<salesinvoice result="1">` | Root `salesinvoice` |
+| "If the sales invoice does not exist an empty salesinvoice element is returned containing an error" | `<salesinvoice msgtype="error" msg="Factuur 999999999 van type FACTUUR bestaat niet." result="0"/>`, also for an unknown invoice type | `SalesInvoiceNotFoundException`, recognised by the structure (one error on the root, no `<header>`), not by the text |
+| `financials` is "only present if the invoice has status final" | In all final invoices, in no concept invoice; `code` `VRK` and the number of a sales transaction that `salesTransactions()->get()` reads | `SalesInvoice::$transaction`; a final invoice without it, or a concept with it, throws |
+| `status` can be `default` when reading | Only `concept` and `final` | `SalesInvoiceStatus::Default` is accepted when reading, refused when saving |
+| `quantity` is an integer; the example has `2.00` | `1` and `0` | A numeric string, kept as Twinfield returns it |
+| `unitspriceinc` is in the table, not in the structure | Only `unitspriceexcl` (the invoice type has prices excluding VAT) | Both are read; a line must have exactly one |
+| `performancedate` on the header and `performancedate`, `performancetype` on the lines | Left out everywhere; empty on the VAT lines | Null when left out or empty |
+| `freetext1`–`freetext3` are strings | Empty; `freetext1` and `freetext2` with empty attributes `name`, `shortname` and `dimensiontype` | Null when empty; the attributes are not read |
+| `vatcode` of a line has `name` and `shortname` | Also `type="sales"` | The code is read |
+| `dim1` of a line has `name` and `shortname` | No attributes | `DimensionReference` with name null |
+| `vatcode` of a VAT line has `name`, `shortname` and `percentage` | Only `name` (an old name, `BTW 19%`) | The code and name are read, no percentage |
+| `description` only on lines with article `0` or `-` | Also on the other lines: the name of the article | Read for every line; the input only sends it for `0` and `-` |
+| – | `subarticle` on every line | Required |
+
+### Mistakes in the documentation examples
+
+- The request example sends `unitspriceexcl` `83.94` for a quantity of 2, and the response has `41.97`. Not checked: was the price of the article used, or the request price divided?
+- The sub-article `501.01` in the example has a dot, which is not allowed in other codes. The SDK only checks the length of article and sub-article codes.
+
+### Not yet verified
+
+These need a live write on a test company (`composer test:write -- --company=… --filter=SalesInvoice`); the list is in [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md):
+
+- The shape of the save and `calculateonly` responses. The fixtures follow the documented response example. If a live save response leaves out an element that the read response has, `create()` throws after Twinfield saved the invoice.
+- The one-off item `0` in a response: its `subarticle` and `description`.
+- Whether an update keeps or removes the lines left out of the request, and how Twinfield handles a price for an article whose price can't be changed.
+- Which header fields are really optional on create.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

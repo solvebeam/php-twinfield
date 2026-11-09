@@ -101,6 +101,7 @@ $transaction = $twinfield->bankTransactions()->create(
 | Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete, match with other transactions. See [Create bank transaction](examples/bank-transactions/create-bank-transaction/) and [Import bank statement](examples/bank-transactions/import-bank-statement/). |
 | Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete. See [Daily cash register](examples/cash-transactions/daily-cash-register/). |
 | Sales | `$twinfield->salesTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices (Finder `IVT`). See [Create sales transaction](examples/sales-transactions/create-sales-transaction/) and [Credit note](examples/sales-transactions/credit-note/). |
+| Sales invoices | `$twinfield->salesInvoices()` | Classic invoicing module: read, create, update, calculate without saving, make final and read the booked sales transaction, invoice types (Finder `INV`). See [Create sales invoice](examples/sales-invoices/create-sales-invoice/) and [Read sales invoice](examples/sales-invoices/read-sales-invoice/). |
 | Purchase, journal | – | Not yet; use `processXml()` |
 
 ## Command & Query web services

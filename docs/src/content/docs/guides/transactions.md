@@ -10,6 +10,7 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 | Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete |
 | Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete |
 | Sales | `$twinfield->salesTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices |
+| Sales invoices | `$twinfield->salesInvoices()` | Read, create, update, calculate, make final, invoice types; see [Sales invoices](#sales-invoices) |
 | Purchase, journal | – | Not yet; use [`processXml()`](/guides/process-xml/) |
 
 Sales transaction or sales invoice? See [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/) in the Twinfield knowledge base.
@@ -133,6 +134,43 @@ The SDK requires an invoice number, although the Twinfield documentation does no
 `excludeFromCollection($dayBook, $number)` and `includeInCollection()` change whether Twinfield collects the invoice (`changepaystatus`).
 
 `openInvoices()` searches unpaid invoices with Finder `IVT`, e.g. `$sales->openInvoices()->customer('1000')->get()`. Without `customer()` or `account()`, the results include open purchase invoices too. See [Open invoices](/examples/sales-transactions/open-invoices/).
+
+## Sales invoices
+
+A sales invoice is not a transaction: Twinfield makes the invoice (in the Classic invoicing module) from an invoice type, a customer and articles, calculates the amounts and VAT, and books the sales transaction when the invoice is final. Use it when Twinfield makes and sends the invoice; see [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/).
+
+```php
+use SolveBeam\Twinfield\SalesInvoice\PaymentMethod;
+use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceInput;
+
+$invoices = $twinfield->salesInvoices();
+
+$input = SalesInvoiceInput::create('FACTUUR', customer: '1000')
+    ->dueDate(new DateTimeImmutable('2026-12-09'))
+    ->paymentMethod(PaymentMethod::Bank)
+    ->article('510', quantity: '2')
+    ->oneOff('Consultancy November', '950.00', vatCode: 'VH');
+
+echo $invoices->calculate($input)->totals->valueInc, PHP_EOL; // nothing is saved
+
+$invoice = $invoices->create($input);                          // concept, with a number
+$invoice = $invoices->update($invoice->edit()->footerText('Thank you!'));
+$invoice = $invoices->finalize('FACTUUR', $invoice->invoiceNumber);
+
+$transaction = $invoices->salesTransaction($invoice);          // the booking, e.g. VRK 202600013
+```
+
+- `article($code, $quantity)` adds an article: Twinfield takes its price, VAT code and account. Give a price with `SalesInvoiceLineInput::article()->unitPriceExcl()` only when the price of the article may be changed.
+- `oneOff($description, $price)` adds the one-off item `0`, which is in every company. Twinfield books it on the account of the invoice type; `account:` overrides that when the invoice type allows it.
+- Prices are excluding or including VAT (`unitPriceExcl()` or `unitPriceInc()`): the invoice type decides which.
+- New invoices are concept. `final()` on the input, or `finalize()`, makes an invoice final: it can't be changed anymore, and `$invoice->transaction` has the day book and number of the sales transaction.
+- `calculate()` sends the invoice with `calculateonly="true"`: Twinfield checks and calculates it without saving.
+- `withoutWarnings()` saves with `raisewarning="false"`; `period('2026/11', raiseWarning: false)` only suppresses the warning about a date outside the period.
+- `invoiceTypes()` searches the invoice types with Finder `INV`.
+
+`get($invoiceType, $invoiceNumber)` returns a `SalesInvoice` with the header, the `lines` with the amounts Twinfield calculated, the `vatLines` and the `totals`. There is no search for sales invoices, and the API can't delete them. Unpaid invoices are found through the sales transactions: [`openInvoices()`](#sales-transactions).
+
+Examples: [Read sales invoice](/examples/sales-invoices/read-sales-invoice/), [Create sales invoice](/examples/sales-invoices/create-sales-invoice/), [Finalize sales invoice](/examples/sales-invoices/finalize-sales-invoice/) and [List invoice types](/examples/sales-invoices/list-invoice-types/). How the live responses differ from the documentation: [Differences with the documentation](/guides/documentation-differences/#sales-invoices).
 
 ## Amounts
 

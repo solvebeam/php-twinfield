@@ -94,6 +94,13 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Credit note](sales-transactions/credit-note/): book a credit note: the same positive amounts, the sides turned around (changes data with `--save`).
 - [Open invoices](sales-transactions/open-invoices/): unpaid invoices of a customer, with Finder `IVT`.
 
+## Sales invoices
+
+- [List invoice types](sales-invoices/list-invoice-types/): the invoice types of the company, with Finder `INV`.
+- [Read sales invoice](sales-invoices/read-sales-invoice/): header, lines, VAT and totals of one sales invoice, and the sales transaction Twinfield booked for it.
+- [Create sales invoice](sales-invoices/create-sales-invoice/): let Twinfield make a concept invoice, or only calculate it (changes data with `--save`).
+- [Finalize sales invoice](sales-invoices/finalize-sales-invoice/): make a concept invoice final, so Twinfield books the sales transaction (changes data with `--save`).
+
 ## Deleted transactions
 
 - [List deleted transactions](deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why, of all day books.
@@ -218,4 +225,3 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List companies](process-xml/list-companies/): all companies, with a request without company.
 - [Read dimension](process-xml/read-dimension/): read a customer and handle errors.
-- [Create sales invoice](process-xml/create-sales-invoice/): let Twinfield make a concept invoice from articles (changes data with `--save`).

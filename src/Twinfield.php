@@ -46,6 +46,7 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Rate\RateResource;
+use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceResource;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
@@ -348,6 +349,15 @@ final readonly class Twinfield
     public function salesTransactions(): SalesTransactionResource
     {
         return new SalesTransactionResource($this);
+    }
+
+    /**
+     * Sales invoices of the company (Classic invoicing module): read, create, update,
+     * calculate, make final and search invoice types.
+     */
+    public function salesInvoices(): SalesInvoiceResource
+    {
+        return new SalesInvoiceResource($this);
     }
 
     /**
