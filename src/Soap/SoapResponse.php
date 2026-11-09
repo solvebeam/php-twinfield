@@ -23,7 +23,9 @@ final class SoapResponse
         $body = (string) $response->getBody();
         $xml = new DOMDocument('1.0', 'UTF-8');
 
-        if ($body === '' || @$xml->loadXML($body) === false) {
+        // LIBXML_PARSEHUGE: without it, libxml silently drops text over 10 MB, e.g. a large
+        // ProcessXmlStringResult with browse data.
+        if ($body === '' || @$xml->loadXML($body, LIBXML_NONET | LIBXML_PARSEHUGE) === false) {
             throw new RuntimeException(self::buildNonSoapResponseMessage($response));
         }
 
