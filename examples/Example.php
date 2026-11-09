@@ -252,14 +252,23 @@ final class Example
      */
     public static function vatPayableAccount(Twinfield $twinfield): string
     {
+        $vatCode = $twinfield->vatCodes()->get(self::salesVatCode($twinfield));
+
+        return $vatCode->latestPercentage()->accounts[0]->generalLedgerAccount->code;
+    }
+
+    /**
+     * VH (high rate) when the company has it, or else the first sales VAT code.
+     */
+    public static function salesVatCode(Twinfield $twinfield): string
+    {
         $codes = array_map(
             static fn (VatCodeSummary $vatCode): string => $vatCode->code,
             $twinfield->vatCodes()->search()->vatType(VatCodeType::Sales)->get()->items,
         );
-        $code = in_array('VH', $codes, true) ? 'VH' : $codes[0]
-            ?? throw new \RuntimeException('The company has no sales VAT code.');
 
-        return $twinfield->vatCodes()->get($code)->latestPercentage()->accounts[0]->generalLedgerAccount->code;
+        return in_array('VH', $codes, true) ? 'VH' : $codes[0]
+            ?? throw new \RuntimeException('The company has no sales VAT code.');
     }
 
     /**

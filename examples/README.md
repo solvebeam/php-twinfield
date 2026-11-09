@@ -211,3 +211,5 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List companies](process-xml/list-companies/): all companies, with a request without company.
 - [Read dimension](process-xml/read-dimension/): read a customer and handle errors.
+- [Create sales transaction](process-xml/create-sales-transaction/): book an invoice from your own software in the sales day book (changes data with `--save`).
+- [Create sales invoice](process-xml/create-sales-invoice/): let Twinfield make a concept invoice from articles (changes data with `--save`).

@@ -9,7 +9,9 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 |---|---|---|
 | Bank | `$twinfield->bankTransactions()` | Read, create, update, save many, post, delete |
 | Cash | `$twinfield->cashTransactions()` | Read, create, update, save many, post, delete |
-| Sales, purchase, journal | – | Not yet; use [`processXml()`](/guides/process-xml/) |
+| Sales, purchase, journal | – | Not yet; use [`processXml()`](/guides/process-xml/), see [Create sales transaction](/examples/process-xml/create-sales-transaction/) |
+
+Sales transaction or sales invoice? See [Sales invoice or sales transaction?](/knowledge-base/sales-invoice-or-sales-transaction/) in the Twinfield knowledge base.
 
 Transactions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 

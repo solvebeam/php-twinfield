@@ -292,3 +292,15 @@ To check:
 Then run the write examples in `examples/projects/{create,update,delete}-project` and replace the
 illustrative output in their READMEs (and in `list-projects`, `search-projects` and
 `read-project`) with the real output.
+
+## Sales transactions and sales invoices: verify the ProcessXml examples live
+
+`examples/process-xml/create-sales-transaction` and `create-sales-invoice` are built from the
+Twinfield documentation and only run as dry run so far.
+
+- Run both with `--save` against a test company and replace the dry-run output in their READMEs with
+  the real output.
+- Sales transaction: does a total line without `dim1` work, and does the delete request work for
+  `VRK`?
+- Sales invoice: does invoice type `FACTUUR` with article `0` and `unitspriceexcl` work in a default
+  company? Can a concept invoice be deleted with the API, so the example can clean up?

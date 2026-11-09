@@ -148,6 +148,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/process-xml' } }],
 				},
 				{
+					label: 'Twinfield knowledge base',
+					items: [{ autogenerate: { directory: 'knowledge-base' } }],
+				},
+				{
 					label: 'Reference',
 					items: [
 						{ label: 'PSR standards', slug: 'reference/standards' },
