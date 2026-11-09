@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;vat result="1"&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;VH&lt;/code&gt;&lt;name&gt;BTW 21%&lt;/name&gt;&lt;shortname&gt;VH 21%&lt;/shortname&gt;&lt;type&gt;sales&lt;/type&gt;&lt;percentages&gt;&lt;percentage&gt;&lt;date&gt;20260101&lt;/date&gt;&lt;percentage&gt;21&lt;/percentage&gt;&lt;name&gt;BTW 21%&lt;/name&gt;&lt;shortname&gt;VH 21%&lt;/shortname&gt;&lt;accounts&gt;&lt;account&gt;&lt;dim1&gt;1530&lt;/dim1&gt;&lt;groupcountry&gt;NL&lt;/groupcountry&gt;&lt;group&gt;NL1A&lt;/group&gt;&lt;percentage&gt;100&lt;/percentage&gt;&lt;linetype&gt;vat&lt;/linetype&gt;&lt;/account&gt;&lt;/accounts&gt;&lt;/percentage&gt;&lt;/percentages&gt;&lt;/vat&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

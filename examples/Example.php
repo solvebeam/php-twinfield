@@ -16,6 +16,8 @@ use SolveBeam\Twinfield\Tests\Support\Setup\Prompt;
 use SolveBeam\Twinfield\Tests\Support\Setup\Setup;
 use SolveBeam\Twinfield\Tests\Support\Setup\SetupException;
 use SolveBeam\Twinfield\Twinfield;
+use SolveBeam\Twinfield\VatCode\VatCodeSummary;
+use SolveBeam\Twinfield\VatCode\VatCodeType;
 use Throwable;
 
 /**
@@ -225,6 +227,39 @@ final class Example
         }
 
         throw new \RuntimeException('Rate codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
+     * The first VAT code from EXAMPLE999 down that does not exist, for the examples that
+     * create a VAT code.
+     */
+    public static function unusedVatCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('EXAMPLE%03d', $number);
+
+            if ($twinfield->vatCodes()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('VAT codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
+     * The VAT payable account of the company, for the examples that create a VAT code: the
+     * account of the current percentage of VH (high rate), or else of the first sales VAT code.
+     */
+    public static function vatPayableAccount(Twinfield $twinfield): string
+    {
+        $codes = array_map(
+            static fn (VatCodeSummary $vatCode): string => $vatCode->code,
+            $twinfield->vatCodes()->search()->vatType(VatCodeType::Sales)->get()->items,
+        );
+        $code = in_array('VH', $codes, true) ? 'VH' : $codes[0]
+            ?? throw new \RuntimeException('The company has no sales VAT code.');
+
+        return $twinfield->vatCodes()->get($code)->latestPercentage()->accounts[0]->generalLedgerAccount->code;
     }
 
     /**

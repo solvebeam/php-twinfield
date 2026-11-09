@@ -9,6 +9,7 @@ use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Rate\RateType;
+use SolveBeam\Twinfield\VatCode\VatCodeType;
 
 /**
  * Immutable Finder search on code and name, for Finder types with the columns code and name
@@ -214,6 +215,17 @@ final readonly class CodeNameSearch
     public function rateType(RateType $type): self
     {
         return $this->option('ratetype', $type->value);
+    }
+
+    /**
+     * Only VAT codes for sales or for purchases, e.g. `vatType(VatCodeType::Sales)`. VAT code
+     * searches only.
+     *
+     * @return self<T>
+     */
+    public function vatType(VatCodeType $type): self
+    {
+        return $this->option('vattype', $type->value);
     }
 
     /**

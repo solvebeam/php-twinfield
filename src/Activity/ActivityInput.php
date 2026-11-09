@@ -47,7 +47,7 @@ final readonly class ActivityInput
         }
 
         if ($vatCode !== null) {
-            XmlValue::maxLength('VAT code', $vatCode, 16);
+            XmlValue::vatCode($vatCode);
         }
     }
 

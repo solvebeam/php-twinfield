@@ -245,6 +245,25 @@ final class BankTransactionInputTest extends TestCase
             ->toXml('1000');
     }
 
+    public function testAnEmptyVatCodeIsNoVatCode(): void
+    {
+        self::assertNull(DetailLineInput::debit('4500', '10.00')->vat('')->vatCode());
+        self::assertSame('#', DetailLineInput::debit('4500', '10.00')->vat('#')->vatCode(), 'The VAT code "no VAT".');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A VAT amount needs a VAT code.');
+
+        DetailLineInput::debit('4500', '10.00')->vat('', '2.10');
+    }
+
+    public function testRefusesAnInvalidVatCode(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('"I H" is not a code');
+
+        VatLineInput::debit('I H', '2.10');
+    }
+
     public function testRefusesNegativeAmounts(): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -1,5 +1,38 @@
 # TODO
 
+## VAT codes: verify writing live
+
+VAT codes (`vat`, Finder `VAT`) are tested offline with fixtures recorded live (`vat-read*.xml`,
+anonymized) and read-only live: 491 VAT codes of 12 companies parse, and `edit()` builds for all
+of them. `vat-save.xml`, `vat-save-error.xml` and the delete and activate responses are
+fictitious. Creating, updating and deleting are not yet tested live: the write test needs an
+interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=VatCode
+```
+
+To check:
+
+- Does an update with `$vatCode->edit()` change nothing (the write test compares the
+  percentages)? Does Twinfield match percentages by date, and keep percentages that are left out
+  of the request, or remove them? The SDK has no way to remove a percentage yet, because the
+  documentation does not say how.
+- Does Twinfield accept the account lines without `@id`? Does it keep or renumber them?
+- `discountaccount` and `writeoffaccount` are returned (always empty) but not documented, and the
+  SDK does not send them. Does an update clear them when they are set? Find out what they are for.
+- Which fields are required when creating: is `shortname` required? Is a percentage without
+  `name` refused (the SDK sends the name of the VAT code then)?
+- Is `linetype` `detail` accepted, and what does its share mean? Only `vat` was seen live.
+- Is the account share checked (100 in total, or 0 for reverse charge)? The SDK only checks
+  -100 to 100 per line.
+- The delete response: `@status` `deleted` or `hide` (as for the other master data)? `delete()`
+  depends on it. And does `activate()` work with `status="active"`?
+- The shape of the live save response, to replace `vat-save.xml`.
+
+Then run the write examples in `examples/vat-codes/{create-vat-code,update-vat-percentage,delete-vat-code}`
+and replace the illustrative output in their READMEs with the real output.
+
 ## Users: verify writing live
 
 Users (Finder `USR`, XML `user`) are read-only tested live: all 18 users of the organisation parse,

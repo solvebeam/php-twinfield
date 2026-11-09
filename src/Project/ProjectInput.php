@@ -51,7 +51,7 @@ final readonly class ProjectInput
         }
 
         if ($vatCode !== null) {
-            XmlValue::maxLength('VAT code', $vatCode, 16);
+            XmlValue::vatCode($vatCode);
         }
     }
 

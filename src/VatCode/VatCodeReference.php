@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\GeneralLedgerAccount;
+namespace SolveBeam\Twinfield\VatCode;
 
 use InvalidArgumentException;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;

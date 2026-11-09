@@ -28,6 +28,7 @@ Other master data works the same way, but is not a dimension:
 | [Budgets](#budgets) | `$twinfield->budgets()` | Search, budget vs. actual (read-only) |
 | [Offices](#offices) | `$twinfield->offices()` | List, search, read (read-only) |
 | [Users](#users) | `$twinfield->users()` | List, search, read (also the user of the access token), create, update, delete, activate |
+| [VAT codes](#vat-codes) | `$twinfield->vatCodes()` | Search (also by type: sales or purchases), read, create, update, delete, activate; percentages over time |
 
 Dimensions belong to a company, so the client needs one: `Twinfield::create($accessTokenProvider)->company('1000')`.
 
@@ -842,6 +843,71 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - The documentation says `unit` is `1` for a price per hour. Live time rates have units such as `93`, `120` and `882`, so the unit may be in minutes. The SDK returns the number as Twinfield sends it.
 - `TRT` is the Finder type for rates; transaction types are `TRS`.
 
+## VAT codes
+
+A VAT code is a VAT rate over time: one or more percentages, each from a date on, with the accounts the VAT is posted on and the box of the VAT return (VAT group) it is reported in. Transaction lines, customers, suppliers, activities, projects and general ledger accounts refer to a VAT code by its code, e.g. `DetailLineInput::debit('4500', '10.00')->vat('IH', '2.10')`. VAT codes are no dimensions, but `$twinfield->vatCodes()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+```php
+use SolveBeam\Twinfield\VatCode\VatAccountInput;
+use SolveBeam\Twinfield\VatCode\VatCodeInput;
+use SolveBeam\Twinfield\VatCode\VatCodeType;
+use SolveBeam\Twinfield\VatCode\VatPercentageInput;
+
+$vatCodes = $twinfield->vatCodes();
+
+// Search: Finder type VAT, only VAT codes for sales
+foreach ($vatCodes->search()->vatType(VatCodeType::Sales)->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Read
+$vatCode = $vatCodes->get('VH');   // or find(): null when it does not exist
+echo $vatCode->percentageOn(new DateTimeImmutable('2026-03-15'))?->percentage, '%', PHP_EOL;   // 21%
+echo $vatCode->vatOn('100.00', new DateTimeImmutable('2026-03-15')), PHP_EOL;                 // 21.00
+
+// Create
+$vatCodes->create(
+    VatCodeInput::sales('VH', 'BTW 21%')
+        ->shortName('VH 21%')
+        ->percentage(
+            VatPercentageInput::from(new DateTimeImmutable('2026-01-01'), '21')
+                ->account(VatAccountInput::vat('1530')->group('NL', 'NL1A')),
+        ),
+);
+
+// A new rate from a date on, with the accounts of the current one
+$vatCodes->update($vatCode->edit()->newPercentageFrom(new DateTimeImmutable('2027-01-01'), '22', 'BTW 22%'));
+
+// Delete: DeleteResult::Hidden when the VAT code is in use
+$vatCodes->delete('VH');
+```
+
+- `search()` gives `VatCodeSummary` results with code and name. `vatType(VatCodeType::Sales)` or `vatType(VatCodeType::Purchase)` keeps one type (Finder option `vattype`).
+- `get()` sends a `<read>` of type `vat`. Not found is a `VatCodeNotFoundException`, an existing code on `create()` a `VatCodeAlreadyExistsException`. `create()`, `update()` and `save()` read the VAT code back after saving, so you always get the complete `VatCode`.
+- A `VatCode` has `type` (`VatCodeType`, shared with the VAT code of a general ledger account), `status`, `uid` and `percentages`: `VatPercentage` lines sorted by start date, each with `from`, `percentage`, `name`, `inUse` and `accounts`. A percentage applies until the next one starts. `percentageOn($date)` gives the line of a date, `currentPercentage()` the line of today and `latestPercentage()` the line with the latest start date.
+- A `VatAccount` has the `generalLedgerAccount`, the VAT group (`groupCountry` and `group`, e.g. `NL` and `NL1A`; both null when not set), the `percentage` (share) of the VAT and the `lineType`: `VatAccountLineType::Vat`, or `Detail` for a part of the VAT that is posted on another account. Reverse charge codes, such as intra-community acquisitions, have `-100` on the VAT payable account and `100` on the input VAT account, so the shares add up to 0.
+- Percentages are `Percentage` objects: numeric strings without trailing zeros (`21`, `5.5`, `-100`), never floats. `vatOn($amount)` (on `VatCode` and `VatPercentage`) and `Percentage::applyTo($amount)` give the VAT on an amount without VAT as an `Amount`, rounded half away from zero to cents. Twinfield calculates VAT per line, so the sum of the lines can differ a cent from the VAT on the total.
+- `edit()` gives a `VatCodeInput` with all percentages and accounts. `percentage()` adds a line or replaces the line with the same start date, and `newPercentageFrom()` adds a rate from a date with the accounts (and names, unless given) of the line that applies the day before. The SDK refuses rates outside 0–100, shares outside -100–100, a VAT group without country, and an input without percentages or a percentage without accounts.
+- A VAT code is validated the same way everywhere it is used (transaction lines, customers, suppliers, activities, projects, fixed assets, posting rules and general ledger accounts): a code of A-Z, 0-9, `_`, `-` and `+`, or `#` for "no VAT".
+
+### Differences with the documentation
+
+The [documentation](https://developers.twinfield.com/documentation/api/master-data/vat/) is short. The read model is based on the live responses of 491 VAT codes of 12 companies (9 November 2026):
+
+- The read response has no `<office>`; the SDK takes the company of the request.
+- The read response has `@status` (always `active`) and `uid`, `created`, `modified`, `touched` and `user` on `<vat>`. The documented response example has `status="default"` and no `created` and `modified`.
+- Each `<percentage>` has `@status` and `@inuse`, and `created` and `user` (who added it). It has no line id, so Twinfield knows a percentage by its date.
+- Not in the documentation: `discountaccount` and `writeoffaccount` on each percentage. They were empty in all live responses, so the SDK reads them (`discountAccount`, `writeOffAccount`), but does not send them.
+- Rates have nine decimals (`21.000000000`), shares one (`100.0`). Shares can be negative (`-100.0`), for reverse charge.
+- An account without VAT group has empty `<groupcountry />` and `<group />`, without the `name` and `shortname` attributes. The short name of the VAT code can be empty.
+- The account line id (`@id`) is documented as response only, so the SDK does not send it.
+- Only `linetype` `vat` was seen live; `detail` is documented.
+- The documentation says to delete with `dimensiongroup/header/@status`, a copy of the dimension group page. The SDK sends `<vat status="deleted">` with office and code, like the other master data.
+- The Finder returns two columns, code and name.
+- Not found is `<vat msgtype="error" msg="…" result="0">` with only the code.
+
+Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+
 ## Offices
 
 `$twinfield->offices()` lists, searches and reads the offices (companies, administrations) the user has access to. Offices are read-only in the API: they cannot be created, changed or deleted. Twinfield is moving from the term "office" to "company"; the classes keep the name `Office` for now.
@@ -1067,3 +1133,9 @@ Creating, updating and deleting are not yet verified live, see [`TODO.md`](https
 - [Create user](/examples/users/create-user/)
 - [Update user](/examples/users/update-user/)
 - [Delete user](/examples/users/delete-user/)
+- [List VAT codes](/examples/vat-codes/list-vat-codes/)
+- [Search VAT codes](/examples/vat-codes/search-vat-codes/)
+- [Read VAT code](/examples/vat-codes/read-vat-code/)
+- [Create VAT code](/examples/vat-codes/create-vat-code/)
+- [Update VAT percentage](/examples/vat-codes/update-vat-percentage/)
+- [Delete VAT code](/examples/vat-codes/delete-vat-code/)

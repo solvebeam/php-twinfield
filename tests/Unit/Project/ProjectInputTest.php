@@ -104,7 +104,7 @@ final class ProjectInputTest extends TestCase
         ];
         yield 'long VAT code' => [
             static fn (): mixed => ProjectInput::create('P0001', 'Name')->vatCode(str_repeat('X', 17)),
-            'VAT code must be at most 16 characters',
+            'is not a code: 1-16 times A-Z, 0-9, _, - or +',
         ];
         yield 'long invoice description' => [
             static fn (): mixed => ProjectInput::create('P0001', 'Name')->invoiceDescription(str_repeat('x', 129)),

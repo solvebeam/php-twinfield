@@ -116,6 +116,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/users' } }],
 				},
 				{
+					label: 'VAT codes',
+					items: [{ autogenerate: { directory: 'examples/vat-codes' } }],
+				},
+				{
 					label: 'Cash transactions',
 					items: [{ autogenerate: { directory: 'examples/cash-transactions' } }],
 				},

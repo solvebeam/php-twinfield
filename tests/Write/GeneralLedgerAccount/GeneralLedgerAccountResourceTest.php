@@ -9,12 +9,13 @@ use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Dimension\DimensionAlreadyExistsException;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Examples\Example;
-use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\ChildValidation;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountInput;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\SubAnalysis;
 use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
+use SolveBeam\Twinfield\VatCode\VatCodeSummary;
+use SolveBeam\Twinfield\VatCode\VatCodeType;
 
 /**
  * Creates a temporary balance sheet and profit and loss account with a free code, changes,
@@ -119,7 +120,10 @@ final class GeneralLedgerAccountResourceTest extends WriteTestCase
 
     private function salesVatCode(): string
     {
-        $codes = array_column($this->twinfield->finder(FinderType::VatCodes)->option('vattype', 'sales')->get()->rows, 0);
+        $codes = array_map(
+            static fn (VatCodeSummary $summary): string => $summary->code,
+            $this->twinfield->vatCodes()->search()->vatType(VatCodeType::Sales)->get()->items,
+        );
 
         // VH (high rate) in Dutch companies, or else any sales VAT code.
         return in_array('VH', $codes, true) ? 'VH' : $codes[0] ?? self::fail('The company has no sales VAT code.');

@@ -177,6 +177,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Update supplier](suppliers/update-supplier/): change how the supplier is paid, a bank account, and add a bank account (changes data).
 - [Delete supplier](suppliers/delete-supplier/): delete or hide a supplier, and activate it again (changes data).
 
+## VAT codes
+
+- [List VAT codes](vat-codes/list-vat-codes/): code and name of all VAT codes, or those matching a pattern.
+- [Search VAT codes](vat-codes/search-vat-codes/): VAT codes for sales or purchases, by name.
+- [Read VAT code](vat-codes/read-vat-code/): percentages over time, the accounts and VAT groups, and the VAT on an amount today.
+- [Create VAT code](vat-codes/create-vat-code/): create a sales VAT code of 21% (changes data).
+- [Update VAT percentage](vat-codes/update-vat-percentage/): a new rate from a date with `newPercentageFrom()` (changes data).
+- [Delete VAT code](vat-codes/delete-vat-code/): delete or hide a VAT code (changes data).
+
 ## Budgets
 
 - [List budgets](budgets/list-budgets/): code and name of all budgets, or those matching a pattern.

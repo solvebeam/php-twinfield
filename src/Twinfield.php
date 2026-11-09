@@ -48,6 +48,7 @@ use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
 use SolveBeam\Twinfield\Supplier\SupplierResource;
 use SolveBeam\Twinfield\User\UserResource;
+use SolveBeam\Twinfield\VatCode\VatCodeResource;
 
 /**
  * Entry point of the SDK.
@@ -166,6 +167,15 @@ final readonly class Twinfield
     public function rates(): RateResource
     {
         return new RateResource($this);
+    }
+
+    /**
+     * VAT codes of the company, with their percentages over time and the accounts the VAT is
+     * posted on: search, read, create, update and delete.
+     */
+    public function vatCodes(): VatCodeResource
+    {
+        return new VatCodeResource($this);
     }
 
     /**

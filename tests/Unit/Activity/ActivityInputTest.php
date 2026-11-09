@@ -96,7 +96,7 @@ final class ActivityInputTest extends TestCase
         ];
         yield 'long VAT code' => [
             static fn (): mixed => ActivityInput::create('A001', 'Name')->vatCode(str_repeat('X', 17)),
-            'VAT code must be at most 16 characters',
+            'is not a code: 1-16 times A-Z, 0-9, _, - or +',
         ];
         yield 'long invoice description' => [
             static fn (): mixed => ActivityInput::create('A001', 'Name')->invoiceDescription(str_repeat('x', 129)),

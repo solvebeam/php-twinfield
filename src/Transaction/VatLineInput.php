@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Transaction;
 use DOMElement;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
+use SolveBeam\Twinfield\ProcessXml\XmlValue;
 
 /**
  * A VAT line to create or update. Immutable: every method returns a new line.
@@ -42,7 +43,7 @@ final class VatLineInput
             throw new InvalidArgumentException('VAT line needs a VAT code.');
         }
 
-        TransactionXmlWriter::optionalText('VAT code', $vatCode, 16);
+        XmlValue::vatCode($vatCode);
 
         if ($value->isNegative()) {
             throw new InvalidArgumentException(sprintf(

@@ -10,6 +10,7 @@ use SolveBeam\Twinfield\Dimension\DimensionBehaviour;
 use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\VatCode\VatCodeReference;
 
 /**
  * A general ledger account as Twinfield returns it: a balance sheet account (dimension type

@@ -254,12 +254,14 @@ final class DetailLineInput
      */
     public function vat(?string $code, Amount|string|null $value = null): self
     {
+        $code = $code === '' ? null : $code;
+
         if ($code === null && $value !== null) {
             throw new InvalidArgumentException('A VAT amount needs a VAT code.');
         }
 
         if ($code !== null) {
-            XmlValue::maxLength('VAT code', $code, 16);
+            XmlValue::vatCode($code);
         }
 
         $value = Amount::ofNullable($value);
@@ -269,7 +271,7 @@ final class DetailLineInput
         }
 
         $line = clone $this;
-        $line->vatCode = $code === '' ? null : $code;
+        $line->vatCode = $code;
         $line->vatValue = $value;
 
         return $line;

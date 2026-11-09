@@ -71,6 +71,9 @@ final class ExamplesTest extends TestCase
         'users/create-user',
         'users/delete-user',
         'users/update-user',
+        'vat-codes/create-vat-code',
+        'vat-codes/delete-vat-code',
+        'vat-codes/update-vat-percentage',
     ];
 
     /**
