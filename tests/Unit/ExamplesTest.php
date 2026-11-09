@@ -68,6 +68,8 @@ final class ExamplesTest extends TestCase
         'suppliers/create-supplier',
         'suppliers/delete-supplier',
         'suppliers/update-supplier',
+        'transaction-blocked-values/register-blocked-value',
+        'transaction-blocked-values/unregister-blocked-value',
         'users/create-user',
         'users/delete-user',
         'users/update-user',

@@ -97,6 +97,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }],
 				},
 				{
+					label: 'Transaction blocked values',
+					items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }],
+				},
+				{
 					label: 'Cost centers',
 					items: [{ autogenerate: { directory: 'examples/cost-centers' } }],
 				},

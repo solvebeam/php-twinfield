@@ -454,3 +454,27 @@ the real output.
 
 Not yet implemented: articles (items) themselves (`<article>`, Finder `ART`). The old manual (`manuals/Webservices-Manual-Sales-Invoices.pdf`) is not read yet: it needs
 `pdftotext` (`brew install poppler`).
+
+## Transaction blocked value: verify live
+
+`transactionBlockedValues()` (TransactionBlockedValueService) sends both commands in the WSDL order;
+the fault fixture (`transaction-blocked-value-fault-cannot-be-registered.xml`) is fictitious. Nothing
+is tested live yet.
+
+```sh
+composer test:write -- --company=1002_3 --filter=TransactionBlockedValue
+```
+
+To check:
+
+- Does Twinfield accept a blocked value on a provisional transaction (the write test uses one), or
+  only on a final one? On which lines: only the total line of a sales or purchase invoice, or also
+  detail lines and journal lines (the documentation example uses `MEMO` line 1)?
+- Zero, negative values (e.g. on a credit note) and values above the open amount: accepted, or which
+  fault? Add a check to `register()` once it is clear.
+- `unregister()` on a line without blocked value: no error, or `BlockedValueCannotBeUnregistered`?
+- Registering twice: does the second value replace the first?
+- Is the blocked value visible anywhere (transaction XML, Finder, browse data)? If so, read it.
+- Record the real fault responses (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to
+  replace the fixture, and run the examples in `examples/transaction-blocked-values/` and replace
+  the illustrative output in their READMEs with the real output.

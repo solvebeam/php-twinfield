@@ -54,6 +54,7 @@ use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
 use SolveBeam\Twinfield\Supplier\SupplierResource;
+use SolveBeam\Twinfield\TransactionBlockedValue\TransactionBlockedValueResource;
 use SolveBeam\Twinfield\User\UserResource;
 use SolveBeam\Twinfield\VatCode\VatCodeResource;
 
@@ -385,6 +386,14 @@ final readonly class Twinfield
     public function deletedTransactions(): DeletedTransactionResource
     {
         return new DeletedTransactionResource($this);
+    }
+
+    /**
+     * Blocked values of transaction lines (TransactionBlockedValueService): register and unregister.
+     */
+    public function transactionBlockedValues(): TransactionBlockedValueResource
+    {
+        return new TransactionBlockedValueResource($this);
     }
 
     /**

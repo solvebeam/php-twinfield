@@ -344,6 +344,26 @@ Each `DeletedTransaction` has `dayBook`, `number`, `transactionDate`, `deletionD
 
 Use it to keep a copy of the transactions in sync: ask for what was deleted since the last sync, and remove those transactions on your side. Without filters you get every deleted transaction of the company, which can be thousands (Twinfield has no paging), so filter on a date when you can.
 
+## Blocked values
+
+A blocked value is an amount associated with one line of a transaction, through the [TransactionBlockedValueService](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/). It works for every day book: the documentation example uses a memorial transaction (`MEMO`).
+
+```php
+$blocked = $twinfield->transactionBlockedValues();
+
+$invoice = $twinfield->purchaseTransactions()->get('INK', 202600021);
+
+$blocked->register('INK', $invoice->number(), $invoice->total->id, '50.00');
+$blocked->unregister('INK', $invoice->number(), $invoice->total->id);
+```
+
+- The line is the `id` of a line of the transaction: `$transaction->total->id` for the total line, `$line->id` for a detail line.
+- The value is an `Amount` or a numeric string with at most two decimals.
+- Both commands return nothing. When Twinfield refuses one, you get a `CommandQueryFaultException` with `errorCode` `BlockedValueCannotBeRegistered` or `BlockedValueCannotBeUnregistered` (`TransactionBlockedValueServiceFaultCode`).
+- The service cannot read a blocked value back, and the transaction responses don't show it.
+
+Not yet verified live: which lines and which transactions (provisional or final) accept a blocked value, and whether it may be negative or more than the open amount. See [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+
 ## Saving many transactions
 
 `saveMany(...$inputs)` saves several transactions in one request. Twinfield saves the valid ones and refuses the others, so it does not throw: it returns a `SaveManyResult` with, per input in the same order, a `SavedTransaction` or a `FailedTransaction`:
@@ -378,6 +398,7 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Read bank transaction](/examples/bank-transactions/read-bank-transaction/), [create](/examples/bank-transactions/create-bank-transaction/), [update](/examples/bank-transactions/update-bank-transaction/), [delete](/examples/bank-transactions/delete-bank-transaction/) and [post](/examples/bank-transactions/post-bank-transaction/).
 - [Import bank statement](/examples/bank-transactions/import-bank-statement/): a CSV statement to one transaction, with rules per line and a balance check.
 - [Bank costs with VAT](/examples/bank-transactions/bank-costs-with-vat/): split an amount including VAT, exactly.
+- [Register blocked value](/examples/transaction-blocked-values/register-blocked-value/) and [unregister](/examples/transaction-blocked-values/unregister-blocked-value/).
 - [Split payment over invoices](/examples/bank-transactions/split-payment-over-invoices/): one payment for several open invoices.
 - [Bulk import with errors](/examples/bank-transactions/bulk-import-with-errors/): `saveMany()` and its result.
 - [Daily cash register](/examples/cash-transactions/daily-cash-register/): sales per VAT rate, expenses and the cash difference of one day.

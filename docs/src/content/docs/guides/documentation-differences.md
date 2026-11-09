@@ -67,6 +67,14 @@ Checked live (November 2026) on two test companies, one with 19 and one with 381
 - **Order and size.** The list is sorted by deletion date, newest first, and has no paging.
 - **Values.** `DeletionDate` has milliseconds (`2025-09-03T11:55:10.883`), `TransactionDate` is midnight, `TransactionNumber` is an `xs:decimal` without fraction, `User` is the user code, and the day book code is not case sensitive. No field was empty or nil, so the SDK requires them all.
 
+## Transaction blocked value
+
+Checked against the [documentation](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/) and the WSDL (`wsdl/accounting/TransactionBlockedValueService.svc.wsdl.xml` and its `?xsd=xsd1`), not yet live. The fields, types and fault codes match.
+
+- **Field order.** The WSDL has the fields in alphabetical order: `BlockedValue`, `CompanyCode`, `TransactionCode`, `TransactionLineId`, `TransactionNumber`. The raw envelope of `RegisterBlockedAmountForTransaction` in the documentation sends them in another order (`TransactionNumber` before `TransactionLineId`, `BlockedValue` last); the one of `UnregisterBlockedAmountForTransaction` follows the WSDL. WCF services refuse fields out of order, so the SDK sends the WSDL order.
+- **Types.** `TransactionNumber` and `BlockedValue` are `xs:decimal`, `TransactionLineId` is `xs:int`. The SDK takes the number as `int` (transaction numbers have no fraction) and the value as `Amount`.
+- **Not documented.** Which lines accept a blocked value, whether it may be negative, and how to read it back: the service has no query.
+
 ## Sales transactions
 
 [Sales transactions](/guides/transactions/#sales-transactions) (`transaction`, day book `VRK`) were checked on 9 November 2026, read-only: 7 transactions of one test company (2015–2022; entered by hand and from sales invoices), each read with the SDK and turned into an input with `edit()`, and Finder `IVT`. Documentation: [Sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/).

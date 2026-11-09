@@ -117,7 +117,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 | CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |
 | DeletedTransactionsService | `$twinfield->deletedTransactions()` | The only query: `list()`, filtered by day book and deletion date. See [List deleted transactions](examples/deleted-transactions/list-deleted-transactions/). |
 | BankStatementService | – | Not yet |
-| TransactionBlockedValueService | – | Not yet |
+| TransactionBlockedValueService | `$twinfield->transactionBlockedValues()` | Both commands: `register()` and `unregister()` a blocked value on a transaction line. See [Register blocked value](examples/transaction-blocked-values/register-blocked-value/). |
 
 Services without a resource can be called directly. Give the fields in the order of the service's WSDL (usually alphabetical):
 

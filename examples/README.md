@@ -118,6 +118,11 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [List deleted transactions](deleted-transactions/list-deleted-transactions/): what was deleted in the last days, by whom and why, of all day books.
 
+## Transaction blocked values
+
+- [Register blocked value](transaction-blocked-values/register-blocked-value/): block part of a line of an existing transaction, e.g. the total line of a purchase invoice (changes data).
+- [Unregister blocked value](transaction-blocked-values/unregister-blocked-value/): remove the blocked value from that line again (changes data).
+
 ## Cost centers
 
 - [List cost centers](cost-centers/list-cost-centers/): code and name of all cost centers, or those matching a pattern.

@@ -46,6 +46,7 @@ jobs:
             "processxml.asmx"
             "sbr.asmx"
             "session.asmx"
+            "TransactionBlockedValueService.svc"
             "versions.asmx"
           )
 
