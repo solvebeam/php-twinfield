@@ -9,3 +9,6 @@
 
 # Raw recorded Twinfield responses (real data, never commit)
 /tests/Fixtures/raw/
+
+# macOS
+.DS_Store
