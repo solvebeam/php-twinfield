@@ -1,0 +1,409 @@
+<browse result="1">
+  <office name="Example company" shortname="">1000</office>
+  <code>650_1</code>
+  <name>Uren en onkosten (Details)</name>
+  <shortname>U&amp;O (Details)</shortname>
+  <visible>false</visible>
+  <columns code="650_1">
+    <column id="1">
+      <field>fin.trs.head.office</field>
+      <label>Administratie</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="2">
+      <field>fin.trs.head.officename</field>
+      <label>Adm.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="3">
+      <field>teq.trs.head.year</field>
+      <label>Jaar</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="4">
+      <field>teq.trs.head.period</field>
+      <label>Periode</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="5">
+      <field>teq.trs.head.week</field>
+      <label>Week</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="6">
+      <field>teq.trs.head.yearperiod</field>
+      <label>Jaar/maand (JJJJ/MM)</label>
+      <visible>false</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="7">
+      <field>teq.trs.head.yearweek</field>
+      <label>Jaar/week (JJJJ/WW)</label>
+      <visible>false</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="8">
+      <field>teq.trs.head.date</field>
+      <label>Datum</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="9">
+      <field>teq.trs.head.user</field>
+      <label>Gebruiker</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="10">
+      <field>teq.trs.head.username</field>
+      <label>Gebruikersnaam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="11">
+      <field>teq.trs.head.usercostcentre</field>
+      <label>Kostenplaatsgebruiker</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="12">
+      <field>teq.trs.head.usercostcentrename</field>
+      <label>Naam kostenplaatsgebruiker</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="13">
+      <field>teq.trs.head.code</field>
+      <label>Urencode</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="14">
+      <field>teq.trs.head.authoriser</field>
+      <label>Autorisator</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="15">
+      <field>teq.trs.head.authorisername</field>
+      <label>Naam autorisator</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="16">
+      <field>teq.trs.head.customer</field>
+      <label>Klant</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="17">
+      <field>teq.trs.head.customername</field>
+      <label>Klantnaam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="18">
+      <field>teq.trs.head.project1</field>
+      <label>Project</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="19">
+      <field>teq.trs.head.project1name</field>
+      <label>Projectnaam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="20">
+      <field>teq.trs.head.project1costcentre</field>
+      <label>Projectkostenplaats</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="21">
+      <field>teq.trs.head.project1costcentrename</field>
+      <label>Project kostenplaatsnaam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="22">
+      <field>teq.trs.head.project2</field>
+      <label>Activiteit</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="23">
+      <field>teq.trs.head.project2name</field>
+      <label>Activiteitsnaam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="24">
+      <field>teq.trs.head.status</field>
+      <label>Urenstatus</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>equal</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="25">
+      <field>teq.trs.head.curcode</field>
+      <label>Valuta</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="26">
+      <field>teq.trs.line.time</field>
+      <label>Uren</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="27">
+      <field>teq.trs.line.timevalueint</field>
+      <label>Uren intern</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="28">
+      <field>teq.trs.line.timevalueext</field>
+      <label>Uren extern</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="29">
+      <field>teq.trs.line.time_nb</field>
+      <label>Uren niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="30">
+      <field>teq.trs.line.timevalueint_nb</field>
+      <label>Uren intern niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="31">
+      <field>teq.trs.line.timevalueext_nb</field>
+      <label>Uren extern niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="32">
+      <field>teq.trs.line.expense</field>
+      <label>Onkosten</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="33">
+      <field>teq.trs.line.expense_nb</field>
+      <label>Onkosten niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="34">
+      <field>teq.trs.line.quantity</field>
+      <label>Aantallen</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="35">
+      <field>teq.trs.line.qtyvalueint</field>
+      <label>Aantallen intern</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="36">
+      <field>teq.trs.line.qtyvalueext</field>
+      <label>Aantallen extern</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="37">
+      <field>teq.trs.line.quantity_nb</field>
+      <label>Aantallen niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="38">
+      <field>teq.trs.line.qtyvalueint_nb</field>
+      <label>Aantallen intern niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="39">
+      <field>teq.trs.line.qtyvalueext_nb</field>
+      <label>Aantallen extern niet facturabel</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="40">
+      <field>teq.trs.line.description</field>
+      <label>Omschrijving</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+  </columns>
+</browse>

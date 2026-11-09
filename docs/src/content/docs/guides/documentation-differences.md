@@ -248,6 +248,43 @@ These need a live write on a test company (`composer test:write -- --company=…
 - Whether an update keeps or removes the lines left out of the request, and how Twinfield handles a price for an article whose price can't be changed.
 - Which header fields are really optional on create.
 
+## Browse data
+
+[Browse data](/guides/browse-data/) was checked on 9 November 2026, read-only, on a test company with 603 transaction lines and with a query over 216,710 lines: the definitions of all 38 browse codes, the browse fields, and about 40 queries on 030_3, 040_1 and 130_3. Documentation: [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/), and the old [browse manual](/reference/manuals/) (version 5.4, 2009).
+
+### Requests
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| The example request sends `label`, `visible` and `ask` for every column | Only `field` is needed. Without `<visible>` (default `false`) a column only selects and is not in the result; `label` is empty in the result when not sent | `columns()` sends `<visible>true</visible>`, criteria on other fields are sent without it. `label` and `ask` are never sent |
+| Don't change `visible` from `false` to `true` | `fin.trs.head.yearperiod` (not visible in 030_3) as column gives a SOAP server error; `fin.trs.head.modified` (also not visible) works | Documented; the SDK sends what you ask |
+| Operators `none`, `equal` and `between` (old manual: also `lessthan`) | `notbetween` works; `like` works with `*` and `?` and is used in the definitions of 130 and 230; `lessthan`, and `in` and `notin` (named in an error message), give a server error. `between` without `to` is refused, `equal` ignores `to` | `equal()`, `between()`, `notBetween()`, `like()`; `BrowseOperator` has `none`, `equal`, `like`, `between` and `notbetween` |
+| Up to three sort fields | A fourth gives a server error. 000 sorts, 030_3 ignores the sort fields | `sortBy()` refuses a fourth field; the limitation is documented |
+| The data is that of the company the user is logged in to | It comes from the company in the SOAP header, but a criterion `fin.trs.head.office` with another company returns the data of that company | `BrowseQuery` refuses a `fin.trs.head.office` criterion for another company; `BrowseRow` checks the company of every row |
+| The definition proposes criteria, e.g. status `normal` | They are not applied: without a status criterion the result has all statuses, also drafts | Documented; examples always send a status criterion |
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| `optimize` removes `field`, `hideforuser` and `type` from all `<td>` except those in `<th>` (old manual: "in the first `<tr>`") | As documented: `<th>` keeps them, rows don't. Rows keep the `name` attribute | Always `optimize="true"` (about three times smaller); cells are read in the order of `<th>` |
+| Cells have a value | Cells of dropdown fields and dates also have a `name` with the value as shown to the user, e.g. `name="Definitief"` for `final`, `name="25/02/2026"` for `20260225` | `BrowseRow::displayName()` |
+| Types `String`, `Decimal` and `Value` | Also `Number` (year, period), `Date` (`yyyymmdd`) and `Datetime` (`yyyymmddhhmmss`) | `BrowseValueType`; an unknown type throws |
+| – | Draft transactions have transaction number `-1` | `TransactionLineReference` accepts `-1` (`isDraft()`) |
+| – | Browse codes with totals (040_1) have a `<key>` with only `<office>` | `BrowseRow::$transactionLine` is null |
+| `first`, `last` and `total` | Always all rows (`first` 1, `last` = `total`), also for 216,710 lines (25 MB). An empty result has `0`, `0`, `0` | `BrowseResult` throws when rows are missing |
+| `<browsefields>` | Has no `result` attribute, unlike other ProcessXml responses. `canorder` is always empty | `fields()` reads it without `ProcessXmlResult`; `canorder` is not read |
+| Errors | `<browse result="0" msg="…">` in the language of the user, e.g. `Veld fin.trs.nope bestaat niet.`, `Opvraagcode 999 bestaat niet.` | `ProcessXmlException` |
+
+### Found in the SDK
+
+Responses over 10 MB lost data: libxml drops text over 10 MB without `LIBXML_PARSEHUGE`, so a large `ProcessXmlStringResult` was cut off without error. `SoapResponse` and `ProcessXmlResult` now parse with `LIBXML_PARSEHUGE`. This affected every service, not only browse data.
+
+### Not yet verified
+
+- The value types and formats of the other browse codes than 030_3, 040_1 and 130_3: an unknown type throws an `UnexpectedResponseException`.
+- How Twinfield behaves with very large queries (timeouts, limits): 216,710 lines took 34 seconds.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

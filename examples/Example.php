@@ -41,6 +41,20 @@ final class Example
     }
 
     /**
+     * The last financial year of the company, e.g. for the browse data examples.
+     */
+    public static function lastYear(Twinfield $twinfield): int
+    {
+        $years = $twinfield->periods()->years();
+
+        if ($years === []) {
+            throw new \RuntimeException(sprintf('Company %s has no financial years.', $twinfield->companyCode()));
+        }
+
+        return max($years);
+    }
+
+    /**
      * An activity code that is not in use yet, from A999 down to A900, for the examples that
      * create an activity. Deleted activities keep their code, so each run takes a new one.
      */

@@ -43,6 +43,7 @@ export default defineConfig({
 						{ label: 'Dimensions', slug: 'guides/dimensions' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
+						{ label: 'Browse data', slug: 'guides/browse-data' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 					],
@@ -94,6 +95,13 @@ export default defineConfig({
 						{ label: 'Sales invoices', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-invoices' } }] },
 						{ label: 'Sales transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-transactions' } }] },
 						{ label: 'Transaction blocked value', collapsed: true, items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }] },
+					],
+				},
+				{
+					label: 'Request Data',
+					items: [
+						{ label: 'Browse data', collapsed: true, items: [{ autogenerate: { directory: 'examples/browse-data' } }] },
+						{ label: 'Shadow database', collapsed: true, items: [{ autogenerate: { directory: 'examples/shadow-database' } }] },
 					],
 				},
 				{

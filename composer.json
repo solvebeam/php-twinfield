@@ -78,7 +78,8 @@
       "Composer\\Config::disableProcessTimeout",
       "@php bin/twinfield-login.php"
     ],
-    "twinfield:anonymize": "@php bin/twinfield-anonymize.php"
+    "twinfield:anonymize": "@php bin/twinfield-anonymize.php",
+    "twinfield:browse-definitions": "@php bin/twinfield-browse-definitions.php"
   },
   "config": {
     "allow-plugins": {
@@ -98,6 +99,7 @@
     "twinfield": "Try live Twinfield calls (whoami, refresh, finder)",
     "twinfield:login": "Log in to Twinfield once and store the refresh token",
     "twinfield:anonymize": "Turn recorded responses into anonymized fixtures",
-    "twinfield:setup": "Guided setup: credentials, login and default company"
+    "twinfield:setup": "Guided setup: credentials, login and default company",
+    "twinfield:browse-definitions": "Save the browse definitions and browse fields in browse-definitions/"
   }
 }

@@ -32,20 +32,24 @@ final readonly class ProcessXmlResult
 
     public static function fromSoapResponse(SoapResponse $response): self
     {
+        return self::fromXml(self::xmlOf($response));
+    }
+
+    /**
+     * The XML in `ProcessXmlStringResult`, before it is parsed. For responses that are not a
+     * regular ProcessXml result, e.g. `<browsefields>` without `result` attribute.
+     */
+    public static function xmlOf(SoapResponse $response): string
+    {
         $payload = $response->payloadElement();
-        $result = null;
 
         foreach ($payload === null ? [] : $payload->childNodes as $child) {
             if ($child instanceof DOMElement && $child->localName === 'ProcessXmlStringResult') {
-                $result = $child;
+                return $child->textContent;
             }
         }
 
-        if ($result === null) {
-            throw new UnexpectedResponseException('ProcessXmlStringResponse/ProcessXmlStringResult is missing.');
-        }
-
-        return self::fromXml($result->textContent);
+        throw new UnexpectedResponseException('ProcessXmlStringResponse/ProcessXmlStringResult is missing.');
     }
 
     public static function fromXml(string $xml): self
@@ -54,7 +58,7 @@ final readonly class ProcessXmlResult
         $previous = libxml_use_internal_errors(true);
 
         try {
-            $loaded = trim($xml) !== '' && $document->loadXML($xml, LIBXML_NONET);
+            $loaded = trim($xml) !== '' && $document->loadXML($xml, LIBXML_NONET | LIBXML_PARSEHUGE);
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($previous);

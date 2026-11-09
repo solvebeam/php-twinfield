@@ -107,6 +107,26 @@ $transaction = $twinfield->bankTransactions()->create(
 | Electronic bank statements | `$twinfield->electronicBankStatements()` | Import bank statements and let Twinfield allocate the lines: create, create many. See [Import electronic bank statement](examples/electronic-bank-statements/import-electronic-bank-statement/). |
 | Reversal | `$twinfield->reversalTransactions()` | Reversals of journal transactions: read, post final, post provisional, undo. See [Read reversal](examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](examples/reversal-transactions/reverse-journal-transaction/). |
 
+## Browse data
+
+Financial data such as general ledger transaction lines, open items and balances comes from [browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/): a browse code with the columns you want and selection criteria. The query is immutable and the rows are read strictly, with amounts as `Amount`. See the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+
+```php
+use SolveBeam\Twinfield\BrowseData\BrowseCode;
+
+$result = $twinfield->browse(BrowseCode::GeneralLedgerDetailsV3)
+    ->columns('fin.trs.head.code', 'fin.trs.head.number', 'fin.trs.line.dim1', 'fin.trs.line.valuesigned')
+    ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+    ->equal('fin.trs.head.status', 'normal')
+    ->get();
+
+foreach ($result as $row) {
+    echo $row->string('fin.trs.head.code'), ' ', $row->int('fin.trs.head.number'), ' ', $row->amount('fin.trs.line.valuesigned'), PHP_EOL;
+}
+```
+
+The definitions of all browse codes are in [`browse-definitions/`](browse-definitions/). See [Read browse definition](examples/browse-data/read-browse-definition/) and, for keeping a copy of the transactions, [Initial load](examples/shadow-database/initial-load/), [Incremental load](examples/shadow-database/incremental-load/) and [Validate balances](examples/shadow-database/validate-balances/).
+
 ## Command & Query web services
 
 Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.

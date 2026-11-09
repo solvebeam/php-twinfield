@@ -1,0 +1,99 @@
+<browse result="1">
+  <office name="Example company" shortname="">1000</office>
+  <code>690</code>
+  <name>Btw-aangifte status</name>
+  <shortname>Btw-aangifte status</shortname>
+  <visible>false</visible>
+  <columns code="690">
+    <column id="1">
+      <field>fin.trs.head.office</field>
+      <label>Administratie</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="2">
+      <field>fin.trs.head.officename</field>
+      <label>Adm.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="3">
+      <field>fin.vat.decltype</field>
+      <label>Aangifte type</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="4">
+      <field>fin.vat.declyear</field>
+      <label>Jaar</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>equal</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="5">
+      <field>fin.vat.timeframe</field>
+      <label>Tijdvak</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="6">
+      <field>fin.vat.status</field>
+      <label>Btw-statuscode</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="7">
+      <field>fin.vat.statusname</field>
+      <label>Btw-status</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>equal</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="8">
+      <field>fin.vat.sent</field>
+      <label>Verzonden</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="9">
+      <field>fin.vat.gateway</field>
+      <label>Poort</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+  </columns>
+</browse>

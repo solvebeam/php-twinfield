@@ -1,0 +1,75 @@
+# Read browse definition
+
+Shows the fields of a browse code: which of them can be a column of the result, which can be a selection criterion, with which operator, and the values Twinfield proposes. Read a definition once, while you design a query.
+
+- `browseDefinitions()->get('030_3')`: the definition of a browse code in the company of the client, as `BrowseDefinition`. Pass a `BrowseCode` or a string. An unknown code gives a `ProcessXmlException` (`Opvraagcode 999 bestaat niet.`).
+- `$definition->columns`: every field as `BrowseDefinitionColumn`, with the `label` in the language of the user.
+- `$definition->criteria()`: the fields with `ask`, which can be a criterion, with the proposed `operator`, `from` and `to`. Twinfield does not apply these proposals to a query: send every criterion you need.
+- A field with `visible` false is meant as criterion only, e.g. `fin.trs.head.yearperiod` in 030_3: asking for it as column can give a server error.
+
+The definitions of all browse codes are also in [`browse-definitions/`](../../../browse-definitions/) in the repository, so you can look them up without running this example. See the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+
+## Code
+
+```php
+$twinfield = Example::twinfield();
+
+$code = $argv[1] ?? '030_3';
+
+$definition = $twinfield->browseDefinitions()->get($code);
+
+echo 'Browse code ', $definition->code, ': ', $definition->name, ' (company ', $definition->company->code, ')', PHP_EOL;
+echo count($definition->columns), ' fields, ', count($definition->criteria()), ' of them can be a criterion', PHP_EOL;
+
+foreach ($definition->columns as $column) {
+    $criterion = '';
+
+    if ($column->ask) {
+        $criterion = ' criterion: ' . $column->operator->value;
+
+        if ($column->from !== null) {
+            $criterion .= sprintf(' (proposed %s%s)', $column->from, $column->to === null ? '' : ' … ' . $column->to);
+        }
+    }
+
+    echo rtrim(sprintf(
+        '[%d/%d] %-40s %-30s%s%s',
+        $column->id,
+        count($definition->columns),
+        $column->field,
+        $column->label,
+        $column->visible ? '' : ' (criterion only)',
+        $criterion,
+    )), PHP_EOL;
+}
+```
+
+## Run
+
+```sh
+php examples/browse-data/read-browse-definition/example.php         # 030_3, General Ledger (details) (v3)
+php examples/browse-data/read-browse-definition/example.php 040_1   # Annual Report (totals)
+```
+
+Add `TWINFIELD_DEBUG=1` to see the SOAP request and response.
+
+```text
+Browse code 030_3: Grootboek (details) (v3) (company 1000)
+51 fields, 9 of them can be a criterion
+[1/51] fin.trs.head.office                      Administratie
+[2/51] fin.trs.head.officename                  Adm.naam
+[3/51] fin.trs.head.year                        Jaar
+[4/51] fin.trs.head.period                      Periode
+[5/51] fin.trs.head.yearperiod                  Jaar/periode (JJJJ/PP)         (criterion only) criterion: between
+[6/51] fin.trs.head.code                        Dagboek
+[7/51] fin.trs.head.number                      Boekingsnummer
+[8/51] fin.trs.head.status                      Status                         criterion: equal (proposed normal)
+…
+[13/51] fin.trs.head.inpdate                     Invoerdatum                    criterion: between
+[14/51] fin.trs.head.modified                    Wijzigingsdatum                (criterion only) criterion: between
+[16/51] fin.trs.line.dim1                        Grootboekrek.                  criterion: between
+[25/51] fin.trs.line.valuesigned                 Bedrag
+…
+[50/51] fin.trs.head.regime                      Regime                         criterion: equal
+[51/51] fin.trs.head.reportingstructure          Rapportagestructuur            (criterion only) criterion: equal
+```

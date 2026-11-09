@@ -19,6 +19,9 @@ use SolveBeam\Twinfield\CashBook\CashBookResource;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionResource;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionResource;
 use SolveBeam\Twinfield\Budget\BudgetResource;
+use SolveBeam\Twinfield\BrowseData\BrowseCode;
+use SolveBeam\Twinfield\BrowseData\BrowseDefinitionResource;
+use SolveBeam\Twinfield\BrowseData\BrowseQuery;
 use SolveBeam\Twinfield\AssetMethod\AssetMethodResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
@@ -422,6 +425,30 @@ final readonly class Twinfield
     public function assetMethods(): AssetMethodResource
     {
         return new AssetMethodResource($this);
+    }
+
+    /**
+     * Query on browse data: transaction lines, balances, open items, … of the company.
+     *
+     *   $result = $twinfield->company('1000')->browse(BrowseCode::GeneralLedgerDetailsV3)
+     *       ->columns('fin.trs.head.code', 'fin.trs.head.number', 'fin.trs.line.valuesigned')
+     *       ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+     *       ->equal('fin.trs.head.status', 'normal')
+     *       ->get();
+     *
+     * @param BrowseCode|string $code A string for codes the SDK does not know yet.
+     */
+    public function browse(BrowseCode|string $code): BrowseQuery
+    {
+        return new BrowseQuery($this, $code instanceof BrowseCode ? $code->value : $code);
+    }
+
+    /**
+     * Browse definitions (the fields of a browse code) and browse fields, to design a browse query.
+     */
+    public function browseDefinitions(): BrowseDefinitionResource
+    {
+        return new BrowseDefinitionResource($this);
     }
 
     public function finder(FinderType $type): FinderQuery

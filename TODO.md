@@ -47,17 +47,29 @@ Then add matching to the write test (it needs an open sales invoice) and run the
 
 ## Bank transactions: not yet implemented
 
-- Browse (searching transactions, e.g. by date, customer or invoice number): Browse Data API, not
-  on the bank transactions page.
 - The `BankStatementService`: bank statements imported by Twinfield itself (see the README).
 - Total line fields `invoicenumber`, `freechar`, `comment`, `repvalue`, `reprate` and detail line
   fields `vatbasevalue`, `vatrepvalue` can't be sent yet. Probably rarely needed.
+
+## Browse data: the other browse codes
+
+Browse data (`browse()`, `browseDefinitions()`) is verified live with 030_3, 040_1 and 130_3 (see
+the browse data section of the documentation differences). The definitions of all 38 browse codes
+are read with the SDK (`browse-definitions/`), but queries only on these three.
+
+- Add an example per browse code (`examples/browse-data/`), in batches: 000, 010, 100, 200; then
+  020, 050_1, 060, 130_3, 230_2, 164, 400, 410, 680_2; then the rest. Run each one live: a value
+  type other than `String`, `Number`, `Decimal`, `Value`, `Date` and `Datetime` throws, and must be
+  added to `BrowseValueType`.
+- Generate a reference page per browse code in the docs from `browse-definitions/` (fields,
+  criteria, data types and values from `browsefields.xml`).
+- Which browse codes sort? 000 does, 030_3 ignores the sort fields.
 
 ## Cash transactions: add live tests and verify live
 
 Cash transactions (`transaction`, day book `KAS`) share their code with bank transactions
 (`StatementTransaction`, `StatementTransactionInput`, `TransactionClient`), so the bank items above
-apply to them too: matching, browse and the fields that can't be sent yet. They are only tested
+apply to them too: matching and the fields that can't be sent yet. They are only tested
 offline, with `cash-transaction-read.xml` (fictitious) and the bank fixtures for save, post and
 delete. Nothing is tested live yet.
 

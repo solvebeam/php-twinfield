@@ -86,4 +86,4 @@ Pass amounts as string or int: floats are not exact. Other types (string with a 
 | `ProcessXmlCompressed` | [Deprecated](https://developers.twinfield.com/documentation/getting-started/breaking-changes#processxmlcompressed) and will be removed. |
 | `<general>` root element | [Deprecated](https://developers.twinfield.com/documentation/getting-started/breaking-changes#general-root-xml-element): send one request per type, e.g. `<transactions>` or `<dimensions>`. |
 
-The requests for the entities themselves (dimensions, transactions, browse data, …) are on the other pages of the [Twinfield API documentation](https://developers.twinfield.com/documentation/api/master-data/activities/). The SDK has no resources for them yet; send them with `processXml()`.
+The requests for the entities themselves (dimensions, transactions, …) are on the other pages of the [Twinfield API documentation](https://developers.twinfield.com/documentation/api/master-data/activities/). Most have a resource in the SDK, e.g. [browse data](/guides/browse-data/); send the others with `processXml()`.

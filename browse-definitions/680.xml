@@ -1,0 +1,79 @@
+<browse result="1">
+  <office name="Example company" shortname="">1000</office>
+  <code>680</code>
+  <name>Bankkoppeling details</name>
+  <shortname>Bankkoppeling details</shortname>
+  <visible>false</visible>
+  <columns code="680">
+    <column id="1">
+      <field>fin.bnk.iban</field>
+      <label>IBAN</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="2">
+      <field>fin.trs.head.office</field>
+      <label>Administratie</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="3">
+      <field>fin.trs.head.officename</field>
+      <label>Adm.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="4">
+      <field>fin.bnk.transactiontype</field>
+      <label>Dagboek</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="5">
+      <field>fin.bnk.banklinkstatus</field>
+      <label>Bankkoppelingstatus</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="6">
+      <field>fin.bnk.dim1</field>
+      <label>Grootboekrek.</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="7">
+      <field>fin.bnk.dim1name</field>
+      <label>Grootboekrek.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+  </columns>
+</browse>

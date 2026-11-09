@@ -238,6 +238,23 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Budget by cost center](budgets/budget-by-cost-center/): amounts per account, cost center and period.
 - [Budget by project](budgets/budget-by-project/): amounts per period, account, cost center and project.
 
+## Browse data
+
+- [Read browse definition](browse-data/read-browse-definition/): the fields of a browse code and which can be a criterion.
+- [List browse fields](browse-data/list-browse-fields/): data types and the values of fields with a fixed list.
+- [General ledger transactions (000)](browse-data/000-general-ledger-transactions/): the lines of a general ledger account.
+- [Transactions still to be matched (010)](browse-data/010-transactions-to-be-matched/): open lines on accounts with matching.
+- [General ledger details (030_3)](browse-data/030_3-general-ledger-details/): every transaction line with all details.
+- [Annual report totals (040_1)](browse-data/040_1-annual-report-totals/): the balance per general ledger account.
+- [Customer transactions (100)](browse-data/100-customer-transactions/): open items of customers.
+- [Supplier transactions (200)](browse-data/200-supplier-transactions/): open items of suppliers.
+
+## Shadow database
+
+- [Initial load](shadow-database/initial-load/): all transaction lines once, one year at a time.
+- [Incremental load](shadow-database/incremental-load/): the changed and deleted transactions since the last sync.
+- [Validate balances](shadow-database/validate-balances/): compare the balance per account with Twinfield.
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

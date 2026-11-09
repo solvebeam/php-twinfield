@@ -1,0 +1,119 @@
+<browse result="1">
+  <office name="Example company" shortname="">1000</office>
+  <code>050_1</code>
+  <name>Annual Report YTD</name>
+  <shortname>Annual Report YTD</shortname>
+  <visible>false</visible>
+  <columns code="050_1">
+    <column id="1">
+      <field>fin.trs.head.office</field>
+      <label>Administratie</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="2">
+      <field>fin.trs.head.officename</field>
+      <label>Adm.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="3">
+      <field>fin.trs.head.yearperiod</field>
+      <label>Jaar/periode (JJJJ/PP)</label>
+      <visible>false</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="4">
+      <field>fin.trs.head.status</field>
+      <label>Status</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>equal</operator>
+      <from>normal</from>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="5">
+      <field>fin.trs.line.dim1</field>
+      <label>Grootboekrek.</label>
+      <visible>true</visible>
+      <ask>true</ask>
+      <operator>between</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="6">
+      <field>fin.trs.line.dim1name</field>
+      <label>Grootboekrek.naam</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="7">
+      <field>fin.trs.line.dim1type</field>
+      <label>Dimensietype 1</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="8">
+      <field>fin.trs.line.valuesigned</field>
+      <label>Bedrag</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="9">
+      <field>fin.trs.line.basevaluesigned</field>
+      <label>Basisbedrag</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="10">
+      <field>fin.trs.line.repvaluesigned</field>
+      <label>Rapportagebedrag</label>
+      <visible>true</visible>
+      <ask>false</ask>
+      <operator>none</operator>
+      <from/>
+      <to/>
+      <finderparam/>
+    </column>
+    <column id="11">
+      <field>fin.trs.head.balanceregimeprompt</field>
+      <label>Regime</label>
+      <visible>false</visible>
+      <ask>true</ask>
+      <operator>equal</operator>
+      <from>Generic</from>
+      <to/>
+      <finderparam/>
+    </column>
+  </columns>
+</browse>

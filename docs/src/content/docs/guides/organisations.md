@@ -103,6 +103,7 @@ Store the parts of the key in separate columns, not as one string. Use the organ
 | Dimension (customer, supplier, project, …) | `organisation.id` + company `code` + dimension type + `code`; dimensions also have a `uid` |
 | Bank, cash book, currency, VAT code, … | `organisation.id` + company `code` + `code` |
 | Transaction | `organisation.id` + company `code` + day book + number |
+| Transaction line ([browse data](/guides/browse-data/)) | `organisation.id` + company `code` + day book + number + line: `BrowseRow::$transactionLine` |
 | Deleted transaction | `organisation.id` + company `code` + day book + number |
 
 A person can have users in several organisations. Twinfield only links them with a Twinfield ID: the `twf.id` claim of the scope `twf.user`, for users that have one.
