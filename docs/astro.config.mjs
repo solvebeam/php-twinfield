@@ -1,10 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import mermaid from 'astro-mermaid';
 
 export default defineConfig({
 	site: 'https://php-twinfield.solvebeam.com',
 	integrations: [
+		// Before Starlight, so ```mermaid code blocks are rendered as diagrams instead of code.
+		mermaid({ theme: 'default', autoTheme: true }),
 		starlight({
 			title: 'PHP Twinfield SDK',
 			description: 'Modern PHP SDK for the Twinfield API, built on PSR standards.',
@@ -39,6 +42,7 @@ export default defineConfig({
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
 						{ label: 'Organisations and companies', slug: 'guides/organisations' },
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
+						{ label: 'Dimensions', slug: 'guides/dimensions' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
