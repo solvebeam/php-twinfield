@@ -104,7 +104,7 @@ $transaction = $twinfield->bankTransactions()->create(
 | Sales invoices | `$twinfield->salesInvoices()` | Classic invoicing module: read, create, update, calculate without saving, make final and read the booked sales transaction, invoice types (Finder `INV`). See [Create sales invoice](examples/sales-invoices/create-sales-invoice/) and [Read sales invoice](examples/sales-invoices/read-sales-invoice/). |
 | Journal | `$twinfield->journalTransactions()` | Read, create, update, save many, post, delete; memorial, wages, opening balance and year end. See [Create journal transaction](examples/journal-transactions/create-journal-transaction/) and [Opening balance](examples/journal-transactions/opening-balance/). |
 | Purchase | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices (Finder `IVT`). See [Create purchase transaction](examples/purchase-transactions/create-purchase-transaction/) and [Credit note](examples/purchase-transactions/credit-note/). |
-| Electronic bank statements | `$twinfield->electronicBankStatements()` | Import bank statements and let Twinfield allocate the lines: create, create many. See [Import electronic bank statement](examples/electronic-bank-statements/import-electronic-bank-statement/). |
+| Electronic bank statements | `$twinfield->electronicBankStatements()` | Import bank statements and let Twinfield allocate the lines: create, create many. Read statements with their allocations and matchings (BankStatementService): list by statement date or creation date. See [Import electronic bank statement](examples/electronic-bank-statements/import-electronic-bank-statement/) and [List electronic bank statements](examples/electronic-bank-statements/list-electronic-bank-statements/). |
 | Reversal | `$twinfield->reversalTransactions()` | Reversals of journal transactions: read, post final, post provisional, undo. See [Read reversal](examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](examples/reversal-transactions/reverse-journal-transaction/). |
 
 ## Browse data
@@ -138,7 +138,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 | BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
 | CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |
 | DeletedTransactionsService | `$twinfield->deletedTransactions()` | The only query: `list()`, filtered by day book and deletion date. See [List deleted transactions](examples/deleted-transactions/list-deleted-transactions/). |
-| BankStatementService | – | Not yet |
+| BankStatementService | `$twinfield->electronicBankStatements()` | Both queries: `list()` by statement date and `listByCreationDate()`. See [List electronic bank statements](examples/electronic-bank-statements/list-electronic-bank-statements/). |
 | TransactionBlockedValueService | `$twinfield->transactionBlockedValues()` | Both commands: `register()` and `unregister()` a blocked value on a transaction line. See [Register blocked value](examples/transaction-blocked-values/register-blocked-value/). |
 
 Services without a resource can be called directly. Give the fields in the order of the service's WSDL (usually alphabetical):

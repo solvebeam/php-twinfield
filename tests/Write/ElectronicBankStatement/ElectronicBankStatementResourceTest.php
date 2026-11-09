@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\Tests\Write\ElectronicBankStatement;
 
 use DateTimeImmutable;
 use SolveBeam\Twinfield\BankBook\BankBook;
+use SolveBeam\Twinfield\ElectronicBankStatement\BankStatement;
+use SolveBeam\Twinfield\ElectronicBankStatement\BankStatementLine;
 use SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementInput;
 use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
@@ -36,6 +38,23 @@ final class ElectronicBankStatementResourceTest extends WriteTestCase
         self::assertCount(2, $statement->lines);
         self::assertSame(DebitCredit::Credit, $statement->lines[0]->debitCredit);
         self::assertSame('0.01', $statement->lines[0]->value->value);
+
+        // Read it back through the BankStatementService.
+        $today = new DateTimeImmutable('today');
+        $read = array_values(array_filter(
+            $this->twinfield->electronicBankStatements()->list($today, $today),
+            static fn (BankStatement $read): bool
+                => $read->bankBook === $statement->bankBook && $read->number === $statement->number,
+        ));
+
+        self::assertCount(1, $read, 'The imported statement is found by date.');
+        self::assertSame($statement->startValue->value, $read[0]->openingBalance->value);
+        self::assertSame($statement->closeValue->value, $read[0]->closingBalance->value);
+        self::assertSame(['0.01', '-0.01'], array_map(
+            static fn (BankStatementLine $line): string => $line->amount->value,
+            $read[0]->lines,
+        ));
+        self::assertSame('php-sdk-write-test', $read[0]->lines[0]->reference);
 
         // What Twinfield answers for a duplicate is not documented: record it for TODO.md.
         $again = $this->twinfield->electronicBankStatements()->createMany([

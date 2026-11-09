@@ -47,7 +47,6 @@ Then add matching to the write test (it needs an open sales invoice) and run the
 
 ## Bank transactions: not yet implemented
 
-- The `BankStatementService`: bank statements imported by Twinfield itself (see the README).
 - Total line fields `invoicenumber`, `freechar`, `comment`, `repvalue`, `reprate` and detail line
   fields `vatbasevalue`, `vatrepvalue` can't be sent yet. Probably rarely needed.
 
@@ -521,9 +520,13 @@ To check:
 - A bank book without allocation rules, or with a clearing code and no `sortcode`: which errors?
 - Run `examples/electronic-bank-statements/import-electronic-bank-statement` with `--save` once and
   replace the illustrative line in its README with the real output.
-- Reading: the documentation refers to the `BankStatementService` (Request Data, Command & Query),
-  not supported yet. See
-  https://developers.twinfield.com/documentation/api/request-data/electronic-bank-statements/.
+- Reading (`list()`, `listByCreationDate()`) is verified live on a company with downloaded
+  statements, but not on a statement imported with `create()`: the write test now reads the
+  imported statement back. Also check there whether `listByCreationDate()` finds it, and whether an
+  imported statement is posted right away.
+- Reading a statement that is not posted (`TransactionNumber` nil), and VAT lines, cheque and
+  paying-in slip numbers: only unit tested with a fictitious response
+  (`electronic-bank-statements-list-unposted.xml`).
 
 ## Transaction blocked value: verify live
 

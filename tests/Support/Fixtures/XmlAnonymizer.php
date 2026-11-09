@@ -41,7 +41,11 @@ final class XmlAnonymizer
     ];
 
     /** Elements whose text is kept as is. */
-    private const KEEP_ELEMENTS = ['TotalRows', 'MessageType', 'Type', 'type', 'result', 'currency'];
+    private const KEEP_ELEMENTS = [
+        'TotalRows', 'MessageType', 'Type', 'type', 'result', 'currency',
+        // Enums of the BankStatementService
+        'Sense', 'Recognition', 'AmountOperator', 'AllocationRuleStorageLevel',
+    ];
 
     /** Text within these elements is kept (column headers, not data). */
     private const KEEP_WITHIN = ['Columns'];
@@ -240,7 +244,16 @@ final class XmlAnonymizer
 
         $date = $this->fakeDate($value);
 
-        return $date ?? $this->scramble($value);
+        if ($date !== null) {
+            return $date;
+        }
+
+        // Trailing zeros of a decimal stay zeros, so `4843.9600` stays an amount with two decimals.
+        if (preg_match('~^(-?\d+\.\d*?)(0+)$~', $value, $matches) === 1) {
+            return $this->scramble($matches[1]) . $matches[2];
+        }
+
+        return $this->scramble($value);
     }
 
     /**
@@ -255,7 +268,10 @@ final class XmlAnonymizer
                 : $this->fakeDate($matches[1] . $matches[2] . $matches[3]) . $matches[4];
         }
 
-        if (preg_match('~^(\d{4})(-?)(\d{2})\2(\d{2})(T.*)?$~', $value, $matches) !== 1) {
+        // A time after the date must be a real time: `2026-09-26T10:0110259902615385` is an ID, not a timestamp.
+        $time = '(T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?';
+
+        if (preg_match('~^(\d{4})(-?)(\d{2})\2(\d{2})' . $time . '$~', $value, $matches) !== 1) {
             return null;
         }
 

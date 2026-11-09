@@ -126,6 +126,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 ## Electronic bank statements
 
 - [Import electronic bank statement](electronic-bank-statements/import-electronic-bank-statement/): a CSV statement as the bank reports it; Twinfield allocates the lines (changes data with `--save`).
+- [List electronic bank statements](electronic-bank-statements/list-electronic-bank-statements/): the statements of the last days with their lines, and how Twinfield allocated and matched them.
 
 ## Transaction blocked values
 

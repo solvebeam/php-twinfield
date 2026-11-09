@@ -285,6 +285,40 @@ Responses over 10 MB lost data: libxml drops text over 10 MB without `LIBXML_PAR
 - The value types and formats of the other browse codes than 030_3, 040_1 and 130_3: an unknown type throws an `UnexpectedResponseException`.
 - How Twinfield behaves with very large queries (timeouts, limits): 216,710 lines took 34 seconds.
 
+## Electronic bank statements (reading)
+
+Checked live (November 2026) on a company with bank statements downloaded by Twinfield (14 statements, 182 lines, 224 allocations in two weeks), against the [documentation](https://developers.twinfield.com/documentation/api/request-data/electronic-bank-statements/) and the WSDL (`BankStatementService.svc?singleWsdl`). The documentation has no response example.
+
+### Mistakes in the documentation
+
+- **`AllocationRuleStorageLevel`.** The documentation gives the type `BankStatementAllocationRuleStorageLevel?` (nullable) but does not define it; it defines a `BankStatementAllocationRuleType` with `LocalBank`, `LocalOffice`, `TemplateBank` and `TemplateOffice` instead. The WSDL has `BankStatementAllocationRuleStorageLevel`, not nillable, with also `NotStored`. Live every line has it: `NotStored` or `LocalOffice`. The SDK follows the WSDL (`BankStatementAllocationRuleStorageLevel`).
+- **Fault codes.** Not documented; the WSDL has `BankStatementServiceFault` with only `MethodIsDisabled` (not seen live).
+
+### Requests
+
+- **`StatementDateFrom` and `StatementDateTo` are required.** Without them Twinfield answers with a server error ("Er is een fout opgetreden bij de server"), not a validation fault.
+- **The time counts.** Statements are dated at midnight and Twinfield compares date and time: from and to `2026-11-03T12:00:00` gives nothing, `2026-11-03T00:00:00` gives the statement of 3 November. `list()` sends the dates at midnight, so both days are included.
+- **From after to is accepted** and gives an empty list. The SDK refuses it before sending.
+- **`IncludePostedStatements`** defaults to `false` in Twinfield. Statements that Twinfield processes automatically are posted right away, so the SDK sends `true` unless you pass `includePosted: false`.
+- **No paging.** A long period with many statements gave an HTTP 502 or a timeout; two weeks (14 statements) took a few seconds. `GetBankStatementsByCreationDate` with only a to date gives every statement up to then, in no clear order.
+- `GetBankStatementsByCreationDate` with only a from date works. Whether the time of the creation dates counts could not be checked: the response has no creation date. The SDK sends it as given and refuses a call without dates.
+
+### Responses
+
+- **Amounts have four decimals** (`4843.9600`), never other than zeros after the second. The SDK reads them as `Amount` and throws when the third or fourth decimal is not zero.
+- **Line amounts are signed** (`-10.3000` for money paid); allocation amounts are positive with a `Sense`. Money received is allocated `Credit`, so the allocations with credit as positive add up to the line amount. This held for every line; the opening balance plus the lines was the closing balance for every statement.
+- **Empty strings, not nil.** `ContraAccountNumber`, `PaymentReference`, `ReturnReason`, `EndToEndId` and `Dimension2` to `Dimension6` come as empty elements; `ChequeNumber`, `DescriptionFormat` and `Recognition` as nil. The SDK gives null for both.
+- **Lists are always there**, empty when there is nothing (`<b:AllocationMethods/>`, `<b:Matchings/>`, `<b:VatLines/>`), not left out or nil.
+- **`AllocationMethods`** are filled when a rule was used (`Recognition` `AllocationRule`); for types other than `Amount` the `Amount` and `AmountOperator` are nil.
+- **`Matching.Number`** is an `xs:decimal` without fraction (`202601319`); `BaseValue` has the sign of the matched line (negative for a purchase invoice).
+- `DescriptionFormat` can hold the placeholder `[editable_description]`.
+
+### Not yet verified
+
+- A statement that is not posted (`TransactionNumber` nil): all statements of the company were posted. Unit tested with a fictitious response.
+- `VatLines`, `ChequeNumber`, `PayingInSlipNumber` and an allocation rule on the amount: never filled live. Modelled after the WSDL and unit tested with a fictitious response.
+- When Twinfield gives `MethodIsDisabled`.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

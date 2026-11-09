@@ -404,7 +404,8 @@ final readonly class Twinfield
 
     /**
      * Electronic bank statements of the company: import bank statements and let Twinfield
-     * allocate the lines. Create only; a statement can't be changed.
+     * allocate the lines, and read statements with their allocations (BankStatementService).
+     * A statement can't be changed.
      */
     public function electronicBankStatements(): ElectronicBankStatementResource
     {

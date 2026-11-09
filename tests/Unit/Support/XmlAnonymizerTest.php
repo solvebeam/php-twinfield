@@ -35,6 +35,32 @@ final class XmlAnonymizerTest extends TestCase
         self::assertMatchesRegularExpression('~<c>-\d{4}\.\d{2}</c>~', $xml);
     }
 
+    public function testKeepsTrailingZerosOfDecimals(): void
+    {
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize('<r><a>4843.9600</a><b>-125.0000</b></r>');
+
+        self::assertMatchesRegularExpression('~<a>\d{4}\.\d{2}00</a>~', $xml);
+        self::assertMatchesRegularExpression('~<b>-\d{3}\.0000</b>~', $xml);
+        self::assertStringNotContainsString('4843.96', $xml);
+    }
+
+    public function testScramblesValuesThatOnlyStartWithADate(): void
+    {
+        // An end-to-end ID of a bank: not a timestamp, so the digits after the T must not survive.
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize('<r><a>2026-09-26T10:0110259902615385</a></r>');
+
+        self::assertStringNotContainsString('10259902615385', $xml);
+        self::assertMatchesRegularExpression('~<a>\d{4}-\d{2}-\d{2}[A-Z]\d{2}:\d{16}</a>~', $xml);
+    }
+
+    public function testKeepsEnumsOfTheBankStatementService(): void
+    {
+        $input = '<r><Sense>Credit</Sense><Recognition>ContraIban</Recognition>'
+            . '<AllocationRuleStorageLevel>NotStored</AllocationRuleStorageLevel></r>';
+
+        self::assertSame($input, (new XmlAnonymizer(self::KEY))->anonymize($input));
+    }
+
     public function testIsDeterministicPerKey(): void
     {
         $input = '<r><a>Acme</a><b>Acme</b></r>';

@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DOMElement;
 use Exception;
 use SolveBeam\Twinfield\Soap\SoapResponse;
+use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -26,7 +27,8 @@ final readonly class ResultElement
 
     public function __construct(
         public DOMElement $element,
-        private string $path,
+        /** Path for error messages, e.g. `GetBankStatementsResult/BankStatements/BankStatement[1]`. */
+        public string $path,
     ) {
     }
 
@@ -119,6 +121,21 @@ final readonly class ResultElement
         return $enum::tryFrom($child->text()) ?? throw $child->invalid('one of ' . implode(', ', $values));
     }
 
+    /**
+     * Like enum(), but nil (`i:nil="true"`) gives null. Only use this where nil is valid
+     * Twinfield behaviour; a missing element still throws.
+     *
+     * @template E of BackedEnum
+     *
+     * @param class-string<E> $enum
+     *
+     * @return ?E
+     */
+    public function nullableEnum(string $name, string $enum): ?BackedEnum
+    {
+        return $this->isNil($name) ? null : $this->enum($name, $enum);
+    }
+
     public function int(string $name): int
     {
         return $this->child($name)->asInt();
@@ -156,6 +173,43 @@ final readonly class ResultElement
         $number = filter_var($matches[1], FILTER_VALIDATE_INT);
 
         return is_int($number) ? $number : throw $child->invalid('a whole number');
+    }
+
+    /**
+     * Like wholeNumber(), but nil gives null, e.g. the transaction number of a bank statement
+     * that is not posted yet. A missing element still throws.
+     */
+    public function nullableWholeNumber(string $name): ?int
+    {
+        return $this->isNil($name) ? null : $this->wholeNumber($name);
+    }
+
+    /**
+     * An `xs:decimal` money amount. Twinfield sends four decimals (`4843.9600`); only zeros
+     * are allowed after the second, so the amount fits in Amount without rounding.
+     */
+    public function amount(string $name): Amount
+    {
+        $child = $this->child($name);
+        $text = $this->decimal($name);
+
+        if (preg_match('~^(-?\d+(?:\.\d{1,2})?)\d*$~', $text, $matches) !== 1) {
+            throw $child->invalid('an amount');
+        }
+
+        if (rtrim(substr($text, strlen($matches[1])), '0') !== '') {
+            throw $child->invalid('an amount with at most 2 decimals');
+        }
+
+        return Amount::fromString($matches[1]);
+    }
+
+    /**
+     * Like amount(), but nil gives null. A missing element still throws.
+     */
+    public function nullableAmount(string $name): ?Amount
+    {
+        return $this->isNil($name) ? null : $this->amount($name);
     }
 
     public function bool(string $name): bool
