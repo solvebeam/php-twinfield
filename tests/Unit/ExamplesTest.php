@@ -67,6 +67,7 @@ final class ExamplesTest extends TestCase
         'rates/update-rate-price',
         'suppliers/create-supplier',
         'suppliers/delete-supplier',
+        'reversal-transactions/reverse-journal-transaction',
         'suppliers/update-supplier',
         'transaction-blocked-values/register-blocked-value',
         'transaction-blocked-values/unregister-blocked-value',

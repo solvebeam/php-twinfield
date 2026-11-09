@@ -48,6 +48,7 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Rate\RateResource;
+use SolveBeam\Twinfield\ReversalTransaction\ReversalTransactionResource;
 use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceResource;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
@@ -369,6 +370,15 @@ final readonly class Twinfield
     public function journalTransactions(): JournalTransactionResource
     {
         return new JournalTransactionResource($this);
+    }
+
+    /**
+     * Reversals of journal transactions of the company: read, reverse a final transaction, and
+     * set or undo the reversal of a provisional one.
+     */
+    public function reversalTransactions(): ReversalTransactionResource
+    {
+        return new ReversalTransactionResource($this);
     }
 
     /**

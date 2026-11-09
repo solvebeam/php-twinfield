@@ -38,6 +38,13 @@ final readonly class WriteGuardClient implements ClientInterface
     private const READ_BY_CODE_ROOTS = ['assetmethod', 'dimensiontype'];
 
     /**
+     * Root elements that read only with this `action`; every other action (or none) changes data.
+     *
+     * @see https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/#get
+     */
+    private const READ_ACTION_ROOTS = ['reverse' => 'getreversetransactioninfo'];
+
+    /**
      * @param list<string> $writeCompanies
      */
     public function __construct(
@@ -124,6 +131,12 @@ final readonly class WriteGuardClient implements ClientInterface
     {
         if (in_array($request->localName, self::READ_XML_ROOTS, true)) {
             return true;
+        }
+
+        $readAction = self::READ_ACTION_ROOTS[(string) $request->localName] ?? null;
+
+        if ($readAction !== null) {
+            return $request->attributes->length === 1 && $request->getAttribute('action') === $readAction;
         }
 
         if (!in_array($request->localName, self::READ_BY_CODE_ROOTS, true) || $request->attributes->length > 0) {

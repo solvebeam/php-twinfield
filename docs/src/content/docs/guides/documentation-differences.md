@@ -187,6 +187,31 @@ These need a live write on a test company (`composer test:write -- --company=…
 - Whether `edit()` with the VAT lines of the response is accepted on update.
 - Whether a booking outside period 0 in an opening balance day book is refused, and what `regime` does in a company with one regime.
 
+## Reversal transactions
+
+[Reversal transactions](/guides/transactions/#reversal-transactions) (`reverse`) were checked on 9 November 2026, read-only: `getreversetransactioninfo` on 2 final and 1 deleted `MEMO` transaction, a sales (`VRK`) and a purchase (`INK`) transaction, and numbers that do not exist, in one test company. `postfinal`, `postprovisional` and `undo` change data and are not checked yet. Documentation: [Reversal transactions](https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/).
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| The table names `@action` `getreversetransactioninfo`; the request example has no `action` | With `action="getreversetransactioninfo"` it works, and the response repeats the action. Without `action` it was not tried: it could be a write | `get()` always sends the action. The write guard only counts `<reverse action="getreversetransactioninfo">` as a read |
+| `<reversed>` only "when there is reversed transaction" | Left out for transactions without reversal | `Reversal::$reversed` is null then |
+| `<settings>` in every Get response | There, with `reverseinnextperiod` `false` for all transactions seen | `Reversal::$reverseInNextPeriod` is required |
+| – | A sales or purchase transaction that exists gives the same error as a number that does not exist: `Originele transactie VRK:202600012 is niet gevonden.`, on `reverse/original` | Thrown as `ProcessXmlException`, not as `TransactionNotFoundException`: the text is the only difference and is in the language of the user |
+| – | A **deleted** journal transaction is still found (`result="1"`, without `<reversed>`) | Returned as is; check `journalTransactions()->find()` when it matters |
+| The introduction mentions detail and VAT lines | No response has lines, only office, code and number | `TransactionReference`; read the lines with `journalTransactions()` |
+| `office` in the request | – | Always the company of the client (SDK choice); the response must be about the same transaction, or `UnexpectedResponseException` |
+
+### Not yet verified
+
+These need a live write on a test company (`composer test:write -- --company=… --filter=ReversalTransaction`, and the [Reverse journal transaction](/examples/reversal-transactions/reverse-journal-transaction/) example for `postfinal`):
+
+- The shape of the `postfinal`, `postprovisional` and `undo` responses. The fixtures follow the documentation, with fictitious values.
+- How `reverseinnextperiod` is set: the requests have no settings. Perhaps a setting of the day book.
+- What `postfinal` does on a provisional transaction, on a transaction that is already reversed, and `postprovisional` on a final one.
+- Whether a provisional transaction with reversal settings gets its reversed transaction when it is posted.
+
 ## Sales invoices
 
 [Sales invoices](/guides/transactions/#sales-invoices) (`salesinvoice`, Classic invoicing module) were checked on 9 November 2026, read-only: 40 invoices of type `FACTUUR` of one test company (2010–2011; 8 concept, 32 final), each read with the SDK and turned into an input with `edit()`, the not found response, Finder `INV`, and for a final invoice the sales transaction it refers to. A second test company and the invoice type `UREN` had no invoices. Documentation: [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/).

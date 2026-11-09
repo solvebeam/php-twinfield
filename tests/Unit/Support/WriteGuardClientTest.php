@@ -37,6 +37,10 @@ final class WriteGuardClientTest extends TestCase
         yield 'process xml asset method save' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>M</code><name>Machine</name></assetmethod>'), false];
         yield 'process xml asset method status' => ['ProcessXmlString', self::processXml('<assetmethod status="deleted"><office>1002</office><code>M</code></assetmethod>'), false];
         yield 'process xml asset method code only' => ['ProcessXmlString', self::processXml('<assetmethod><code>M</code><code>N</code></assetmethod>'), false];
+        yield 'process xml reversal info' => ['ProcessXmlString', self::processXml('<reverse action="getreversetransactioninfo"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), true];
+        yield 'process xml reversal without action' => ['ProcessXmlString', self::processXml('<reverse><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
+        yield 'process xml reversal post final' => ['ProcessXmlString', self::processXml('<reverse action="postfinal"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
+        yield 'process xml reversal undo' => ['ProcessXmlString', self::processXml('<reverse action="undo"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
         yield 'process xml dimension type read' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code></dimensiontype>'), true];
         yield 'process xml dimension type save' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code><name>Debiteuren</name></dimensiontype>'), false];
         yield 'process xml dimension by code' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office><code>1000</code></dimension>'), false];

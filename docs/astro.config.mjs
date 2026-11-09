@@ -95,6 +95,7 @@ export default defineConfig({
 						{ label: 'Deleted transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/deleted-transactions' } }] },
 						{ label: 'Journal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/journal-transactions' } }] },
 						{ label: 'Purchase transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/purchase-transactions' } }] },
+						{ label: 'Reversal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/reversal-transactions' } }] },
 						{ label: 'Sales invoices', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-invoices' } }] },
 						{ label: 'Sales transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-transactions' } }] },
 						{ label: 'Transaction blocked value', collapsed: true, items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }] },

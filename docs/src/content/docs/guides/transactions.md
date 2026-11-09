@@ -13,10 +13,10 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 | Sales invoices | [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/) | `$twinfield->salesInvoices()` | Read, create, update, calculate, make final, invoice types; see [Sales invoices](#sales-invoices) |
 | Journal | [Journal transactions](https://developers.twinfield.com/documentation/api/transaction-data/journal-transactions/) | `$twinfield->journalTransactions()` | Read, create, update, save many, post, delete; see [Journal transactions](#journal-transactions) |
 | Purchase | [Purchase transactions](https://developers.twinfield.com/documentation/api/transaction-data/purchase-transactions/) | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices; see [Purchase transactions](#purchase-transactions) |
+| Reversal transactions | [Reversal transactions](https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/) | `$twinfield->reversalTransactions()` | Read, post final, post provisional, undo; see [Reversal transactions](#reversal-transactions) |
 | Deleted transactions | [Deleted transactions](https://developers.twinfield.com/documentation/api/transaction-data/deleted-transactions/) | `$twinfield->deletedTransactions()` | List; see [Deleted transactions](#deleted-transactions) |
 | Transaction blocked value | [Transaction blocked value](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/) | `$twinfield->transactionBlockedValues()` | Register, unregister; see [Blocked values](#blocked-values) |
 | Electronic bank statements | [Electronic bank statements](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/) |  | Not supported yet |
-| Reversal transactions | [Reversal transactions](https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/) |  | Not supported yet |
 | Spread transactions | [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/) |  | Not supported yet |
 | Time entry | [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/) |  | Not supported yet |
 
@@ -206,6 +206,30 @@ Twinfield has several kinds of journal: memorial, wages, opening balance and yea
 `get()` returns a `JournalTransaction` with the `header`, the `regime`, the `details` and the `vat` lines; `debit()` and `credit()` are the sums of both sides.
 
 Examples: [Read journal transaction](/examples/journal-transactions/read-journal-transaction/), [Create journal transaction](/examples/journal-transactions/create-journal-transaction/) and [Opening balance](/examples/journal-transactions/opening-balance/). How the live responses differ from the documentation: [Differences with the documentation](/guides/documentation-differences/#journal-transactions).
+
+## Reversal transactions
+
+A reversal transaction is a complete reverse of a journal transaction, e.g. to undo an accrual in the next period. Twinfield makes it itself, in the reversal day book of the journal (e.g. `MEMOTEGENBOEKING` for `MEMO`), and links it to the original.
+
+```php
+$reversals = $twinfield->reversalTransactions();
+
+$reversal = $reversals->get('MEMO', 202600003);
+
+if ($reversal->reversed === null) {
+    $reversed = $reversals->postFinal('MEMO', 202600003);
+
+    $transaction = $twinfield->journalTransactions()->get($reversed->dayBook, $reversed->number);
+}
+```
+
+- `get($dayBook, $number)` returns a `Reversal`: the `original` transaction, the `reversed` transaction (or `null` when there is none) and `reverseInNextPeriod`. Both transactions are a `TransactionReference` (company, day book and number): read the transaction itself with `journalTransactions()`.
+- `postFinal()` reverses a **final** journal transaction: Twinfield creates the reversed transaction and posts it as final. It returns the reversed transaction.
+- `postProvisional()` only saves the reversal settings of a **provisional** journal transaction; `undo()` removes them again.
+- Only journal transactions have a reversal. For a sales or purchase transaction, or a number that does not exist, Twinfield answers `Originele transactie VRK:202600012 is niet gevonden.`, thrown as `ProcessXmlException`. A deleted journal transaction is still found, without reversed transaction.
+- The documentation has no way to set `reverseInNextPeriod`: the requests only have the original transaction.
+
+Examples: [Read reversal](/examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](/examples/reversal-transactions/reverse-journal-transaction/). How the live responses differ from the documentation: [Differences with the documentation](/guides/documentation-differences/#reversal-transactions).
 
 ## Sales invoices
 
@@ -416,3 +440,4 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Read purchase transaction](/examples/purchase-transactions/read-purchase-transaction/), [create](/examples/purchase-transactions/create-purchase-transaction/) and [credit note](/examples/purchase-transactions/credit-note/).
 - [Open invoices](/examples/purchase-transactions/open-invoices/): unpaid invoices of a supplier.
 - [Read journal transaction](/examples/journal-transactions/read-journal-transaction/), [create](/examples/journal-transactions/create-journal-transaction/) and [opening balance](/examples/journal-transactions/opening-balance/).
+- [Read reversal](/examples/reversal-transactions/read-reversal/) and [reverse journal transaction](/examples/reversal-transactions/reverse-journal-transaction/).

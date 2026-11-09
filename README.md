@@ -104,6 +104,7 @@ $transaction = $twinfield->bankTransactions()->create(
 | Sales invoices | `$twinfield->salesInvoices()` | Classic invoicing module: read, create, update, calculate without saving, make final and read the booked sales transaction, invoice types (Finder `INV`). See [Create sales invoice](examples/sales-invoices/create-sales-invoice/) and [Read sales invoice](examples/sales-invoices/read-sales-invoice/). |
 | Journal | `$twinfield->journalTransactions()` | Read, create, update, save many, post, delete; memorial, wages, opening balance and year end. See [Create journal transaction](examples/journal-transactions/create-journal-transaction/) and [Opening balance](examples/journal-transactions/opening-balance/). |
 | Purchase | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices (Finder `IVT`). See [Create purchase transaction](examples/purchase-transactions/create-purchase-transaction/) and [Credit note](examples/purchase-transactions/credit-note/). |
+| Reversal | `$twinfield->reversalTransactions()` | Reversals of journal transactions: read, post final, post provisional, undo. See [Read reversal](examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](examples/reversal-transactions/reverse-journal-transaction/). |
 
 ## Command & Query web services
 

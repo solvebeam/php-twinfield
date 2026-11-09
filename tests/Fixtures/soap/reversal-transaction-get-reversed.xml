@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;reverse action="getreversetransactioninfo" result="1"&gt;&lt;original&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;MEMO&lt;/code&gt;&lt;number&gt;202600003&lt;/number&gt;&lt;/original&gt;&lt;reversed&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;MEMOTEGENBOEKING&lt;/code&gt;&lt;number&gt;202600001&lt;/number&gt;&lt;/reversed&gt;&lt;settings&gt;&lt;reverseinnextperiod&gt;true&lt;/reverseinnextperiod&gt;&lt;/settings&gt;&lt;/reverse&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

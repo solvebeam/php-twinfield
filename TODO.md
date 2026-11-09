@@ -455,6 +455,31 @@ the real output.
 Not yet implemented: articles (items) themselves (`<article>`, Finder `ART`). The old manual (`manuals/Webservices-Manual-Sales-Invoices.pdf`) is not read yet: it needs
 `pdftotext` (`brew install poppler`).
 
+## Reversal transactions: verify writing live
+
+`reversalTransactions()` reads live (`getreversetransactioninfo`); `postFinal()`, `postProvisional()`
+and `undo()` are tested offline with fixtures that follow the documentation
+(`reversal-transaction-{post-final,post-provisional,undo}.xml`, fictitious values).
+
+```sh
+composer test:write -- --company=1002_3 --filter=ReversalTransaction
+```
+
+The write test only uses a provisional transaction (`postProvisional()`, `get()`, `undo()`, then
+deletes it). `postFinal()` makes two final transactions that cannot be deleted: run
+`examples/reversal-transactions/reverse-journal-transaction` once on a test company by hand.
+
+To check:
+
+- The real responses of the three actions; record them (`TWINFIELD_RECORD=1`, then
+  `composer twinfield:anonymize`) to replace the fixtures, and replace the illustrative output in the
+  README of the example.
+- How `reverseinnextperiod` is set (not in any request); perhaps a setting of the day book.
+- `postFinal()` on a provisional or already reversed transaction, `postProvisional()` on a final one,
+  `undo()` without settings: which errors?
+- Does posting a provisional transaction with reversal settings create the reversed transaction?
+- `<reverse>` without `action`: is it really a read, as the documentation example suggests?
+
 ## Transaction blocked value: verify live
 
 `transactionBlockedValues()` (TransactionBlockedValueService) sends both commands in the WSDL order;

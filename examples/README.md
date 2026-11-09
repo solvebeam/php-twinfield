@@ -107,6 +107,11 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Create journal transaction](journal-transactions/create-journal-transaction/): book a correction; the lines balance by themselves, without total line (changes data with `--save`).
 - [Opening balance](journal-transactions/opening-balance/): book an opening balance in period 0 (changes data with `--save`).
 
+## Reversal transactions
+
+- [Read reversal](reversal-transactions/read-reversal/): the reversed transaction and reversal settings of a journal transaction.
+- [Reverse journal transaction](reversal-transactions/reverse-journal-transaction/): reverse a final journal transaction (changes data).
+
 ## Sales invoices
 
 - [List invoice types](sales-invoices/list-invoice-types/): the invoice types of the company, with Finder `INV`.
