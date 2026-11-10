@@ -41,8 +41,22 @@ Twinfield supports the following OAuth 2.0 scopes:
 | `twf.organisation` | Contains organisation information. | • `twf.organisationCode` - Code of organisation<br>• `twf.organisationId` - GUID of organisation<br>• `twf.clusterUrl` - URL of cluster on which organisation is located |
 | `twf.organisationUser` | Contains information about organisation user.<br><br>**⚠️ Important:** This scope is **mandatory** in order to login. | • `twf.organisationUserCode` - Code of the organisation user (used for login)<br>• `twf.organisationCode` - Code of the organisation<br>• `twf.organisationId` - GUID of organisation |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
+| `readArticles` | REST API: read sales articles. | - |
+| `writeArticles` | REST API: create, update, delete and import sales articles (also reads them). | - |
+| `readBankAccounts` | REST API: PSD2 bank feeds. | - |
+| `readBookkeeping` | REST API: ledger accounts. | - |
+| `readBookkeepingMatches` | REST API: matching audit trail. | - |
+| `readBudgets` | REST API: budget lines, annual budgets and budget periods. | - |
+| `writeBudgets` | REST API: change, copy, spread and import budget lines (also reads them). | - |
+| `readBudgetScenarios` | REST API: budgets and spreading templates. | - |
+| `writeBudgetScenarios` | REST API: create, update and delete budgets and spreading templates (also reads them). | - |
+| `readCustomers` | REST API: changed customers, posting rules and ledger accounts. | - |
+| `readSuppliers` | REST API: changed suppliers, posting rules and ledger accounts. | - |
+| `readFixedAssets` | REST API: fixed assets of the new fixed assets module, with classes, groups and reports. | - |
+| `readVat` | REST API: VAT codes. | - |
+| `readVatGroup` | REST API: VAT groups; also gives access to the ledger accounts. | - |
 
-The [REST API](/guides/rest-api/#scopes) needs a scope per operation on top of these, e.g. `readFixedAssets`, `readVat` or `writeArticles`; the `Scope` enum has them all, and `Scope::rest()` lists the REST API scopes. Without the scope Twinfield answers HTTP 403. `AccessTokenValidation::$scopes` has the scopes of a token.
+Every operation of the [REST API](/guides/rest-api/#scopes) needs one of the `read…`/`write…` scopes on top of the identity scopes; without it Twinfield answers HTTP 403. The `Scope` enum has them all, and `Scope::rest()` lists the REST API scopes. Your OAuth client must be allowed to request them. `AccessTokenValidation::$scopes` has the scopes of a token.
 
 The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
 
