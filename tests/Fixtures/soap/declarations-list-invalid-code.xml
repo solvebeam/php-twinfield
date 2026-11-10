@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><GetAllSummariesResponse xmlns="http://www.twinfield.com/"><GetAllSummariesResult><MessageOfLoadMessage><Type>Error</Type><Text>Deze code bestaat niet.</Text><Code>InvalidCode</Code><Parameters><string xsi:nil="true"/></Parameters></MessageOfLoadMessage></GetAllSummariesResult><vatReturn/></GetAllSummariesResponse></soap:Body></soap:Envelope>

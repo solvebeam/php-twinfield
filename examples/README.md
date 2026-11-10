@@ -256,6 +256,11 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Incremental load](shadow-database/incremental-load/): the changed and deleted transactions since the last sync.
 - [Validate balances](shadow-database/validate-balances/): compare the balance per account with Twinfield.
 
+## Declarations
+
+- [List declarations](declarations/list-declarations/): VAT, ICT and tax group returns of the company or the organisation.
+- [Download VAT return](declarations/download-vat-return/): a VAT return as XBRL, with its payment reference.
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

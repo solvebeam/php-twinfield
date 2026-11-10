@@ -44,6 +44,7 @@ export default defineConfig({
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Browse data', slug: 'guides/browse-data' },
+						{ label: 'Declarations', slug: 'guides/declarations' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 					],
@@ -107,6 +108,7 @@ export default defineConfig({
 				{
 					label: 'Miscellaneous',
 					items: [
+						{ label: 'Declarations', collapsed: true, items: [{ autogenerate: { directory: 'examples/declarations' } }] },
 						{ label: 'Finder', collapsed: true, items: [{ autogenerate: { directory: 'examples/finder' } }] },
 						{ label: 'Periods', collapsed: true, items: [{ autogenerate: { directory: 'examples/periods' } }] },
 					],

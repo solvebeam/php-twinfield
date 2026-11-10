@@ -551,3 +551,30 @@ To check:
 - Record the real fault responses (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to
   replace the fixture, and run the examples in `examples/transaction-blocked-values/` and replace
   the illustrative output in their READMEs with the real output.
+
+## Declarations: verify the status commands live
+
+All 14 queries of the declarations service are verified live (read-only, see the declarations
+section of the documentation differences). The status commands `setToSent()`, `setToApproved()`
+and `setToRejected()` are only tested offline, with fictitious responses after the WSDL
+(`declarations-set-to-*.xml`).
+
+```sh
+TWINFIELD_RECORD=1 composer test:write -- --company=1002_3 --filter=Declaration
+```
+
+The write test only changes returns of the write company that are still "Created", and is skipped
+when there is none: create a VAT return in Twinfield first (without sending it).
+
+To check:
+
+- The response of a successful command: an empty `<SetToSentResult/>`, as the SDK expects?
+- An unknown document ID: `DocumentDoesNotExist`, or SOAP fault 100 like the queries?
+- Which transitions are allowed: can a "Created" return be set to sent, and a sent one to rejected
+  or approved? What does a refused transition give (`StartStatusInCorrectForTransition`)?
+- Can a return of another company of the organisation be changed with the write company in the
+  header (the queries only look at the document ID)? If so, the write guard can't protect it: say
+  so in the guide.
+- Statuses other than Created and Approved (Sent, Rejected, Error while sending): does
+  `ExtraInformation` get a value, e.g. the rejection reason?
+- Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`).

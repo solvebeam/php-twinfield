@@ -30,6 +30,7 @@ use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\CostCenter\CostCenterResource;
 use SolveBeam\Twinfield\Currency\CurrencyResource;
 use SolveBeam\Twinfield\Customer\CustomerResource;
+use SolveBeam\Twinfield\Declaration\DeclarationResource;
 use SolveBeam\Twinfield\DeletedTransaction\DeletedTransactionResource;
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
@@ -410,6 +411,15 @@ final readonly class Twinfield
     public function electronicBankStatements(): ElectronicBankStatementResource
     {
         return new ElectronicBankStatementResource($this);
+    }
+
+    /**
+     * VAT, ICT and tax group returns (declarations.asmx): list them, download them as XBRL or
+     * XML, get the payment reference and set their status.
+     */
+    public function declarations(): DeclarationResource
+    {
+        return new DeclarationResource($this);
     }
 
     /**

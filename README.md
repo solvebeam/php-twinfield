@@ -127,6 +127,24 @@ foreach ($result as $row) {
 
 The definitions of all browse codes are in [`browse-definitions/`](browse-definitions/). See [Read browse definition](examples/browse-data/read-browse-definition/) and, for keeping a copy of the transactions, [Initial load](examples/shadow-database/initial-load/), [Incremental load](examples/shadow-database/incremental-load/) and [Validate balances](examples/shadow-database/validate-balances/).
 
+## Declarations
+
+VAT, ICT and tax group returns come from the [declarations service](https://developers.twinfield.com/documentation/api/miscellaneous/declarations/): list them per company or for the whole organisation, download them as XBRL or XML, get the payment reference and mark them as sent, approved or rejected. See the [declarations guide](https://php-twinfield.solvebeam.com/guides/declarations/).
+
+```php
+use SolveBeam\Twinfield\Declaration\DeclarationType;
+
+$declarations = $twinfield->company('1000')->declarations();
+
+foreach ($declarations->list(year: 2026) as $return) {
+    if ($return->type === DeclarationType::VatTurnover) {
+        file_put_contents($return->id . '.xbrl', $declarations->vatReturnXbrl($return->id));
+    }
+}
+```
+
+See [List declarations](examples/declarations/list-declarations/) and [Download VAT return](examples/declarations/download-vat-return/).
+
 ## Command & Query web services
 
 Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.

@@ -38,6 +38,10 @@ final class XmlAnonymizer
         'accountant', 'accountantcustomer', 'regular', 'nouse', 'useandmanage', 'useonlyforcompanycreation',
         'NotInvited', 'Invited', 'Supervisor', 'primary', 'name', 'dropdown',
         'cs-CZ', 'da-DK', 'de-DE', 'en-GB', 'fr-FR', 'hu-HU', 'nl-NL',
+        // Message codes of the declarations service (in `Code`, which also holds company and user codes)
+        'NoAccess', 'InvalidCode', 'InvalidParameter', 'NotSupported', 'InvalidDocumentType', 'ParameterIsRequired',
+        'ParametersAreRequired', 'DocumentDoesNotExist', 'StartStatusInCorrectForTransition',
+        'UnableToPerformTransition',
     ];
 
     /** Elements whose text is kept as is. */
@@ -45,6 +49,8 @@ final class XmlAnonymizer
         'TotalRows', 'MessageType', 'Type', 'type', 'result', 'currency',
         // Enums of the BankStatementService
         'Sense', 'Recognition', 'AmountOperator', 'AllocationRuleStorageLevel',
+        // Declarations service: the kind of return
+        'DocumentCode',
     ];
 
     /** Text within these elements is kept (column headers, not data). */

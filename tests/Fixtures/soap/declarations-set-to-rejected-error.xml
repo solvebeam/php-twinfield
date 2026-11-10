@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><SetToRejectedResponse xmlns="http://www.twinfield.com/"><SetToRejectedResult><MessageOfSetStatusMessages><Type>Error</Type><Text>The return can not be rejected in its current status.</Text><Code>StartStatusInCorrectForTransition</Code><Parameters/></MessageOfSetStatusMessages></SetToRejectedResult></SetToRejectedResponse></soap:Body></soap:Envelope>

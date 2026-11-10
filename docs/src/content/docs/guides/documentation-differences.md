@@ -319,6 +319,50 @@ Checked live (November 2026) on a company with bank statements downloaded by Twi
 - `VatLines`, `ChequeNumber`, `PayingInSlipNumber` and an allocation rule on the amount: never filled live. Modelled after the WSDL and unit tested with a fictitious response.
 - When Twinfield gives `MethodIsDisabled`.
 
+## Declarations
+
+Checked live (November 2026), read-only, on an organisation with 5,828 returns of all five types (2010–2026), against the [documentation](https://developers.twinfield.com/documentation/api/miscellaneous/declarations/) and the WSDL (`declarations.asmx?wsdl`, the same as in `wsdl/accounting/`). The SDK follows the WSDL and the live responses. See the [declarations guide](/guides/declarations/).
+
+### Mistakes in the documentation
+
+- **Kind of service.** The documentation calls it a "Command & Query Web Service"; it is a classic `.asmx` service with a `Header` (`AccessToken`, `CompanyCode`) and a SOAPAction per operation. The raw envelopes in the documentation are right.
+- **Element names.** On the wire they are camelCase (`companyCode`, `documentId`, `isMessageIdRequired`); the documentation mixes `DocumentId` and `documentId`.
+- **`DocumentTimeFrame`** also has `Year` (int), filled in every return; the documentation only lists `Period`.
+- **The list of returns** is `vatReturn/DeclarationSummary` (an array), next to `<Operation>Result` with the messages; the documentation shows one `DeclarationSummary VatReturn`.
+- **Messages** have `Type`, `Text`, `Code` and `Parameters` (a list of `string`, which can be nil), not `TypeField`, `TextField`, `CodeField` and `ParametersField` (a string).
+- **`LoadMessage`** also has `ParameterIsRequired` and `ParametersAreRequired` (WSDL); Twinfield gives `ParameterIsRequired` without `modifiedSince`.
+- **`startIndex` is 0-based.** The documentation's examples use `1`, which skips the first return.
+- **`modifiedSince` is required**, as in the WSDL (`minOccurs="1"`). The documentation says "If provided" for `GetRangeOfSummariesSinceModified`; without it Twinfield answers `ParameterIsRequired`.
+- **`*` as company code** works for `GetAllSummaries` and `GetRangeOfSummaries` too, not only for the two operations where the documentation mentions it. `GetNumberOfDeclarations` refuses it with `InvalidCode`, so the SDK has no organisation count.
+- **The company in the header is required**, also with `*`: without it Twinfield answers SOAP fault 359 ("Company ontbreekt in request header").
+- **`SetToRejected.reason`** is "Mandatory" in the documentation and optional in the WSDL. The SDK requires it.
+
+### Requests
+
+- **`modifiedSince`** counts to the second, at or after the moment ("on and after"). Twinfield respects the time zone (`11:07:46+01:00` is `10:07:46Z`) and reads a time without one as UTC. The SDK sends the time zone of the date.
+- **No maximum page size.** `count=100000` gave all 5,828 returns.
+- A negative `startIndex` gives `InvalidParameter`; `count=0` gives an empty list. The SDK refuses both before sending.
+- **Only the document ID counts** for downloads and payment references: the company in the header can be another company of the organisation.
+- **`isMessageIdRequired`** made no difference: `MessageReferenceSupplierVAT` was filled in with `false` and with `true`, for an approved and for a created return.
+- **The type is not checked** for downloads: `GetVatReturnAsXbrl` on an ICT return gives the ICT return. Payment references are checked (`InvalidDocumentType`).
+
+### Responses
+
+- **Order.** Returns come by ID, oldest first.
+- **`ExtraInformation`** is an empty element in every return, and left out in the four oldest (2010, 2011). The SDK gives null for both.
+- **`Assignee` and `Company`** have a code and a name in every return.
+- **Status.** Only `1` (`Gecreëerd`) and `7` (`Goedgekeurd`) were seen; the description is in the language of the user.
+- **`vatReturn`** of the XBRL and XML downloads holds one element: `xbrli:xbrl`, `AangifteOmzetbelasting` (with `xmlns=""`) or `OpgaafICP`. The SDK returns it as a standalone document.
+- **Empty payment reference.** `<paymentReference/>` for every yearly supplementary return (`YEARLYSUPPLETION`) and the oldest VAT return; the SDK gives null. For an ICT return and a yearly supplementary tax group return (`TXGRPYRSP`) Twinfield answers `InvalidDocumentType`.
+- **An unknown document ID** is a SOAP fault with code `100` and a server error message, not `DocumentDoesNotExist`.
+- **An unknown company code** gives an empty list, not `InvalidCode`.
+
+### Not yet verified
+
+- The status commands (`SetToSent`, `SetToApproved`, `SetToRejected`): their response and messages, and which transitions Twinfield allows. Only tested offline, with responses after the WSDL.
+- Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
+- Statuses other than `Created` and `Approved`, and filled `ExtraInformation` (e.g. for `Error while sending`).
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

@@ -61,6 +61,16 @@ final class XmlAnonymizerTest extends TestCase
         self::assertSame($input, (new XmlAnonymizer(self::KEY))->anonymize($input));
     }
 
+    public function testKeepsTheTypeAndMessageCodesOfTheDeclarationsService(): void
+    {
+        $input = '<r><DocumentCode>YEARLYSUPPLETION</DocumentCode><Code>InvalidDocumentType</Code></r>';
+
+        self::assertSame($input, (new XmlAnonymizer(self::KEY))->anonymize($input));
+
+        // Other codes, such as company and user codes, are still replaced.
+        self::assertStringNotContainsString('JDOE', (new XmlAnonymizer(self::KEY))->anonymize('<r><Code>JDOE</Code></r>'));
+    }
+
     public function testIsDeterministicPerKey(): void
     {
         $input = '<r><a>Acme</a><b>Acme</b></r>';
