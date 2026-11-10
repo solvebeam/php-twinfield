@@ -67,6 +67,7 @@ use SolveBeam\Twinfield\Rest\RawBody;
 use SolveBeam\Twinfield\Rest\RestClient;
 use SolveBeam\Twinfield\Rest\RestResponse;
 use SolveBeam\Twinfield\ReversalTransaction\ReversalTransactionResource;
+use SolveBeam\Twinfield\SalesArticle\SalesArticleResource;
 use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceResource;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
@@ -387,6 +388,15 @@ final readonly class Twinfield
     public function ledgerAccounts(): LedgerAccountResource
     {
         return new LedgerAccountResource($this);
+    }
+
+    /**
+     * Sales articles of the company (REST API): search, read, create, update, delete, import and
+     * export.
+     */
+    public function salesArticles(): SalesArticleResource
+    {
+        return new SalesArticleResource($this);
     }
 
     /**
