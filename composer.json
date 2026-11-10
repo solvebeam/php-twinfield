@@ -9,6 +9,12 @@
       "email": "remcotolsma@gmail.com"
     }
   ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/solvebeam"
+    }
+  ],
   "keywords": [
     "php",
     "twinfield",
