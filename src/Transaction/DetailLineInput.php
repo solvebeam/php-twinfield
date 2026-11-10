@@ -111,14 +111,14 @@ final class DetailLineInput
      */
     public static function fromLine(DetailLine $line): self
     {
-        $input = new self($line->debitCredit, $line->account->code, $line->amounts->value, allowNegative: true);
+        $input = new self($line->debitCredit, $line->account->code, $line->value, allowNegative: true);
 
         $input->dim2 = $line->dim2?->code;
         $input->dim3 = $line->dim3?->code;
         $input->vatCode = $line->vatCode;
         $input->vatValue = $line->vatCode === null ? null : $line->vatValue;
-        $input->rate = $line->amounts->rate;
-        $input->repRate = $line->amounts->repRate;
+        $input->rate = $line->rate;
+        $input->repRate = $line->repRate;
         $input->invoiceNumber = $line->invoiceNumber;
         $input->description = $line->description;
         $input->comment = $line->comment;

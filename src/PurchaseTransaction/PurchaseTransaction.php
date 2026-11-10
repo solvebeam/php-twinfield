@@ -29,7 +29,7 @@ use SolveBeam\Twinfield\Transaction\VatLineInput;
  *   echo $transaction->invoiceNumber, ' ', $transaction->supplier()->name, ' ', $transaction->value(), PHP_EOL;
  *
  *   foreach ($transaction->details as $line) {
- *       echo $line->account->code, ' ', $line->amounts->value, ' ', $line->vatCode, PHP_EOL;
+ *       echo $line->account->code, ' ', $line->value, ' ', $line->vatCode, PHP_EOL;
  *   }
  *
  * To change it, call edit() and pass the result to update().
@@ -121,7 +121,7 @@ final readonly class PurchaseTransaction
      */
     public function value(): Amount
     {
-        $value = $this->total->amounts->value;
+        $value = $this->total->value;
 
         return $this->total->debitCredit === DebitCredit::Credit ? $value : $value->negate();
     }

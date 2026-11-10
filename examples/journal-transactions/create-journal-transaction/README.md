@@ -54,7 +54,7 @@ echo 'Created: ', $transaction->dayBook(), ' ', $transaction->number(), ' (', $t
     ', period ', $transaction->header->period, PHP_EOL;
 
 foreach ($transaction->details as $line) {
-    echo '  ', $line->id, ' ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->amounts->value,
+    echo '  ', $line->id, ' ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->value,
         PHP_EOL;
 }
 

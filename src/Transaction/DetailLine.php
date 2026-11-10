@@ -16,6 +16,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 final readonly class DetailLine
 {
     /**
+     * @param numeric-string $rate
+     * @param ?numeric-string $repRate
      * @param list<MatchSet> $matches
      */
     public function __construct(
@@ -28,8 +30,16 @@ final readonly class DetailLine
         public ?DimensionReference $dim3,
         /** Bank and cash: credit when money is received, debit when it is paid. */
         public DebitCredit $debitCredit,
-        /** Amount without VAT. */
-        public LineAmounts $amounts,
+        /** Amount without VAT. In the currency of the transaction; always positive, `debitCredit` gives the side. */
+        public Amount $value,
+        /** In the base currency of the company. */
+        public Amount $baseValue,
+        /** Exchange rate from the transaction currency to the base currency, e.g. `1` or `1.084500000`. */
+        public string $rate,
+        /** In the reporting currency; null when the company has none (Twinfield then leaves it out). */
+        public ?Amount $repValue,
+        /** Exchange rate from the transaction currency to the reporting currency. */
+        public ?string $repRate,
         public ?string $invoiceNumber,
         public ?string $description,
         public ?DateTimeImmutable $dueDate,
@@ -64,7 +74,11 @@ final readonly class DetailLine
             dim2: TransactionXml::optionalDimension($line, 'dim2'),
             dim3: TransactionXml::optionalDimension($line, 'dim3'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),
-            amounts: LineAmounts::fromXml($line),
+            value: TransactionXml::amount($line, 'value'),
+            baseValue: TransactionXml::amount($line, 'basevalue'),
+            rate: TransactionXml::rate($line, 'rate'),
+            repValue: TransactionXml::optionalAmount($line, 'repvalue'),
+            repRate: TransactionXml::optionalRate($line, 'reprate'),
             invoiceNumber: TransactionXml::optionalString($line, 'invoicenumber'),
             description: TransactionXml::optionalString($line, 'description'),
             dueDate: TransactionXml::optionalDate($line, 'duedate'),
@@ -98,7 +112,7 @@ final readonly class DetailLine
      */
     public function signedValue(): Amount
     {
-        return $this->debitCredit === DebitCredit::Credit ? $this->amounts->value : $this->amounts->value->negate();
+        return $this->debitCredit === DebitCredit::Credit ? $this->value : $this->value->negate();
     }
 
     public function edit(): DetailLineInput

@@ -22,7 +22,7 @@ $transaction = $bank->create(
 
 echo 'Created:  ', $transaction->dayBook(), ' ', $transaction->number(),
     ' (', $transaction->header->status->name, ')', PHP_EOL;
-echo 'Total:    ', $transaction->total->debitCredit->value, ' ', $transaction->total->amounts->value, PHP_EOL;
+echo 'Total:    ', $transaction->total->debitCredit->value, ' ', $transaction->total->value, PHP_EOL;
 echo 'Balance:  ', $transaction->startValue, ' → ', $transaction->closeValue, PHP_EOL;
 
 // Clean up: delete the provisional example transaction again.

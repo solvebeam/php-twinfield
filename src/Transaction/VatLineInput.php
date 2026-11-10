@@ -79,7 +79,7 @@ final class VatLineInput
 
     public static function fromLine(VatLine $line): self
     {
-        $input = new self($line->debitCredit, $line->vatCode, $line->amounts->value);
+        $input = new self($line->debitCredit, $line->vatCode, $line->value);
 
         $input->account = $line->account->code;
         $input->turnover = $line->vatTurnover;

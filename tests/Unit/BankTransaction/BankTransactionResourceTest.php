@@ -68,10 +68,10 @@ final class BankTransactionResourceTest extends TestCase
         self::assertSame('1010', $total->account->code);
         self::assertSame('Bank', $total->account->name);
         self::assertSame(DebitCredit::Debit, $total->debitCredit);
-        self::assertSame('423.45', $total->amounts->value->value);
-        self::assertSame('1', $total->amounts->rate);
-        self::assertSame('635.18', $total->amounts->repValue?->value);
-        self::assertSame('1.500000000', $total->amounts->repRate);
+        self::assertSame('423.45', $total->value->value);
+        self::assertSame('1', $total->rate);
+        self::assertSame('635.18', $total->repValue?->value);
+        self::assertSame('1.500000000', $total->repRate);
         self::assertSame(MatchStatus::NotMatchable, $total->matchStatus);
 
         self::assertCount(2, $transaction->details);
@@ -109,7 +109,7 @@ final class BankTransactionResourceTest extends TestCase
         $vat = $transaction->vat[0];
         self::assertSame('1520', $vat->account->code);
         self::assertSame('IH', $vat->vatCode);
-        self::assertSame('2.10', $vat->amounts->value->value);
+        self::assertSame('2.10', $vat->value->value);
         self::assertSame('10.00', $vat->vatTurnover?->value);
         self::assertSame(3, $vat->baseline);
     }
@@ -181,7 +181,7 @@ final class BankTransactionResourceTest extends TestCase
         self::assertSame(202600046, $transaction->number());
         self::assertSame('1518.46', $transaction->closeValue->value);
         self::assertSame(MatchStatus::Available, $transaction->details[0]->matchStatus);
-        self::assertNull($transaction->total->amounts->repValue, 'Without reporting currency, Twinfield leaves it out.');
+        self::assertNull($transaction->total->repValue, 'Without reporting currency, Twinfield leaves it out.');
     }
 
     public function testCreateRefusesATransactionNumber(): void

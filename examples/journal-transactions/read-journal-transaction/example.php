@@ -37,7 +37,7 @@ foreach ($transaction->details as $line) {
         $line->debitCredit->value,
         $line->account->code,
         $line->dim2->code ?? '',
-        $line->amounts->value,
+        $line->value,
         $line->vatCode ?? '',
         $line->vatValue ?? '',
         $line->description ?? '',
@@ -50,7 +50,7 @@ foreach ($transaction->vat as $line) {
         $line->debitCredit->value,
         $line->account->code,
         '',
-        $line->amounts->value,
+        $line->value,
         $line->vatCode,
         $line->vatTurnover ?? '-',
     ), PHP_EOL;

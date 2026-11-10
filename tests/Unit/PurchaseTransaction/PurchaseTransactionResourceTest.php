@@ -76,7 +76,7 @@ final class PurchaseTransactionResourceTest extends TestCase
         self::assertCount(2, $transaction->details);
         [$consultancy, $training] = $transaction->details;
         self::assertSame(DebitCredit::Debit, $consultancy->debitCredit);
-        self::assertSame('100.00', $consultancy->amounts->value->value);
+        self::assertSame('100.00', $consultancy->value->value);
         self::assertSame('IH', $consultancy->vatCode);
         self::assertSame('21.00', $consultancy->vatValue?->value);
         self::assertSame(MatchStatus::NotMatchable, $consultancy->matchStatus);
@@ -89,7 +89,7 @@ final class PurchaseTransactionResourceTest extends TestCase
         self::assertCount(1, $transaction->vat);
         $vat = $transaction->vat[0];
         self::assertSame('1520', $vat->account->code);
-        self::assertSame('31.50', $vat->amounts->value->value);
+        self::assertSame('31.50', $vat->value->value);
         self::assertSame('150.00', $vat->vatTurnover?->value);
         self::assertSame(1, $vat->baseline);
         self::assertSame(MatchStatus::Available, $vat->matchStatus, 'Live: available, not notmatchable as documented.');
@@ -108,9 +108,9 @@ final class PurchaseTransactionResourceTest extends TestCase
         self::assertSame('+++100/0160/01495+++', $transaction->paymentReference);
 
         $total = $transaction->total;
-        self::assertSame('111.53', $total->amounts->baseValue->value);
-        self::assertSame('0.921700000', $total->amounts->rate);
-        self::assertSame('121.00', $total->amounts->repValue?->value);
+        self::assertSame('111.53', $total->baseValue->value);
+        self::assertSame('0.921700000', $total->rate);
+        self::assertSame('121.00', $total->repValue?->value);
         self::assertSame('19.36', $total->vatBaseTotal?->value);
         self::assertSame('21.00', $total->vatRepTotal?->value);
         self::assertSame('Credit note F-2026-0043', $total->description);
@@ -192,7 +192,7 @@ final class PurchaseTransactionResourceTest extends TestCase
             ->purchaseTransactions()
             ->get('INK', 202600012);
 
-        self::assertSame('-50.00', $transaction->details[1]->amounts->value->value);
+        self::assertSame('-50.00', $transaction->details[1]->value->value);
 
         $xpath = $this->xpath($transaction->edit()->toXml('1000')->toXml());
         self::assertSame('debit', $xpath->evaluate('string(//line[@id="3"]/debitcredit)'));

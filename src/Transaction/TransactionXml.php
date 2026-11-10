@@ -34,6 +34,16 @@ final class TransactionXml
     }
 
     /**
+     * Required exchange rate, e.g. `1.500000000`.
+     *
+     * @return numeric-string
+     */
+    public static function rate(XmlElement $parent, string $name): string
+    {
+        return self::optionalRate($parent, $name) ?? throw $parent->child($name)->invalid('an exchange rate');
+    }
+
+    /**
      * Exchange rate, e.g. `1.500000000`.
      *
      * @return ?numeric-string

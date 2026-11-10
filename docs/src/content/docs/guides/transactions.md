@@ -284,7 +284,7 @@ Amount::sum(['10.00', '2.10']);         // 12.10
 Amount::of('1,50');                     // InvalidArgumentException
 ```
 
-Calculations use bcmath. Read models return amounts as `Amount` too, e.g. `$transaction->closeValue` or `$line->amounts->value`.
+Calculations use bcmath. Read models return amounts as `Amount` too, e.g. `$transaction->closeValue` or `$line->value`.
 
 ## VAT
 

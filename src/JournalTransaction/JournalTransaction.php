@@ -22,7 +22,7 @@ use SolveBeam\Twinfield\Transaction\VatLineInput;
  *   $transaction = $twinfield->journalTransactions()->get('MEMO', 202600003);
  *
  *   foreach ($transaction->details as $line) {
- *       echo $line->account->code, ' ', $line->debitCredit->value, ' ', $line->amounts->value, PHP_EOL;
+ *       echo $line->account->code, ' ', $line->debitCredit->value, ' ', $line->value, PHP_EOL;
  *   }
  *
  * To change it, call edit() and pass the result to update().
@@ -123,7 +123,7 @@ final readonly class JournalTransaction
 
         foreach ([...$this->details, ...$this->vat] as $line) {
             if ($line->debitCredit === $side) {
-                $amounts[] = $line->amounts->value;
+                $amounts[] = $line->value;
             }
         }
 

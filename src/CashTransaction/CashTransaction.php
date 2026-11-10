@@ -14,7 +14,7 @@ use SolveBeam\Twinfield\Transaction\StatementTransaction;
  *   echo $transaction->startValue, ' → ', $transaction->closeValue, PHP_EOL;
  *
  *   foreach ($transaction->details as $line) {
- *       echo $line->debitCredit->value, ' ', $line->amounts->value, ' ', $line->dim2?->name, PHP_EOL;
+ *       echo $line->debitCredit->value, ' ', $line->value, ' ', $line->dim2?->name, PHP_EOL;
  *   }
  *
  * To change it, call edit() and pass the result to update().

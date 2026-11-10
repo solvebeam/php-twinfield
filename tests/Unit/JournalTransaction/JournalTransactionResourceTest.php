@@ -57,7 +57,7 @@ final class JournalTransactionResourceTest extends TestCase
         self::assertSame('8199', $revenue->account->code);
         self::assertSame('PNL', $revenue->account->type);
         self::assertSame(DebitCredit::Credit, $revenue->debitCredit);
-        self::assertSame('1000.00', $revenue->amounts->value->value);
+        self::assertSame('1000.00', $revenue->value->value);
         self::assertSame('PRIVE-H', $revenue->vatCode);
         self::assertSame('210.00', $revenue->vatValue?->value);
         self::assertNull($revenue->invoiceNumber, 'Twinfield returns it empty.');
@@ -76,7 +76,7 @@ final class JournalTransactionResourceTest extends TestCase
         self::assertSame(4, $vat->id);
         self::assertSame('1618', $vat->account->code);
         self::assertSame(DebitCredit::Credit, $vat->debitCredit);
-        self::assertSame('210.00', $vat->amounts->value->value);
+        self::assertSame('210.00', $vat->value->value);
         self::assertSame('1000.00', $vat->vatTurnover?->value);
         self::assertSame(1, $vat->baseline);
 
@@ -187,7 +187,7 @@ final class JournalTransactionResourceTest extends TestCase
         self::assertSame(MatchStatus::Available, $payment->matchStatus);
         self::assertSame('-435.55', $payment->openBaseValue?->value);
         self::assertSame('-435.55', $payment->openRepValue?->value);
-        self::assertSame('435.55', $payment->amounts->repValue?->value);
+        self::assertSame('435.55', $payment->repValue?->value);
     }
 
     public function testCreateRefusesATransactionNumber(): void

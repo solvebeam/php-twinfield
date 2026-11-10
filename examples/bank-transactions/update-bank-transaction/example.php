@@ -30,7 +30,7 @@ $updated = $bank->update(
 echo 'Updated: ', $updated->number(), ' ', count($updated->details), ' lines, ', $updated->balance(), PHP_EOL;
 
 foreach ($updated->details as $line) {
-    echo '  ', $line->description, ': ', $line->amounts->value, PHP_EOL;
+    echo '  ', $line->description, ': ', $line->value, PHP_EOL;
 }
 
 // Clean up: delete the provisional example transaction again.

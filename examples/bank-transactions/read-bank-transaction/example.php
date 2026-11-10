@@ -29,7 +29,7 @@ echo 'Transaction: ', $header->dayBook, ' ', $header->number, ' (', $header->sta
 echo 'Date:        ', $header->date->format('Y-m-d'), ', period ', $header->period, PHP_EOL;
 echo 'Statement:   ', $transaction->statementNumber ?? '-', PHP_EOL;
 echo 'Balance:     ', $transaction->startValue, ' → ', $transaction->closeValue, ' ', $header->currency, PHP_EOL;
-echo 'Total:       ', $transaction->total->debitCredit->value, ' ', $transaction->total->amounts->value,
+echo 'Total:       ', $transaction->total->debitCredit->value, ' ', $transaction->total->value,
     ' on ', $transaction->total->account->code, PHP_EOL;
 
 foreach ($transaction->details as $line) {
@@ -38,7 +38,7 @@ foreach ($transaction->details as $line) {
         $line->debitCredit->value,
         $line->account->code,
         $line->dim2->code ?? '',
-        $line->amounts->value,
+        $line->value,
         $line->matchStatus->value,
         $line->dim2->name ?? $line->description ?? '',
     ), PHP_EOL;
@@ -57,6 +57,6 @@ foreach ($transaction->vat as $line) {
         $line->debitCredit->value,
         $line->account->code,
         $line->vatCode,
-        $line->amounts->value,
+        $line->value,
     ), PHP_EOL;
 }

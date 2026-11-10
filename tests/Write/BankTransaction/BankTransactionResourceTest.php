@@ -47,7 +47,7 @@ final class BankTransactionResourceTest extends WriteTestCase
             $read = $bank->get($created->dayBook(), $created->number());
 
             self::assertSame($created->number(), $read->number());
-            self::assertSame('1.23', $read->details[0]->amounts->value->value);
+            self::assertSame('1.23', $read->details[0]->value->value);
 
             $updated = $bank->update($read->edit()->description('PHP SDK write test (updated)'));
 

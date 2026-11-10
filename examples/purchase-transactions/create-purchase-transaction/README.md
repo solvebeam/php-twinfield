@@ -61,12 +61,12 @@ echo 'Total:    ', $transaction->value(), ' including ', $transaction->total->va
     $transaction->total->openBaseValue, PHP_EOL;
 
 foreach ($transaction->details as $line) {
-    echo '  detail ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->amounts->value,
+    echo '  detail ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->value,
         ' ', $line->vatCode, ' ', $line->vatValue, PHP_EOL;
 }
 
 foreach ($transaction->vat as $line) {
-    echo '  vat    ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->amounts->value, PHP_EOL;
+    echo '  vat    ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->value, PHP_EOL;
 }
 
 // Clean up: delete the provisional example transaction again.
