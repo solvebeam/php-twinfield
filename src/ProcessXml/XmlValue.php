@@ -17,6 +17,8 @@ use SolveBeam\Twinfield\Period\Period;
  *   XmlValue::period(2025, 1);                           // 2025/01
  *
  * @see https://developers.twinfield.com/documentation/api/types/xml-web-services/#value-types
+ *
+ * @internal
  */
 final class XmlValue
 {

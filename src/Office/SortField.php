@@ -24,6 +24,8 @@ final readonly class SortField
 
     /**
      * Null for an empty `<field>`: that sort position is not used, which is valid in Twinfield.
+     *
+     * @internal
      */
     public static function nullable(XmlElement $field): ?self
     {

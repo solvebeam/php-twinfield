@@ -30,6 +30,9 @@ class SoapFaultException extends RuntimeException
         parent::__construct($message);
     }
 
+    /**
+     * @internal
+     */
     public static function fromSoapResponse(SoapResponse $response): self
     {
         $faultCode = $response->faultCode();

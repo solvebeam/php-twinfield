@@ -251,6 +251,9 @@ abstract class AbstractTransactionInput implements TransactionInput
         return $this->destiny;
     }
 
+    /**
+     * @internal
+     */
     public function toXml(string $company): XmlBuilder
     {
         $xml = XmlBuilder::create('transaction', $this->attributes());
@@ -260,6 +263,9 @@ abstract class AbstractTransactionInput implements TransactionInput
         return $xml;
     }
 
+    /**
+     * @internal
+     */
     public function appendTo(XmlBuilder $xml, DOMElement $parent, string $company): void
     {
         $transaction = $xml->add($parent, 'transaction', null, $this->attributes());

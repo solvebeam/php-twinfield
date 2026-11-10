@@ -37,6 +37,9 @@ final readonly class CompanyAccess
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $office, Organisation $organisation): self
     {
         $templateCompanyAccess = $office->child('templatecompanyaccess');

@@ -264,6 +264,8 @@ final readonly class RateInput
      * The `<projectrate>` request to save this rate in a company.
      *
      * @throws LogicException When the input has no prices: Twinfield requires at least one.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

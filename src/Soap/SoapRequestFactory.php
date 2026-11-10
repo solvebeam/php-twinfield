@@ -10,6 +10,8 @@ use Psr\Http\Message\StreamInterface;
 /**
  * Abstracts PSR-7 / PSR-17 object creation so the SOAP layer stays
  * independent of the concrete HTTP library (Guzzle, Nyholm, etc.).
+ *
+ * @internal
  */
 interface SoapRequestFactory
 {

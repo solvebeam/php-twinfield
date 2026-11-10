@@ -42,6 +42,8 @@ final readonly class BankBook
 
     /**
      * From a `GetBankBookResult`. The result has no code: it is the code of the request.
+     *
+     * @internal
      */
     public static function fromResult(ResultElement $result, CompanyReference $company, string $code): self
     {

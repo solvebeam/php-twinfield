@@ -45,6 +45,9 @@ final readonly class TotalLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         return new self(

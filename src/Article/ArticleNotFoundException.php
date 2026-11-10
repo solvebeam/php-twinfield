@@ -29,6 +29,8 @@ final class ArticleNotFoundException extends RuntimeException
      * Twinfield then answers with an empty element and one error on it:
      * `<article msgtype="error" msg="Artikel X bestaat niet." result="0"/>`. The message is in the
      * language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

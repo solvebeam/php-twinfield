@@ -29,6 +29,8 @@ final class AssetMethodNotFoundException extends RuntimeException
      * Twinfield then answers with only office and code, and one error on the root element:
      * `<assetmethod msgtype="error" msg="Methode M999 bestaat niet." result="0">` with `<office>` and `<code>`.
      * The message is in the language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

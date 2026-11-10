@@ -66,6 +66,9 @@ final readonly class DetailLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         return new self(

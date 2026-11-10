@@ -69,6 +69,8 @@ final readonly class SalesInvoiceLine
 
     /**
      * From a `<line>` element of a read, save or calculate response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $line): self
     {

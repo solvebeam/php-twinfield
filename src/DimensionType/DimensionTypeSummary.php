@@ -25,6 +25,8 @@ final readonly class DimensionTypeSummary
      * From a Finder row; columns: code, name (column names depend on the user's language).
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {

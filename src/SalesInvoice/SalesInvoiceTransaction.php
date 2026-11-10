@@ -25,6 +25,9 @@ final readonly class SalesInvoiceTransaction
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $financials): self
     {
         return new self($financials->string('code'), $financials->int('number'));

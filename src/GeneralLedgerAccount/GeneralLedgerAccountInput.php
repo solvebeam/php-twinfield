@@ -248,6 +248,8 @@ final readonly class GeneralLedgerAccountInput
      * The `<dimension>` request to save this account in a company.
      *
      * `financials/accounttype` is not sent: it is read-only and follows from the type.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

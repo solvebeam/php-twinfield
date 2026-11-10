@@ -69,6 +69,9 @@ final readonly class InvoiceTotalLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         return new self(

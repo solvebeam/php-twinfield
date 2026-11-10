@@ -13,6 +13,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
  * Writes time entries as a `<teqs>` request.
  *
  *   echo TimeEntryXmlWriter::request('1000', $input)->toXml();
+ *
+ * @internal
  */
 final class TimeEntryXmlWriter
 {

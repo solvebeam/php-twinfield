@@ -32,6 +32,8 @@ use SolveBeam\Twinfield\Soap\SoapRequestFactory;
  *   </s:Envelope>
  *
  * SOAPAction: `http://www.twinfield.com/PeriodService/Query` (or `/Process` for commands).
+ *
+ * @internal
  */
 final readonly class CommandQueryEnvelope implements SoapMessage
 {

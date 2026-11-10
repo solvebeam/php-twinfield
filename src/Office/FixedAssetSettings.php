@@ -25,6 +25,9 @@ final readonly class FixedAssetSettings
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $fixedAssets): self
     {
         return new self(

@@ -172,6 +172,8 @@ final readonly class VatCodeInput
      * The `<vat>` request to save this VAT code in a company.
      *
      * @throws LogicException When the input has no percentages, or a percentage has no account.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

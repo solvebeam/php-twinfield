@@ -30,6 +30,9 @@ final readonly class ProcessXmlResult
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromSoapResponse(SoapResponse $response): self
     {
         return self::fromXml(self::xmlOf($response));
@@ -38,6 +41,8 @@ final readonly class ProcessXmlResult
     /**
      * The XML in `ProcessXmlStringResult`, before it is parsed. For responses that are not a
      * regular ProcessXml result, e.g. `<browsefields>` without `result` attribute.
+     *
+     * @internal
      */
     public static function xmlOf(SoapResponse $response): string
     {
@@ -52,6 +57,9 @@ final readonly class ProcessXmlResult
         throw new UnexpectedResponseException('ProcessXmlStringResponse/ProcessXmlStringResult is missing.');
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(string $xml): self
     {
         $document = new DOMDocument();

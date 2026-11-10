@@ -16,6 +16,8 @@ use Psr\Http\Message\StreamInterface;
  *
  *   $psr17 = new \Nyholm\Psr7\Factory\Psr17Factory();
  *   $factory = new Psr17SoapRequestFactory($psr17, $psr17);
+ *
+ * @internal
  */
 final readonly class Psr17SoapRequestFactory implements SoapRequestFactory
 {

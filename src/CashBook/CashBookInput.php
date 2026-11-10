@@ -68,6 +68,8 @@ final readonly class CashBookInput
 
     /**
      * The `CreateCashBook` command, fields in WSDL order. Empty optional fields are left out.
+     *
+     * @internal
      */
     public function toCreateCommand(): Command
     {

@@ -8,6 +8,11 @@ use SolveBeam\Twinfield\Data\ArrayOfString;
 use SolveBeam\Twinfield\Data\ArrayOfArrayOfString;
 use SolveBeam\Twinfield\Soap\SoapName;
 
+/**
+ * `FinderData` in the response of the Finder.
+ *
+ * @internal Use `FinderResult`.
+ */
 final readonly class FinderData
 {
     public function __construct(

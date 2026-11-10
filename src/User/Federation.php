@@ -24,6 +24,9 @@ final readonly class Federation
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $federation): self
     {
         return new self($federation->string('domain'), $federation->string('email'));

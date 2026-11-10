@@ -24,6 +24,8 @@ final readonly class CashBookSummary
      * From a Finder row (type BNK, banktype 1); columns: code, name.
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {

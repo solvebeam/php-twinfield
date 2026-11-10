@@ -100,6 +100,8 @@ final class MatchSetInput
 
     /**
      * @throws LogicException When the set has no lines.
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $matches): void
     {

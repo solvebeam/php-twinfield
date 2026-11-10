@@ -24,6 +24,9 @@ final readonly class BankStatementAllocationMethod
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $method): self
     {
         return new self(

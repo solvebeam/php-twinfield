@@ -10,6 +10,8 @@ namespace SolveBeam\Twinfield\Soap;
  *
  * - When `type` is a builtin like 'string', 'int', etc., the text content is coerced.
  * - When `type` is a class name, each child element is recursively mapped.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class SoapArray

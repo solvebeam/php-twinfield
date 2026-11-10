@@ -42,6 +42,8 @@ final readonly class BudgetLineKey
     /**
      * `{year}/{period}/{unitOfMeasure}/{generalLedgerId}[/{costCenterId}[/{projectId}]]`; without cost
      * center or project the path leaves them out (an empty GUID gives "not found").
+     *
+     * @internal
      */
     public function toPath(): string
     {

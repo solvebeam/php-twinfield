@@ -12,6 +12,8 @@ namespace SolveBeam\Twinfield\Soap;
  *
  * Usage on properties:
  *   #[SoapName('AccessToken')]
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::TARGET_PARAMETER)]
 final class SoapName

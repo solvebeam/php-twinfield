@@ -20,6 +20,8 @@ use SolveBeam\Twinfield\Transaction\Amount;
  *
  * Values: scalars, null, arrays, `Amount`, `UnitPrice`, `JsonNumber` and backed enums (their value).
  * Use `(object) []` for an empty JSON object.
+ *
+ * @internal `Twinfield::rest()` encodes the body.
  */
 final class JsonWriter
 {

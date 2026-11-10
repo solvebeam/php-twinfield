@@ -94,6 +94,8 @@ final readonly class ActivityInput
 
     /**
      * The `<dimension>` request to save this activity in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

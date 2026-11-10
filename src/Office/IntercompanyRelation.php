@@ -35,6 +35,8 @@ final readonly class IntercompanyRelation
      * `transaction` element instead.
      *
      * @param bool $outgoing True for `<out>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $relation, bool $outgoing): self
     {

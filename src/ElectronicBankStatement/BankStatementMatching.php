@@ -29,6 +29,9 @@ final readonly class BankStatementMatching
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $matching): self
     {
         return new self(

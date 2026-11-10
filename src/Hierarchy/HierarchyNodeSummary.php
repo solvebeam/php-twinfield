@@ -26,6 +26,8 @@ final readonly class HierarchyNodeSummary
      * From a Finder row; columns: code, name.
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(
         array $row,

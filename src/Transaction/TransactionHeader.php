@@ -55,6 +55,8 @@ final readonly class TransactionHeader
 
     /**
      * From a `<transaction>` element of a read or save response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $transaction, Organisation $organisation): self
     {

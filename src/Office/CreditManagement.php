@@ -35,6 +35,9 @@ final readonly class CreditManagement
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $creditManagement): self
     {
         $prompts = [];

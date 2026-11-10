@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - MIT license: `LICENSE` and `"license": "MIT"` in `composer.json`.
 - The PHP extensions the SDK uses are required in `composer.json`: `ext-bcmath`, `ext-dom`, `ext-libxml`, `ext-mbstring` and `ext-simplexml`.
+- Backward compatibility: the transport layer is marked `@internal` and is not part of the public API: `SoapClient`, `RestClient`, the SOAP envelope and request classes, `XmlBuilder`, `XmlElement`, `XmlValue`, `JsonWriter`, `Twinfield::call()` and the mapping methods on models (`fromXml()`, `toXml()`, `fromResult()`, `fromFinderRow()`, …). Use the resources, or `Twinfield::processXml()`, `query()`, `process()` and `rest()`.
 
 #### Client and authentication
 

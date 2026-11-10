@@ -18,6 +18,8 @@ use SolveBeam\Twinfield\Soap\RateLimitExceededException;
  * Use `Twinfield::rest()`, which adds the access token and the GUIDs of the organisation and company.
  *
  * @see https://api.accounting.twinfield.com/Api/swagger/ui/index
+ *
+ * @internal
  */
 final readonly class RestClient
 {

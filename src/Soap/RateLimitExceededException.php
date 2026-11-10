@@ -56,6 +56,9 @@ final class RateLimitExceededException extends RuntimeException
         );
     }
 
+    /**
+     * @internal
+     */
     public static function fromHttpResponse(ResponseInterface $response): self
     {
         // Retry-After may also be an HTTP date (RFC 9110); Twinfield documents seconds, anything else is null.

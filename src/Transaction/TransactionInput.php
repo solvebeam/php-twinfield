@@ -24,11 +24,15 @@ interface TransactionInput
 
     /**
      * Adds the `<transaction>` element to the parent (a `<transactions>` element).
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $parent, string $company): void;
 
     /**
      * The `<transaction>` request on its own.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder;
 }

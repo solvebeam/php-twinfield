@@ -65,6 +65,8 @@ final readonly class Currency
 
     /**
      * From a `<currency>` element of a save response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $currency, Organisation $organisation): self
     {

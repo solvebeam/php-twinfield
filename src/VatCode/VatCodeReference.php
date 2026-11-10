@@ -34,6 +34,8 @@ final readonly class VatCodeReference
     /**
      * From the `<vatcode>` element; null when it is empty (`<vatcode fixed="false" />`), which
      * is how Twinfield returns an account without a default VAT code.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $vatCode): ?self
     {

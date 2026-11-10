@@ -30,6 +30,8 @@ final class RateNotFoundException extends RuntimeException
      * `<projectrate msgtype="error" msg="Tarief T999 bestaat niet." result="0" inuse="false">`
      * with `<office>` and `<code>`. The message is in the language of the user, so the
      * structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

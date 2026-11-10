@@ -10,6 +10,8 @@ use SolveBeam\Twinfield\Soap\SoapArray;
 
 /**
  * @implements IteratorAggregate<int, string>
+ *
+ * @internal
  */
 #[SoapArray(elementName: 'string')]
 final readonly class ArrayOfString implements IteratorAggregate

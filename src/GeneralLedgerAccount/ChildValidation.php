@@ -89,6 +89,8 @@ final readonly class ChildValidation
 
     /**
      * From a `<childvalidation>` element.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $validation): self
     {

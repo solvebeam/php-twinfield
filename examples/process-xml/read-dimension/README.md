@@ -2,7 +2,7 @@
 
 Reads a customer (dimension type `DEB`) with ProcessXml and shows what to do when Twinfield does not accept the request.
 
-`processXml()` takes the request as XML string. Build it with an XML library, as Twinfield recommends, so values such as `&` are escaped. `XmlBuilder` makes that short: `add($parent, $name, $value, $attributes)` and `toXml()`. DOM, SimpleXML or XMLWriter work too, or a plain string: `processXml('<read>…</read>')`. Before sending, comments and whitespace between elements are removed, as Twinfield asks.
+`processXml()` takes the request as XML string. Build it with an XML library, as Twinfield recommends, so values such as `&` are escaped. The example uses DOM; SimpleXML or XMLWriter work too, or a plain string: `processXml('<read>…</read>')`. Before sending, comments and whitespace between elements are removed, as Twinfield asks.
 
 Twinfield marks the result of each element with a `result` attribute: `1` processed, `0` not. When the root element has `result="0"`, `processXml()` throws a `ProcessXmlException`. Its `result` has the whole response, and `messages()` gives each error and warning (`msg` and `msgtype`) with the path of the element, e.g. `dimension/code`. In a bulk request (e.g. `<transactions>` with several transactions) the other elements may have been processed: check their `result` attribute.
 
@@ -15,15 +15,23 @@ $twinfield = Example::twinfield();
 
 $code = $argv[1] ?? '1000';
 
-// Build the request with XmlBuilder (DOM), so values are escaped.
-$request = XmlBuilder::create('read');
-$request->add($request->root(), 'type', 'dimensions');
-$request->add($request->root(), 'office', (string) $twinfield->companyCode());
-$request->add($request->root(), 'dimtype', 'DEB');
-$request->add($request->root(), 'code', $code);
+// Build the request with DOM, so values are escaped.
+$request = new DOMDocument();
+$read = $request->appendChild($request->createElement('read'));
+
+$fields = [
+    'type' => 'dimensions',
+    'office' => (string) $twinfield->companyCode(),
+    'dimtype' => 'DEB',
+    'code' => $code,
+];
+
+foreach ($fields as $name => $value) {
+    $read->appendChild($request->createElement($name))->appendChild($request->createTextNode($value));
+}
 
 try {
-    $result = $twinfield->processXml($request->toXml());
+    $result = $twinfield->processXml((string) $request->saveXML($read));
 } catch (ProcessXmlException $exception) {
     foreach ($exception->result->messages() as $message) {
         echo $message->type->value, ' at ', $message->path, ': ', $message->text, PHP_EOL;

@@ -11,6 +11,8 @@ use Psr\Http\Message\RequestInterface;
  *
  * Implemented by SoapEnvelope (classic .asmx services) and
  * CommandQueryEnvelope (Command & Query .svc services).
+ *
+ * @internal
  */
 interface SoapMessage
 {

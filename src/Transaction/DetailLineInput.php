@@ -463,6 +463,9 @@ final class DetailLineInput
         return $this->debitCredit === DebitCredit::Credit ? $value : $value->negate();
     }
 
+    /**
+     * @internal
+     */
     public function appendTo(XmlBuilder $xml, DOMElement $lines, int $id): void
     {
         $line = $xml->add($lines, 'line', null, ['type' => LineType::Detail->value, 'id' => (string) $id]);

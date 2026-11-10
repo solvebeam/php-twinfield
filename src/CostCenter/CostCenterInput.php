@@ -51,6 +51,8 @@ final readonly class CostCenterInput
 
     /**
      * The `<dimension>` request to save this cost center in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

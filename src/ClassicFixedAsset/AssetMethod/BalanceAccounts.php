@@ -30,6 +30,9 @@ final readonly class BalanceAccounts
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $accounts): self
     {
         return new self(

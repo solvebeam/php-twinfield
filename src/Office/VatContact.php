@@ -26,6 +26,8 @@ final readonly class VatContact
 
     /**
      * @param bool $hasSoleTraderId True for `txp`, the only contact with a `cpid_st` element.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $contact, bool $hasSoleTraderId = false): self
     {

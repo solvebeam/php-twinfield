@@ -7,6 +7,11 @@ namespace SolveBeam\Twinfield\Soap;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
+/**
+ * Sends SOAP requests to the Twinfield web services.
+ *
+ * @internal Use `Twinfield::processXml()`, `Twinfield::query()` and `Twinfield::process()`.
+ */
 final class SoapClient
 {
     public function __construct(

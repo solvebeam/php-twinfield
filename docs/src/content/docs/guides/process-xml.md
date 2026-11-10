@@ -66,17 +66,17 @@ A response without a valid `result` attribute on the root element, or a message 
 
 ## Value types
 
-`XmlValue` formats values for requests and reads them from responses. Invalid values throw an `InvalidArgumentException`.
+Twinfield expects these formats in a request and uses them in the response:
 
-| Type | Format | Format with | Read with |
-|---|---|---|---|
-| boolean | `true` or `false` | `XmlValue::boolean(true)` | `XmlValue::toBoolean('true')` |
-| date | `yyyymmdd` | `XmlValue::date($date)` | `XmlValue::toDate('20250131')` |
-| money | `0.00`, dot as decimal separator | `XmlValue::money('12.5')` → `12.50` | – |
-| period | `yyyy/p` or `yyyy/pp` | `XmlValue::period(2025, 1)` → `2025/01` | `XmlValue::toPeriod('2025/1')` |
-| code | at most 16 characters: `A-Z`, `0-9`, `_`, `-`, `+` | `XmlValue::code('DEB')` | – |
+| Type | Format | Example |
+|---|---|---|
+| boolean | `true` or `false` | `true` |
+| date | `yyyymmdd` | `20250131` |
+| money | dot as decimal separator | `12.50` |
+| period | `yyyy/p` or `yyyy/pp` | `2025/01` |
+| code | at most 16 characters: `A-Z`, `0-9`, `_`, `-`, `+` | `DEB` |
 
-Pass amounts as string or int: floats are not exact. Other types (string with a maximum length, integer, fixed value, enumeration) need no conversion.
+The value objects of the SDK give money and periods in this form: `(string) Amount::of('12.5')` is `12.50` and `(string) Period::of(2025, 1)` is `2025/01`. Format a date with `$date->format('Ymd')`. Pass amounts as string: floats are not exact. Other types (string with a maximum length, integer, fixed value, enumeration) need no conversion.
 
 ## Not supported
 

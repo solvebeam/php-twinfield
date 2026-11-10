@@ -26,6 +26,8 @@ final readonly class CollectMandate
 
     /**
      * From the `<collectmandate>` element, or null when it has no id.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $mandate): ?self
     {

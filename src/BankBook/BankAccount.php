@@ -34,6 +34,8 @@ final readonly class BankAccount
 
     /**
      * From the `BankAccount` element of a GetBankBook result.
+     *
+     * @internal
      */
     public static function fromResult(ResultElement $element): self
     {

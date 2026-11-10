@@ -46,6 +46,9 @@ final readonly class ProjectSettings
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $projects): self
     {
         return new self(
@@ -63,6 +66,8 @@ final readonly class ProjectSettings
 
     /**
      * Adds the complete `projects` element, so an update also clears values that were removed.
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $parent): void
     {

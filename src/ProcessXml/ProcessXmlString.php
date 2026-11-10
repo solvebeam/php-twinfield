@@ -16,6 +16,8 @@ use SolveBeam\Twinfield\Soap\SoapName;
  * ProcessXmlString call of the XML web services (`processxml.asmx`).
  *
  * @see https://developers.twinfield.com/documentation/api/types/xml-web-services/
+ *
+ * @internal
  */
 #[SoapName('ProcessXmlString')]
 #[SoapAction(action: 'http://www.twinfield.com/ProcessXmlString')]

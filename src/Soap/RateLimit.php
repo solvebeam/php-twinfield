@@ -38,6 +38,9 @@ final readonly class RateLimit
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromResponse(ResponseInterface $response): self
     {
         return new self(

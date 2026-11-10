@@ -52,6 +52,8 @@ final readonly class ElectronicBankStatement
 
     /**
      * From a `<statement>` of the response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $statement, CompanyReference $client): self
     {

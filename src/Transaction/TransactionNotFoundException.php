@@ -44,6 +44,8 @@ final class TransactionNotFoundException extends RuntimeException
      * Twinfield then answers with an empty transaction with the error on it, e.g.
      * `<transaction msgtype="error" msg="De boeking bestaat niet." result="0" />`. The
      * message is in the language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $dayBook, int $number): ?self
     {

@@ -21,6 +21,9 @@ final readonly class SalesInvoiceTotals
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $totals): self
     {
         return new self(

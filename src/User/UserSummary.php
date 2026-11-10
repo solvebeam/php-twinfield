@@ -29,6 +29,8 @@ final readonly class UserSummary
      * From a Finder `USR` row; columns: code, name (column names depend on the user's language).
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, Organisation $organisation): self
     {

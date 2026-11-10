@@ -148,6 +148,8 @@ final readonly class DimensionGroupInput
      * Always `status="active"`: without it, saving a deleted group keeps it deleted. The
      * short name and `<dimensions>` are always sent, so they replace the current ones
      * (an empty `<dimensions/>` removes all dimensions).
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

@@ -80,6 +80,8 @@ final readonly class AssetMethod
 
     /**
      * From an `<assetmethod>` element of a read response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $method, Organisation $organisation): self
     {

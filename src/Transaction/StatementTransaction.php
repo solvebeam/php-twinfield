@@ -40,6 +40,8 @@ abstract readonly class StatementTransaction
      *
      * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
      *                                   of the response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $transaction, Organisation $organisation): static
     {

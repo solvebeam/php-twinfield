@@ -286,6 +286,8 @@ final readonly class CustomerInput
 
     /**
      * The `<dimension>` request to save this customer in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

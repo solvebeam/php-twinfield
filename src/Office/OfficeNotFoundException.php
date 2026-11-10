@@ -30,6 +30,8 @@ final class OfficeNotFoundException extends RuntimeException
      * Twinfield then answers with only the code and one error on the root element:
      * `<office msgtype="error" msg="Administratie (9999) bestaat niet." result="0"><code>9999</code></office>`.
      * The message is in the language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

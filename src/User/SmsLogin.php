@@ -19,6 +19,9 @@ final readonly class SmsLogin
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $smsLogin): self
     {
         $service = $smsLogin->child('service');

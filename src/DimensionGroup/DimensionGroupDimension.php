@@ -28,6 +28,8 @@ final readonly class DimensionGroupDimension
     /**
      * From a `<dimension>` element in `<dimensions>`, e.g.
      * `<dimension><type name="Debiteuren">DEB</type><code name="Example B.V.">1000</code></dimension>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $dimension): self
     {

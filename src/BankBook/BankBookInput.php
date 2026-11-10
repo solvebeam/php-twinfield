@@ -75,6 +75,8 @@ final readonly class BankBookInput
 
     /**
      * The `CreateBankBook` command, fields in WSDL order. Empty optional fields are left out.
+     *
+     * @internal
      */
     public function toCreateCommand(): Command
     {

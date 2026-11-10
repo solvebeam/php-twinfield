@@ -19,6 +19,9 @@ final readonly class RemittanceAdvice
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $advice): self
     {
         return new self(

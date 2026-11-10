@@ -141,6 +141,8 @@ final class MatchInput
      * The `<match>` request for the company with this office code.
      *
      * @throws LogicException When the set has fewer than two lines.
+     *
+     * @internal
      */
     public function toXml(string $office): string
     {

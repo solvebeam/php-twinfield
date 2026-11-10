@@ -37,6 +37,8 @@ final readonly class CustomerFinancials
 
     /**
      * From the `<financials>` element of a customer.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $financials): self
     {

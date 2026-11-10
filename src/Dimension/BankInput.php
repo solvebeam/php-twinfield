@@ -203,6 +203,8 @@ final readonly class BankInput
 
     /**
      * Appends the `<bank>` element to `<banks>`.
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $banks): void
     {

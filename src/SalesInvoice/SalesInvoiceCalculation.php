@@ -30,6 +30,8 @@ final readonly class SalesInvoiceCalculation
 
     /**
      * From the `<salesinvoice>` element of a `calculateonly` response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $invoice): self
     {

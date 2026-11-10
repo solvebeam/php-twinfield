@@ -6,6 +6,11 @@ namespace SolveBeam\Twinfield\Authentication;
 
 use SolveBeam\Twinfield\Soap\SoapName;
 
+/**
+ * SOAP header with the access token and the company.
+ *
+ * @internal
+ */
 #[SoapName('Header')]
 final readonly class AuthenticationHeader
 {

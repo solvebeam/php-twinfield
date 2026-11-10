@@ -119,6 +119,8 @@ final readonly class BankAccountInput
      * (nillable) in the WSDL, so empty ones are sent as nil instead of being left out.
      *
      * @return array<string, string|Nil|null>
+     *
+     * @internal
      */
     public function toFields(): array
     {

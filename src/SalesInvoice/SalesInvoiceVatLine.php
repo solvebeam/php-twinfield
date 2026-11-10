@@ -26,6 +26,9 @@ final readonly class SalesInvoiceVatLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         $vatCode = $line->child('vatcode');

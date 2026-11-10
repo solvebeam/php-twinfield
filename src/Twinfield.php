@@ -720,12 +720,19 @@ final readonly class Twinfield
      *
      * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $query Null values are left
      *        out; a list repeats the parameter (`vats=a&vats=b`); booleans become `true`/`false`.
-     * @param array<array-key, mixed>|object|null $body Encoded with JsonWriter (amounts as exact numbers),
+     * @param array<array-key, mixed>|object|null $body Encoded as JSON (`Amount` and `JsonNumber` as exact numbers),
      *        or a RawBody that is sent as is (a file upload, a JSON Patch).
      * @param array<string, string> $headers E.g. `['If-Match' => '3']`.
      *
      * @see https://api.accounting.twinfield.com/Api/swagger/ui/index
-     * @see RestClient::send() for the exceptions.
+     *
+     * @throws \SolveBeam\Twinfield\Soap\AccessDeniedException HTTP 401 or 403: the access token is invalid, lacks
+     *         a scope of the operation (e.g. `readVat`), or the role of the user has no access.
+     * @throws \SolveBeam\Twinfield\Soap\RateLimitExceededException HTTP 429.
+     * @throws \SolveBeam\Twinfield\Rest\NotFoundException HTTP 404.
+     * @throws \SolveBeam\Twinfield\Rest\VersionConflictException HTTP 412.
+     * @throws \SolveBeam\Twinfield\Rest\ValidationException HTTP 400 or 422.
+     * @throws \SolveBeam\Twinfield\Rest\RestException Any other 4xx or 5xx.
      */
     public function rest(
         string $method,
@@ -795,7 +802,9 @@ final readonly class Twinfield
     }
 
     /**
-     * Low-level SOAP call with authentication; prefer the resource methods.
+     * Low-level SOAP call with authentication.
+     *
+     * @internal Use the resource methods, or `processXml()`, `query()` and `process()`.
      */
     public function call(string $service, object $body): SoapResponse
     {
@@ -813,8 +822,8 @@ final readonly class Twinfield
      *   $result = $twinfield->processXml('<read><type>dimensions</type><office>1000</office><dimtype>DEB</dimtype><code>1000</code></read>');
      *   $name = $result->xpath()->evaluate('string(/dimension/name)');
      *
-     * The request is an XML string: use `XmlBuilder::toXml()`, or e.g. `saveXML()` (DOM),
-     * `asXML()` (SimpleXML) or `outputMemory()` (XMLWriter). Comments and whitespace
+     * The request is an XML string, e.g. from `saveXML()` (DOM), `asXML()` (SimpleXML) or
+     * `outputMemory()` (XMLWriter). Comments and whitespace
      * between elements are removed before sending.
      *
      * @throws ProcessXmlException When Twinfield did not process (all of) the request (`result="0"`).

@@ -27,6 +27,9 @@ class RestException extends RuntimeException
         parent::__construct($message, $status);
     }
 
+    /**
+     * @internal
+     */
     public static function fromHttpResponse(ResponseInterface $response, string $method, string $path): static
     {
         $body = (string) $response->getBody();

@@ -34,6 +34,8 @@ final readonly class SupplierFinancials
 
     /**
      * From the `<financials>` element of a supplier.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $financials): self
     {

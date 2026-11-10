@@ -167,6 +167,8 @@ final readonly class BrowseQuery
 
     /**
      * The ProcessXml request, e.g. to log it or to try it in Postman.
+     *
+     * @internal
      */
     public function toXml(): string
     {

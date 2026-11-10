@@ -152,6 +152,8 @@ final readonly class SupplierInput
 
     /**
      * The `<dimension>` request to save this supplier in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

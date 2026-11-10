@@ -35,6 +35,8 @@ final class SalesInvoiceNotFoundException extends RuntimeException
      * `<salesinvoice msgtype="error" msg="Factuur 999999999 van type FACTUUR bestaat niet." result="0"/>`.
      * The message is in the language of the user, and also an unknown invoice type gives it,
      * so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(
         ProcessXmlException $exception,

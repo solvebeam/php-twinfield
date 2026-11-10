@@ -43,6 +43,8 @@ final readonly class BrowseResult implements Countable, IteratorAggregate
      * @param list<string> $columns The columns asked for, to check the response.
      *
      * @throws UnexpectedResponseException When the response is not what was asked for.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $browse, CompanyReference $company, array $columns): self
     {

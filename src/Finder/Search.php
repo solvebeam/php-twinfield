@@ -8,6 +8,11 @@ use SolveBeam\Twinfield\Data\ArrayOfArrayOfString;
 use SolveBeam\Twinfield\Soap\SoapAction;
 use SolveBeam\Twinfield\Soap\SoapName;
 
+/**
+ * `Search` request of the Finder.
+ *
+ * @internal Use `Twinfield::finder()`.
+ */
 #[SoapName('Search')]
 #[SoapAction(action: 'http://www.twinfield.com/Search')]
 final readonly class Search

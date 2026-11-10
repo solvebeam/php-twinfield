@@ -26,6 +26,9 @@ final readonly class BrowseField
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $field): self
     {
         $options = array_map(

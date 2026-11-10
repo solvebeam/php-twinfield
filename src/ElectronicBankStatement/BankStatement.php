@@ -55,6 +55,8 @@ final readonly class BankStatement
 
     /**
      * From a `BankStatement` element of the `GetBankStatementsResult`.
+     *
+     * @internal
      */
     public static function fromResult(ResultElement $statement, CompanyReference $company): self
     {

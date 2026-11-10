@@ -27,6 +27,8 @@ enum ChangeMode
 
     /**
      * @param string $path Element, for the error message.
+     *
+     * @internal
      */
     public static function fromXml(bool $locked, bool $inherit, string $path): self
     {

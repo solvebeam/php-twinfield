@@ -25,6 +25,9 @@ final readonly class ExpenseDefaults
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $expenses): self
     {
         return new self(

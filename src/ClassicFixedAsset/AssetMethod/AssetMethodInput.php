@@ -223,6 +223,8 @@ final readonly class AssetMethodInput
      *
      * Accounts and free texts are always sent, so unset ones are cleared. The calculation
      * settings are only sent when set; Twinfield then keeps the current values.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

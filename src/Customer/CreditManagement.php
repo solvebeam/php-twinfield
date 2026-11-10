@@ -33,6 +33,8 @@ final readonly class CreditManagement
 
     /**
      * From the `<creditmanagement>` element of a customer.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $credit): self
     {

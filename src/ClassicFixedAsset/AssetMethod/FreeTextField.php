@@ -34,6 +34,8 @@ final readonly class FreeTextField
 
     /**
      * From a `<freetext id="1" type="text">Serial number</freetext>` element.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $freeText): self
     {

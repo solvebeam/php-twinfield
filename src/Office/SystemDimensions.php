@@ -46,6 +46,9 @@ final readonly class SystemDimensions
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $dimensions): self
     {
         return new self(

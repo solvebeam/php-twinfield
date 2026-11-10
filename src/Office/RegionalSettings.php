@@ -22,6 +22,9 @@ final readonly class RegionalSettings
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $regional): self
     {
         return new self(

@@ -45,6 +45,8 @@ final readonly class VatAccount
 
     /**
      * From an `<account>` element of `<percentage><accounts>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $account): self
     {

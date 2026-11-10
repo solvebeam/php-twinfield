@@ -29,6 +29,8 @@ final readonly class Reversal
 
     /**
      * From the `<reverse>` response of `getreversetransactioninfo`, `postfinal` or `postprovisional`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $reverse, CompanyReference $company): self
     {

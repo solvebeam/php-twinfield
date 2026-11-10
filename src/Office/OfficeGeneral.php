@@ -86,6 +86,9 @@ final readonly class OfficeGeneral
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $general): self
     {
         $lastClosedYear = $general->int('lastclosedyear');

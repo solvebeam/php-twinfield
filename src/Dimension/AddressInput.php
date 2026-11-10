@@ -231,6 +231,8 @@ final readonly class AddressInput
 
     /**
      * Appends the `<address>` element to `<addresses>`.
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $addresses): void
     {

@@ -37,6 +37,8 @@ final readonly class PostingRule
 
     /**
      * From a `<postingrule>` element of a dimension.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $rule): self
     {

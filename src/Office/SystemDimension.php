@@ -28,6 +28,8 @@ final readonly class SystemDimension
 
     /**
      * Null for an empty element: the system dimension is not set, which is valid in Twinfield.
+     *
+     * @internal
      */
     public static function nullable(XmlElement $element): ?self
     {

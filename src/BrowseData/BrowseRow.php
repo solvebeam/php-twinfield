@@ -49,6 +49,8 @@ final readonly class BrowseRow
 
     /**
      * @param list<BrowseResultColumn> $columns The columns of `<th>`, in order.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $tr, array $columns, CompanyReference $company): self
     {

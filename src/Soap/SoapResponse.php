@@ -9,6 +9,11 @@ use DOMElement;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
+/**
+ * Response of a SOAP web service.
+ *
+ * @internal
+ */
 final class SoapResponse
 {
     public function __construct(

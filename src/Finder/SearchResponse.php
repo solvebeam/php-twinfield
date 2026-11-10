@@ -6,6 +6,11 @@ namespace SolveBeam\Twinfield\Finder;
 
 use SolveBeam\Twinfield\Soap\SoapName;
 
+/**
+ * `SearchResponse` of the Finder.
+ *
+ * @internal Use `Twinfield::finder()`.
+ */
 #[SoapName('SearchResponse')]
 final readonly class SearchResponse
 {

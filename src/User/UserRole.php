@@ -28,6 +28,9 @@ final readonly class UserRole
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $role): self
     {
         if ($role->text() === '') {

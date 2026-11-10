@@ -222,6 +222,8 @@ final readonly class BudgetTotalsQuery
 
     /**
      * The query with its fields in the order of the WSDL; ranges that are not set are left out.
+     *
+     * @internal
      */
     public function toQuery(string $type): Query
     {

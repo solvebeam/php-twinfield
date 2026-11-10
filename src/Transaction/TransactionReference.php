@@ -34,6 +34,8 @@ final readonly class TransactionReference
 
     /**
      * From an element with `<office>`, `<code>` and `<number>`, e.g. `<original>` of a reversal.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $transaction, CompanyReference $client): self
     {

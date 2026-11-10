@@ -36,6 +36,8 @@ final readonly class ResultElement
      * The `Result` element of a query response, checked against the expected `i:type`, e.g. `GetPeriodsResult`.
      *
      * The QueryResponse is a WCF message contract, so `<Result>` is directly in the SOAP body.
+     *
+     * @internal
      */
     public static function fromQueryResponse(SoapResponse $response, string $resultType): self
     {

@@ -40,6 +40,8 @@ final readonly class DimensionTypeLevels
 
     /**
      * From the `<levels>` element of a dimension type.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $levels): self
     {

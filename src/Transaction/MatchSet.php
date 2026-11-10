@@ -25,6 +25,9 @@ final readonly class MatchSet
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $set): self
     {
         $status = $set->element->hasAttribute('status')
@@ -43,6 +46,8 @@ final readonly class MatchSet
      * Match sets of a line; none when it is not matched (Twinfield then leaves `<matches>` out).
      *
      * @return list<self>
+     *
+     * @internal
      */
     public static function listFromLine(XmlElement $line): array
     {

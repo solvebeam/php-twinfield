@@ -28,6 +28,8 @@ final readonly class ReconciliationReportRequest
 
     /**
      * @return array<string, string|int|null>
+     *
+     * @internal
      */
     public function toQuery(): array
     {

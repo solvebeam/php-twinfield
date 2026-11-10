@@ -23,6 +23,8 @@ enum TemplateCompanyAccess: string
 
     /**
      * Case-insensitive, so both the documented and the returned spelling work.
+     *
+     * @internal
      */
     public static function fromXml(string $value): ?self
     {

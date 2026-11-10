@@ -47,6 +47,8 @@ final readonly class PaymentCondition
 
     /**
      * From a `<paymentcondition>` element of a dimension.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $condition): self
     {

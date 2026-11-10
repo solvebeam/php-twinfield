@@ -30,6 +30,8 @@ final class DimensionTypeNotFoundException extends RuntimeException
      * `<dimensiontype msgtype="error" msg="Dimensietype XYZ bestaat niet." result="0">`, with
      * the code as name and every level 0. Every existing type has a financial level, so the
      * structure decides, not the message (which is in the language of the user).
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

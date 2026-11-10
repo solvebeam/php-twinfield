@@ -38,6 +38,8 @@ final class DimensionNotFoundException extends RuntimeException
      * Twinfield then answers with an empty dimension (no `uid`) and one error on `code`,
      * e.g. `<code msgtype="error" msg="Dimensie A999 bestaat niet.">A999</code>`.
      * The message is in the language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $type, string $code): ?self
     {

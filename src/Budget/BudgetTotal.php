@@ -58,6 +58,8 @@ final readonly class BudgetTotal
 
     /**
      * From a `GetBudgetTotalResult` element.
+     *
+     * @internal
      */
     public static function fromResult(ResultElement $result, CompanyReference $company): self
     {

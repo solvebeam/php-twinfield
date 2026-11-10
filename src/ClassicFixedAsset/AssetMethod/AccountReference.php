@@ -36,6 +36,8 @@ final readonly class AccountReference
      * `<purchasevalue name="Purchase value" shortname="" dimensiontype="BAS">0501</purchasevalue>`.
      *
      * Null for an empty element: the account is not set, which is valid in Twinfield.
+     *
+     * @internal
      */
     public static function account(XmlElement $element): ?self
     {
@@ -45,6 +47,8 @@ final readonly class AccountReference
     /**
      * From a dimension group element such as `<purchasevaluegroup name="" shortname=""/>`,
      * which has no dimension type. Null when no group is set.
+     *
+     * @internal
      */
     public static function group(XmlElement $element): ?self
     {

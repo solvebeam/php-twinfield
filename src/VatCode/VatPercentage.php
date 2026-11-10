@@ -76,6 +76,8 @@ final readonly class VatPercentage
 
     /**
      * From a `<percentage>` element of `<vat><percentages>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $line): self
     {

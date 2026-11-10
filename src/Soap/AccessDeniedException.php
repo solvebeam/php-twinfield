@@ -18,6 +18,9 @@ use Throwable;
  */
 final class AccessDeniedException extends RuntimeException
 {
+    /**
+     * @internal
+     */
     public static function fromHttpResponse(ResponseInterface $response, ?Throwable $previous = null): self
     {
         // HTTP/2 responses have no reason phrase.

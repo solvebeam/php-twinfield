@@ -30,6 +30,8 @@ final class UserNotFoundException extends RuntimeException
      * `<user iscurrentuser="false" level="Supervisor" status="default" msgtype="error"
      * msg="Gebruiker JDOE bestaat niet." result="0"><code>JDOE</code></user>`. The message is in
      * the language of the user, so the structure decides, not the text.
+     *
+     * @internal
      */
     public static function fromProcessXml(ProcessXmlException $exception, string $code): ?self
     {

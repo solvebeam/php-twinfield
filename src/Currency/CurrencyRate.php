@@ -24,6 +24,8 @@ final readonly class CurrencyRate
 
     /**
      * From a `<rate>` element of `<currency><rates>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $rate): self
     {

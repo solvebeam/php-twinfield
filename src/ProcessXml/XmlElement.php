@@ -20,6 +20,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  * Every reader throws an UnexpectedResponseException when an element or attribute is
  * missing or has an invalid value, with the path in the message, e.g.
  * `dimension/projects/quantities/quantity[2]/label is missing.`
+ *
+ * @internal
  */
 final readonly class XmlElement
 {

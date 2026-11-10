@@ -103,6 +103,8 @@ final readonly class Rate
 
     /**
      * From a `<projectrate>` element of a read response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $rate, Organisation $organisation): self
     {

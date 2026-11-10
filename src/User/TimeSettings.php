@@ -24,6 +24,9 @@ final readonly class TimeSettings
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $time): self
     {
         // Empty for users that never had week hours set, 0 for others.

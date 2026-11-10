@@ -39,6 +39,9 @@ final readonly class BrowseDefinition
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $browse, CompanyReference $company): self
     {
         if ($browse->element->localName !== 'browse') {

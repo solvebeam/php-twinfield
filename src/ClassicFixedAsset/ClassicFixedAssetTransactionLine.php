@@ -70,6 +70,8 @@ final readonly class ClassicFixedAssetTransactionLine
 
     /**
      * From a `<transline>` element.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $line): self
     {

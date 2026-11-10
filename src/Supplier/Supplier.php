@@ -92,6 +92,8 @@ final readonly class Supplier
 
     /**
      * From a `<dimension>` element of a read or save response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $dimension, Organisation $organisation): self
     {

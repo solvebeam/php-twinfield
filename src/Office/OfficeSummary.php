@@ -63,6 +63,8 @@ final readonly class OfficeSummary
      * country, VAT period, starting quarter (column names depend on the user's language).
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, Organisation $organisation): self
     {

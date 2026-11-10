@@ -30,6 +30,9 @@ final readonly class FinderResult implements IteratorAggregate, Countable
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromResponse(SearchResponse $response): self
     {
         $data = $response->data

@@ -22,6 +22,9 @@ final readonly class ProfitLossAccounts
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $accounts): self
     {
         return new self(

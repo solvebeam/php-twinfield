@@ -80,6 +80,8 @@ final readonly class PostingRuleLine
 
     /**
      * From a `<line>` element of a posting rule.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $line): self
     {

@@ -121,6 +121,8 @@ final readonly class PostingRuleInput
 
     /**
      * Appends the `<postingrule>` element to `<postingrules>`.
+     *
+     * @internal
      */
     public function appendTo(XmlBuilder $xml, DOMElement $rules): void
     {

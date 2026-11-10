@@ -197,6 +197,9 @@ final class VatLineInput
         return $this->debitCredit === DebitCredit::Credit ? $this->value : $this->value->negate();
     }
 
+    /**
+     * @internal
+     */
     public function appendTo(XmlBuilder $xml, DOMElement $lines, int $id): void
     {
         $line = $xml->add($lines, 'line', null, ['type' => LineType::Vat->value, 'id' => (string) $id]);

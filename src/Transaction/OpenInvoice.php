@@ -40,6 +40,8 @@ final readonly class OpenInvoice
      * debit/credit (`D` or `C`). Column names depend on the user's language.
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {

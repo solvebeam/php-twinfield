@@ -31,6 +31,8 @@ final readonly class AddressLabels
 
     /**
      * From the `<address>` element of a dimension type, with `<label1>`–`<label6>`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $address): self
     {

@@ -26,6 +26,9 @@ final readonly class Intercompany
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $intercompany): self
     {
         return new self(

@@ -53,6 +53,9 @@ final readonly class VatManagement
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $vat): self
     {
         return new self(

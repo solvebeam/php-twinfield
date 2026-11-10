@@ -24,6 +24,8 @@ final readonly class RestFile
 
     /**
      * From a response with `Content-Disposition: attachment; filename=articles.csv`.
+     *
+     * @internal
      */
     public static function fromResponse(RestResponse $response, string $defaultName): self
     {

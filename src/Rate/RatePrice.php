@@ -52,6 +52,8 @@ final readonly class RatePrice
     /**
      * From a `<ratechange>` element of `<projectrate><ratechanges>`. `@lastused` is obsolete
      * and not read.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $line): self
     {

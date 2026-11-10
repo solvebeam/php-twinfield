@@ -288,6 +288,8 @@ final readonly class ClassicFixedAssetInput
 
     /**
      * The `<dimension>` request to save this fixed asset in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

@@ -40,6 +40,9 @@ final readonly class ElectronicBankStatementLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         $dimensions = [];

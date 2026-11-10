@@ -38,6 +38,9 @@ final readonly class BrowseDefinitionColumn
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $column): self
     {
         return new self(

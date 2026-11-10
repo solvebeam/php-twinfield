@@ -99,6 +99,8 @@ final readonly class ProjectInput
 
     /**
      * The `<dimension>` request to save this project in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

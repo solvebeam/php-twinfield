@@ -317,6 +317,8 @@ final readonly class SalesInvoiceInput
      * @param bool $calculateOnly True to only check and calculate it (`calculateonly="true"`).
      *
      * @throws LogicException When the input has no lines: an invoice needs at least one.
+     *
+     * @internal
      */
     public function toXml(string $company, bool $calculateOnly = false): XmlBuilder
     {

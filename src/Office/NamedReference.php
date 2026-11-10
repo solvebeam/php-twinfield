@@ -29,6 +29,8 @@ final readonly class NamedReference
      * From an element with a code and `name` and `shortname` attributes.
      *
      * @param bool $hasShortName False for elements without a `shortname` attribute, such as `taxgroup`.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $element, bool $hasShortName = true): self
     {
@@ -41,6 +43,8 @@ final readonly class NamedReference
 
     /**
      * Null for an empty element: the setting is not set, which is valid in Twinfield.
+     *
+     * @internal
      */
     public static function nullable(XmlElement $element, bool $hasShortName = true): ?self
     {

@@ -25,6 +25,9 @@ final readonly class MatchLine
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         $method = $line->string('method');

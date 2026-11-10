@@ -119,7 +119,7 @@ foreach ($json->list('items') as $class) {
 }
 ```
 
-The body is an array (encoded with `JsonWriter`, which writes `Amount` and `JsonNumber` as exact numbers) or a `RawBody` for a file upload.
+The body is an array (`Amount` and `JsonNumber` values are written as exact JSON numbers) or a `RawBody` for a file upload.
 
 ## Endpoints
 

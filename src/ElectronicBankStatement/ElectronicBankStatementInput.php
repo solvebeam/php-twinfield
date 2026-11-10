@@ -234,6 +234,8 @@ final class ElectronicBankStatementInput
      * The request for this statement: `<statements>` with one `<statement>`, e.g. to show or log it.
      *
      * @param bool $importDuplicate Also import a statement Twinfield already has (`importduplicate="1"`).
+     *
+     * @internal
      */
     public function toXml(string $company, bool $importDuplicate = false): XmlBuilder
     {

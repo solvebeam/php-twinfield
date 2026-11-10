@@ -23,6 +23,9 @@ final readonly class AutomaticBankProcessing
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $element): self
     {
         return new self(

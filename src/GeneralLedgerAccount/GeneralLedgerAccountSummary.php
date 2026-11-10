@@ -27,6 +27,8 @@ final readonly class GeneralLedgerAccountSummary
      * `hidden` (column names depend on the user's language, the status does not).
      *
      * @param list<string> $row
+     *
+     * @internal
      */
     public static function fromFinderRow(array $row, int $index, CompanyReference $company): self
     {

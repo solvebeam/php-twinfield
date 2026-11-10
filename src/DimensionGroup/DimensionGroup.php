@@ -70,6 +70,8 @@ final readonly class DimensionGroup
 
     /**
      * From a `<dimensiongroup>` element of a save response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $group, Organisation $organisation): self
     {

@@ -31,6 +31,9 @@ final readonly class OfficeAddress
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $address): self
     {
         return new self(

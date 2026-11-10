@@ -60,6 +60,8 @@ final readonly class Bank
 
     /**
      * From a `<bank>` element of a dimension.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $bank): self
     {

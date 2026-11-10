@@ -45,6 +45,9 @@ final readonly class UserAccount
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $account): self
     {
         $disable = $account->child('disable');

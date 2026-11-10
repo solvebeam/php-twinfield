@@ -18,6 +18,9 @@ final readonly class DebitCredit
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $element): self
     {
         return new self(

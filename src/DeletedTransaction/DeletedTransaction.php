@@ -46,6 +46,8 @@ final readonly class DeletedTransaction
 
     /**
      * From a `DeletedTransaction` element of the `GetDeletedTransactions` result.
+     *
+     * @internal
      */
     public static function fromResult(ResultElement $transaction, CompanyReference $company): self
     {

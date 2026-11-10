@@ -21,6 +21,8 @@ use Psr\Http\Message\RequestInterface;
  *           url: 'https://login.twinfield.com/webservices/session.asmx',
  *           factory: new NyholmSoapRequestFactory(),
  *       );
+ *
+ * @internal
  */
 final class SoapEnvelopeBuilder
 {

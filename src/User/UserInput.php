@@ -387,6 +387,8 @@ final readonly class UserInput
      * The `<user>` element to send.
      *
      * @throws LogicException When the settings do not go together, e.g. invite() without role().
+     *
+     * @internal
      */
     public function toXml(): XmlBuilder
     {

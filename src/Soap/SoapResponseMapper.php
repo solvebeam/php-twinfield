@@ -12,6 +12,11 @@ use ReflectionParameter;
 use SolveBeam\Twinfield\Soap\SoapArray;
 use SolveBeam\Twinfield\Soap\SoapName;
 
+/**
+ * Maps a SOAP response element onto a response class.
+ *
+ * @internal
+ */
 final class SoapResponseMapper
 {
     /**

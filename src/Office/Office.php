@@ -70,6 +70,8 @@ final readonly class Office
      *
      * @param Organisation $organisation Organisation of the access token: Twinfield leaves it out
      *                                   of the response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $office, Organisation $organisation): self
     {

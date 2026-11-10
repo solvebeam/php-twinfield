@@ -45,6 +45,9 @@ final readonly class BankStatementLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $line): self
     {
         return new self(

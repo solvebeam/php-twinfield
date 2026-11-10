@@ -51,6 +51,8 @@ final readonly class DimensionType
 
     /**
      * From a `<dimensiontype>` element of a response.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $type, Organisation $organisation): self
     {

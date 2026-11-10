@@ -55,6 +55,8 @@ final readonly class Address
 
     /**
      * From an `<address>` element of a dimension.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $address): self
     {

@@ -101,6 +101,8 @@ final readonly class VatCode
      * From the `<vat>` element of a read response.
      *
      * @param CompanyReference $company The company of the request: the response does not have it.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $vat, CompanyReference $company): self
     {

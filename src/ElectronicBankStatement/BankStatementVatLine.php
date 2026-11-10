@@ -26,6 +26,9 @@ final readonly class BankStatementVatLine
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $vatLine): self
     {
         return new self(

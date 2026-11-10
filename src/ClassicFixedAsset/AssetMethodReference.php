@@ -37,6 +37,8 @@ final readonly class AssetMethodReference
     /**
      * From the `<method>` element; null when it is empty, which Twinfield allows for assets
      * whose method was removed or never set.
+     *
+     * @internal
      */
     public static function fromXml(XmlElement $method): ?self
     {

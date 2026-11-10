@@ -48,6 +48,9 @@ final readonly class BankStatementAllocation
         }
     }
 
+    /**
+     * @internal
+     */
     public static function fromResult(ResultElement $allocation): self
     {
         $dimensions = [];

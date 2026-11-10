@@ -30,6 +30,7 @@
 - [XML web services (ProcessXml)](#xml-web-services-processxml)
 - [REST API](#rest-api)
 - [Errors](#errors)
+- [Backward compatibility](#backward-compatibility)
 - [PSR Compliance](#psr-compliance)
 - [OAuth2 Usage](#oauth2-usage)
 - [OpenID Connect Authentication](#openid-connect-authentication)
@@ -290,7 +291,7 @@ $result = $twinfield->processXml('<read><type>dimensions</type><office>1000</off
 echo $result->xpath()->evaluate('string(/dimension/name)'), PHP_EOL;
 ```
 
-Comments and whitespace between elements are removed before sending. A response with `result="0"` throws a `ProcessXmlException` with every error and warning and the path of its element. `XmlValue` formats and checks the value types (date, money, period, boolean, code). Listing companies works without company: `$twinfield->withoutCompany()->processXml('<list><type>offices</type></list>')`.
+Comments and whitespace between elements are removed before sending. A response with `result="0"` throws a `ProcessXmlException` with every error and warning and the path of its element. Listing companies works without company: `$twinfield->withoutCompany()->processXml('<list><type>offices</type></list>')`.
 
 Not supported, because Twinfield deprecated them or they are only for .NET: `ProcessXmlCompressed`, `ProcessXmlDocument` and the `<general>` root element for bulk requests. See the [ProcessXml guide](https://php.twinfield.solvebeam.com/guides/process-xml/) and the examples [List companies](examples/process-xml/list-companies/) and [Read dimension](examples/process-xml/read-dimension/).
 
@@ -344,6 +345,19 @@ Match `detailCode` with `ErrorCode` for the general codes of the classic service
 Authorization errors come as HTTP 401 or 403; without a SOAP fault in the response the SDK throws an `AccessDeniedException`. Too many requests give a `RateLimitExceededException`; `$twinfield->lastRateLimit()` returns the rate limit headers of the most recent response, to slow down before that. Wrap the HTTP client in a `RateLimitRetryClient` to wait for `Retry-After` and retry automatically. See the [rate limits guide](https://php.twinfield.solvebeam.com/guides/rate-limits/).
 
 See the [error handling example](examples/getting-started/error-handling/) for all error codes.
+
+## Backward compatibility
+
+The SDK follows [Semantic Versioning](https://semver.org/). The public API is what you use to work with Twinfield:
+
+- the `Twinfield` client and the resources it returns (`$twinfield->customers()`, …);
+- models, inputs, searches, enums and value objects (`Amount`, `Period`, …);
+- exceptions;
+- the low-level methods `processXml()`, `query()`, `process()` and `rest()` with their results (`ProcessXmlResult`, `ResultElement`, `RestResponse`, `JsonValue`).
+
+Classes and methods marked `@internal` are not part of it and can change in any release. That is how the SDK talks to Twinfield: the SOAP and REST clients, the XML and JSON readers and writers, the request classes, and the methods that map a model from or to XML or JSON (`fromXml()`, `toXml()`, …). Twinfield is moving from SOAP/XML to REST/JSON, and that layer moves with it. The examples print a request with `toXml()` to show what would be sent; read that output, don't build on it. PHPStan and PhpStorm report the use of internal code.
+
+Nearly all classes are `final`: wrap them instead of extending them. The exceptions are base classes you catch, such as `SoapFaultException` and `RestException`.
 
 ## PSR Compliance
 

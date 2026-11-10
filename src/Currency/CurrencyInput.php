@@ -130,6 +130,8 @@ final readonly class CurrencyInput
 
     /**
      * The `<currency>` request to save this currency in a company.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {

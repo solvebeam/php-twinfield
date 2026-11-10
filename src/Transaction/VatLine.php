@@ -47,6 +47,9 @@ final readonly class VatLine
     ) {
     }
 
+    /**
+     * @internal
+     */
     public static function fromXml(XmlElement $line): self
     {
         return new self(

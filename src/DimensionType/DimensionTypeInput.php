@@ -91,6 +91,8 @@ final readonly class DimensionTypeInput
     /**
      * The `<dimensiontype>` request to save this dimension type in a company. The short name
      * and levels are read-only, so they are not sent.
+     *
+     * @internal
      */
     public function toXml(string $company): XmlBuilder
     {
