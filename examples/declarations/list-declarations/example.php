@@ -31,4 +31,3 @@ foreach ($returns as $return) {
         $return->status->step->name,
     ), PHP_EOL;
 }
-
