@@ -105,6 +105,23 @@ foreach ($twinfield->vatCodes()->search()->inAllCompanies()->all() as $summary) 
 
 This works for dimensions, VAT codes, bank books, cash books, currencies and dimension types (and with `finder()` also for `PAY`, `TRS`, `VATN` and `VGM`). Other types ignore `company=*` (the rows have no company), so `inAllCompanies()` refuses them. Together with `inBankAccount()` Twinfield fails with a server error, so that is refused too. See the [example](/examples/finder/all-companies/).
 
+### Changes in a whole organisation
+
+With `modifiedSince()`, one search gives everything that changed in all companies of the organisation, e.g. for a shadow database of the master data:
+
+```php
+$since = new DateTimeImmutable('2026-10-01 00:00:00', new DateTimeZone('UTC'));
+
+foreach ($twinfield->customers()->search()->inAllCompanies()->modifiedSince($since)->all() as $summary) {
+    // Read the full customer only for what changed.
+    $customer = $twinfield->company($summary->company)->customers()->get($summary->code);
+}
+```
+
+Live, this gave the 557 customers changed since 1 October 2026 in all companies of an organisation in one request. The same works for suppliers, general ledger accounts, cost centers, projects, activities and fixed assets (all dimensions), VAT codes, bank books, cash books and currencies.
+
+`company=*` was not always there. Before, a shadow database of an organisation with 200 companies needed a search per company and per kind of master data to find what changed since the last sync: 200 requests to find the changed customers, 200 more for suppliers, and so on, mostly with nothing changed. Twinfield added `*` on request of the author of this SDK. Since the [rate limits](/guides/rate-limits/) of 1 December 2024 this matters even more: a Finder search costs 1 API credit, so 200 searches are a fifth of the credits per minute of an organisation, and one search is one credit.
+
 ## Errors
 
 When Twinfield refuses a search, e.g. an option the type doesn't support, `get()` and `all()` throw a `FinderException` with the messages of Twinfield:

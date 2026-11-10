@@ -105,9 +105,28 @@ To stay under the limits:
 
 - Save many transactions in one request with `saveMany()` instead of one request per transaction. It is on every transaction type: `salesTransactions()`, `purchaseTransactions()`, `cashTransactions()`, `journalTransactions()` and `bankTransactions()`. See [Saving many transactions](/guides/transactions/#saving-many-transactions). For electronic bank statements, `createMany()` does the same: see [Electronic bank statements](/guides/transactions/#electronic-bank-statements).
 - Keep a shadow database instead of reading the same data again and again: see [Keys for a shadow database](/guides/organisations/#keys-for-a-shadow-database).
+- Find changed master data of all companies at once: `search()->inAllCompanies()->modifiedSince($since)` is one request for the whole organisation instead of one per company. See [Changes in a whole organisation](/guides/finder/#changes-in-a-whole-organisation).
 - Send requests one after another per organisation, or limit your workers to at most 10 at the same time per organisation.
 
 See also [Error handling](/examples/getting-started/error-handling/) and, in the knowledge base, [API best practices](/knowledge-base/api-best-practices/).
+
+## Introduction of the limits
+
+Until 1 December 2024 Twinfield did not limit the number of requests of an integration or the number of entities it read. Wolters Kluwer announced the limits by email to integrators on 23 September 2024 ("API-limieten ingaande per 1 december 2024"):
+
+- The reason: strong growth of the API use, mostly creating transactions. Some entities use many resources on the Twinfield servers: transaction lines, invoice lines and dimensions. Web services count as API.
+- From 1 December 2024 Twinfield enforces a rate limit and a concurrency limit, with a `429 Too Many Requests` response over the limit. Integrations should respect the limits and not cause these responses often.
+- The number of requests per minute is limited to 1000. The email gave each integration its measured peak per minute, so it could check whether it had to change.
+
+The same email announced the end of:
+
+| Feature | Date |
+|---|---|
+| The root element `general` in ProcessXML and ProcessXMLDocument | 1 September 2024 |
+| The `template` field of users | 31 December 2024 |
+| `ProcessXmlCompressed` | 31 December 2024 |
+
+The SDK uses none of them: it sends ProcessXML uncompressed with `ProcessXmlString`, and `OfficeGeneral` is the `general` element inside an `<office>` response, not the root element.
 
 ## The community article
 
