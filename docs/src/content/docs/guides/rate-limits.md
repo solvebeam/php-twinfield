@@ -24,7 +24,7 @@ Twinfield counts these requests as query requests (1 credit):
 
 | Twinfield | In this SDK |
 |---|---|
-| HTTP `GET` and `OPTIONS` | none: the SDK sends every API request as `POST` |
+| HTTP `GET` and `OPTIONS` | reads through the [REST API](/guides/rest-api/), e.g. ledger accounts, VAT codes by ID, fixed assets, sales articles, budgets, the audit trail of matching, and `rest('GET', …)`. The SOAP web services (the rows below) always send `POST`. |
 | `/webservices/*.asmx` with a SOAP action that starts with `Get`, `Query`, `Search` or `Load` | the Finder (`Search`): searching master data, offices, users, … |
 | `/webservices/*.svc` with a SOAP action that starts with `Get`, `Query`, `Search` or `Load` | the queries of the Command & Query services, e.g. periods (`Query`) |
 | `/webservices/DeletedTransactionsService.svc` | [Deleted transactions](/guides/transactions/#deleted-transactions) |
