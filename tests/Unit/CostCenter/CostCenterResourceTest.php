@@ -117,12 +117,17 @@ final class CostCenterResourceTest extends TestCase
 
     public function testFindReturnsNullWhenNotFound(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('cost-center-read-not-found'))->costCenters()->find('999'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('cost-center-read-not-found'))->costCenters()->find('999'),
+        );
     }
 
     public function testFindReturnsTheCostCenter(): void
     {
-        self::assertSame('100', $this->twinfield(ReplayClient::fixture('cost-center-read'))->costCenters()->find('100')?->code);
+        self::assertSame(
+            '100',
+            $this->twinfield(ReplayClient::fixture('cost-center-read'))->costCenters()->find('100')?->code,
+        );
     }
 
     public function testThrowsOnAnotherDimensionType(): void
@@ -284,7 +289,12 @@ final class CostCenterResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Cost centers belong to a company: use company() first.');

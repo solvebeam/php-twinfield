@@ -42,7 +42,10 @@ final class SupplierResourceTest extends TestCase
         self::assertSame('DIM', $xpath->evaluate('string(//tw:Search/tw:type)'));
         self::assertSame('NL91*', $xpath->evaluate('string(//tw:Search/tw:pattern)'));
         self::assertSame('3', $xpath->evaluate('string(//tw:Search/tw:field)'));
-        self::assertSame('CRD', $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString[tw:string[1]="dimtype"]/tw:string[2])'));
+        self::assertSame(
+            'CRD',
+            $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString[tw:string[1]="dimtype"]/tw:string[2])'),
+        );
     }
 
     public function testSearchesInAddresses(): void
@@ -127,7 +130,10 @@ final class SupplierResourceTest extends TestCase
 
         self::assertCount(2, $http->requests);
         self::assertStringStartsWith('<read>', $this->xmlRequest($http->requests[0]));
-        self::assertStringStartsWith('<dimension><office>1000</office><type>CRD</type><code>2010</code>', $this->xmlRequest($http->requests[1]));
+        self::assertStringStartsWith(
+            '<dimension><office>1000</office><type>CRD</type><code>2010</code>',
+            $this->xmlRequest($http->requests[1]),
+        );
     }
 
     public function testCreateRefusesAnExistingCode(): void
@@ -152,7 +158,10 @@ final class SupplierResourceTest extends TestCase
             );
             self::fail('Expected a ProcessXmlException.');
         } catch (ProcessXmlException $exception) {
-            self::assertSame('dimension/financials/paycode: Betaalwijze UNKNOWN bestaat niet.', $exception->getMessage());
+            self::assertSame(
+                'dimension/financials/paycode: Betaalwijze UNKNOWN bestaat niet.',
+                $exception->getMessage(),
+            );
         }
     }
 
@@ -229,7 +238,12 @@ final class SupplierResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Suppliers belong to a company: use company() first.');

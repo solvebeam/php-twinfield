@@ -32,7 +32,13 @@ final class SupplierResourceTest extends WriteTestCase
                     ->relationsReference('SDK-TEST')
                     ->cheques()
                     ->remittanceAdvice(RemittanceAdviceSendType::ByEmail, 'remittance@example.com')
-                    ->address(AddressInput::invoice('SDK test supplier')->field(2, 'Main street 1')->city('Amsterdam')->country('NL')->default())
+                    ->address(
+                        AddressInput::invoice('SDK test supplier')
+                            ->field(2, 'Main street 1')
+                            ->city('Amsterdam')
+                            ->country('NL')
+                            ->default(),
+                    )
                     ->bank(BankInput::create()->iban('NL91ABNA0417164300')->ascription('SDK test supplier')->default()),
             );
             $code = $created->code;
@@ -56,7 +62,11 @@ final class SupplierResourceTest extends WriteTestCase
                 $suppliers->create(SupplierInput::create('Duplicate')->code($code));
                 self::fail('Expected a DimensionAlreadyExistsException.');
             } catch (DimensionAlreadyExistsException) {
-                self::assertSame('SDK test supplier', $suppliers->get($code)->name, 'The existing supplier is unchanged.');
+                self::assertSame(
+                    'SDK test supplier',
+                    $suppliers->get($code)->name,
+                    'The existing supplier is unchanged.',
+                );
             }
 
             // No payments by Twinfield, no external number, and a second bank account.

@@ -28,7 +28,8 @@ final class BankFeedResourceTest extends TestCase
         self::assertSame('NL91ABNA0417164300', $feed->account->iban);
         self::assertSame('1000', $feed->account->companyCode);
         self::assertSame(
-            TestTokens::REST_COMPANY_URL . '/banks/feeds/psd2?requestedCompanies=all&expiresOnTo=2026-12-31T00%3A00%3A00%2B00%3A00',
+            TestTokens::REST_COMPANY_URL
+                . '/banks/feeds/psd2?requestedCompanies=all&expiresOnTo=2026-12-31T00%3A00%3A00%2B00%3A00',
             (string) $http->lastRequest()->getUri(),
         );
     }
@@ -38,6 +39,9 @@ final class BankFeedResourceTest extends TestCase
         $http = new ReplayClient(ReplayClient::raw(200, '{"items":[],"total":0,"filteredTotal":0}'));
 
         self::assertCount(0, TestTokens::restClient($http)->bankFeeds()->psd2()->get());
-        self::assertStringEndsWith('/banks/feeds/psd2?requestedCompanies=current', (string) $http->lastRequest()->getUri());
+        self::assertStringEndsWith(
+            '/banks/feeds/psd2?requestedCompanies=current',
+            (string) $http->lastRequest()->getUri(),
+        );
     }
 }

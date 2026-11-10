@@ -42,7 +42,10 @@ final class ActivityInputTest extends TestCase
         self::assertEquals(new DateTimeImmutable('2025-01-01'), $input->projects->validFrom);
         self::assertSame('Advice', $input->projects->invoiceDescription);
         self::assertEquals(new CodeSetting('T001', ChangeMode::Disallow), $input->projects->rate);
-        self::assertSame(['KM', 'Parking'], array_map(static fn (Quantity $q): string => $q->label, $input->projects->quantities));
+        self::assertSame(
+            ['KM', 'Parking'],
+            array_map(static fn (Quantity $q): string => $q->label, $input->projects->quantities),
+        );
     }
 
     public function testClearsValues(): void
@@ -84,8 +87,14 @@ final class ActivityInputTest extends TestCase
     public static function invalidInput(): iterable
     {
         yield 'empty code' => [static fn (): mixed => ActivityInput::create('', 'Name'), '"" is not a code'];
-        yield 'lowercase code' => [static fn (): mixed => ActivityInput::create('a001', 'Name'), '"a001" is not a code'];
-        yield 'empty name' => [static fn (): mixed => ActivityInput::create('A001', ''), 'Activity name must not be empty.'];
+        yield 'lowercase code' => [
+            static fn (): mixed => ActivityInput::create('a001', 'Name'),
+            '"a001" is not a code',
+        ];
+        yield 'empty name' => [
+            static fn (): mixed => ActivityInput::create('A001', ''),
+            'Activity name must not be empty.',
+        ];
         yield 'long name' => [
             static fn (): mixed => ActivityInput::create('A001', str_repeat('x', 41)),
             'Activity name must be at most 40 characters, 41 given',
@@ -106,7 +115,10 @@ final class ActivityInputTest extends TestCase
             static fn (): mixed => ActivityInput::create('A001', 'Name')->customer('10 10'),
             '"10 10" is not a code',
         ];
-        yield 'empty quantity label' => [static fn (): mixed => Quantity::create(''), 'Quantity label must not be empty.'];
+        yield 'empty quantity label' => [
+            static fn (): mixed => Quantity::create(''),
+            'Quantity label must not be empty.',
+        ];
         yield 'long quantity label' => [
             static fn (): mixed => Quantity::create(str_repeat('x', 37)),
             'Quantity label must be at most 36 characters',

@@ -32,7 +32,13 @@ final class RateResourceTest extends TestCase
     {
         $http = ReplayClient::fixture('finder-rates');
 
-        $page = $this->twinfield($http)->rates()->search('K*')->inCode()->rateType(RateType::Quantity)->limit(10)->get();
+        $page = $this->twinfield($http)
+            ->rates()
+            ->search('K*')
+            ->inCode()
+            ->rateType(RateType::Quantity)
+            ->limit(10)
+            ->get();
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals([
@@ -132,7 +138,10 @@ final class RateResourceTest extends TestCase
     public function testFind(): void
     {
         self::assertNull($this->twinfield(ReplayClient::fixture('rate-read-not-found'))->rates()->find('T999'));
-        self::assertSame('CONSULT', $this->twinfield(ReplayClient::fixture('rate-read'))->rates()->find('CONSULT')?->code);
+        self::assertSame(
+            'CONSULT',
+            $this->twinfield(ReplayClient::fixture('rate-read'))->rates()->find('CONSULT')?->code,
+        );
     }
 
     /**
@@ -141,13 +150,29 @@ final class RateResourceTest extends TestCase
     public static function unexpectedResponses(): iterable
     {
         yield 'unknown type' => ['<type>time</type>', '<type>expense</type>', 'projectrate/type is "expense"'];
-        yield 'unknown status' => ['status="active" inuse', 'status="archived" inuse', 'projectrate/@status is "archived"'];
+        yield 'unknown status' => [
+            'status="active" inuse',
+            'status="archived" inuse',
+            'projectrate/@status is "archived"',
+        ];
         yield 'missing inuse' => ['inuse="true" ', '', 'projectrate/@inuse is missing'];
         yield 'unit 0' => ['<unit>1</unit>', '<unit>0</unit>', 'unit of 1 or more'];
         yield 'empty currency' => ['>EUR</currency>', '></currency>', 'projectrate/currency is empty'];
-        yield 'price with comma' => ['<externalrate>95.0000', '<externalrate>95,0000', 'ratechange/externalrate is "95,0000"'];
-        yield 'negative price' => ['<internalrate>55.0000', '<internalrate>-5.0000', 'ratechange/internalrate is "-5.0000"'];
-        yield 'invalid date' => ['<begindate>20250101', '<begindate>2025-01-01', 'ratechange/begindate is "2025-01-01"'];
+        yield 'price with comma' => [
+            '<externalrate>95.0000',
+            '<externalrate>95,0000',
+            'ratechange/externalrate is "95,0000"',
+        ];
+        yield 'negative price' => [
+            '<internalrate>55.0000',
+            '<internalrate>-5.0000',
+            'ratechange/internalrate is "-5.0000"',
+        ];
+        yield 'invalid date' => [
+            '<begindate>20250101',
+            '<begindate>2025-01-01',
+            'ratechange/begindate is "2025-01-01"',
+        ];
         yield 'ends before start' => ['<enddate>29991231', '<enddate>20241231', 'ends on 2024-12-31, before it starts'];
         yield 'line without id' => [' id="2"', '', 'ratechange/@id is missing'];
         yield 'no prices' => [
@@ -272,7 +297,8 @@ final class RateResourceTest extends TestCase
 
         self::assertCount(4, $http->requests);
         self::assertSame(
-            '<projectrate><office>1000</office><code>CONSULT</code><name>Consultancy</name><shortname>Consult</shortname>'
+            '<projectrate><office>1000</office><code>CONSULT</code>'
+            . '<name>Consultancy</name><shortname>Consult</shortname>'
             . '<type>time</type><unit>1</unit><currency>EUR</currency><ratechanges>'
             . '<ratechange id="2"><begindate>20250101</begindate><enddate>20260630</enddate>'
             . '<internalrate>55.0000</internalrate><externalrate>95.0000</externalrate></ratechange>'

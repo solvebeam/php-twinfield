@@ -38,7 +38,10 @@ final class SalesArticleResourceTest extends IntegrationTestCase
         $csv = $this->twinfield->salesArticles()->export();
 
         self::assertSame('articles.csv', $csv->fileName);
-        self::assertStringStartsWith('Name,Code,NetPrice,GrossPrice,VatCode,RevenueTypeCode,CostCenterCode,ArticleId', $csv->contents);
+        self::assertStringStartsWith(
+            'Name,Code,NetPrice,GrossPrice,VatCode,RevenueTypeCode,CostCenterCode,ArticleId',
+            $csv->contents,
+        );
         self::assertStringStartsWith('PK', $this->twinfield->salesArticles()->export(FileType::Xlsx)->contents);
     }
 }

@@ -69,7 +69,14 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
     }
 
     /**
-     * @return array{token: string, expires: int, clusterUrl: string, userCode: string, organisationId: string, organisationCode: string}
+     * @return array{
+     *     token: string,
+     *     expires: int,
+     *     clusterUrl: string,
+     *     userCode: string,
+     *     organisationId: string,
+     *     organisationCode: string,
+     * }
      */
     private function current(): array
     {

@@ -41,7 +41,11 @@ final class DimensionTypeResourceTest extends TestCase
         self::assertSame('2', $xpath->evaluate('string(//tw:Search/tw:field)'));
         self::assertSame('21', $xpath->evaluate('string(//tw:Search/tw:firstRow)'));
         self::assertSame('10', $xpath->evaluate('string(//tw:Search/tw:maxRows)'));
-        self::assertSame(0.0, $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'), 'The company comes from the header.');
+        self::assertSame(
+            0.0,
+            $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'),
+            'The company comes from the header.',
+        );
     }
 
     public function testSearchesByFinancialLevelAndDimension(): void
@@ -62,7 +66,10 @@ final class DimensionTypeResourceTest extends TestCase
 
     public function testChecksWhetherACodeExists(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-dimension-types-deb'), ReplayClient::response('finder-dimension-types-deb'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-dimension-types-deb'),
+            ReplayClient::response('finder-dimension-types-deb'),
+        );
         $types = $this->twinfield($http)->dimensionTypes();
 
         self::assertTrue($types->exists(DimensionTypeCode::AccountsReceivable));
@@ -94,7 +101,10 @@ final class DimensionTypeResourceTest extends TestCase
         self::assertTrue($type->mask->matches('1010'));
         self::assertFalse($type->mask->matches('2000'));
         self::assertEquals(new DimensionTypeLevels(financial: 2, time: 0, fixedAssets: 0, invoices: 0), $type->levels);
-        self::assertEquals(new AddressLabels('Tav', 'Adres', 'Postadres', 'BTW nummer', 'KVK nummer', null), $type->addressLabels);
+        self::assertEquals(
+            new AddressLabels('Tav', 'Adres', 'Postadres', 'BTW nummer', 'KVK nummer', null),
+            $type->addressLabels,
+        );
         self::assertSame(1, $type->touched);
     }
 
@@ -124,12 +134,17 @@ final class DimensionTypeResourceTest extends TestCase
 
     public function testFindReturnsNullWhenTheDimensionTypeDoesNotExist(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('dimension-type-read-not-found'))->dimensionTypes()->find('XYZ'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('dimension-type-read-not-found'))->dimensionTypes()->find('XYZ'),
+        );
     }
 
     public function testUpdatesADimensionType(): void
     {
-        $http = new ReplayClient(ReplayClient::response('dimension-type-read'), ReplayClient::response('dimension-type-save'));
+        $http = new ReplayClient(
+            ReplayClient::response('dimension-type-read'),
+            ReplayClient::response('dimension-type-save'),
+        );
         $types = $this->twinfield($http)->dimensionTypes();
 
         $updated = $types->update(
@@ -155,7 +170,10 @@ final class DimensionTypeResourceTest extends TestCase
 
     public function testThrowsTheRefusalWhenTwinfieldRefusesAnUpdate(): void
     {
-        $http = new ReplayClient(ReplayClient::response('dimension-type-read'), ReplayClient::response('dimension-type-save-error'));
+        $http = new ReplayClient(
+            ReplayClient::response('dimension-type-read'),
+            ReplayClient::response('dimension-type-save-error'),
+        );
         $types = $this->twinfield($http)->dimensionTypes();
 
         try {
@@ -169,7 +187,12 @@ final class DimensionTypeResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Dimension types belong to a company: use company() first.');

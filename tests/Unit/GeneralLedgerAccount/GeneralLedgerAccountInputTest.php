@@ -87,7 +87,8 @@ final class GeneralLedgerAccountInputTest extends TestCase
         self::assertSame(
             '<dimension><office>1000</office><type>PNL</type><code>8000</code><name>Omzet</name>'
                 . '<shortname/><beginperiod>0</beginperiod><beginyear>0</beginyear>'
-                . '<financials><matchtype>notmatchable</matchtype><vatcode fixed="false"/><childvalidations/></financials>'
+                . '<financials><matchtype>notmatchable</matchtype>'
+                . '<vatcode fixed="false"/><childvalidations/></financials>'
                 . '<groups/></dimension>',
             $input->toXml('1000')->toXml(),
         );

@@ -48,7 +48,9 @@ final readonly class LoopbackLogin
         ]);
         $state = $provider->getState();
 
-        $this->prompt->line(sprintf('[1/4] Client "%s", redirect URI %s', $this->config->clientId(), $this->config->redirectUri()));
+        $this->prompt->line(
+            sprintf('[1/4] Client "%s", redirect URI %s', $this->config->clientId(), $this->config->redirectUri()),
+        );
         $this->prompt->line('      Scopes: ' . implode(' ', $scopes));
         $this->prompt->line('[2/4] Opening the Twinfield login in your browser…');
         $this->prompt->line('      If it does not open, visit: ' . $authorizationUrl);
@@ -80,11 +82,17 @@ final readonly class LoopbackLogin
             $token = $provider->getAccessToken('authorization_code', ['code' => $query['code']]);
             $validation = $provider->getAccessTokenValidation($token);
         } catch (IdentityProviderException $exception) {
-            throw new SetupException('Token request failed: ' . $exception->getMessage() . "\n" . $this->hint(), 0, $exception);
+            throw new SetupException(
+                'Token request failed: ' . $exception->getMessage() . "\n" . $this->hint(),
+                0,
+                $exception,
+            );
         }
 
         if ($token->getRefreshToken() === null) {
-            throw new SetupException('Twinfield did not return a refresh token. Check that the client may use the "offline_access" scope.');
+            throw new SetupException(
+                'Twinfield did not return a refresh token. Check that the client may use the "offline_access" scope.',
+            );
         }
 
         $session->store($token, $validation);
@@ -155,7 +163,9 @@ final readonly class LoopbackLogin
             ));
         }
 
-        $this->prompt->line(sprintf('      Waiting for the redirect on %s (max %d seconds)…', $redirectUri, self::TIMEOUT));
+        $this->prompt->line(
+            sprintf('      Waiting for the redirect on %s (max %d seconds)…', $redirectUri, self::TIMEOUT),
+        );
 
         $deadline = time() + self::TIMEOUT;
 
@@ -191,7 +201,8 @@ final readonly class LoopbackLogin
                 : '<h1>Twinfield login failed</h1><p>See the terminal for details.</p>';
 
             fwrite($connection, sprintf(
-                "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: %d\r\nConnection: close\r\n\r\n%s",
+                "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n"
+                    . "Content-Length: %d\r\nConnection: close\r\n\r\n%s",
                 strlen($html),
                 $html,
             ));
@@ -208,7 +219,9 @@ final readonly class LoopbackLogin
      */
     private function askForRedirect(): array
     {
-        $this->prompt->line('After logging in, your browser is sent to the redirect URI (the page may fail to load, that is fine).');
+        $this->prompt->line(
+            'After logging in, your browser is sent to the redirect URI (the page may fail to load, that is fine).',
+        );
 
         $url = $this->prompt->ask('Paste the full URL from the address bar');
         parse_str((string) parse_url($url, PHP_URL_QUERY), $query);

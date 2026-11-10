@@ -20,8 +20,9 @@ use UnexpectedValueException;
  *   $database->replaceTransactions($result);
  *
  * One file in the temp directory holds the lines of every company you sync, keyed by the
- * organisation id and the company code (see "Keys for a shadow database" in the organisations guide). In your own application you use your own database; the queries to Twinfield
- * stay the same.
+ * organisation id and the company code (see "Keys for a shadow database" in the organisations
+ * guide). In your own application you use your own database; the queries to Twinfield stay the
+ * same.
  */
 final class ShadowDatabase
 {

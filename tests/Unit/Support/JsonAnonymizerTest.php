@@ -24,7 +24,10 @@ final class JsonAnonymizerTest extends TestCase
         $result = json_decode($this->anonymizer()->anonymize($json), false, 512, JSON_THROW_ON_ERROR);
 
         self::assertIsObject($result);
-        self::assertMatchesRegularExpression('~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~', $result->id);
+        self::assertMatchesRegularExpression(
+            '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
+            $result->id,
+        );
         self::assertNotSame(self::GUID, $result->id);
         self::assertNotSame('Fiets 10:30, [12]', $result->name);
         self::assertSame(3, $result->version);

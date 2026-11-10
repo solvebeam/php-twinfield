@@ -38,14 +38,22 @@ final class LedgerAccountResourceTest extends IntegrationTestCase
 
     public function testTheGuidIsTheUidOfTheDimension(): void
     {
-        $account = $this->twinfield->ledgerAccounts()->search()->types(LedgerAccountType::Balance)->limit(1)->get()->items[0];
+        $account = $this->twinfield->ledgerAccounts()
+            ->search()
+            ->types(LedgerAccountType::Balance)
+            ->limit(1)
+            ->get()
+            ->items[0];
 
         self::assertSame($account->id, strtolower($this->twinfield->balanceSheetAccounts()->get($account->code)->uid));
     }
 
     public function testReadsAllAccountsOverPages(): void
     {
-        $search = $this->twinfield->ledgerAccounts()->search()->types(LedgerAccountType::Debtor, LedgerAccountType::Creditor);
+        $search = $this->twinfield->ledgerAccounts()->search()->types(
+            LedgerAccountType::Debtor,
+            LedgerAccountType::Creditor,
+        );
         $count = 0;
 
         foreach ($search->limit(100)->all() as $account) {

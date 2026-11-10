@@ -27,7 +27,12 @@ final class BudgetRestTest extends WriteTestCase
         $this->requireScopes(Scope::WriteBudgets, Scope::WriteBudgetScenarios, Scope::ReadBookkeeping);
 
         $budgets = $this->twinfield->budgets();
-        $account = $this->twinfield->ledgerAccounts()->search()->types(LedgerAccountType::ProfitAndLoss)->limit(1)->get()->items[0];
+        $account = $this->twinfield->ledgerAccounts()
+            ->search()
+            ->types(LedgerAccountType::ProfitAndLoss)
+            ->limit(1)
+            ->get()
+            ->items[0];
         $years = $this->twinfield->periods()->years();
         $year = $years === [] ? (int) date('Y') : max($years);
         $code = 'SDK' . random_int(100, 999);
@@ -49,7 +54,10 @@ final class BudgetRestTest extends WriteTestCase
             self::assertSame('40.5', $budgets->line($budget->id, $key)->credit);
 
             $budgets->spread($budget->id, $year, UnitOfMeasure::Monetary, $account->id, '1200', SpreadFor::Debit);
-            self::assertGreaterThan(1, $budgets->accountLines($budget->id, $year, UnitOfMeasure::Monetary, $account->id)->get()->filteredTotal);
+            self::assertGreaterThan(
+                1,
+                $budgets->accountLines($budget->id, $year, UnitOfMeasure::Monetary, $account->id)->get()->filteredTotal,
+            );
 
             $budgets->deleteLine($budget->id, $key);
 
@@ -81,7 +89,10 @@ final class BudgetRestTest extends WriteTestCase
 
         try {
             self::assertEquals($weights, $template->distribution);
-            self::assertSame('SDK test template (updated)', $templates->update($template->id, 'SDK test template (updated)', $weights)->name);
+            self::assertSame(
+                'SDK test template (updated)',
+                $templates->update($template->id, 'SDK test template (updated)', $weights)->name,
+            );
         } finally {
             $templates->delete($template->id);
         }

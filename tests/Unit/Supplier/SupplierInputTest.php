@@ -46,10 +46,18 @@ final class SupplierInputTest extends TestCase
             ->relationsReference('CUST-4711')
             ->vatCode('IH')
             ->remittanceAdvice(RemittanceAdviceSendType::ByEmail, 'accounts@example.com')
-            ->address(AddressInput::invoice('Example Supplies B.V.')->city('Amsterdam')->country('NL')->vatNumber('NL001234567B01')->default())
+            ->address(
+                AddressInput::invoice('Example Supplies B.V.')
+                    ->city('Amsterdam')
+                    ->country('NL')
+                    ->vatNumber('NL001234567B01')
+                    ->default(),
+            )
             ->bank(BankInput::create()->iban('NL91 ABNA 0417 1643 00')->ascription('Example Supplies B.V.')->default())
             ->group('2REL')
-            ->postingRule(PostingRuleInput::create('EUR', '121')->line(PostingRuleLine::create('4500', '100')->vatCode('IH')))
+            ->postingRule(
+                PostingRuleInput::create('EUR', '121')->line(PostingRuleLine::create('4500', '100')->vatCode('IH')),
+            )
             ->paymentCondition(5, '2.75');
 
         $xml = $input->toXml('1000')->toXml();
@@ -65,21 +73,32 @@ final class SupplierInputTest extends TestCase
             . '<meansofpayment>paymentfile</meansofpayment><paycode>SEPANLCT</paycode>'
             . '<substitutewith>1600</substitutewith><relationsreference>CUST-4711</relationsreference>'
             . '<vatcode>IH</vatcode></financials>'
-            . '<remittanceadvice><sendtype>ByEmail</sendtype><sendmail>accounts@example.com</sendmail></remittanceadvice>',
+            . '<remittanceadvice><sendtype>ByEmail</sendtype>'
+            . '<sendmail>accounts@example.com</sendmail></remittanceadvice>',
             $xml,
         );
-        self::assertStringContainsString('<address type="invoice" default="true"><name>Example Supplies B.V.</name><country>NL</country><city>Amsterdam</city>', $xml);
+        self::assertStringContainsString(
+            '<address type="invoice" default="true"><name>Example Supplies B.V.</name>'
+                . '<country>NL</country><city>Amsterdam</city>',
+            $xml,
+        );
         self::assertStringContainsString('<bank default="true"><ascription>Example Supplies B.V.</ascription>', $xml);
         self::assertStringContainsString('<iban>NL91ABNA0417164300</iban>', $xml);
         self::assertStringContainsString('<groups><group>2REL</group></groups>', $xml);
-        self::assertStringContainsString('<dimension1>4500</dimension1><dimension2/><dimension3/><ratio>100</ratio><vatcode>IH</vatcode>', $xml);
+        self::assertStringContainsString(
+            '<dimension1>4500</dimension1><dimension2/><dimension3/><ratio>100</ratio><vatcode>IH</vatcode>',
+            $xml,
+        );
         self::assertStringEndsWith(
-            '<paymentconditions><paymentcondition><discountdays>5</discountdays><discountpercentage>2.75</discountpercentage></paymentcondition></paymentconditions></dimension>',
+            '<paymentconditions><paymentcondition><discountdays>5</discountdays>'
+                . '<discountpercentage>2.75</discountpercentage></paymentcondition></paymentconditions></dimension>',
             $xml,
         );
 
         // Not in use for suppliers, so never sent.
-        foreach (['ebilling', 'ebillmail', 'collectmandate', 'collectionschema', 'creditmanagement', 'invoicing'] as $element) {
+        $elements = ['ebilling', 'ebillmail', 'collectmandate', 'collectionschema', 'creditmanagement', 'invoicing'];
+
+        foreach ($elements as $element) {
             self::assertStringNotContainsString('<' . $element, $xml);
         }
     }
@@ -115,7 +134,9 @@ final class SupplierInputTest extends TestCase
 
     public function testNullClearsAValue(): void
     {
-        $input = SupplierInput::create('Example Supplies B.V.')->relationsReference('CUST-4711')->relationsReference(null);
+        $input = SupplierInput::create('Example Supplies B.V.')->relationsReference('CUST-4711')->relationsReference(
+            null,
+        );
 
         self::assertTrue($input->has('financials/relationsreference'));
         self::assertNull($input->value('financials/relationsreference'));
@@ -124,7 +145,10 @@ final class SupplierInputTest extends TestCase
 
     public function testAcceptsTheVatCodeForNoVat(): void
     {
-        self::assertSame('#', SupplierInput::create('Example Supplies B.V.')->vatCode('#')->value('financials/vatcode'));
+        self::assertSame(
+            '#',
+            SupplierInput::create('Example Supplies B.V.')->vatCode('#')->value('financials/vatcode'),
+        );
     }
 
     public function testADefaultBankMakesTheOthersNonDefault(): void
@@ -133,7 +157,10 @@ final class SupplierInputTest extends TestCase
             ->bank(BankInput::create()->accountNumber('1')->default())
             ->bank(BankInput::create()->accountNumber('2')->default());
 
-        self::assertSame([false, true], array_map(static fn (BankInput $bank): bool => $bank->default, $input->banks ?? []));
+        self::assertSame(
+            [false, true],
+            array_map(static fn (BankInput $bank): bool => $bank->default, $input->banks ?? []),
+        );
     }
 
     public function testABankWithAnIdReplacesThatBank(): void
@@ -149,15 +176,25 @@ final class SupplierInputTest extends TestCase
 
     public function testRemovesAnAddressAndABank(): void
     {
-        $input = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit()->withoutAddress(2)->withoutBank(2);
+        $input = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())
+            ->edit()
+            ->withoutAddress(2)
+            ->withoutBank(2);
 
-        self::assertSame([1], array_map(static fn (AddressInput $address): ?int => $address->id, $input->addresses ?? []));
+        self::assertSame(
+            [1],
+            array_map(static fn (AddressInput $address): ?int => $address->id, $input->addresses ?? []),
+        );
         self::assertSame([1], array_map(static fn (BankInput $bank): ?int => $bank->id, $input->banks ?? []));
     }
 
     public function testDeletesAPostingRule(): void
     {
-        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit()->withoutPostingRule(1)->toXml('1000')->toXml();
+        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())
+            ->edit()
+            ->withoutPostingRule(1)
+            ->toXml('1000')
+            ->toXml();
 
         self::assertStringContainsString('<postingrule id="1" status="deleted"><currency>EUR</currency>', $xml);
     }
@@ -183,7 +220,10 @@ final class SupplierInputTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('A supplier has at most one default bank account.');
 
-        SupplierInput::create('Example Supplies B.V.')->banks(BankInput::create()->default(), BankInput::create()->default());
+        SupplierInput::create('Example Supplies B.V.')->banks(
+            BankInput::create()->default(),
+            BankInput::create()->default(),
+        );
     }
 
     public function testRemittanceAdviceByEmailNeedsAnEmailAddress(): void
@@ -200,16 +240,40 @@ final class SupplierInputTest extends TestCase
     public static function invalidInput(): iterable
     {
         yield 'empty name' => [static fn () => SupplierInput::create(''), 'Supplier name must not be empty.'];
-        yield 'long name' => [static fn () => SupplierInput::create(str_repeat('a', 81)), 'Supplier name must be at most 80 characters'];
+        yield 'long name' => [
+            static fn () => SupplierInput::create(str_repeat('a', 81)),
+            'Supplier name must be at most 80 characters',
+        ];
         yield 'invalid code' => [static fn () => SupplierInput::create('A')->code('ab c'), 'is not a code'];
-        yield 'long short name' => [static fn () => SupplierInput::create('A')->shortName(str_repeat('a', 21)), 'Supplier short name must be at most 20'];
-        yield 'long website' => [static fn () => SupplierInput::create('A')->website(str_repeat('a', 41)), 'Supplier website must be at most 40'];
-        yield 'negative due days' => [static fn () => SupplierInput::create('A')->dueDays(-1), 'Due days must be 0 or more'];
-        yield 'invalid pay code' => [static fn () => SupplierInput::create('A')->creditTransfer('sepa nl'), 'is not a code'];
-        yield 'long reference' => [static fn () => SupplierInput::create('A')->relationsReference(str_repeat('R', 41)), 'Relations reference must be at most 40'];
+        yield 'long short name' => [
+            static fn () => SupplierInput::create('A')->shortName(str_repeat('a', 21)),
+            'Supplier short name must be at most 20',
+        ];
+        yield 'long website' => [
+            static fn () => SupplierInput::create('A')->website(str_repeat('a', 41)),
+            'Supplier website must be at most 40',
+        ];
+        yield 'negative due days' => [
+            static fn () => SupplierInput::create('A')->dueDays(-1),
+            'Due days must be 0 or more',
+        ];
+        yield 'invalid pay code' => [
+            static fn () => SupplierInput::create('A')->creditTransfer('sepa nl'),
+            'is not a code',
+        ];
+        yield 'long reference' => [
+            static fn () => SupplierInput::create('A')->relationsReference(str_repeat('R', 41)),
+            'Relations reference must be at most 40',
+        ];
         yield 'invalid VAT code' => [static fn () => SupplierInput::create('A')->vatCode('i h'), 'is not a code'];
-        yield 'invalid account' => [static fn () => SupplierInput::create('A')->balanceAccount('16 00'), 'is not a code'];
-        yield 'invalid percentage' => [static fn () => SupplierInput::create('A')->paymentCondition(8, '101'), 'is not a discount percentage'];
+        yield 'invalid account' => [
+            static fn () => SupplierInput::create('A')->balanceAccount('16 00'),
+            'is not a code',
+        ];
+        yield 'invalid percentage' => [
+            static fn () => SupplierInput::create('A')->paymentCondition(8, '101'),
+            'is not a discount percentage',
+        ];
     }
 
     /**

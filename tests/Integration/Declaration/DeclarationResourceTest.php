@@ -64,24 +64,43 @@ final class DeclarationResourceTest extends IntegrationTestCase
     {
         $return = $this->find(DeclarationType::VatTurnover);
 
-        self::assertRoot('http://www.xbrl.org/2003/instance', 'xbrl', $this->declarations()->vatReturnXbrl($return->id));
+        self::assertRoot(
+            'http://www.xbrl.org/2003/instance',
+            'xbrl',
+            $this->declarations()->vatReturnXbrl($return->id),
+        );
         self::assertRoot('', 'AangifteOmzetbelasting', $this->declarations()->vatReturnXml($return->id));
-        self::assertMatchesRegularExpression('~^\d+\+$~', (string) $this->declarations()->vatReturnPaymentReference($return->id));
+        self::assertMatchesRegularExpression(
+            '~^\d+\+$~',
+            (string) $this->declarations()->vatReturnPaymentReference($return->id),
+        );
     }
 
     public function testDownloadsAnIctReturn(): void
     {
         $return = $this->find(DeclarationType::Ict);
 
-        self::assertRoot('http://www.xbrl.org/2003/instance', 'xbrl', $this->declarations()->ictReturnXbrl($return->id));
-        self::assertRoot('http://xml.belastingdienst.nl/schemas/ICP/2010/01', 'OpgaafICP', $this->declarations()->ictReturnXml($return->id));
+        self::assertRoot(
+            'http://www.xbrl.org/2003/instance',
+            'xbrl',
+            $this->declarations()->ictReturnXbrl($return->id),
+        );
+        self::assertRoot(
+            'http://xml.belastingdienst.nl/schemas/ICP/2010/01',
+            'OpgaafICP',
+            $this->declarations()->ictReturnXml($return->id),
+        );
     }
 
     public function testDownloadsATaxGroupReturn(): void
     {
         $return = $this->find(DeclarationType::TaxGroup);
 
-        self::assertRoot('http://www.xbrl.org/2003/instance', 'xbrl', $this->declarations()->taxGroupVatReturnXbrl($return->id));
+        self::assertRoot(
+            'http://www.xbrl.org/2003/instance',
+            'xbrl',
+            $this->declarations()->taxGroupVatReturnXbrl($return->id),
+        );
         self::assertRoot('', 'AangifteOmzetbelasting', $this->declarations()->taxGroupVatReturnXml($return->id));
         self::assertMatchesRegularExpression(
             '~^\d+\+$~',

@@ -81,8 +81,14 @@ final class RestClientTest extends TestCase
         $twinfield->company('1000')->rest('GET', '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes');
 
         self::assertCount(4, $http->requests);
-        self::assertStringContainsString('/companies/f47ac10b-58cc-4372-a567-0e02b2c3d479/', (string) $http->requests[2]->getUri());
-        self::assertStringContainsString('/companies/0f8fad5b-d9cb-469f-a165-70867728950e/', (string) $http->requests[3]->getUri());
+        self::assertStringContainsString(
+            '/companies/f47ac10b-58cc-4372-a567-0e02b2c3d479/',
+            (string) $http->requests[2]->getUri(),
+        );
+        self::assertStringContainsString(
+            '/companies/0f8fad5b-d9cb-469f-a165-70867728950e/',
+            (string) $http->requests[3]->getUri(),
+        );
     }
 
     public function testThrowsWhenTheCompanyIsNotAnOfficeOfTheUser(): void
@@ -119,12 +125,16 @@ final class RestClientTest extends TestCase
         $http = new ReplayClient(ReplayClient::raw(404, '"Article with specified ID does not exist"'));
 
         try {
-            $this->twinfield($http)->rest('GET', '/organisations/{organisationId}/companies/{companyId}/sales/articles/x');
+            $this->twinfield($http)->rest(
+                'GET',
+                '/organisations/{organisationId}/companies/{companyId}/sales/articles/x',
+            );
             self::fail('Expected a NotFoundException.');
         } catch (NotFoundException $exception) {
             self::assertSame(404, $exception->status);
             self::assertSame(
-                'Twinfield refused GET /sales/articles/x (HTTP 404 Not Found): Article with specified ID does not exist',
+                'Twinfield refused GET /sales/articles/x (HTTP 404 '
+                    . 'Not Found): Article with specified ID does not exist',
                 $exception->getMessage(),
             );
         }
@@ -134,7 +144,11 @@ final class RestClientTest extends TestCase
     {
         $this->expectException(VersionConflictException::class);
 
-        $this->twinfield(new ReplayClient(ReplayClient::raw(412)))->rest('PUT', '/organisations/{organisationId}/companies/{companyId}/sales/articles/x', body: []);
+        $this->twinfield(new ReplayClient(ReplayClient::raw(412)))->rest(
+            'PUT',
+            '/organisations/{organisationId}/companies/{companyId}/sales/articles/x',
+            body: [],
+        );
     }
 
     public function testThrowsAValidationErrorWithTheMessages(): void
@@ -142,15 +156,24 @@ final class RestClientTest extends TestCase
         $body = '{"code": "Article code is already in use", "netPrice": "Must be 0 or more"}';
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('(HTTP 422 Unprocessable Entity): code: Article code is already in use netPrice: Must be 0 or more');
+        $this->expectExceptionMessage(
+            '(HTTP 422 Unprocessable Entity): code: Article code is already in use netPrice: Must be 0 or more',
+        );
 
-        $this->twinfield(new ReplayClient(ReplayClient::raw(422, $body)))->rest('POST', '/organisations/{organisationId}/companies/{companyId}/sales/articles', body: []);
+        $this->twinfield(new ReplayClient(ReplayClient::raw(422, $body)))->rest(
+            'POST',
+            '/organisations/{organisationId}/companies/{companyId}/sales/articles',
+            body: [],
+        );
     }
 
     public function testThrowsOtherErrorsAsRestException(): void
     {
         try {
-            $this->twinfield(new ReplayClient(ReplayClient::raw(500, 'Internal error')))->rest('GET', '/organisations/{organisationId}/budgets');
+            $this->twinfield(new ReplayClient(ReplayClient::raw(500, 'Internal error')))->rest(
+                'GET',
+                '/organisations/{organisationId}/budgets',
+            );
             self::fail('Expected a RestException.');
         } catch (RestException $exception) {
             self::assertSame(RestException::class, $exception::class);
@@ -161,16 +184,24 @@ final class RestClientTest extends TestCase
     public function testThrowsAccessDeniedWithAHintAboutScopes(): void
     {
         $this->expectException(AccessDeniedException::class);
-        $this->expectExceptionMessage('Twinfield denied access (HTTP 403 Forbidden). GET /vat/vatcodes: request the scope of the operation');
+        $this->expectExceptionMessage(
+            'Twinfield denied access (HTTP 403 Forbidden). GET /vat/vatcodes: request the scope of the operation',
+        );
 
-        $this->twinfield(new ReplayClient(ReplayClient::raw(403)))->rest('GET', '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes');
+        $this->twinfield(new ReplayClient(ReplayClient::raw(403)))->rest(
+            'GET',
+            '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes',
+        );
     }
 
     public function testThrowsWhenTheRateLimitIsExceeded(): void
     {
         $this->expectException(RateLimitExceededException::class);
 
-        $this->twinfield(new ReplayClient(ReplayClient::raw(429, '', ['Retry-After' => '10'])))->rest('GET', '/organisations/{organisationId}/budgets');
+        $this->twinfield(new ReplayClient(ReplayClient::raw(429, '', ['Retry-After' => '10'])))->rest(
+            'GET',
+            '/organisations/{organisationId}/budgets',
+        );
     }
 
     private function twinfield(ReplayClient $http): Twinfield

@@ -38,7 +38,10 @@ final class CurrencyTest extends TestCase
 
     public function testLatestRate(): void
     {
-        self::assertSame('1.0912', $this->usd(['2026-07-01' => '1.0912', '2026-01-01' => '1.085'])->latestRate()?->rate->value);
+        self::assertSame(
+            '1.0912',
+            $this->usd(['2026-07-01' => '1.0912', '2026-01-01' => '1.085'])->latestRate()?->rate->value,
+        );
         self::assertNull($this->usd([])->latestRate());
         self::assertNull($this->usd([])->rateOn(new DateTimeImmutable('2026-01-01')));
     }

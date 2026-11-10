@@ -188,7 +188,9 @@ final class ClassicFixedAssetTest extends TestCase
     public function testThrowsOnAnotherCostCenterLevel(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('dimension/financials/substitutionlevel is "1", expected 2 (the cost center level).');
+        $this->expectExceptionMessage(
+            'dimension/financials/substitutionlevel is "1", expected 2 (the cost center level).',
+        );
 
         self::fixture('fixed-asset-read', static fn (string $xml): string => str_replace(
             '<substitutionlevel>2</substitutionlevel>',
@@ -224,7 +226,9 @@ final class ClassicFixedAssetTest extends TestCase
     public function testThrowsOnATransactionLineWithoutNumber(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('dimension/fixedassets/translines/transline[1]/number is "", expected an integer.');
+        $this->expectExceptionMessage(
+            'dimension/fixedassets/translines/transline[1]/number is "", expected an integer.',
+        );
 
         self::fixture('fixed-asset-read', static fn (string $xml): string => str_replace(
             '<number locked="true">202600012</number>',
@@ -252,6 +256,9 @@ final class ClassicFixedAssetTest extends TestCase
         $xml = (string) $document->getElementsByTagName('ProcessXmlStringResult')->item(0)?->textContent;
         $xml = $change === null ? $xml : $change($xml);
 
-        return ClassicFixedAsset::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)), TestTokens::organisation());
+        return ClassicFixedAsset::fromXml(
+            XmlElement::root(ProcessXmlResult::fromXml($xml)),
+            TestTokens::organisation(),
+        );
     }
 }

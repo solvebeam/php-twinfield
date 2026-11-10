@@ -55,13 +55,21 @@ final class DeclarationResourceTest extends TestCase
         self::assertSame('EXAMPLE', $return->company->organisation->code);
         self::assertSame('THR Bnwhvehysa Uhaug', $return->companyName);
 
-        self::assertSame('http://www.twinfield.com/GetRangeOfSummariesByDeclarationYear', $http->lastRequest()->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            'http://www.twinfield.com/GetRangeOfSummariesByDeclarationYear',
+            $http->lastRequest()->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
-            '<GetRangeOfSummariesByDeclarationYear><companyCode>1000</companyCode><declarationYear>2025</declarationYear>'
+            '<GetRangeOfSummariesByDeclarationYear><companyCode>1000</companyCode>'
+            . '<declarationYear>2025</declarationYear>'
             . '<startIndex>0</startIndex><count>100</count></GetRangeOfSummariesByDeclarationYear>',
             $this->body($http),
         );
-        self::assertStringContainsString('<CompanyCode>1000</CompanyCode>', $this->body($http), 'The company in the header.');
+        self::assertStringContainsString(
+            '<CompanyCode>1000</CompanyCode>',
+            $this->body($http),
+            'The company in the header.',
+        );
     }
 
     public function testListsAllReturnsOfACompany(): void
@@ -69,7 +77,10 @@ final class DeclarationResourceTest extends TestCase
         $http = ReplayClient::fixture('declarations-list-empty');
 
         self::assertSame([], $this->twinfield($http)->declarations()->all());
-        self::assertStringContainsString('<GetAllSummaries><companyCode>1000</companyCode></GetAllSummaries>', $this->body($http));
+        self::assertStringContainsString(
+            '<GetAllSummaries><companyCode>1000</companyCode></GetAllSummaries>',
+            $this->body($http),
+        );
     }
 
     public function testListsAPage(): void
@@ -79,7 +90,8 @@ final class DeclarationResourceTest extends TestCase
         $this->twinfield($http)->declarations()->list(offset: 200, limit: 50);
 
         self::assertStringContainsString(
-            '<GetRangeOfSummaries><companyCode>1000</companyCode><startIndex>200</startIndex><count>50</count></GetRangeOfSummaries>',
+            '<GetRangeOfSummaries><companyCode>1000</companyCode>'
+                . '<startIndex>200</startIndex><count>50</count></GetRangeOfSummaries>',
             $this->body($http),
         );
     }
@@ -92,7 +104,8 @@ final class DeclarationResourceTest extends TestCase
         $this->twinfield($http)->declarations()->list(modifiedSince: $since);
 
         self::assertStringContainsString(
-            '<GetRangeOfSummariesSinceModified><companyCode>1000</companyCode><startIndex>0</startIndex><count>100</count>'
+            '<GetRangeOfSummariesSinceModified><companyCode>1000</companyCode>'
+            . '<startIndex>0</startIndex><count>100</count>'
             . '<modifiedSince>2026-11-06T11:07:46+01:00</modifiedSince></GetRangeOfSummariesSinceModified>',
             $this->body($http),
         );
@@ -108,7 +121,8 @@ final class DeclarationResourceTest extends TestCase
         self::assertStringContainsString(
             '<GetRangeOfSummariesByDeclarationYearAndSinceModified><companyCode>1000</companyCode>'
             . '<declarationYear>2026</declarationYear><startIndex>0</startIndex><count>100</count>'
-            . '<modifiedSince>2026-10-01T00:00:00+00:00</modifiedSince></GetRangeOfSummariesByDeclarationYearAndSinceModified>',
+            . '<modifiedSince>2026-10-01T00:00:00+00:00</modifiedSince>'
+            . '</GetRangeOfSummariesByDeclarationYearAndSinceModified>',
             $this->body($http),
         );
     }
@@ -122,16 +136,24 @@ final class DeclarationResourceTest extends TestCase
         $declarations = $this->twinfield($http)->declarations();
 
         $declarations->allForOrganisation();
-        self::assertStringContainsString('<GetAllSummaries><companyCode>*</companyCode></GetAllSummaries>', $this->body($http));
+        self::assertStringContainsString(
+            '<GetAllSummaries><companyCode>*</companyCode></GetAllSummaries>',
+            $this->body($http),
+        );
         self::assertStringContainsString('<CompanyCode>1000</CompanyCode>', $this->body($http));
 
         $declarations->listForOrganisation(year: 2026);
-        self::assertStringContainsString('<GetRangeOfSummariesByDeclarationYear><companyCode>*</companyCode>', $this->body($http));
+        self::assertStringContainsString(
+            '<GetRangeOfSummariesByDeclarationYear><companyCode>*</companyCode>',
+            $this->body($http),
+        );
     }
 
     public function testReadsAReturnWithoutExtraInformation(): void
     {
-        $returns = $this->twinfield(ReplayClient::fixture('declarations-list-without-extra-information'))->declarations()->all();
+        $returns = $this->twinfield(ReplayClient::fixture('declarations-list-without-extra-information'))
+            ->declarations()
+            ->all();
 
         self::assertNull($returns[0]->status->extraInformation);
     }
@@ -140,7 +162,8 @@ final class DeclarationResourceTest extends TestCase
     {
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage(
-            'GetAllSummariesResponse/vatReturn/DeclarationSummary/Status/StepIndex is "9", expected a status step from 1 to 8.',
+            'GetAllSummariesResponse/vatReturn/DeclarationSummary/Status/StepIndex '
+                . 'is "9", expected a status step from 1 to 8.',
         );
 
         $this->twinfield(ReplayClient::fixture('declarations-list-invalid-step'))->declarations()->all();
@@ -174,7 +197,10 @@ final class DeclarationResourceTest extends TestCase
         $http = ReplayClient::fixture('declarations-count');
 
         self::assertSame(9, $this->twinfield($http)->declarations()->count());
-        self::assertStringContainsString('<GetNumberOfDeclarations><companyCode>1000</companyCode></GetNumberOfDeclarations>', $this->body($http));
+        self::assertStringContainsString(
+            '<GetNumberOfDeclarations><companyCode>1000</companyCode></GetNumberOfDeclarations>',
+            $this->body($http),
+        );
     }
 
     public function testDownloadsAVatReturnAsXbrl(): void
@@ -188,14 +214,17 @@ final class DeclarationResourceTest extends TestCase
         self::assertSame('http://www.xbrl.org/2003/instance', $document->documentElement->namespaceURI);
         self::assertStringNotContainsString('twinfield.com', $xml, 'Only the return, not the SOAP response.');
         self::assertStringContainsString(
-            '<GetVatReturnAsXbrl><documentId>2909</documentId><isMessageIdRequired>true</isMessageIdRequired></GetVatReturnAsXbrl>',
+            '<GetVatReturnAsXbrl><documentId>2909</documentId>'
+                . '<isMessageIdRequired>true</isMessageIdRequired></GetVatReturnAsXbrl>',
             $this->body($http),
         );
     }
 
     public function testDownloadsAVatReturnAsXmlWithoutNamespace(): void
     {
-        $xml = $this->twinfield(ReplayClient::fixture('declarations-vat-return-xml'))->declarations()->vatReturnXml(2909);
+        $xml = $this->twinfield(ReplayClient::fixture('declarations-vat-return-xml'))->declarations()->vatReturnXml(
+            2909,
+        );
         $document = self::document($xml);
 
         self::assertSame('AangifteOmzetbelasting', $document->documentElement?->localName);
@@ -227,7 +256,10 @@ final class DeclarationResourceTest extends TestCase
         $xml = $this->twinfield($http)->declarations()->taxGroupVatReturnXbrl(11934);
 
         self::assertSame('xbrl', self::document($xml)->documentElement?->localName);
-        self::assertSame('http://www.twinfield.com/GetTaxGroupVatReturnAsXbrl', $http->lastRequest()->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            'http://www.twinfield.com/GetTaxGroupVatReturnAsXbrl',
+            $http->lastRequest()->getHeaderLine('SOAPAction'),
+        );
     }
 
     public function testGivesThePaymentReference(): void
@@ -235,7 +267,10 @@ final class DeclarationResourceTest extends TestCase
         $http = ReplayClient::fixture('declarations-vat-return-payment-reference');
 
         self::assertSame('9096427548239821+', $this->twinfield($http)->declarations()->vatReturnPaymentReference(2909));
-        self::assertStringContainsString('<GetVatReturnPaymentReference><documentId>2909</documentId></GetVatReturnPaymentReference>', $this->body($http));
+        self::assertStringContainsString(
+            '<GetVatReturnPaymentReference><documentId>2909</documentId></GetVatReturnPaymentReference>',
+            $this->body($http),
+        );
     }
 
     public function testGivesNoPaymentReferenceForAnEmptyElement(): void
@@ -258,7 +293,9 @@ final class DeclarationResourceTest extends TestCase
     public function testThrowsASoapFaultForAnUnknownDocument(): void
     {
         try {
-            $this->twinfield(ReplayClient::fixture('declarations-unknown-document', 500))->declarations()->vatReturnXbrl(999999);
+            $this->twinfield(ReplayClient::fixture('declarations-unknown-document', 500))
+                ->declarations()
+                ->vatReturnXbrl(999999);
             self::fail('Expected a ClassicServiceFaultException.');
         } catch (ClassicServiceFaultException $exception) {
             self::assertSame('100', $exception->errorCode);
@@ -292,7 +329,10 @@ final class DeclarationResourceTest extends TestCase
             $this->twinfield($http)->declarations()->setToRejected(2909, 'Wrong amount & period');
             self::fail('Expected a DeclarationException.');
         } catch (DeclarationException $exception) {
-            self::assertSame(DeclarationStatusMessage::StartStatusInCorrectForTransition, $exception->messages[0]->code);
+            self::assertSame(
+                DeclarationStatusMessage::StartStatusInCorrectForTransition,
+                $exception->messages[0]->code,
+            );
         }
 
         self::assertStringContainsString(
@@ -326,7 +366,12 @@ final class DeclarationResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 
@@ -341,7 +386,9 @@ final class DeclarationResourceTest extends TestCase
         $xml = (string) ReplayClient::response('declarations-list-empty')->getBody();
         $psr17 = new Psr17Factory();
 
-        return $psr17->createResponse()->withBody($psr17->createStream(str_replace('GetAllSummaries', $operation, $xml)));
+        return $psr17->createResponse()->withBody(
+            $psr17->createStream(str_replace('GetAllSummaries', $operation, $xml)),
+        );
     }
 
     private static function document(string $xml): DOMDocument

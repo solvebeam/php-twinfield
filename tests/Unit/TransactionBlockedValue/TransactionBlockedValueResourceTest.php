@@ -26,8 +26,14 @@ final class TransactionBlockedValueResourceTest extends TestCase
 
         $request = $http->lastRequest();
 
-        self::assertSame('https://example.test/webservices/TransactionBlockedValueService.svc', (string) $request->getUri());
-        self::assertSame('"http://www.twinfield.com/TransactionBlockedValueService/Process"', $request->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            'https://example.test/webservices/TransactionBlockedValueService.svc',
+            (string) $request->getUri(),
+        );
+        self::assertSame(
+            '"http://www.twinfield.com/TransactionBlockedValueService/Process"',
+            $request->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
             'i:type="a:RegisterBlockedAmountForTransaction">'
             . '<a:BlockedValue>2000.00</a:BlockedValue>'
@@ -127,7 +133,12 @@ final class TransactionBlockedValueResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

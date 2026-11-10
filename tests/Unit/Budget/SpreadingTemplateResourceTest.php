@@ -21,7 +21,10 @@ final class SpreadingTemplateResourceTest extends TestCase
 
         self::assertCount(12, $weights);
         self::assertEquals(new PeriodWeight(1, 1), $weights[0]);
-        self::assertStringEndsWith('/budgeting/spreadingtemplates/defaultdistribution', (string) $http->lastRequest()->getUri());
+        self::assertStringEndsWith(
+            '/budgeting/spreadingtemplates/defaultdistribution',
+            (string) $http->lastRequest()->getUri(),
+        );
     }
 
     public function testCreatesSearchesUpdatesAndDeletes(): void
@@ -35,7 +38,11 @@ final class SpreadingTemplateResourceTest extends TestCase
             'distribution' => [['period' => 1, 'weight' => 2], ['period' => 2, 'weight' => 1]],
         ]);
         $http = new ReplayClient(
-            ReplayClient::raw(201, '', ['Location' => TestTokens::REST_COMPANY_URL . '/budgeting/spreadingtemplates/' . self::TEMPLATE_ID]),
+            ReplayClient::raw(
+                201,
+                '',
+                ['Location' => TestTokens::REST_COMPANY_URL . '/budgeting/spreadingtemplates/' . self::TEMPLATE_ID],
+            ),
             ReplayClient::raw(200, $template),
             ReplayClient::raw(200, '{"items":[' . $template . '],"total":1,"filteredTotal":1}'),
             ReplayClient::raw(204),
@@ -52,9 +59,18 @@ final class SpreadingTemplateResourceTest extends TestCase
         self::assertSame('SEASON', $created->code);
         self::assertEquals([new PeriodWeight(1, 2), new PeriodWeight(2, 1)], $created->distribution);
         self::assertEquals([$created], $found);
-        self::assertSame('{"code":"SEASON","name":"Season","distribution":[{"period":1,"weight":2},{"period":2,"weight":1}]}', (string) $http->requests[0]->getBody());
-        self::assertStringEndsWith('/budgeting/spreadingtemplates?searchPattern=SEA%2A&includeDistributionData=true', (string) $http->requests[2]->getUri());
-        self::assertSame('{"name":"Season (new)","distribution":[{"period":1,"weight":1}]}', (string) $http->requests[3]->getBody());
+        self::assertSame(
+            '{"code":"SEASON","name":"Season","distribution":[{"period":1,"weight":2},{"period":2,"weight":1}]}',
+            (string) $http->requests[0]->getBody(),
+        );
+        self::assertStringEndsWith(
+            '/budgeting/spreadingtemplates?searchPattern=SEA%2A&includeDistributionData=true',
+            (string) $http->requests[2]->getUri(),
+        );
+        self::assertSame(
+            '{"name":"Season (new)","distribution":[{"period":1,"weight":1}]}',
+            (string) $http->requests[3]->getBody(),
+        );
         self::assertSame('DELETE', $http->requests[5]->getMethod());
     }
 }

@@ -59,7 +59,10 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     {
         $http = ReplayClient::fixture('finder-general-ledger-accounts-hidden');
 
-        $accounts = iterator_to_array($this->twinfield($http)->balanceSheetAccounts()->search()->includeHidden()->all(), false);
+        $accounts = iterator_to_array(
+            $this->twinfield($http)->balanceSheetAccounts()->search()->includeHidden()->all(),
+            false,
+        );
 
         self::assertEquals([
             new GeneralLedgerAccountSummary(TestTokens::company(), '8000', 'Omzet', hidden: false),
@@ -82,7 +85,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     public function testThrowsOnAnUnknownSearchStatus(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('Finder general ledger account row 0 has status "deleted", expected active or hidden.');
+        $this->expectExceptionMessage(
+            'Finder general ledger account row 0 has status "deleted", expected active or hidden.',
+        );
 
         GeneralLedgerAccountSummary::fromFinderRow(['8000', 'Omzet', 'deleted'], 0, TestTokens::company());
     }
@@ -104,7 +109,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     public function testThrowsNotFound(): void
     {
         try {
-            $this->twinfield(ReplayClient::fixture('general-ledger-account-read-not-found'))->profitAndLossAccounts()->get('9999');
+            $this->twinfield(ReplayClient::fixture('general-ledger-account-read-not-found'))
+                ->profitAndLossAccounts()
+                ->get('9999');
             self::fail('Expected a DimensionNotFoundException.');
         } catch (DimensionNotFoundException $exception) {
             self::assertSame('PNL', $exception->dimensionType);
@@ -116,7 +123,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     public function testFindReturnsNullWhenNotFound(): void
     {
         self::assertNull(
-            $this->twinfield(ReplayClient::fixture('general-ledger-account-read-not-found'))->profitAndLossAccounts()->find('9999'),
+            $this->twinfield(ReplayClient::fixture('general-ledger-account-read-not-found'))
+                ->profitAndLossAccounts()
+                ->find('9999'),
         );
     }
 
@@ -133,7 +142,8 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         self::assertSame(
             '<dimension><office>1000</office><type>PNL</type><code>8010</code><name>Omzet diensten</name>'
                 . '<financials><subanalyse>true</subanalyse><childvalidations>'
-                . '<childvalidation type="type" level="2">KPL</childvalidation></childvalidations></financials></dimension>',
+                . '<childvalidation type="type" level="2">KPL</childvalidation>'
+                . '</childvalidations></financials></dimension>',
             $this->xmlRequest($http->lastRequest()),
         );
         self::assertSame('8010', $account->code);
@@ -160,11 +170,14 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $http = new ReplayClient();
 
         try {
-            $this->twinfield($http)->balanceSheetAccounts()->save(GeneralLedgerAccountInput::profitAndLoss('8010', 'Omzet'));
+            $this->twinfield($http)->balanceSheetAccounts()->save(
+                GeneralLedgerAccountInput::profitAndLoss('8010', 'Omzet'),
+            );
             self::fail('Expected an InvalidArgumentException.');
         } catch (InvalidArgumentException $exception) {
             self::assertSame(
-                'Account 8010 is a profit and loss account (PNL), but this resource is for balance sheet accounts (BAS).',
+                'Account 8010 is a profit and loss account (PNL), but '
+                    . 'this resource is for balance sheet accounts (BAS).',
                 $exception->getMessage(),
             );
         }
@@ -194,7 +207,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $http = ReplayClient::fixture('general-ledger-account-read-profit-and-loss');
 
         try {
-            $this->twinfield($http)->profitAndLossAccounts()->create(GeneralLedgerAccountInput::profitAndLoss('8000', 'Omzet'));
+            $this->twinfield($http)->profitAndLossAccounts()->create(
+                GeneralLedgerAccountInput::profitAndLoss('8000', 'Omzet'),
+            );
             self::fail('Expected a DimensionAlreadyExistsException.');
         } catch (DimensionAlreadyExistsException $exception) {
             self::assertSame('Dimension PNL 8000 already exists.', $exception->getMessage());
@@ -217,8 +232,10 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         self::assertCount(3, $http->requests);
         self::assertSame(
             '<dimension><office>1000</office><type>PNL</type><code>8000</code><name>Omzet producten</name>'
-                . '<shortname/><beginperiod>0</beginperiod><beginyear>0</beginyear><endperiod>0</endperiod><endyear>0</endyear>'
-                . '<financials><matchtype>notmatchable</matchtype><subanalyse>maybe</subanalyse><vatcode fixed="false"/>'
+                . '<shortname/><beginperiod>0</beginperiod><beginyear>0</beginyear>'
+                . '<endperiod>0</endperiod><endyear>0</endyear>'
+                . '<financials><matchtype>notmatchable</matchtype>'
+                . '<subanalyse>maybe</subanalyse><vatcode fixed="false"/>'
                 . '<childvalidations><childvalidation type="type" level="2">KPL</childvalidation></childvalidations>'
                 . '</financials></dimension>',
             $this->xmlRequest($http->lastRequest()),
@@ -232,7 +249,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $this->expectException(DimensionNotFoundException::class);
 
         try {
-            $this->twinfield($http)->profitAndLossAccounts()->update(GeneralLedgerAccountInput::profitAndLoss('9999', 'Omzet'));
+            $this->twinfield($http)->profitAndLossAccounts()->update(
+                GeneralLedgerAccountInput::profitAndLoss('9999', 'Omzet'),
+            );
         } finally {
             self::assertCount(1, $http->requests, 'Nothing is saved.');
         }
@@ -253,7 +272,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     {
         self::assertSame(
             DeleteResult::Hidden,
-            $this->twinfield(ReplayClient::fixture('general-ledger-account-delete-hidden'))->profitAndLossAccounts()->delete('8000'),
+            $this->twinfield(ReplayClient::fixture('general-ledger-account-delete-hidden'))
+                ->profitAndLossAccounts()
+                ->delete('8000'),
         );
     }
 
@@ -262,7 +283,9 @@ final class GeneralLedgerAccountResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Profit and loss account 8000 is still active after deleting it.');
 
-        $this->twinfield(ReplayClient::fixture('general-ledger-account-activate'))->profitAndLossAccounts()->delete('8000');
+        $this->twinfield(ReplayClient::fixture('general-ledger-account-activate'))->profitAndLossAccounts()->delete(
+            '8000',
+        );
     }
 
     public function testActivates(): void
@@ -280,7 +303,12 @@ final class GeneralLedgerAccountResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Balance sheet accounts belong to a company: use company() first.');

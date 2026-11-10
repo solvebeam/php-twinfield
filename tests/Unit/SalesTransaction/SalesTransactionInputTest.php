@@ -165,7 +165,8 @@ final class SalesTransactionInputTest extends TestCase
             . '<lines>'
             . '<line type="total" id="1"><dim2>1000</dim2><debitcredit>debit</debitcredit><value>100.00</value>'
             . '<description>Invoice 2026-0042</description><freechar>N</freechar><comment>Order 778</comment></line>'
-            . '<line type="detail" id="2"><dim1>8000</dim1><debitcredit>credit</debitcredit><value>100.00</value></line>'
+            . '<line type="detail" id="2"><dim1>8000</dim1>'
+            . '<debitcredit>credit</debitcredit><value>100.00</value></line>'
             . '</lines>'
             . '</transaction>',
             $input->toXml('1000')->toXml(),

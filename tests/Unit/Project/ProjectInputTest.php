@@ -42,7 +42,10 @@ final class ProjectInputTest extends TestCase
         self::assertEquals(new DateTimeImmutable('2025-01-01'), $input->projects->validFrom);
         self::assertSame('Advice', $input->projects->invoiceDescription);
         self::assertEquals(new CodeSetting('T001', ChangeMode::Disallow), $input->projects->rate);
-        self::assertSame(['KM', 'Parking'], array_map(static fn (Quantity $q): string => $q->label, $input->projects->quantities));
+        self::assertSame(
+            ['KM', 'Parking'],
+            array_map(static fn (Quantity $q): string => $q->label, $input->projects->quantities),
+        );
     }
 
     public function testClearsValues(): void
@@ -68,7 +71,10 @@ final class ProjectInputTest extends TestCase
         $name = str_repeat('x', 80);
 
         self::assertSame($name, ProjectInput::create('P0001', $name)->name);
-        self::assertStringContainsString("<name>{$name}</name>", ProjectInput::create('P0001', $name)->toXml('1000')->toXml());
+        self::assertStringContainsString(
+            "<name>{$name}</name>",
+            ProjectInput::create('P0001', $name)->toXml('1000')->toXml(),
+        );
     }
 
     public function testStoresDatesWithoutTime(): void
@@ -92,8 +98,14 @@ final class ProjectInputTest extends TestCase
     public static function invalidInput(): iterable
     {
         yield 'empty code' => [static fn (): mixed => ProjectInput::create('', 'Name'), '"" is not a code'];
-        yield 'lowercase code' => [static fn (): mixed => ProjectInput::create('p0001', 'Name'), '"p0001" is not a code'];
-        yield 'empty name' => [static fn (): mixed => ProjectInput::create('P0001', ''), 'Project name must not be empty.'];
+        yield 'lowercase code' => [
+            static fn (): mixed => ProjectInput::create('p0001', 'Name'),
+            '"p0001" is not a code',
+        ];
+        yield 'empty name' => [
+            static fn (): mixed => ProjectInput::create('P0001', ''),
+            'Project name must not be empty.',
+        ];
         yield 'long name' => [
             static fn (): mixed => ProjectInput::create('P0001', str_repeat('x', 81)),
             'Project name must be at most 80 characters, 81 given',
@@ -114,7 +126,10 @@ final class ProjectInputTest extends TestCase
             static fn (): mixed => ProjectInput::create('P0001', 'Name')->customer('10 10'),
             '"10 10" is not a code',
         ];
-        yield 'empty quantity label' => [static fn (): mixed => Quantity::create(''), 'Quantity label must not be empty.'];
+        yield 'empty quantity label' => [
+            static fn (): mixed => Quantity::create(''),
+            'Quantity label must not be empty.',
+        ];
         yield 'long quantity label' => [
             static fn (): mixed => Quantity::create(str_repeat('x', 37)),
             'Quantity label must be at most 36 characters',

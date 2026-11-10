@@ -37,7 +37,8 @@ final class ElectronicBankStatementResourceTest extends TestCase
             . '<startvalue>7.68</startvalue><closevalue>151.18</closevalue>'
             . '<transactions>'
             . '<transaction><contraaccount name="Example customer">1234567890</contraaccount><type>N100</type>'
-            . '<debitcredit>credit</debitcredit><value>151.00</value><description>Invoice 2026-0042</description></transaction>'
+            . '<debitcredit>credit</debitcredit><value>151.00</value>'
+            . '<description>Invoice 2026-0042</description></transaction>'
             . '<transaction><contraiban>NL20INGB0001234567</contraiban><type>N999</type>'
             . '<debitcredit>debit</debitcredit><value>7.50</value><description>Bank costs</description></transaction>'
             . '</transactions></statement></statements>',
@@ -89,7 +90,8 @@ final class ElectronicBankStatementResourceTest extends TestCase
         self::assertSame(
             '<statements importduplicate="1"><statement target="electronicstatements">'
             . '<code>BNK</code><office>1000</office>'
-            . '<transactions><transaction><debitcredit>credit</debitcredit><value>10.00</value></transaction></transactions>'
+            . '<transactions><transaction><debitcredit>credit</debitcredit>'
+            . '<value>10.00</value></transaction></transactions>'
             . '</statement></statements>',
             $this->xmlRequest($http->lastRequest()),
         );
@@ -109,7 +111,8 @@ final class ElectronicBankStatementResourceTest extends TestCase
             '<statements importduplicate="0"><statement target="electronicstatements">'
             . '<account>417164300</account><office>1000</office><sortcode>123456</sortcode>'
             . '<transactions><transaction><reference>REF-1</reference><debitcredit>debit</debitcredit>'
-            . '<value>1.00</value><endtoendid>E2E-1</endtoendid><returnreason>AC04</returnreason></transaction></transactions>'
+            . '<value>1.00</value><endtoendid>E2E-1</endtoendid>'
+            . '<returnreason>AC04</returnreason></transaction></transactions>'
             . '</statement></statements>',
             $this->xmlRequest($http->lastRequest()),
         );
@@ -134,7 +137,10 @@ final class ElectronicBankStatementResourceTest extends TestCase
 
         $result = $this->twinfield($http)->electronicBankStatements()->createMany([self::input(), $failing]);
 
-        self::assertSame(2, substr_count($this->xmlRequest($http->lastRequest()), '<statement target="electronicstatements">'));
+        self::assertSame(
+            2,
+            substr_count($this->xmlRequest($http->lastRequest()), '<statement target="electronicstatements">'),
+        );
         self::assertCount(2, $result);
         self::assertFalse($result->allCreated());
         self::assertInstanceOf(CreatedStatement::class, $result->results[0]);
@@ -180,7 +186,9 @@ final class ElectronicBankStatementResourceTest extends TestCase
         $http = new ReplayClient();
 
         try {
-            $this->twinfield($http)->electronicBankStatements()->create(ElectronicBankStatementInput::forBankBook('BNK'));
+            $this->twinfield($http)->electronicBankStatements()->create(
+                ElectronicBankStatementInput::forBankBook('BNK'),
+            );
             self::fail('Expected an InvalidArgumentException.');
         } catch (\InvalidArgumentException $exception) {
             self::assertStringContainsString('at least one line', $exception->getMessage());
@@ -192,7 +200,10 @@ final class ElectronicBankStatementResourceTest extends TestCase
     {
         $body = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>'
             . '<ProcessXmlString xmlns="http://www.twinfield.com/"><xmlRequest>'
-            . htmlspecialchars('<statements importduplicate="0"><statement target="electronicstatements"><code>BNK</code><office>1000</office></statement></statements>')
+            . htmlspecialchars(
+                '<statements importduplicate="0"><statement target="electronicstatements">'
+                    . '<code>BNK</code><office>1000</office></statement></statements>',
+            )
             . '</xmlRequest></ProcessXmlString></soap:Body></soap:Envelope>';
 
         self::assertFalse(WriteGuardClient::isReadOnly('ProcessXmlString', $body));
@@ -201,7 +212,12 @@ final class ElectronicBankStatementResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The client has no company');
@@ -215,7 +231,13 @@ final class ElectronicBankStatementResourceTest extends TestCase
             ->date(new DateTimeImmutable('2026-11-09'))
             ->currency('EUR')
             ->number(2, startValue: '7.68', closeValue: '151.18')
-            ->receive('151.00', 'Invoice 2026-0042', type: 'N100', contraAccount: '1234567890', contraName: 'Example customer')
+            ->receive(
+                '151.00',
+                'Invoice 2026-0042',
+                type: 'N100',
+                contraAccount: '1234567890',
+                contraName: 'Example customer',
+            )
             ->pay('7.50', 'Bank costs', type: 'N999', contraIban: 'NL20INGB0001234567');
     }
 

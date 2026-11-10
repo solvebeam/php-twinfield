@@ -37,9 +37,14 @@ final class SoapEnvelopeTest extends TestCase
 
     public function testEscapesValues(): void
     {
-        $envelope = new SoapEnvelope(new Search(type: 'DIM', pattern: 'M&amp;Z & <co>', field: 0, firstRow: 1, maxRows: 10));
+        $envelope = new SoapEnvelope(
+            new Search(type: 'DIM', pattern: 'M&amp;Z & <co>', field: 0, firstRow: 1, maxRows: 10),
+        );
 
-        self::assertSame('M&amp;Z & <co>', $this->xpath($envelope->toXml())->evaluate('string(//tw:Search/tw:pattern)'));
+        self::assertSame(
+            'M&amp;Z & <co>',
+            $this->xpath($envelope->toXml())->evaluate('string(//tw:Search/tw:pattern)'),
+        );
     }
 
     public function testSkipsNullProperties(): void
@@ -69,7 +74,10 @@ final class SoapEnvelopeTest extends TestCase
         $psr17 = new Psr17Factory();
         $envelope = new SoapEnvelope(new Search('DIM', '*', 0, 1, 10));
 
-        $request = $envelope->toRequest('https://example.test/webservices/finder.asmx', new Psr17SoapRequestFactory($psr17, $psr17));
+        $request = $envelope->toRequest(
+            'https://example.test/webservices/finder.asmx',
+            new Psr17SoapRequestFactory($psr17, $psr17),
+        );
 
         self::assertSame('POST', $request->getMethod());
         self::assertSame('http://www.twinfield.com/Search', $request->getHeaderLine('SOAPAction'));

@@ -33,9 +33,33 @@ final class OfficeResourceTest extends TestCase
         $offices = $this->twinfield($http)->offices()->list();
 
         self::assertEquals([
-            new OfficeSummary(TestTokens::organisation(), '1000', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21),
-            new OfficeSummary(TestTokens::organisation(), '1001', 'Example Retail & Co B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 0, 30),
-            new OfficeSummary(TestTokens::organisation(), '1002', 'Example Services B.V.', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'BE', 2, 21),
+            new OfficeSummary(
+                TestTokens::organisation(),
+                '1000',
+                'Example Holding B.V.',
+                '0f8fad5b-d9cb-469f-a165-70867728950e',
+                'NL',
+                1,
+                21,
+            ),
+            new OfficeSummary(
+                TestTokens::organisation(),
+                '1001',
+                'Example Retail & Co B.V.',
+                '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+                'NL',
+                0,
+                30,
+            ),
+            new OfficeSummary(
+                TestTokens::organisation(),
+                '1002',
+                'Example Services B.V.',
+                'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                'BE',
+                2,
+                21,
+            ),
         ], $offices);
 
         $xpath = $this->soapXpath($http->requests[1]);

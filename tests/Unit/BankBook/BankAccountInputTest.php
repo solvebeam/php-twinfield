@@ -45,10 +45,22 @@ final class BankAccountInputTest extends TestCase
      */
     public static function invalidValues(): iterable
     {
-        yield 'IBAN check digits' => [static fn (BankAccountInput $a) => $a->iban('NL45INGB0003255113'), '"NL45INGB0003255113" is not a valid IBAN.'];
-        yield 'IBAN format' => [static fn (BankAccountInput $a) => $a->iban('3255112'), '"3255112" is not a valid IBAN.'];
-        yield 'BIC' => [static fn (BankAccountInput $a) => $a->bic('INGB'), '"INGB" is not a BIC: 8 or 11 letters and digits.'];
-        yield 'country' => [static fn (BankAccountInput $a) => $a->country('NLD'), '"NLD" is not a country code such as NL.'];
+        yield 'IBAN check digits' => [
+            static fn (BankAccountInput $a) => $a->iban('NL45INGB0003255113'),
+            '"NL45INGB0003255113" is not a valid IBAN.',
+        ];
+        yield 'IBAN format' => [
+            static fn (BankAccountInput $a) => $a->iban('3255112'),
+            '"3255112" is not a valid IBAN.',
+        ];
+        yield 'BIC' => [
+            static fn (BankAccountInput $a) => $a->bic('INGB'),
+            '"INGB" is not a BIC: 8 or 11 letters and digits.',
+        ];
+        yield 'country' => [
+            static fn (BankAccountInput $a) => $a->country('NLD'),
+            '"NLD" is not a country code such as NL.',
+        ];
     }
 
     #[DataProvider('invalidValues')]

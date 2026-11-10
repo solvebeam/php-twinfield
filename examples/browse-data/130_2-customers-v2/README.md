@@ -146,7 +146,11 @@ $twinfield->browse(BrowseCode::CustomersV2)
     )
     ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
     ->equal('fin.trs.head.status', 'normal')
-    ->betweenDateTimes('fin.trs.line.modified', new DateTimeImmutable('2026-03-01 00:00 UTC'), new DateTimeImmutable('2026-03-31 00:00 UTC'))
+    ->betweenDateTimes(
+        'fin.trs.line.modified',
+        new DateTimeImmutable('2026-03-01 00:00 UTC'),
+        new DateTimeImmutable('2026-03-31 00:00 UTC'),
+    )
     ->get();
 ```
 

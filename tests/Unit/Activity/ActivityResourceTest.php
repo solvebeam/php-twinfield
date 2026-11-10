@@ -178,17 +178,24 @@ final class ActivityResourceTest extends TestCase
 
     public function testFindReturnsNullWhenNotFound(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('activity-read-not-found'))->activities()->find('A999'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('activity-read-not-found'))->activities()->find('A999'),
+        );
     }
 
     public function testFindReturnsNullForACodeOutsideTheCodeFormat(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('activity-read-invalid-code'))->activities()->find('NOPE'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('activity-read-invalid-code'))->activities()->find('NOPE'),
+        );
     }
 
     public function testFindReturnsTheActivity(): void
     {
-        self::assertSame('A001', $this->twinfield(ReplayClient::fixture('activity-read'))->activities()->find('A001')?->code);
+        self::assertSame(
+            'A001',
+            $this->twinfield(ReplayClient::fixture('activity-read'))->activities()->find('A001')?->code,
+        );
     }
 
     public function testThrowsOnUnknownBehaviour(): void
@@ -237,7 +244,8 @@ final class ActivityResourceTest extends TestCase
             . '<customer locked="false" inherit="false">1010</customer>'
             . '<billable locked="false" inherit="false" forratio="false">true</billable>'
             . '<rate locked="true" inherit="false">T001</rate>'
-            . '<quantities><quantity><label>KM</label><rate>KM</rate><billable locked="true">false</billable><mandatory>false</mandatory></quantity></quantities>'
+            . '<quantities><quantity><label>KM</label><rate>KM</rate>'
+            . '<billable locked="true">false</billable><mandatory>false</mandatory></quantity></quantities>'
             . '</projects>'
             . '</dimension>',
             $this->xmlRequest($http->lastRequest()),
@@ -291,7 +299,9 @@ final class ActivityResourceTest extends TestCase
             ReplayClient::response('activity-save'),
         );
 
-        $activity = $this->twinfield($http)->activities()->create(ActivityInput::create('A100', 'Deploy API documentation'));
+        $activity = $this->twinfield($http)->activities()->create(
+            ActivityInput::create('A100', 'Deploy API documentation'),
+        );
 
         self::assertSame('A100', $activity->code);
         self::assertCount(2, $http->requests);
@@ -358,8 +368,10 @@ final class ActivityResourceTest extends TestCase
             . '<billable locked="false" inherit="false" forratio="true">true</billable>'
             . '<rate locked="true" inherit="false">T001</rate>'
             . '<quantities>'
-            . '<quantity><label>KM</label><rate>KM</rate><billable locked="true">false</billable><mandatory>false</mandatory></quantity>'
-            . '<quantity><label>Parking</label><rate/><billable locked="false">true</billable><mandatory>true</mandatory></quantity>'
+            . '<quantity><label>KM</label><rate>KM</rate>'
+            . '<billable locked="true">false</billable><mandatory>false</mandatory></quantity>'
+            . '<quantity><label>Parking</label><rate/>'
+            . '<billable locked="false">true</billable><mandatory>true</mandatory></quantity>'
             . '</quantities>'
             . '</projects>'
             . '</dimension>',
@@ -416,7 +428,12 @@ final class ActivityResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Activities belong to a company: use company() first.');

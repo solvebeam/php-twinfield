@@ -114,12 +114,17 @@ final class RateInputTest extends TestCase
             ->toXml('1000')
             ->toXml();
 
-        self::assertStringContainsString('<ratechange><begindate>20260101</begindate><enddate>29991231</enddate>', $xml);
+        self::assertStringContainsString(
+            '<ratechange><begindate>20260101</begindate><enddate>29991231</enddate>',
+            $xml,
+        );
     }
 
     public function testNewPriceFromBeforeTheOpenPriceThrows(): void
     {
-        $input = RateInput::time('CONSULT', 'Consultancy')->existingPrice($this->existing(2, '2025-01-01', null, '55', '95'));
+        $input = RateInput::time('CONSULT', 'Consultancy')->existingPrice(
+            $this->existing(2, '2025-01-01', null, '55', '95'),
+        );
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The current price starts on 2025-01-01, after 2024-07-01');
@@ -188,7 +193,8 @@ final class RateInputTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Rate CONSULT: the price from 2026-01-01 overlaps the price from 2025-01-01 (without end date; use newPriceFrom()).',
+            'Rate CONSULT: the price from 2026-01-01 overlaps the price '
+                . 'from 2025-01-01 (without end date; use newPriceFrom()).',
         );
 
         $input->price(new DateTimeImmutable('2026-01-01'), '60', '105');
@@ -227,15 +233,28 @@ final class RateInputTest extends TestCase
     {
         yield 'lowercase code' => [static fn () => RateInput::time('km', 'Kilometres'), '"km" is not a code'];
         yield 'empty name' => [static fn () => RateInput::time('KM', ''), 'Rate name must not be empty.'];
-        yield 'long name' => [static fn () => RateInput::time('KM', str_repeat('x', 41)), 'Rate name must be at most 40'];
+        yield 'long name' => [
+            static fn () => RateInput::time('KM', str_repeat('x', 41)),
+            'Rate name must be at most 40',
+        ];
         yield 'long short name' => [
             static fn () => RateInput::time('KM', 'Kilometres')->shortName(str_repeat('x', 21)),
             'Rate short name must be at most 20',
         ];
-        yield 'unit 0' => [static fn () => RateInput::time('KM', 'Kilometres')->unit(0), 'Rate unit must be 1 or more, 0 given.'];
-        yield 'invalid currency' => [static fn () => RateInput::time('KM', 'Kilometres')->currency('eur'), '"eur" is not a code'];
+        yield 'unit 0' => [
+            static fn () => RateInput::time('KM', 'Kilometres')->unit(0),
+            'Rate unit must be 1 or more, 0 given.',
+        ];
+        yield 'invalid currency' => [
+            static fn () => RateInput::time('KM', 'Kilometres')->currency('eur'),
+            '"eur" is not a code',
+        ];
         yield 'price with comma' => [
-            static fn () => RateInput::time('KM', 'Kilometres')->price(new DateTimeImmutable(), UnitPrice::fromString('0,15'), '0.23'),
+            static fn () => RateInput::time('KM', 'Kilometres')->price(
+                new DateTimeImmutable(),
+                UnitPrice::fromString('0,15'),
+                '0.23',
+            ),
             '"0,15" is not a unit price',
         ];
     }

@@ -91,7 +91,9 @@ final class ClassicFixedAssetResourceTest extends TestCase
 
     public function testFindReturnsNullWhenNotFound(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('fixed-asset-read-not-found'))->classicFixedAssets()->find('69999'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('fixed-asset-read-not-found'))->classicFixedAssets()->find('69999'),
+        );
     }
 
     public function testSavesAFixedAsset(): void
@@ -148,7 +150,9 @@ final class ClassicFixedAssetResourceTest extends TestCase
             ReplayClient::response('fixed-asset-save'),
         );
 
-        $this->twinfield($http)->classicFixedAssets()->create(ClassicFixedAssetInput::create('Delivery van')->code('60011'));
+        $this->twinfield($http)->classicFixedAssets()->create(
+            ClassicFixedAssetInput::create('Delivery van')->code('60011'),
+        );
 
         self::assertCount(2, $http->requests);
         self::assertStringStartsWith('<read>', $this->xmlRequest($http->requests[0]));
@@ -181,7 +185,10 @@ final class ClassicFixedAssetResourceTest extends TestCase
         $fixedAssets->update($fixedAssets->get('60010')->edit()->residualValue('1000'));
 
         self::assertCount(3, $http->requests);
-        self::assertStringContainsString('<residualvalue>1000.00</residualvalue>', $this->xmlRequest($http->lastRequest()));
+        self::assertStringContainsString(
+            '<residualvalue>1000.00</residualvalue>',
+            $this->xmlRequest($http->lastRequest()),
+        );
         self::assertStringNotContainsString('<beginperiod>', $this->xmlRequest($http->lastRequest()), 'Locked.');
     }
 
@@ -248,7 +255,12 @@ final class ClassicFixedAssetResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Fixed assets belong to a company: use company() first.');

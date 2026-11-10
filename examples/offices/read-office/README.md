@@ -43,7 +43,8 @@ echo 'Address:         ', $general->address->field1 ?? '-', ', ', $general->addr
 echo 'Last closed:     ', $general->lastClosedYear ?? '-', PHP_EOL;
 echo 'Tax group:       ', $vat->taxGroup?->code ?? '-', PHP_EOL;
 echo 'VAT period:      ', $vat->declarationTimeframe, ', starting quarter ', $vat->startingQuarter, PHP_EOL;
-echo 'Receivable:      ', $dimensions->accountsReceivable?->code ?? '-', ' ', $dimensions->accountsReceivable?->name, PHP_EOL;
+echo 'Receivable:      ', $dimensions->accountsReceivable?->code ?? '-', ' ',
+    $dimensions->accountsReceivable?->name, PHP_EOL;
 echo 'Payable:         ', $dimensions->accountsPayable?->code ?? '-', ' ', $dimensions->accountsPayable?->name, PHP_EOL;
 echo 'Customers:       dimension type ', $office->systemDimensionTypes->accountsReceivable->code, PHP_EOL;
 echo 'Intercompany:    ', $office->intercompany->status->name, PHP_EOL;
@@ -56,7 +57,8 @@ foreach ($office->intercompany->incoming as $relation) {
     echo '  from ', $relation->office->code, ' on ', $relation->dimension1?->code ?? '-', PHP_EOL;
 }
 
-echo 'Locked:          ', implode(', ', array_map(static fn ($field) => $field->name, $office->lockedFields)) ?: '-', PHP_EOL;
+echo 'Locked:          ',
+    implode(', ', array_map(static fn ($field) => $field->name, $office->lockedFields)) ?: '-', PHP_EOL;
 echo 'Modified:        ', $office->modified->format('Y-m-d H:i'), ' by ', $office->user->code, PHP_EOL;
 ```
 

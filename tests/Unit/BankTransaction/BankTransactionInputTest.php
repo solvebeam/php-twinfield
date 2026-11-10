@@ -38,11 +38,13 @@ final class BankTransactionInputTest extends TestCase
         self::assertSame(
             '<transaction destiny="temporary">'
             . '<header><office>001</office><code>BNK</code><currency>EUR</currency><date>20211104</date>'
-            . '<statementnumber>4</statementnumber><startvalue>974.01</startvalue><closevalue>1409.56</closevalue></header>'
+            . '<statementnumber>4</statementnumber><startvalue>974.01</startvalue>'
+            . '<closevalue>1409.56</closevalue></header>'
             . '<lines>'
             . '<line type="total" id="1"><dim1>1010</dim1><debitcredit>debit</debitcredit><value>435.55</value></line>'
             . '<line type="detail" id="2"><dim1>1300</dim1><dim2>1000</dim2><debitcredit>credit</debitcredit>'
-            . '<value>435.55</value><invoicenumber>11001770</invoicenumber><description>Invoice paid</description></line>'
+            . '<value>435.55</value><invoicenumber>11001770</invoicenumber>'
+            . '<description>Invoice paid</description></line>'
             . '</lines>'
             . '</transaction>',
             $input->toXml('001')->toXml(),
@@ -134,7 +136,11 @@ final class BankTransactionInputTest extends TestCase
         self::assertSame('Imported', $xpath->evaluate('string(//header/freetext2)'));
         self::assertSame('Statement 245', $xpath->evaluate('string(//line[@type="total"]/description)'));
         self::assertSame(TransactionStatus::Final, $input->destiny());
-        self::assertSame(0.0, $xpath->evaluate('count(//header/startvalue)'), 'Without opening balance, no balances are sent.');
+        self::assertSame(
+            0.0,
+            $xpath->evaluate('count(//header/startvalue)'),
+            'Without opening balance, no balances are sent.',
+        );
     }
 
     public function testWritesAllDetailLineFields(): void
@@ -152,10 +158,14 @@ final class BankTransactionInputTest extends TestCase
             ->dueDate(new DateTimeImmutable('2026-12-01'))
             ->lineDate(new DateTimeImmutable('2026-11-02'))
             ->destinationCompany('1001')
-            ->performance(Performance::services(new DateTimeImmutable('2026-10-31'))->country('DE')->vatNumber('DE123456789'))
+            ->performance(
+                Performance::services(new DateTimeImmutable('2026-10-31'))->country('DE')->vatNumber('DE123456789'),
+            )
             ->freeChar('N');
 
-        $xpath = $this->xpath(BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line));
+        $xpath = $this->xpath(
+            BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line),
+        );
         $values = [];
 
         foreach ($xpath->query('//line[@id="2"]/*') ?: [] as $element) {
@@ -199,13 +209,18 @@ final class BankTransactionInputTest extends TestCase
                     ->line('VRK', 202600013, 1, '200.00'),
             );
 
-        $xpath = $this->xpath(BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line));
+        $xpath = $this->xpath(
+            BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line),
+        );
 
         self::assertSame(
-            '<line type="detail" id="2"><dim1>1300</dim1><dim2>1000</dim2><debitcredit>credit</debitcredit><value>635.55</value>'
+            '<line type="detail" id="2"><dim1>1300</dim1><dim2>1000</dim2>'
+            . '<debitcredit>credit</debitcredit><value>635.55</value>'
             . '<matches><set><matchdate>20261103</matchdate><lines>'
-            . '<line><code>VRK</code><number>202600012</number><line>1</line><method>payment</method><matchvalue>435.55</matchvalue></line>'
-            . '<line><code>VRK</code><number>202600013</number><line>1</line><method>payment</method><matchvalue>200.00</matchvalue></line>'
+            . '<line><code>VRK</code><number>202600012</number><line>1</line>'
+            . '<method>payment</method><matchvalue>435.55</matchvalue></line>'
+            . '<line><code>VRK</code><number>202600013</number><line>1</line>'
+            . '<method>payment</method><matchvalue>200.00</matchvalue></line>'
             . '</lines><matchvalue>635.55</matchvalue></set></matches>'
             . '</line>',
             $xpath->document->saveXML($xpath->query('//line[@id="2"]')->item(0)),
@@ -378,7 +393,12 @@ final class BankTransactionInputTest extends TestCase
             shortName: null,
             generalLedgerAccount: $account,
             bankAccount: new BankAccount(null, null, null, null, null, null, null),
-            automaticBankProcessing: new AutomaticBankProcessing(AutomaticBankProcessingSignUpState::Inactive, false, false, false),
+            automaticBankProcessing: new AutomaticBankProcessing(
+                AutomaticBankProcessingSignUpState::Inactive,
+                false,
+                false,
+                false,
+            ),
         );
     }
 

@@ -52,7 +52,10 @@ final class GeneralLedgerAccountResourceTest extends WriteTestCase
 
         $this->lifecycle(
             $accounts,
-            GeneralLedgerAccountInput::balanceSheet(Example::unusedGeneralLedgerAccountCode($accounts), 'SDK test suspense')
+            GeneralLedgerAccountInput::balanceSheet(
+                Example::unusedGeneralLedgerAccountCode($accounts),
+                'SDK test suspense',
+            )
                 ->matchable()
                 ->subAnalysis(SubAnalysis::Optional)
                 ->childValidation(ChildValidation::dimensionType('DEB'))
@@ -64,7 +67,9 @@ final class GeneralLedgerAccountResourceTest extends WriteTestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->twinfield->balanceSheetAccounts()->create(GeneralLedgerAccountInput::profitAndLoss('8999', 'Wrong type'));
+        $this->twinfield->balanceSheetAccounts()->create(
+            GeneralLedgerAccountInput::profitAndLoss('8999', 'Wrong type'),
+        );
     }
 
     private function lifecycle(GeneralLedgerAccountResource $accounts, GeneralLedgerAccountInput $input): void
@@ -96,7 +101,10 @@ final class GeneralLedgerAccountResourceTest extends WriteTestCase
 
             // An empty <childvalidations/> removes them.
             $updated = $accounts->update(
-                $read->edit()->name($input->name . ' (updated) & more')->subAnalysis(SubAnalysis::NotAllowed)->childValidations(),
+                $read->edit()
+                    ->name($input->name . ' (updated) & more')
+                    ->subAnalysis(SubAnalysis::NotAllowed)
+                    ->childValidations(),
             );
 
             self::assertSame($input->name . ' (updated) & more', $updated->name);

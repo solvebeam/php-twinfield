@@ -179,7 +179,10 @@ final class SalesTransactionResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dim2 is missing or empty');
 
-        $this->twinfield(new ReplayClient(new Response(200, [], (string) $xml)))->salesTransactions()->get('VRK', 202600012);
+        $this->twinfield(new ReplayClient(new Response(200, [], (string) $xml)))->salesTransactions()->get(
+            'VRK',
+            202600012,
+        );
     }
 
     public function testEditKeepsAllValues(): void
@@ -295,7 +298,10 @@ final class SalesTransactionResourceTest extends TestCase
             SalesTransactionInput::invoice('VRK', '9999', '2026-0046', $date)->revenue('8000', '50.00', 'VH', '10.50'),
         );
 
-        self::assertStringStartsWith('<transactions><transaction destiny="temporary">', $this->xmlRequest($http->lastRequest()));
+        self::assertStringStartsWith(
+            '<transactions><transaction destiny="temporary">',
+            $this->xmlRequest($http->lastRequest()),
+        );
         self::assertFalse($result->allSaved());
 
         $saved = $result->saved()[0];
@@ -379,7 +385,9 @@ final class SalesTransactionResourceTest extends TestCase
         self::assertStringContainsString('<pattern>2026-*</pattern>', $body);
         self::assertStringContainsString('<maxRows>10</maxRows>', $body);
 
-        foreach (['dim2' => '1000', 'dim1' => '1300', 'value' => '181.50', 'openvalue' => '181.50'] as $name => $value) {
+        $expected = ['dim2' => '1000', 'dim1' => '1300', 'value' => '181.50', 'openvalue' => '181.50'];
+
+        foreach ($expected as $name => $value) {
             self::assertStringContainsString(
                 sprintf('<ArrayOfString><string>%s</string><string>%s</string></ArrayOfString>', $name, $value),
                 $body,
@@ -411,7 +419,12 @@ final class SalesTransactionResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Sales transactions belong to a company');

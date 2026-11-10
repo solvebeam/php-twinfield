@@ -50,8 +50,10 @@ final class FixedAssetResourceTest extends TestCase
         self::assertNull($asset->groupId);
         self::assertSame(11, $asset->version);
         self::assertSame(
-            TestTokens::REST_COMPANY_URL . '/fixedassets/assets?fields=%2A&searchPattern=2%2A&status=active&regime=fiscal'
-            . '&timeRelatedFiltersYear=2026&timeRelatedFiltersPeriodNumber=3&investmentFrom=2020-01-01&amountFrom=1000.00&limit=2',
+            TestTokens::REST_COMPANY_URL
+            . '/fixedassets/assets?fields=%2A&searchPattern=2%2A&status=active&regime=fiscal'
+            . '&timeRelatedFiltersYear=2026&timeRelatedFiltersPeriodNumber=3'
+            . '&investmentFrom=2020-01-01&amountFrom=1000.00&limit=2',
             (string) $http->lastRequest()->getUri(),
         );
     }
@@ -124,7 +126,10 @@ final class FixedAssetResourceTest extends TestCase
         self::assertSame(209806460, $actions[2]->transactions[0]->number);
         self::assertSame('NCEPA', $actions[2]->user);
         self::assertSame('2022-04-15T10:13:22+00:00', $actions[2]->timestamp->format(DATE_ATOM));
-        self::assertStringEndsWith('/fixedassets/assets/' . self::ASSET_ID . '/actions', (string) $http->lastRequest()->getUri());
+        self::assertStringEndsWith(
+            '/fixedassets/assets/' . self::ASSET_ID . '/actions',
+            (string) $http->lastRequest()->getUri(),
+        );
     }
 
     public function testListsAndGetsClasses(): void
@@ -146,7 +151,10 @@ final class FixedAssetResourceTest extends TestCase
         self::assertSame(Regime::Fiscal, $class->depreciationSettings[0]->regime);
         self::assertSame('0c45b9d2-7336-ea7f-0d85-59d93c7d4ecd', $class->purchaseValueAccountId);
         self::assertStringEndsWith('/fixedassets/classes?fields=%2A', (string) $http->requests[0]->getUri());
-        self::assertStringEndsWith('/fixedassets/classes/' . $summary->id . '?fields=%2A', (string) $http->requests[1]->getUri());
+        self::assertStringEndsWith(
+            '/fixedassets/classes/' . $summary->id . '?fields=%2A',
+            (string) $http->requests[1]->getUri(),
+        );
     }
 
     public function testGetsAGroupWithStopValues(): void
@@ -186,7 +194,8 @@ final class FixedAssetResourceTest extends TestCase
         self::assertSame('{"lines":[]}', $fixedAssets->downloadReconciliationReport($id)->contents);
         self::assertSame('POST', $http->requests[0]->getMethod());
         self::assertStringEndsWith(
-            '/fixedassets/backgroundreports/reconciliation?year=2026&periodNumber=12&regime=fiscal&assetStatusFrom=active&classCodeFrom=GEBOUWEN',
+            '/fixedassets/backgroundreports/reconciliation?year=2026&periodNumber=12'
+                . '&regime=fiscal&assetStatusFrom=active&classCodeFrom=GEBOUWEN',
             (string) $http->requests[0]->getUri(),
         );
         self::assertStringEndsWith('/fixedassets/backgroundreports/42/download', (string) $http->requests[3]->getUri());

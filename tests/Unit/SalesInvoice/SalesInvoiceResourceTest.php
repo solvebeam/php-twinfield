@@ -107,7 +107,9 @@ final class SalesInvoiceResourceTest extends TestCase
     public function testThrowsNotFound(): void
     {
         $this->expectException(SalesInvoiceNotFoundException::class);
-        $this->expectExceptionMessage('Sales invoice FACTUUR 999999999 not found: Factuur 999999999 van type FACTUUR bestaat niet.');
+        $this->expectExceptionMessage(
+            'Sales invoice FACTUUR 999999999 not found: Factuur 999999999 van type FACTUUR bestaat niet.',
+        );
 
         $this->twinfield(ReplayClient::fixture('sales-invoice-not-found'))->salesInvoices()->get('FACTUUR', 999999999);
     }
@@ -115,7 +117,10 @@ final class SalesInvoiceResourceTest extends TestCase
     public function testFindGivesNullWhenNotFound(): void
     {
         self::assertNull(
-            $this->twinfield(ReplayClient::fixture('sales-invoice-not-found'))->salesInvoices()->find('FACTUUR', 999999999),
+            $this->twinfield(ReplayClient::fixture('sales-invoice-not-found'))->salesInvoices()->find(
+                'FACTUUR',
+                999999999,
+            ),
         );
     }
 
@@ -132,7 +137,11 @@ final class SalesInvoiceResourceTest extends TestCase
 
     public function testThrowsOnAnUnknownStatus(): void
     {
-        $xml = str_replace('&lt;status&gt;concept&lt;', '&lt;status&gt;archived&lt;', $this->fixture('sales-invoice-read-concept'));
+        $xml = str_replace(
+            '&lt;status&gt;concept&lt;',
+            '&lt;status&gt;archived&lt;',
+            $this->fixture('sales-invoice-read-concept'),
+        );
 
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('salesinvoice/header/status');
@@ -168,7 +177,8 @@ final class SalesInvoiceResourceTest extends TestCase
         self::assertSame(
             '<salesinvoice><header><office>1000</office><invoicetype>FACTUUR</invoicetype><customer>1000</customer>'
                 . '<status>concept</status><paymentmethod>bank</paymentmethod></header><lines><line id="1">'
-                . '<article>510</article><subarticle>501.01</subarticle><quantity>2</quantity></line></lines></salesinvoice>',
+                . '<article>510</article><subarticle>501.01</subarticle>'
+                . '<quantity>2</quantity></line></lines></salesinvoice>',
             $this->xmlRequest($http->lastRequest()),
         );
 
@@ -319,7 +329,12 @@ final class SalesInvoiceResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

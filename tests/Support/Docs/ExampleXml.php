@@ -155,7 +155,8 @@ final class ExampleXml
             $isProcessXml
                 ? sprintf('The SDK sends this XML as `xmlRequest` of `ProcessXmlString` to `%s`:', $service)
                 : sprintf(
-                    'The SDK sends this in the SOAP body to `%s`, with SOAPAction `%s`; the access token goes in the SOAP header:',
+                    'The SDK sends this in the SOAP body to `%s`, with SOAPAction `%s`; '
+                        . 'the access token goes in the SOAP header:',
                     $service,
                     trim($request->getHeaderLine('SOAPAction'), '"'),
                 ),
@@ -181,7 +182,9 @@ final class ExampleXml
 
         return [
             ...$lines,
-            $isProcessXml ? 'Twinfield answers with this XML in `ProcessXmlStringResult`:' : 'Twinfield answers with this SOAP body:',
+            $isProcessXml
+                ? 'Twinfield answers with this XML in `ProcessXmlStringResult`:'
+                : 'Twinfield answers with this SOAP body:',
             '',
             '```xml',
             $responseXml,
@@ -324,8 +327,13 @@ final class ExampleXml
     /**
      * @param callable(string, string): string $insert Adds the block when the README has none yet.
      */
-    private static function replaceBlock(string $readme, string $start, string $end, string $content, callable $insert): string
-    {
+    private static function replaceBlock(
+        string $readme,
+        string $start,
+        string $end,
+        string $content,
+        callable $insert,
+    ): string {
         $block = $start . "\n" . $content . "\n" . $end;
         $pattern = '~' . preg_quote($start, '~') . '.*?' . preg_quote($end, '~') . '~s';
 

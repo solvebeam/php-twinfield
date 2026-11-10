@@ -141,7 +141,9 @@ final class GeneralLedgerAccountTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('vatcode/@type is "", expected one of purchase, sales.');
 
-        VatCodeReference::fromXml(self::element('<vatcode name="BTW 21%" shortname="VH" type="" fixed="false">VH</vatcode>'));
+        VatCodeReference::fromXml(
+            self::element('<vatcode name="BTW 21%" shortname="VH" type="" fixed="false">VH</vatcode>'),
+        );
     }
 
     public function testThrowsOnAnUnknownChildValidationType(): void
@@ -207,7 +209,10 @@ final class GeneralLedgerAccountTest extends TestCase
 
         $xml = strtr((string) $soap->getElementsByTagName('ProcessXmlStringResult')->item(0)?->textContent, $replace);
 
-        return GeneralLedgerAccount::fromXml(XmlElement::root(ProcessXmlResult::fromXml($xml)), TestTokens::organisation());
+        return GeneralLedgerAccount::fromXml(
+            XmlElement::root(ProcessXmlResult::fromXml($xml)),
+            TestTokens::organisation(),
+        );
     }
 
     private static function element(string $xml): XmlElement

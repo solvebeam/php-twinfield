@@ -53,8 +53,16 @@ final class LedgerAccountResourceTest extends TestCase
     public function testListsAllPages(): void
     {
         $http = new ReplayClient(
-            ReplayClient::raw(200, (string) json_encode(['items' => [self::account('1000'), self::account('1001')], 'total' => 3, 'filteredTotal' => 3])),
-            ReplayClient::raw(200, (string) json_encode(['items' => [self::account('1002')], 'total' => 3, 'filteredTotal' => 3])),
+            ReplayClient::raw(
+                200,
+                (string) json_encode(
+                    ['items' => [self::account('1000'), self::account('1001')], 'total' => 3, 'filteredTotal' => 3],
+                ),
+            ),
+            ReplayClient::raw(
+                200,
+                (string) json_encode(['items' => [self::account('1002')], 'total' => 3, 'filteredTotal' => 3]),
+            ),
         );
 
         $codes = array_map(

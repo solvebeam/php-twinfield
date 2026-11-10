@@ -125,7 +125,8 @@ final readonly class AccessTokenValidation
 
         if (!is_string($value) || $value === '') {
             throw new UnexpectedResponseException(sprintf(
-                'Access token validation has no "%s"; request the scopes twf.organisationUser and twf.organisation at login.',
+                'Access token validation has no "%s"; '
+                    . 'request the scopes twf.organisationUser and twf.organisation at login.',
                 $name,
             ));
         }

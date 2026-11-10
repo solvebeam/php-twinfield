@@ -68,7 +68,10 @@ final class XmlAnonymizerTest extends TestCase
         self::assertSame($input, (new XmlAnonymizer(self::KEY))->anonymize($input));
 
         // Other codes, such as company and user codes, are still replaced.
-        self::assertStringNotContainsString('JDOE', (new XmlAnonymizer(self::KEY))->anonymize('<r><Code>JDOE</Code></r>'));
+        self::assertStringNotContainsString(
+            'JDOE',
+            (new XmlAnonymizer(self::KEY))->anonymize('<r><Code>JDOE</Code></r>'),
+        );
     }
 
     public function testIsDeterministicPerKey(): void
@@ -86,7 +89,9 @@ final class XmlAnonymizerTest extends TestCase
 
     public function testShiftsDatesConsistently(): void
     {
-        $xml = (new XmlAnonymizer(self::KEY))->anonymize('<r><a>20250131</a><b>2025-02-10</b><c>2025-02-10T12:00:00</c></r>');
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize(
+            '<r><a>20250131</a><b>2025-02-10</b><c>2025-02-10T12:00:00</c></r>',
+        );
 
         preg_match('~<a>(\d{8})</a><b>([\d-]{10})</b><c>([\d-]{10})T12:00:00</c>~', $xml, $matches);
 
@@ -113,11 +118,13 @@ final class XmlAnonymizerTest extends TestCase
     public function testKeepsFixedValuesOfCustomersAndSuppliers(): void
     {
         $xml = (new XmlAnonymizer(self::KEY))->anonymize(
-            '<r><matchtype>customersupplier</matchtype><meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
+            '<r><matchtype>customersupplier</matchtype>'
+                . '<meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
         );
 
         self::assertSame(
-            '<r><matchtype>customersupplier</matchtype><meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
+            '<r><matchtype>customersupplier</matchtype>'
+                . '<meansofpayment>none</meansofpayment><sendtype>ToFileManager</sendtype></r>',
             $xml,
         );
     }
@@ -125,7 +132,8 @@ final class XmlAnonymizerTest extends TestCase
     public function testAlwaysReplacesSecrets(): void
     {
         $xml = (new XmlAnonymizer(self::KEY))->anonymize(
-            '<r><AccessToken>abc123</AccessToken><CompanyCode>10</CompanyCode><clusterUrl>https://api.accounting.twinfield.com</clusterUrl></r>',
+            '<r><AccessToken>abc123</AccessToken><CompanyCode>10</CompanyCode>'
+                . '<clusterUrl>https://api.accounting.twinfield.com</clusterUrl></r>',
         );
 
         self::assertStringNotContainsString('abc123', $xml);
@@ -135,9 +143,14 @@ final class XmlAnonymizerTest extends TestCase
 
     public function testAnonymizesEmbeddedXmlAndAttributes(): void
     {
-        $inner = htmlspecialchars('<dimension status="active"><name>Voorbeeld BV</name><office code="1002" /></dimension>', ENT_XML1);
+        $inner = htmlspecialchars(
+            '<dimension status="active"><name>Voorbeeld BV</name><office code="1002" /></dimension>',
+            ENT_XML1,
+        );
 
-        $xml = (new XmlAnonymizer(self::KEY))->anonymize("<r><ProcessXmlStringResult>{$inner}</ProcessXmlStringResult></r>");
+        $xml = (new XmlAnonymizer(self::KEY))->anonymize(
+            "<r><ProcessXmlStringResult>{$inner}</ProcessXmlStringResult></r>",
+        );
         $result = html_entity_decode($xml, ENT_XML1);
 
         self::assertStringNotContainsString('Voorbeeld', $result);

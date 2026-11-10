@@ -34,7 +34,12 @@ final class SalesTransactionResourceTest extends WriteTestCase
             SalesTransactionInput::invoice('VRK', $this->customer(), $invoiceNumber, $date)
                 ->dueDate($date->modify('+30 days'))
                 ->description('PHP SDK write test')
-                ->revenue($this->profitAndLossAccount(), '1.00', vatCode: $this->vatCode(), description: 'PHP SDK write test'),
+                ->revenue(
+                    $this->profitAndLossAccount(),
+                    '1.00',
+                    vatCode: $this->vatCode(),
+                    description: 'PHP SDK write test',
+                ),
         );
 
         try {
@@ -51,7 +56,9 @@ final class SalesTransactionResourceTest extends WriteTestCase
             self::assertSame($created->number(), $read->number());
             self::assertSame($created->value()->value, $read->value()->value);
 
-            $updated = $sales->update($read->edit()->paymentReference($invoiceNumber)->description('PHP SDK write test (updated)'));
+            $updated = $sales->update(
+                $read->edit()->paymentReference($invoiceNumber)->description('PHP SDK write test (updated)'),
+            );
 
             self::assertSame($created->number(), $updated->number());
             self::assertSame($invoiceNumber, $updated->paymentReference);
@@ -71,7 +78,12 @@ final class SalesTransactionResourceTest extends WriteTestCase
         $sales = $this->twinfield->salesTransactions();
 
         $created = $sales->create(
-            SalesTransactionInput::creditNote('VRK', $this->customer(), 'SDK-C-' . date('YmdHis'), new DateTimeImmutable('today'))
+            SalesTransactionInput::creditNote(
+                'VRK',
+                $this->customer(),
+                'SDK-C-' . date('YmdHis'),
+                new DateTimeImmutable('today'),
+            )
                 ->revenue($this->profitAndLossAccount(), '1.00', vatCode: $this->vatCode()),
         );
 
@@ -117,7 +129,11 @@ final class SalesTransactionResourceTest extends WriteTestCase
 
     private function profitAndLossAccount(): string
     {
-        $row = $this->twinfield->finder(FinderType::Dimensions)->option('dimtype', 'PNL')->limit(1)->get()->rows[0] ?? null;
+        $row = $this->twinfield->finder(FinderType::Dimensions)
+            ->option('dimtype', 'PNL')
+            ->limit(1)
+            ->get()
+            ->rows[0] ?? null;
 
         if ($row === null) {
             self::markTestSkipped('The company has no profit and loss accounts.');

@@ -305,7 +305,10 @@ final class DimensionGroupResourceTest extends TestCase
             $this->twinfield($http)->dimensionGroups()->delete('NL-CUSTOMERS');
             self::fail('Expected UnexpectedResponseException.');
         } catch (UnexpectedResponseException $exception) {
-            self::assertSame('Dimension group NL-CUSTOMERS still has dimensions after emptying it.', $exception->getMessage());
+            self::assertSame(
+                'Dimension group NL-CUSTOMERS still has dimensions after emptying it.',
+                $exception->getMessage(),
+            );
             self::assertCount(2, $http->requests, 'No delete request.');
         }
     }

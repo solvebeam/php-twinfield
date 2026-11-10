@@ -51,7 +51,10 @@ final class CashBookInputTest extends TestCase
     {
         $input = (new CashBook(TestTokens::company('1000'), 'KAS', 'Kas', 'Winkel', '1000'))->edit();
 
-        self::assertEquals(CashBookInput::create('KAS', 'Kas')->shortName('Winkel')->generalLedgerAccount('1000'), $input);
+        self::assertEquals(
+            CashBookInput::create('KAS', 'Kas')->shortName('Winkel')->generalLedgerAccount('1000'),
+            $input,
+        );
     }
 
     public function testReadModelRequiresAName(): void

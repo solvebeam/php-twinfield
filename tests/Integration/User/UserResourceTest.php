@@ -36,7 +36,11 @@ final class UserResourceTest extends IntegrationTestCase
             self::assertSame($summary->code, $user->code);
             self::assertSame($summary->name, $user->name);
             self::assertSame($user->code === $this->twinfield->userCode(), $user->isCurrentUser);
-            self::assertSame($user->companies->restricted, $user->companies->companies !== [], 'Restricted users list their companies.');
+            self::assertSame(
+                $user->companies->restricted,
+                $user->companies->companies !== [],
+                'Restricted users list their companies.',
+            );
 
             // edit() must give an input that Twinfield accepts; here only that it builds.
             self::assertStringStartsWith('<user><code>' . $user->code . '</code>', $user->edit()->toXml()->toXml());

@@ -78,7 +78,15 @@ final class DimensionGroupTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new DimensionGroup(TestTokens::company('1000'), 'NL', 'Dutch customers', null, DimensionGroupStatus::Active, -1, []);
+        new DimensionGroup(
+            TestTokens::company('1000'),
+            'NL',
+            'Dutch customers',
+            null,
+            DimensionGroupStatus::Active,
+            -1,
+            [],
+        );
     }
 
     private function group(): DimensionGroup

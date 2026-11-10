@@ -47,7 +47,15 @@ final class TwinfieldTest extends TestCase
     public function testTakesTheCompanyOfAModel(): void
     {
         $twinfield = $this->twinfield();
-        $office = new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 1, 21);
+        $office = new OfficeSummary(
+            TestTokens::organisation(),
+            '1001',
+            'Example Trading B.V.',
+            '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+            'NL',
+            1,
+            21,
+        );
 
         self::assertSame('1002', $twinfield->company(TestTokens::company('1002'))->companyCode());
         self::assertSame('1001', $twinfield->company($office)->companyCode());
@@ -58,7 +66,9 @@ final class TwinfieldTest extends TestCase
         $other = new Organisation('7c9e6679-7425-40de-944b-e07fc1f90ae7', 'OTHER');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Company 1000 belongs to organisation OTHER, but the access token to organisation EXAMPLE.');
+        $this->expectExceptionMessage(
+            'Company 1000 belongs to organisation OTHER, but the access token to organisation EXAMPLE.',
+        );
 
         $this->twinfield()->company(new CompanyReference($other, '1000'));
     }
@@ -75,7 +85,10 @@ final class TwinfieldTest extends TestCase
     {
         $twinfield = Twinfield::create(TestTokens::provider('https://api.accounting.twinfield.com'));
 
-        self::assertSame('https://api.accounting.twinfield.com/webservices/finder.asmx', $twinfield->endpoint('finder'));
+        self::assertSame(
+            'https://api.accounting.twinfield.com/webservices/finder.asmx',
+            $twinfield->endpoint('finder'),
+        );
     }
 
     private function twinfield(string $clusterUrl = 'https://example.test'): Twinfield

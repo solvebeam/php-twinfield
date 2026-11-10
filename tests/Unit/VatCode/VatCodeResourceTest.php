@@ -120,7 +120,11 @@ final class VatCodeResourceTest extends TestCase
             $this->xmlRequest($http->lastRequest()),
         );
 
-        self::assertEquals(TestTokens::company('1000'), $vatCode->company, 'The response has no office: it is the company of the request.');
+        self::assertEquals(
+            TestTokens::company('1000'),
+            $vatCode->company,
+            'The response has no office: it is the company of the request.',
+        );
         self::assertSame('VH', $vatCode->code);
         self::assertSame('BTW Hoog', $vatCode->name);
         self::assertSame('V Hoog', $vatCode->shortName);
@@ -183,7 +187,9 @@ final class VatCodeResourceTest extends TestCase
         $vatCode = $this->twinfield(ReplayClient::fixture('vat-read'))->vatCodes()->get('VH');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('VAT code VH has no percentage on 1999-12-31: the first one starts on 2000-01-01.');
+        $this->expectExceptionMessage(
+            'VAT code VH has no percentage on 1999-12-31: the first one starts on 2000-01-01.',
+        );
 
         $vatCode->vatOn('100.00', new DateTimeImmutable('1999-12-31'));
     }
@@ -246,7 +252,11 @@ final class VatCodeResourceTest extends TestCase
         yield 'percentage with comma' => ['<percentage>21.0000', '<percentage>21,0000', 'percentage is "21,0000'];
         yield 'percentage above 100' => ['<percentage>21.0000', '<percentage>121.0000', 'must be 0 to 100, 121 given'];
         yield 'invalid date' => ['<date>20121001', '<date>2012-10-01', 'percentage[2]/date is "2012-10-01"'];
-        yield 'same date twice' => ['<date>20121001', '<date>20000101', 'VAT code VH has two percentages from 2000-01-01.'];
+        yield 'same date twice' => [
+            '<date>20121001',
+            '<date>20000101',
+            'VAT code VH has two percentages from 2000-01-01.',
+        ];
         yield 'missing inuse' => [' inuse="true"><date>20121001', '><date>20121001', '@inuse is missing'];
         yield 'unknown line type' => ['<linetype>vat', '<linetype>total', 'account/linetype is "total"'];
         yield 'share above 100' => ['<percentage>100.0', '<percentage>200.0', 'must be -100 to 100 percent, 200 given'];
@@ -256,8 +266,16 @@ final class VatCodeResourceTest extends TestCase
             '<groupcountry />',
             'A VAT group needs both a country and a group code.',
         ];
-        yield 'no accounts' => ['~<accounts>.*?</accounts>~', '<accounts></accounts>', 'must have at least one account'];
-        yield 'no percentages' => ['~<percentages>.*</percentages>~', '<percentages></percentages>', 'at least one percentage'];
+        yield 'no accounts' => [
+            '~<accounts>.*?</accounts>~',
+            '<accounts></accounts>',
+            'must have at least one account',
+        ];
+        yield 'no percentages' => [
+            '~<percentages>.*</percentages>~',
+            '<percentages></percentages>',
+            'at least one percentage',
+        ];
     }
 
     #[DataProvider('unexpectedResponses')]
@@ -355,7 +373,10 @@ final class VatCodeResourceTest extends TestCase
         );
 
         self::assertCount(3, $http->requests);
-        self::assertStringStartsWith('<vat><office>1000</office><code>VH</code>', $this->xmlRequest($http->requests[1]));
+        self::assertStringStartsWith(
+            '<vat><office>1000</office><code>VH</code>',
+            $this->xmlRequest($http->requests[1]),
+        );
     }
 
     public function testUpdateThrowsNotFoundWithoutSaving(): void

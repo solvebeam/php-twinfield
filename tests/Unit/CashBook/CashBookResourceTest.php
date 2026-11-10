@@ -98,12 +98,17 @@ final class CashBookResourceTest extends TestCase
 
     public function testFindReturnsNullWhenNotFound(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('cashbook-fault-not-found', 500))->cashBooks()->find('NOPE'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('cashbook-fault-not-found', 500))->cashBooks()->find('NOPE'),
+        );
     }
 
     public function testFindReturnsTheCashBook(): void
     {
-        self::assertSame('Kas', $this->twinfield(ReplayClient::fixture('cashbook-get'))->cashBooks()->find('KAS')?->name);
+        self::assertSame(
+            'Kas',
+            $this->twinfield(ReplayClient::fixture('cashbook-get'))->cashBooks()->find('KAS')?->name,
+        );
     }
 
     public function testCreatesACashBookAndReadsIt(): void
@@ -116,7 +121,10 @@ final class CashBookResourceTest extends TestCase
 
         self::assertSame('KAS', $cashBook->code);
         self::assertCount(2, $http->requests);
-        self::assertSame('"http://www.twinfield.com/CashBookService/Process"', $http->requests[0]->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            '"http://www.twinfield.com/CashBookService/Process"',
+            $http->requests[0]->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
             'i:type="a:CreateCashBook"><a:Code>KAS</a:Code><a:GeneralLedgerAccount>1000</a:GeneralLedgerAccount>'
             . '<a:Name>Kas</a:Name><a:ShortName>Kas</a:ShortName></Command>',
@@ -201,10 +209,17 @@ final class CashBookResourceTest extends TestCase
 
         $bodies = array_map($this->body(...), $http->requests);
 
-        self::assertStringContainsString('i:type="a:ChangeCashBookName"><a:Code>KAS</a:Code><a:Name>Kas winkel</a:Name>', $bodies[0]);
-        self::assertStringContainsString('i:type="a:ChangeCashBookShortName"><a:Code>KAS</a:Code><a:ShortName>Winkel</a:ShortName>', $bodies[1]);
         self::assertStringContainsString(
-            'i:type="a:ChangeCashBookGeneralLedgerAccount"><a:Code>KAS</a:Code><a:GeneralLedgerAccount>1010</a:GeneralLedgerAccount>',
+            'i:type="a:ChangeCashBookName"><a:Code>KAS</a:Code><a:Name>Kas winkel</a:Name>',
+            $bodies[0],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeCashBookShortName"><a:Code>KAS</a:Code><a:ShortName>Winkel</a:ShortName>',
+            $bodies[1],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeCashBookGeneralLedgerAccount"><a:Code>KAS</a:Code>'
+                . '<a:GeneralLedgerAccount>1010</a:GeneralLedgerAccount>',
             $bodies[2],
         );
         self::assertStringContainsString(
@@ -239,7 +254,12 @@ final class CashBookResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

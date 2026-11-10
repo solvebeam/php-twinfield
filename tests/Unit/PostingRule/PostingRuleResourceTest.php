@@ -16,7 +16,10 @@ final class PostingRuleResourceTest extends TestCase
     {
         $http = ReplayClient::jsonFixture('posting-rules-list');
 
-        $page = TestTokens::restClient($http)->postingRules()->modifiedSince(new DateTimeImmutable('2000-01-01T00:00:00Z'))->get();
+        $page = TestTokens::restClient($http)
+            ->postingRules()
+            ->modifiedSince(new DateTimeImmutable('2000-01-01T00:00:00Z'))
+            ->get();
 
         self::assertCount(4, $page);
 

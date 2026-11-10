@@ -33,7 +33,13 @@ final class CustomerResourceTest extends WriteTestCase
                 CustomerInput::create('SDK test customer')
                     ->dueDays(21)
                     ->sendReminder(SendReminder::ByEmail, 'reminders@example.com')
-                    ->address(AddressInput::invoice('SDK test customer')->field(2, 'Main street 1')->city('Amsterdam')->country('NL')->default())
+                    ->address(
+                        AddressInput::invoice('SDK test customer')
+                            ->field(2, 'Main street 1')
+                            ->city('Amsterdam')
+                            ->country('NL')
+                            ->default(),
+                    )
                     ->bank(BankInput::create()->iban('NL91ABNA0417164300')->ascription('SDK test customer')->default()),
             );
             $code = $created->code;
@@ -56,7 +62,11 @@ final class CustomerResourceTest extends WriteTestCase
                 $customers->create(CustomerInput::create('Duplicate')->code($code));
                 self::fail('Expected a DimensionAlreadyExistsException.');
             } catch (DimensionAlreadyExistsException) {
-                self::assertSame('SDK test customer', $customers->get($code)->name, 'The existing customer is unchanged.');
+                self::assertSame(
+                    'SDK test customer',
+                    $customers->get($code)->name,
+                    'The existing customer is unchanged.',
+                );
             }
 
             // Change the invoice address, add a postal address and a second bank account.
@@ -66,7 +76,11 @@ final class CustomerResourceTest extends WriteTestCase
                     ->name('SDK test customer (updated) & more')
                     ->dueDays(14)
                     ->address($invoice->city('Rotterdam'))
-                    ->address(AddressInput::postal('SDK test customer')->field(2, 'Postbus 1')->city('Utrecht')->country('NL'))
+                    ->address(
+                        AddressInput::postal('SDK test customer')->field(2, 'Postbus 1')->city('Utrecht')->country(
+                            'NL',
+                        ),
+                    )
                     ->bank(BankInput::create()->iban('BE68539007547034')->ascription('SDK test customer')),
             );
 

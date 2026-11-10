@@ -56,12 +56,20 @@ final class VatCodeResourceTest extends WriteTestCase
                 $vatCodes->create(VatCodeInput::sales($code, 'Duplicate'));
                 self::fail('Expected a VatCodeAlreadyExistsException.');
             } catch (VatCodeAlreadyExistsException) {
-                self::assertSame('SDK test VAT code', $vatCodes->get($code)->name, 'The existing VAT code is unchanged.');
+                self::assertSame(
+                    'SDK test VAT code',
+                    $vatCodes->get($code)->name,
+                    'The existing VAT code is unchanged.',
+                );
             }
 
             $unchanged = $vatCodes->update($created->edit());
 
-            self::assertEquals($created->percentages, $unchanged->percentages, 'An update with edit() changes nothing.');
+            self::assertEquals(
+                $created->percentages,
+                $unchanged->percentages,
+                'An update with edit() changes nothing.',
+            );
 
             $updated = $vatCodes->update(
                 $created->edit()

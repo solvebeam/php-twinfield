@@ -33,24 +33,94 @@ final class WriteGuardClientTest extends TestCase
     {
         yield 'finder search' => ['Search', self::envelope('<Search />'), true];
         yield 'get' => ['GetAllSummaries', self::envelope('<GetAllSummaries />'), true];
-        yield 'process xml read' => ['ProcessXmlString', self::processXml('<read><type>dimensions</type></read>'), true];
+        yield 'process xml read' => [
+            'ProcessXmlString',
+            self::processXml('<read><type>dimensions</type></read>'),
+            true,
+        ];
         yield 'process xml browse' => ['ProcessXmlString', self::processXml('<columns code="000" />'), true];
-        yield 'process xml general with reads' => ['ProcessXmlString', self::processXml('<general><read /><list /></general>'), true];
-        yield 'process xml write' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office></dimension>'), false];
-        yield 'process xml asset method read' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>10JRGEB</code></assetmethod>'), true];
-        yield 'process xml asset method save' => ['ProcessXmlString', self::processXml('<assetmethod><office>1002</office><code>M</code><name>Machine</name></assetmethod>'), false];
-        yield 'process xml asset method status' => ['ProcessXmlString', self::processXml('<assetmethod status="deleted"><office>1002</office><code>M</code></assetmethod>'), false];
-        yield 'process xml asset method code only' => ['ProcessXmlString', self::processXml('<assetmethod><code>M</code><code>N</code></assetmethod>'), false];
-        yield 'process xml reversal info' => ['ProcessXmlString', self::processXml('<reverse action="getreversetransactioninfo"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), true];
-        yield 'process xml reversal without action' => ['ProcessXmlString', self::processXml('<reverse><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
-        yield 'process xml reversal post final' => ['ProcessXmlString', self::processXml('<reverse action="postfinal"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
-        yield 'process xml reversal undo' => ['ProcessXmlString', self::processXml('<reverse action="undo"><original><office>1002</office><code>MEMO</code><number>202100001</number></original></reverse>'), false];
-        yield 'process xml dimension type read' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code></dimensiontype>'), true];
-        yield 'process xml dimension type save' => ['ProcessXmlString', self::processXml('<dimensiontype><office>1002</office><code>DEB</code><name>Debiteuren</name></dimensiontype>'), false];
-        yield 'process xml dimension by code' => ['ProcessXmlString', self::processXml('<dimension><office>1002</office><code>1000</code></dimension>'), false];
-        yield 'process xml mixed' => ['ProcessXmlString', self::processXml('<general><read /><transaction /></general>'), false];
+        yield 'process xml general with reads' => [
+            'ProcessXmlString',
+            self::processXml('<general><read /><list /></general>'),
+            true,
+        ];
+        yield 'process xml write' => [
+            'ProcessXmlString',
+            self::processXml('<dimension><office>1002</office></dimension>'),
+            false,
+        ];
+        yield 'process xml asset method read' => [
+            'ProcessXmlString',
+            self::processXml('<assetmethod><office>1002</office><code>10JRGEB</code></assetmethod>'),
+            true,
+        ];
+        yield 'process xml asset method save' => [
+            'ProcessXmlString',
+            self::processXml('<assetmethod><office>1002</office><code>M</code><name>Machine</name></assetmethod>'),
+            false,
+        ];
+        yield 'process xml asset method status' => [
+            'ProcessXmlString',
+            self::processXml('<assetmethod status="deleted"><office>1002</office><code>M</code></assetmethod>'),
+            false,
+        ];
+        yield 'process xml asset method code only' => [
+            'ProcessXmlString',
+            self::processXml('<assetmethod><code>M</code><code>N</code></assetmethod>'),
+            false,
+        ];
+
+        $original = '<original><office>1002</office><code>MEMO</code><number>202100001</number></original>';
+
+        yield 'process xml reversal info' => [
+            'ProcessXmlString',
+            self::processXml('<reverse action="getreversetransactioninfo">' . $original . '</reverse>'),
+            true,
+        ];
+        yield 'process xml reversal without action' => [
+            'ProcessXmlString',
+            self::processXml('<reverse>' . $original . '</reverse>'),
+            false,
+        ];
+        yield 'process xml reversal post final' => [
+            'ProcessXmlString',
+            self::processXml('<reverse action="postfinal">' . $original . '</reverse>'),
+            false,
+        ];
+        yield 'process xml reversal undo' => [
+            'ProcessXmlString',
+            self::processXml('<reverse action="undo">' . $original . '</reverse>'),
+            false,
+        ];
+
+        yield 'process xml dimension type read' => [
+            'ProcessXmlString',
+            self::processXml('<dimensiontype><office>1002</office><code>DEB</code></dimensiontype>'),
+            true,
+        ];
+        yield 'process xml dimension type save' => [
+            'ProcessXmlString',
+            self::processXml(
+                '<dimensiontype><office>1002</office><code>DEB</code><name>Debiteuren</name></dimensiontype>',
+            ),
+            false,
+        ];
+        yield 'process xml dimension by code' => [
+            'ProcessXmlString',
+            self::processXml('<dimension><office>1002</office><code>1000</code></dimension>'),
+            false,
+        ];
+        yield 'process xml mixed' => [
+            'ProcessXmlString',
+            self::processXml('<general><read /><transaction /></general>'),
+            false,
+        ];
         yield 'process xml unparsable' => ['ProcessXmlString', self::processXml('not xml'), false];
-        yield 'compressed (cannot inspect)' => ['ProcessXmlCompressed', self::envelope('<ProcessXmlCompressed />'), false];
+        yield 'compressed (cannot inspect)' => [
+            'ProcessXmlCompressed',
+            self::envelope('<ProcessXmlCompressed />'),
+            false,
+        ];
         yield 'command & query: query' => ['Query', self::envelope('<Query />'), true];
         yield 'command & query: process (command)' => ['Process', self::envelope('<Command />'), false];
         yield 'hierarchy load' => ['Load', self::envelope('<Load />'), true];
@@ -80,7 +150,9 @@ final class WriteGuardClientTest extends TestCase
         $this->expectException(WriteBlockedException::class);
         $this->expectExceptionMessage('writes not confirmed');
 
-        $this->guard(allowWrites: null)->sendRequest($this->request('ProcessXmlString', self::processXml('<dimension />', '1002')));
+        $this->guard(allowWrites: null)->sendRequest(
+            $this->request('ProcessXmlString', self::processXml('<dimension />', '1002')),
+        );
     }
 
     public function testBlocksWritesOutsideAllowlistEvenWhenConfirmed(): void
@@ -88,7 +160,9 @@ final class WriteGuardClientTest extends TestCase
         $this->expectException(WriteBlockedException::class);
         $this->expectExceptionMessage('not in TWINFIELD_WRITE_COMPANIES');
 
-        $this->guard(allowWrites: '1000')->sendRequest($this->request('ProcessXmlString', self::processXml('<dimension />', '1000')));
+        $this->guard(allowWrites: '1000')->sendRequest(
+            $this->request('ProcessXmlString', self::processXml('<dimension />', '1000')),
+        );
     }
 
     public function testBlocksWritesWithOfficeOutsideConfirmedCompany(): void
@@ -108,7 +182,10 @@ final class WriteGuardClientTest extends TestCase
             new Command('ClosePeriod', ['PeriodNumber' => 1, 'Year' => 2021]),
             new AuthenticationHeader('x', '1002'),
         );
-        $request = $envelope->toRequest('https://example.test/webservices/PeriodService.svc', new Psr17SoapRequestFactory(new Psr17Factory(), new Psr17Factory()));
+        $request = $envelope->toRequest(
+            'https://example.test/webservices/PeriodService.svc',
+            new Psr17SoapRequestFactory(new Psr17Factory(), new Psr17Factory()),
+        );
 
         $this->expectException(WriteBlockedException::class);
         $this->expectExceptionMessage('Blocked SOAP write "Process" on company "1002": writes not confirmed.');
@@ -179,7 +256,9 @@ final class WriteGuardClientTest extends TestCase
         $this->expectException(WriteBlockedException::class);
         $this->expectExceptionMessage('is not an office of the user');
 
-        $this->guard(allowWrites: '1002')->sendRequest($this->restRequest('PUT', '7c9e6679-7425-40de-944b-e07fc1f90ae7'));
+        $this->guard(allowWrites: '1002')->sendRequest(
+            $this->restRequest('PUT', '7c9e6679-7425-40de-944b-e07fc1f90ae7'),
+        );
     }
 
     public function testBlocksRestWritesWithoutCompany(): void
@@ -187,7 +266,9 @@ final class WriteGuardClientTest extends TestCase
         $this->expectException(WriteBlockedException::class);
         $this->expectExceptionMessage('no company GUID found in the path');
 
-        $this->guard(allowWrites: '1002')->sendRequest(new Request('POST', 'https://example.test/Api/organisations/' . self::ORGANISATION . '/x'));
+        $this->guard(allowWrites: '1002')->sendRequest(
+            new Request('POST', 'https://example.test/Api/organisations/' . self::ORGANISATION . '/x'),
+        );
     }
 
     public function testBlocksRestWritesWithoutResolver(): void
@@ -201,7 +282,9 @@ final class WriteGuardClientTest extends TestCase
 
     public function testAllowsConfirmedRestWrites(): void
     {
-        $response = $this->guard(allowWrites: '1002')->sendRequest($this->restRequest('PATCH', strtoupper(self::COMPANY_1002)));
+        $response = $this->guard(allowWrites: '1002')->sendRequest(
+            $this->restRequest('PATCH', strtoupper(self::COMPANY_1002)),
+        );
 
         self::assertSame(200, $response->getStatusCode());
     }
@@ -222,7 +305,8 @@ final class WriteGuardClientTest extends TestCase
     {
         return new Request(
             $method,
-            'https://example.test/Api/organisations/' . self::ORGANISATION . '/companies/' . $companyId . '/sales/articles',
+            'https://example.test/Api/organisations/' . self::ORGANISATION
+                . '/companies/' . $companyId . '/sales/articles',
         );
     }
 
@@ -237,7 +321,9 @@ final class WriteGuardClientTest extends TestCase
     {
         return <<<XML
             <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.twinfield.com/">
-              <soap:Header><Header><AccessToken>x</AccessToken><CompanyCode>{$company}</CompanyCode></Header></soap:Header>
+              <soap:Header>
+                <Header><AccessToken>x</AccessToken><CompanyCode>{$company}</CompanyCode></Header>
+              </soap:Header>
               <soap:Body>{$body}</soap:Body>
             </soap:Envelope>
             XML;

@@ -199,7 +199,9 @@ final class Session implements AccessTokenProvider
 
         // Write to a temporary file first so a crash never leaves a broken token file.
         $tmp = $file . '.' . bin2hex(random_bytes(4)) . '.tmp';
-        file_put_contents($tmp, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+
+        file_put_contents($tmp, $json . "\n");
         chmod($tmp, 0600);
         rename($tmp, $file);
     }

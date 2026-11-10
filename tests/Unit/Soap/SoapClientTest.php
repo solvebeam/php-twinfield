@@ -48,7 +48,11 @@ final class SoapClientTest extends TestCase
     {
         try {
             $this->client(ReplayClient::fixture('fault-soap11', 500))
-                ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+                ->send(
+                    'https://example.test/webservices/finder.asmx',
+                    new Search('DIM', '*', 0, 1, 10),
+                    $this->header(),
+                );
             self::fail('Expected a SoapFaultException.');
         } catch (SoapFaultException $exception) {
             self::assertSame(SoapFaultException::class, $exception::class);
@@ -61,10 +65,17 @@ final class SoapClientTest extends TestCase
     {
         try {
             $this->client(ReplayClient::fixture('fault-guidelines-detail', 500))
-                ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+                ->send(
+                    'https://example.test/webservices/finder.asmx',
+                    new Search('DIM', '*', 0, 1, 10),
+                    $this->header(),
+                );
             self::fail('Expected a ClassicServiceFaultException.');
         } catch (ClassicServiceFaultException $exception) {
-            self::assertSame('soap:Client: Access denied. Token invalid. (code 354, source Search)', $exception->getMessage());
+            self::assertSame(
+                'soap:Client: Access denied. Token invalid. (code 354, source Search)',
+                $exception->getMessage(),
+            );
             self::assertSame('354', $exception->errorCode);
             self::assertSame('Access denied. Token invalid.', $exception->errorMessage);
             self::assertSame('Search', $exception->source);
@@ -76,7 +87,11 @@ final class SoapClientTest extends TestCase
     {
         try {
             $this->client(ReplayClient::fixture('fault-guidelines-detail', 401))
-                ->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+                ->send(
+                    'https://example.test/webservices/finder.asmx',
+                    new Search('DIM', '*', 0, 1, 10),
+                    $this->header(),
+                );
             self::fail('Expected a ClassicServiceFaultException.');
         } catch (ClassicServiceFaultException $exception) {
             self::assertSame(ErrorCode::TokenInvalid, ErrorCode::tryFrom($exception->errorCode));
@@ -88,11 +103,18 @@ final class SoapClientTest extends TestCase
         $http = new ReplayClient(new Response(401, ['WWW-Authenticate' => 'Bearer error="invalid_token"'], ''));
 
         try {
-            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            $this->client($http)->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
             self::fail('Expected an AccessDeniedException.');
         } catch (AccessDeniedException $exception) {
             self::assertSame(401, $exception->getCode());
-            self::assertSame('Twinfield denied access (HTTP 401 Unauthorized). Bearer error="invalid_token"', $exception->getMessage());
+            self::assertSame(
+                'Twinfield denied access (HTTP 401 Unauthorized). Bearer error="invalid_token"',
+                $exception->getMessage(),
+            );
         }
     }
 
@@ -101,7 +123,11 @@ final class SoapClientTest extends TestCase
         $http = new ReplayClient(new Response(403, [], '<html>Forbidden</html>'));
 
         try {
-            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            $this->client($http)->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
             self::fail('Expected an AccessDeniedException.');
         } catch (AccessDeniedException $exception) {
             self::assertSame(403, $exception->getCode());
@@ -130,7 +156,11 @@ final class SoapClientTest extends TestCase
         ], 'Too Many Requests'));
 
         try {
-            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            $this->client($http)->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
             self::fail('Expected a RateLimitExceededException.');
         } catch (RateLimitExceededException $exception) {
             self::assertSame(30, $exception->retryAfterSeconds);
@@ -149,7 +179,11 @@ final class SoapClientTest extends TestCase
         $http = new ReplayClient(new Response(429, [], 'Too Many Requests'));
 
         try {
-            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            $this->client($http)->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
             self::fail('Expected a RateLimitExceededException.');
         } catch (RateLimitExceededException $exception) {
             self::assertNull($exception->retryAfterSeconds);
@@ -168,7 +202,11 @@ final class SoapClientTest extends TestCase
         $http = new ReplayClient(new Response(429, [], 'Concurrency limit exceeded.'));
 
         try {
-            $this->client($http)->send('https://example.test/webservices/finder.asmx', new Search('DIM', '*', 0, 1, 10), $this->header());
+            $this->client($http)->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
             self::fail('Expected a RateLimitExceededException.');
         } catch (RateLimitExceededException $exception) {
             self::assertTrue($exception->concurrencyLimitExceeded);

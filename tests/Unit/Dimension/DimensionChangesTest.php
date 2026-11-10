@@ -34,7 +34,8 @@ final class DimensionChangesTest extends TestCase
             $page->items[0],
         );
         self::assertSame(
-            TestTokens::REST_COMPANY_URL . '/sales/customers/changes?modifiedSince=2020-01-01T00%3A00%3A00%2B00%3A00&limit=2',
+            TestTokens::REST_COMPANY_URL
+                . '/sales/customers/changes?modifiedSince=2020-01-01T00%3A00%3A00%2B00%3A00&limit=2',
             (string) $http->lastRequest()->getUri(),
         );
     }
@@ -47,19 +48,36 @@ final class DimensionChangesTest extends TestCase
 
         self::assertCount(2, $page);
         self::assertSame(8, $page->filteredTotal);
-        self::assertStringContainsString('/purchase/suppliers/changes?modifiedSince=2020-01-01T00', (string) $http->lastRequest()->getUri());
+        self::assertStringContainsString(
+            '/purchase/suppliers/changes?modifiedSince=2020-01-01T00',
+            (string) $http->lastRequest()->getUri(),
+        );
     }
 
     public function testReadsDeletedAndArchivedRelations(): void
     {
         $body = (string) json_encode(['items' => [
-            ['id' => '0f8fad5b-d9cb-469f-a165-70867728950e', 'name' => 'Old', 'status' => 'deleted', 'modified' => '2026-11-01T10:00:00Z'],
-            ['id' => '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'name' => 'Hidden', 'status' => 'archived', 'modified' => '2026-11-02T10:00:00Z'],
+            [
+                'id' => '0f8fad5b-d9cb-469f-a165-70867728950e',
+                'name' => 'Old',
+                'status' => 'deleted',
+                'modified' => '2026-11-01T10:00:00Z',
+            ],
+            [
+                'id' => '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+                'name' => 'Hidden',
+                'status' => 'archived',
+                'modified' => '2026-11-02T10:00:00Z',
+            ],
         ], 'total' => 2, 'filteredTotal' => 2]);
 
         $statuses = array_map(
             static fn (DimensionChange $change): DimensionChangeStatus => $change->status,
-            TestTokens::restClient(new ReplayClient(ReplayClient::raw(200, $body)))->customers()->changes(new DateTimeImmutable())->get()->items,
+            TestTokens::restClient(new ReplayClient(ReplayClient::raw(200, $body)))
+                ->customers()
+                ->changes(new DateTimeImmutable())
+                ->get()
+                ->items,
         );
 
         self::assertSame([DimensionChangeStatus::Deleted, DimensionChangeStatus::Archived], $statuses);
@@ -68,11 +86,15 @@ final class DimensionChangesTest extends TestCase
     public function testThrowsTheServerErrorOfTwinfield(): void
     {
         // Live, some companies answer every customer changes request with this server error.
-        $body = '"An error occurred on the server. Always include the following error reference when you report this error: \'2026-11-10 EZU53\'."';
+        $body = '"An error occurred on the server. Always include the following error reference '
+            . 'when you report this error: \'2026-11-10 EZU53\'."';
 
         $this->expectException(RestException::class);
         $this->expectExceptionMessage('(HTTP 500 Internal Server Error): An error occurred on the server.');
 
-        TestTokens::restClient(new ReplayClient(ReplayClient::raw(500, $body)))->customers()->changes(new DateTimeImmutable())->get();
+        TestTokens::restClient(new ReplayClient(ReplayClient::raw(500, $body)))
+            ->customers()
+            ->changes(new DateTimeImmutable())
+            ->get();
     }
 }

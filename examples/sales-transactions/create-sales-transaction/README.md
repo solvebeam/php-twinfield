@@ -54,7 +54,8 @@ try {
     exit(1);
 }
 
-echo 'Created:  ', $transaction->dayBook(), ' ', $transaction->number(), ' (', $transaction->header->status->name, ')', PHP_EOL;
+echo 'Created:  ', $transaction->dayBook(), ' ', $transaction->number(),
+    ' (', $transaction->header->status->name, ')', PHP_EOL;
 echo 'Invoice:  ', $transaction->invoiceNumber, ', due ', $transaction->dueDate->format('Y-m-d'), PHP_EOL;
 echo 'Customer: ', $transaction->customer()->code, ' ', $transaction->customer()->name, PHP_EOL;
 echo 'Total:    ', $transaction->value(), ' including ', $transaction->total->vatTotal, ' VAT, open ',

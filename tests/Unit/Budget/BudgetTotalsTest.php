@@ -37,6 +37,16 @@ final class BudgetTotalsTest extends TestCase
     {
         $amounts = new BudgetAmounts('0', '0', '0');
 
-        return new BudgetTotal(TestTokens::company(), 2025, $period, $account, [], $dimension2, $dimension3, $amounts, $amounts);
+        return new BudgetTotal(
+            TestTokens::company(),
+            2025,
+            $period,
+            $account,
+            [],
+            $dimension2,
+            $dimension3,
+            $amounts,
+            $amounts,
+        );
     }
 }

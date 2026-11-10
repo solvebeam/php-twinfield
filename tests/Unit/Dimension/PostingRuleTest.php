@@ -22,7 +22,11 @@ final class PostingRuleTest extends TestCase
     {
         $rule = PostingRuleInput::create('EUR', '125')
             ->description('Monthly fee')
-            ->line(PostingRuleLine::create('8000', '80')->costCenter('100')->project('P001')->vatCode('VH')->description('Fee'))
+            ->line(
+                PostingRuleLine::create('8000', '80')->costCenter('100')->project('P001')->vatCode('VH')->description(
+                    'Fee',
+                ),
+            )
             ->line(PostingRuleLine::create('8010', '20')->company('1001'));
 
         $xml = XmlBuilder::create('postingrules');

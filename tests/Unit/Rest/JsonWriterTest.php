@@ -17,7 +17,8 @@ final class JsonWriterTest extends TestCase
     public function testWritesAmountsAsExactNumbers(): void
     {
         self::assertSame(
-            '{"name":"Fiets / bike","netPrice":121.10,"gross":-0.50,"price":0.1550,"percent":21.5,"lines":[{"value":1.00}],"none":null}',
+            '{"name":"Fiets / bike","netPrice":121.10,"gross":-0.50,"price":0.1550,"percent":21.5,'
+                . '"lines":[{"value":1.00}],"none":null}',
             JsonWriter::encode([
                 'name' => 'Fiets / bike',
                 'netPrice' => Amount::of('121.1'),

@@ -30,7 +30,12 @@ final class TransactionBlockedValueResourceTest extends WriteTestCase
         $created = $purchases->create(
             PurchaseTransactionInput::invoice('INK', $this->supplier(), 'SDK-B-' . date('YmdHis'), $date)
                 ->dueDate($date->modify('+30 days'))
-                ->expense($this->profitAndLossAccount(), '10.00', vatCode: $this->vatCode(), description: 'PHP SDK write test'),
+                ->expense(
+                    $this->profitAndLossAccount(),
+                    '10.00',
+                    vatCode: $this->vatCode(),
+                    description: 'PHP SDK write test',
+                ),
         );
 
         try {
@@ -51,7 +56,11 @@ final class TransactionBlockedValueResourceTest extends WriteTestCase
 
     private function profitAndLossAccount(): string
     {
-        $row = $this->twinfield->finder(FinderType::Dimensions)->option('dimtype', 'PNL')->limit(1)->get()->rows[0] ?? null;
+        $row = $this->twinfield->finder(FinderType::Dimensions)
+            ->option('dimtype', 'PNL')
+            ->limit(1)
+            ->get()
+            ->rows[0] ?? null;
 
         if ($row === null) {
             self::markTestSkipped('The company has no profit and loss accounts.');

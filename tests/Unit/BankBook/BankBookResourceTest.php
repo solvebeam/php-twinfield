@@ -124,7 +124,9 @@ final class BankBookResourceTest extends TestCase
 
     public function testFindReturnsNullWhenNotFound(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('bankbook-fault-not-found', 500))->bankBooks()->find('NOPE'));
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('bankbook-fault-not-found', 500))->bankBooks()->find('NOPE'),
+        );
     }
 
     public function testCreatesABankBookAndReadsIt(): void
@@ -135,14 +137,21 @@ final class BankBookResourceTest extends TestCase
             BankBookInput::create('ING', 'ING 3255112')
                 ->shortName('ING')
                 ->generalLedgerAccount('1100')
-                ->bankAccount(BankAccountInput::create()->name('Example B.V.')->iban('NL45 INGB 0003 2551 12')->country('nl')),
+                ->bankAccount(
+                    BankAccountInput::create()->name('Example B.V.')->iban('NL45 INGB 0003 2551 12')->country('nl'),
+                ),
         );
 
         self::assertSame('ING', $bankBook->code);
-        self::assertSame('"http://www.twinfield.com/BankBookService/Process"', $http->requests[0]->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            '"http://www.twinfield.com/BankBookService/Process"',
+            $http->requests[0]->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
-            'i:type="a:CreateBankBook"><a:Code>ING</a:Code><a:BankAccount><a:Bic i:nil="true"/><a:Country>NL</a:Country>'
-            . '<a:Iban>NL45INGB0003255112</a:Iban><a:Name>Example B.V.</a:Name><a:Nbic i:nil="true"/><a:Number i:nil="true"/>'
+            'i:type="a:CreateBankBook"><a:Code>ING</a:Code>'
+            . '<a:BankAccount><a:Bic i:nil="true"/><a:Country>NL</a:Country>'
+            . '<a:Iban>NL45INGB0003255112</a:Iban><a:Name>Example B.V.</a:Name>'
+            . '<a:Nbic i:nil="true"/><a:Number i:nil="true"/>'
             . '<a:ReferenceNumber i:nil="true"/></a:BankAccount><a:GeneralLedgerAccount>1100</a:GeneralLedgerAccount>'
             . '<a:Name>ING 3255112</a:Name><a:ShortName>ING</a:ShortName></Command>',
             $this->body($http->requests[0]),
@@ -196,7 +205,8 @@ final class BankBookResourceTest extends TestCase
         self::assertStringContainsString(
             'i:type="a:ChangeBankBookBankAccount"><a:Code>ING</a:Code><a:BankAccount><a:Bic i:nil="true"/>'
             . '<a:Country>NL</a:Country><a:Iban>NL45INGB0003255112</a:Iban><a:Name>Example B.V.</a:Name>'
-            . '<a:Nbic i:nil="true"/><a:Number>3255112</a:Number><a:ReferenceNumber i:nil="true"/></a:BankAccount></Command>',
+            . '<a:Nbic i:nil="true"/><a:Number>3255112</a:Number>'
+            . '<a:ReferenceNumber i:nil="true"/></a:BankAccount></Command>',
             $this->body($http->requests[2]),
         );
     }
@@ -233,10 +243,17 @@ final class BankBookResourceTest extends TestCase
 
         $bodies = array_map($this->body(...), $http->requests);
 
-        self::assertStringContainsString('i:type="a:ChangeBankBookName"><a:Code>ING</a:Code><a:Name>ING zakelijk</a:Name>', $bodies[0]);
-        self::assertStringContainsString('i:type="a:ChangeBankBookShortName"><a:Code>ING</a:Code><a:ShortName i:nil="true"/>', $bodies[1]);
         self::assertStringContainsString(
-            'i:type="a:ChangeBankBookGeneralLedgerAccount"><a:Code>ING</a:Code><a:GeneralLedgerAccount>1110</a:GeneralLedgerAccount>',
+            'i:type="a:ChangeBankBookName"><a:Code>ING</a:Code><a:Name>ING zakelijk</a:Name>',
+            $bodies[0],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeBankBookShortName"><a:Code>ING</a:Code><a:ShortName i:nil="true"/>',
+            $bodies[1],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeBankBookGeneralLedgerAccount"><a:Code>ING</a:Code>'
+                . '<a:GeneralLedgerAccount>1110</a:GeneralLedgerAccount>',
             $bodies[2],
         );
         self::assertStringContainsString('<a:Number>3255112</a:Number>', $bodies[3]);
@@ -262,7 +279,12 @@ final class BankBookResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

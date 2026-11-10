@@ -42,7 +42,10 @@ final class BankStatementListTest extends TestCase
         $request = $http->lastRequest();
 
         self::assertSame('https://example.test/webservices/BankStatementService.svc', (string) $request->getUri());
-        self::assertSame('"http://www.twinfield.com/BankStatementService/Query"', $request->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            '"http://www.twinfield.com/BankStatementService/Query"',
+            $request->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
             'i:type="a:GetBankStatements">'
             . '<a:IncludePostedStatements>true</a:IncludePostedStatements>'
@@ -185,7 +188,10 @@ final class BankStatementListTest extends TestCase
         self::assertSame('CHQ-0042', $allocation->chequeNumber);
         self::assertSame(12345, $allocation->payingInSlipNumber);
         self::assertTrue($allocation->saveDescriptionFormatToAllocationRule);
-        self::assertEquals([new BankStatementVatLine('VH', Amount::of('100'), Amount::of('21'), false)], $allocation->vatLines);
+        self::assertEquals(
+            [new BankStatementVatLine('VH', Amount::of('100'), Amount::of('21'), false)],
+            $allocation->vatLines,
+        );
         self::assertSame($line->amount->value, $allocation->signedAmount()->value, 'Money paid is booked debit.');
     }
 
@@ -254,7 +260,10 @@ final class BankStatementListTest extends TestCase
             new DateTimeImmutable('2026-11-04T08:00:00'),
         );
 
-        self::assertStringContainsString('<a:StatementDateTo>2026-11-04T00:00:00</a:StatementDateTo>', $this->body($http));
+        self::assertStringContainsString(
+            '<a:StatementDateTo>2026-11-04T00:00:00</a:StatementDateTo>',
+            $this->body($http),
+        );
     }
 
     public function testRejectsCreationFromAfterTo(): void
@@ -294,11 +303,19 @@ final class BankStatementListTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 
-        $twinfield->electronicBankStatements()->list(new DateTimeImmutable('2026-11-01'), new DateTimeImmutable('2026-11-30'));
+        $twinfield->electronicBankStatements()->list(
+            new DateTimeImmutable('2026-11-01'),
+            new DateTimeImmutable('2026-11-30'),
+        );
     }
 
     private function body(ReplayClient $http): string

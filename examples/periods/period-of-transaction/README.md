@@ -19,7 +19,13 @@ $from = Period::fromString($argv[1] ?? $year . '/00');
 $to = Period::fromString($argv[2] ?? $year . '/55');
 
 $result = $twinfield->browse(BrowseCode::GeneralLedgerDetailsV3)
-    ->columns('fin.trs.head.code', 'fin.trs.head.number', 'fin.trs.head.date', 'fin.trs.head.year', 'fin.trs.head.period')
+    ->columns(
+        'fin.trs.head.code',
+        'fin.trs.head.number',
+        'fin.trs.head.date',
+        'fin.trs.head.year',
+        'fin.trs.head.period',
+    )
     ->between('fin.trs.head.yearperiod', $from, $to)
     ->equal('fin.trs.head.status', 'normal')
     ->get();

@@ -35,7 +35,8 @@ final class SalesInvoiceInputTest extends TestCase
 
         self::assertSame(
             '<salesinvoice raisewarning="false"><header><office>1000</office><invoicetype>FACTUUR</invoicetype>'
-                . '<invoicedate>20261109</invoicedate><duedate>20261209</duedate><performancedate>20261101</performancedate>'
+                . '<invoicedate>20261109</invoicedate><duedate>20261209</duedate>'
+                . '<performancedate>20261101</performancedate>'
                 . '<bank>BNK</bank><customer>1000</customer><period raisewarning="false">2026/11</period>'
                 . '<currency>EUR</currency><status>final</status><paymentmethod>da</paymentmethod>'
                 . '<invoiceaddressnumber>1</invoiceaddressnumber><deliveraddressnumber>2</deliveraddressnumber>'
@@ -61,7 +62,8 @@ final class SalesInvoiceInputTest extends TestCase
         self::assertSame(
             '<line id="1"><article>0</article><quantity>1.5</quantity><units>1</units>'
                 . '<unitspriceexcl>950.00</unitspriceexcl><vatcode>VH</vatcode>'
-                . '<allowdiscountorpremium>false</allowdiscountorpremium><description>Consultancy November</description>'
+                . '<allowdiscountorpremium>false</allowdiscountorpremium>'
+                . '<description>Consultancy November</description>'
                 . '<performancedate>20261103</performancedate><performancetype>services</performancetype>'
                 . '<freetext1>Order 778</freetext1><freetext3>Project X</freetext3><dim1>8020</dim1></line>',
             $this->lineXml(SalesInvoiceInput::create('FACTUUR', '1000')->line($line)),
@@ -120,7 +122,10 @@ final class SalesInvoiceInputTest extends TestCase
 
     public function testCalculateOnlyAttribute(): void
     {
-        $xml = SalesInvoiceInput::create('FACTUUR', '1000')->article('510')->toXml('1000', calculateOnly: true)->toXml();
+        $xml = SalesInvoiceInput::create('FACTUUR', '1000')
+            ->article('510')
+            ->toXml('1000', calculateOnly: true)
+            ->toXml();
 
         self::assertStringStartsWith('<salesinvoice calculateonly="true">', $xml);
     }

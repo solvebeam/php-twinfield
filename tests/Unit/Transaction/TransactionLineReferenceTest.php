@@ -22,7 +22,9 @@ final class TransactionLineReferenceTest extends TestCase
         self::assertSame(202600003, $line->transaction()->number);
         self::assertTrue($line->equals(new TransactionLineReference(TestTokens::company(), 'VRK', 202600003, 2)));
         self::assertFalse($line->equals(new TransactionLineReference(TestTokens::company(), 'VRK', 202600003, 1)));
-        self::assertFalse($line->equals(new TransactionLineReference(TestTokens::company('1001'), 'VRK', 202600003, 2)));
+        self::assertFalse(
+            $line->equals(new TransactionLineReference(TestTokens::company('1001'), 'VRK', 202600003, 2)),
+        );
     }
 
     public function testADraftHasNoTransactionNumber(): void

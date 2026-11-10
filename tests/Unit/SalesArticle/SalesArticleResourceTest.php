@@ -45,8 +45,10 @@ final class SalesArticleResourceTest extends TestCase
         self::assertSame([], $article->translations);
         self::assertSame(2, $article->version);
         self::assertSame(
-            TestTokens::REST_COMPANY_URL . '/sales/articles?searchPattern=1%2A&searchScope=anyTranslation&customerCultureCode=nl-NL'
-            . '&vats=' . self::VAT_CODE_ID . '&vats=0f8fad5b-d9cb-469f-a165-70867728950e&grossPriceFrom=10.0000&orderBy=name&asc=true',
+            TestTokens::REST_COMPANY_URL
+            . '/sales/articles?searchPattern=1%2A&searchScope=anyTranslation&customerCultureCode=nl-NL'
+            . '&vats=' . self::VAT_CODE_ID . '&vats=0f8fad5b-d9cb-469f-a165-70867728950e'
+            . '&grossPriceFrom=10.0000&orderBy=name&asc=true',
             (string) $http->lastRequest()->getUri(),
         );
     }
@@ -56,7 +58,9 @@ final class SalesArticleResourceTest extends TestCase
         $http = new ReplayClient(ReplayClient::jsonResponse('sales-articles-get', 201));
 
         $article = TestTokens::restClient($http)->salesArticles()->create(
-            SalesArticleInput::create('Bike', self::VAT_CODE_ID)->code('BIKE')->netPrice('825')->translations(['en-GB' => 'Bike']),
+            SalesArticleInput::create('Bike', self::VAT_CODE_ID)->code('BIKE')->netPrice('825')->translations(
+                ['en-GB' => 'Bike'],
+            ),
         );
 
         $request = $http->lastRequest();
@@ -65,7 +69,8 @@ final class SalesArticleResourceTest extends TestCase
         self::assertSame('POST', $request->getMethod());
         self::assertSame(TestTokens::REST_COMPANY_URL . '/sales/articles', (string) $request->getUri());
         self::assertSame(
-            '{"name":"Bike","code":"BIKE","vatId":"' . self::VAT_CODE_ID . '","translations":{"en-GB":"Bike"},"netPrice":825.0000}',
+            '{"name":"Bike","code":"BIKE","vatId":"' . self::VAT_CODE_ID . '",'
+                . '"translations":{"en-GB":"Bike"},"netPrice":825.0000}',
             (string) $request->getBody(),
         );
     }
@@ -89,7 +94,10 @@ final class SalesArticleResourceTest extends TestCase
 
     public function testUpdatesAnArticleWithItsVersion(): void
     {
-        $http = new ReplayClient(ReplayClient::jsonResponse('sales-articles-get'), ReplayClient::jsonResponse('sales-articles-get'));
+        $http = new ReplayClient(
+            ReplayClient::jsonResponse('sales-articles-get'),
+            ReplayClient::jsonResponse('sales-articles-get'),
+        );
         $articles = TestTokens::restClient($http)->salesArticles();
 
         $article = $articles->get(self::ARTICLE_ID);
@@ -116,7 +124,11 @@ final class SalesArticleResourceTest extends TestCase
 
         $this->expectException(VersionConflictException::class);
 
-        TestTokens::restClient(new ReplayClient(ReplayClient::raw(412, '"Article with specified version was modified since last request"')))
+        TestTokens::restClient(
+            new ReplayClient(
+                ReplayClient::raw(412, '"Article with specified version was modified since last request"'),
+            ),
+        )
             ->salesArticles()->update($article->edit()->name('Old'));
     }
 
@@ -155,9 +167,14 @@ final class SalesArticleResourceTest extends TestCase
 
     public function testExportsAndImportsArticles(): void
     {
-        $csv = "Name,Code,NetPrice,GrossPrice,VatCode,RevenueTypeCode,CostCenterCode,ArticleId\r\nBike,BIKE,825.00,998.25,VH,8000,,\r\n";
+        $csv = "Name,Code,NetPrice,GrossPrice,VatCode,RevenueTypeCode,CostCenterCode,ArticleId\r\n"
+            . "Bike,BIKE,825.00,998.25,VH,8000,,\r\n";
         $http = new ReplayClient(
-            ReplayClient::raw(200, $csv, ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=articles.csv']),
+            ReplayClient::raw(
+                200,
+                $csv,
+                ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=articles.csv'],
+            ),
             ReplayClient::raw(200, '[{"row":1}]', ['Content-Type' => 'application/json']),
         );
         $articles = TestTokens::restClient($http)->salesArticles();
@@ -203,7 +220,9 @@ final class SalesArticleResourceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        TestTokens::restClient(new ReplayClient())->salesArticles()->update(SalesArticleInput::create('Bike', self::VAT_CODE_ID));
+        TestTokens::restClient(new ReplayClient())->salesArticles()->update(
+            SalesArticleInput::create('Bike', self::VAT_CODE_ID),
+        );
     }
 
     public function testInputRefusesTwoPrices(): void
@@ -216,6 +235,8 @@ final class SalesArticleResourceTest extends TestCase
 
     private static function article(): SalesArticle
     {
-        return TestTokens::restClient(ReplayClient::jsonFixture('sales-articles-get'))->salesArticles()->get(self::ARTICLE_ID);
+        return TestTokens::restClient(ReplayClient::jsonFixture('sales-articles-get'))->salesArticles()->get(
+            self::ARTICLE_ID,
+        );
     }
 }

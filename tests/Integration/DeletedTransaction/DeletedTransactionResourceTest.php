@@ -24,7 +24,10 @@ final class DeletedTransactionResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no deleted transactions.');
         }
 
-        $dates = array_map(static fn (DeletedTransaction $transaction): DateTimeImmutable => $transaction->deletionDate, $transactions);
+        $dates = array_map(
+            static fn (DeletedTransaction $transaction): DateTimeImmutable => $transaction->deletionDate,
+            $transactions,
+        );
         $sorted = $dates;
         usort($sorted, static fn (DateTimeImmutable $a, DateTimeImmutable $b): int => $b <=> $a);
 

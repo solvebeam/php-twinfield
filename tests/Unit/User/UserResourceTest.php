@@ -42,11 +42,20 @@ final class UserResourceTest extends TestCase
     {
         $http = ReplayClient::fixture('finder-users');
 
-        $page = $this->twinfield($http)->users()->search('J*')->inCode()->withMutualCompanies()->withoutAccessRules()->get();
+        $page = $this->twinfield($http)
+            ->users()
+            ->search('J*')
+            ->inCode()
+            ->withMutualCompanies()
+            ->withoutAccessRules()
+            ->get();
 
         self::assertSame(2, $page->totalRows);
         self::assertEquals(
-            [new UserSummary(TestTokens::organisation(), 'ADMIN', 'Example Admin'), new UserSummary(TestTokens::organisation(), 'JDOE', 'John Doe')],
+            [
+                new UserSummary(TestTokens::organisation(), 'ADMIN', 'Example Admin'),
+                new UserSummary(TestTokens::organisation(), 'JDOE', 'John Doe'),
+            ],
             iterator_to_array($page),
         );
 
@@ -107,7 +116,9 @@ final class UserResourceTest extends TestCase
         self::assertFalse($user->hasAccessTo('2000'));
         self::assertTrue($user->hasAccessTo(TestTokens::company('1001')));
         self::assertFalse(
-            $user->hasAccessTo(new CompanyReference(new Organisation('7c9e6679-7425-40de-944b-e07fc1f90ae7', 'OTHER'), '1001')),
+            $user->hasAccessTo(
+                new CompanyReference(new Organisation('7c9e6679-7425-40de-944b-e07fc1f90ae7', 'OTHER'), '1001'),
+            ),
             'Company 1001 of another organisation is another company.',
         );
         self::assertEquals(TestTokens::organisation(), $user->organisation);
@@ -166,7 +177,8 @@ final class UserResourceTest extends TestCase
         $fixture = (string) ReplayClient::response('user-read')->getBody();
         $xml = str_replace(
             '&lt;performance&gt;',
-            '&lt;federation&gt;&lt;domain&gt;example.com&lt;/domain&gt;&lt;email&gt;jdoe@example.com&lt;/email&gt;&lt;/federation&gt;&lt;performance&gt;',
+            '&lt;federation&gt;&lt;domain&gt;example.com&lt;/domain&gt;&lt;email'
+                . '&gt;jdoe@example.com&lt;/email&gt;&lt;/federation&gt;&lt;performance&gt;',
             $fixture,
         );
 
@@ -231,15 +243,43 @@ final class UserResourceTest extends TestCase
         yield 'unknown type' => ['>accountant</type>', '>admin</type>', 'user/type is "admin"'];
         yield 'unknown culture' => ['>nl-NL</culture>', '>nl-BE</culture>', 'user/culture is "nl-BE"'];
         yield 'empty email' => ['<email>john.doe@example.com</email>', '<email></email>', 'user/email is empty'];
-        yield 'role without code' => ['level="2">LVL1</role>', 'level="2"></role>', 'user/role is "", expected a role code'];
-        yield 'unknown invitation' => ['>Active</invitationstatus>', '>Pending</invitationstatus>', 'user/invitationstatus is "Pending"'];
-        yield 'unknown template access' => ['>useandmanage<', '>everything<', 'user/office/templatecompanyaccess is "everything"'];
+        yield 'role without code' => [
+            'level="2">LVL1</role>',
+            'level="2"></role>',
+            'user/role is "", expected a role code',
+        ];
+        yield 'unknown invitation' => [
+            '>Active</invitationstatus>',
+            '>Pending</invitationstatus>',
+            'user/invitationstatus is "Pending"',
+        ];
+        yield 'unknown template access' => [
+            '>useandmanage<',
+            '>everything<',
+            'user/office/templatecompanyaccess is "everything"',
+        ];
         yield 'invalid sso' => ['<sso>0</sso>', '<sso>yes</sso>', 'user/account/sso is "yes"'];
-        yield 'invalid last logon' => ['lastlogon="20261106155135"', 'lastlogon="2026-11-06"', 'user/account/@lastlogon is "2026-11-06"'];
-        yield 'enabled before disabled' => ['<to>20260801000000</to>', '<to>20260601000000</to>', 'disabled until 2026-06-01 00:00:00'];
+        yield 'invalid last logon' => [
+            'lastlogon="20261106155135"',
+            'lastlogon="2026-11-06"',
+            'user/account/@lastlogon is "2026-11-06"',
+        ];
+        yield 'enabled before disabled' => [
+            '<to>20260801000000</to>',
+            '<to>20260601000000</to>',
+            'disabled until 2026-06-01 00:00:00',
+        ];
         yield 'week hours' => ['<weekhours>32<', '<weekhours>200<', 'Week hours must be 0 to 168, 200 given'];
-        yield 'no modifier' => ['<user name="Example Admin" shortname="Admin">ADMIN</user>', '', 'user/user is missing'];
-        yield 'other element in offices' => ['<office name="Example Trading B.V." shortname="">1001</office>', '<company>1001</company>', 'user/office/offices contains <company>'];
+        yield 'no modifier' => [
+            '<user name="Example Admin" shortname="Admin">ADMIN</user>',
+            '',
+            'user/user is missing',
+        ];
+        yield 'other element in offices' => [
+            '<office name="Example Trading B.V." shortname="">1001</office>',
+            '<company>1001</company>',
+            'user/office/offices contains <company>',
+        ];
     }
 
     #[DataProvider('unexpectedResponses')]
@@ -267,18 +307,28 @@ final class UserResourceTest extends TestCase
             . '<smslogin><phonenumber>+31612345678</phonenumber><service>1</service></smslogin>'
             . '<office><default>1000</default><templatecompanyaccess>useandmanage</templatecompanyaccess>'
             . '<offices><office>1000</office><office>1001</office></offices></office>'
-            . '<account><sso>0</sso><expire>20271231</expire><disable><from>20260701000000</from><to>20260801000000</to></disable></account>'
+            . '<account><sso>0</sso><expire>20271231</expire><disable>'
+            . '<from>20260701000000</from><to>20260801000000</to></disable></account>'
             . '<time><authoriser>JSMITH</authoriser><weekhours>32</weekhours></time>'
-            . '<expenses><dimension1>8000</dimension1><dimension2/><dimension3>P0001</dimension3><dimension4/></expenses></user>',
+            . '<expenses><dimension1>8000</dimension1><dimension2/>'
+            . '<dimension3>P0001</dimension3><dimension4/></expenses></user>',
             $user->edit()->toXml()->toXml(),
         );
     }
 
     public function testEditLeavesOutTheCompanyListAndExpiryOfAnUnrestrictedSingleSignOnUser(): void
     {
-        $xml = $this->twinfield(ReplayClient::fixture('user-read-all-companies'))->users()->get('API')->edit()->toXml()->toXml();
+        $xml = $this->twinfield(ReplayClient::fixture('user-read-all-companies'))
+            ->users()
+            ->get('API')
+            ->edit()
+            ->toXml()
+            ->toXml();
 
-        self::assertStringContainsString('<office><default/><templatecompanyaccess>nouse</templatecompanyaccess></office>', $xml);
+        self::assertStringContainsString(
+            '<office><default/><templatecompanyaccess>nouse</templatecompanyaccess></office>',
+            $xml,
+        );
         self::assertStringContainsString('<account><sso>1</sso><disable><from/><to/></disable></account>', $xml);
         self::assertStringContainsString('<shortname/>', $xml, 'An empty short name is sent empty.');
     }
@@ -363,7 +413,11 @@ final class UserResourceTest extends TestCase
     {
         $http = ReplayClient::fixture('user-delete');
 
-        $result = $this->twinfield($http)->users()->delete('JDOE', UserDeleteReason::NoLongerOperative, 'Left the company');
+        $result = $this->twinfield($http)->users()->delete(
+            'JDOE',
+            UserDeleteReason::NoLongerOperative,
+            'Left the company',
+        );
 
         self::assertSame(DeleteResult::Deleted, $result);
         self::assertSame(

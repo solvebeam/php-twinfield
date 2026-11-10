@@ -31,7 +31,10 @@ final class AddressLabelsTest extends TestCase
 
     public function testCreatesFromAnArray(): void
     {
-        self::assertEquals(new AddressLabels(field2: 'Adres', field5: 'KVK'), AddressLabels::fromArray([2 => 'Adres', 5 => 'KVK']));
+        self::assertEquals(
+            new AddressLabels(field2: 'Adres', field5: 'KVK'),
+            AddressLabels::fromArray([2 => 'Adres', 5 => 'KVK']),
+        );
     }
 
     public function testRejectsAFieldOutOfRange(): void

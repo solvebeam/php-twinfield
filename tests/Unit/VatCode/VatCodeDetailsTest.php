@@ -47,7 +47,12 @@ final class VatCodeDetailsTest extends TestCase
     {
         $http = ReplayClient::jsonFixture('vat-codes-list');
 
-        $page = TestTokens::restClient($http)->vatCodes()->searchDetails('D*')->type(VatCodeType::Sales)->orderByCode()->get();
+        $page = TestTokens::restClient($http)
+            ->vatCodes()
+            ->searchDetails('D*')
+            ->type(VatCodeType::Sales)
+            ->orderByCode()
+            ->get();
 
         $vatCodes = array_filter($page->items, static fn (VatCodeDetails $vatCode): bool => $vatCode->code === 'DOB-L');
         $vatCode = array_values($vatCodes)[0];

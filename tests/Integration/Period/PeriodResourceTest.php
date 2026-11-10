@@ -54,7 +54,11 @@ final class PeriodResourceTest extends IntegrationTestCase
             }
 
             if ($previous !== null) {
-                self::assertGreaterThan($previous, $details->endDate, "Period {$details->period} ends after the previous period.");
+                self::assertGreaterThan(
+                    $previous,
+                    $details->endDate,
+                    "Period {$details->period} ends after the previous period.",
+                );
             }
 
             $previous = $details->endDate;

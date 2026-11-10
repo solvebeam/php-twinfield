@@ -56,7 +56,11 @@ final class ActivityResourceTest extends WriteTestCase
                 $activities->create(ActivityInput::create($code, 'Duplicate'));
                 self::fail('Expected a DimensionAlreadyExistsException.');
             } catch (DimensionAlreadyExistsException) {
-                self::assertSame('SDK test activity', $activities->get($code)->name, 'The existing activity is unchanged.');
+                self::assertSame(
+                    'SDK test activity',
+                    $activities->get($code)->name,
+                    'The existing activity is unchanged.',
+                );
             }
 
             $activities->update(
@@ -72,8 +76,15 @@ final class ActivityResourceTest extends WriteTestCase
             self::assertSame('SDK test activity (updated)', $updated->name);
             self::assertNull($updated->shortName, 'An update clears values that were removed.');
             self::assertEquals(new DateTimeImmutable('2025-12-31'), $updated->projects->validTill);
-            self::assertSame(['KM', 'Parking'], array_map(static fn (Quantity $q): string => $q->label, $updated->projects->quantities));
-            self::assertSame('Created by the twinfield-php write tests', $updated->projects->invoiceDescription, 'edit() keeps other values.');
+            self::assertSame(
+                ['KM', 'Parking'],
+                array_map(static fn (Quantity $q): string => $q->label, $updated->projects->quantities),
+            );
+            self::assertSame(
+                'Created by the twinfield-php write tests',
+                $updated->projects->invoiceDescription,
+                'edit() keeps other values.',
+            );
 
             self::assertSame(DeleteResult::Deleted, $activities->delete($code));
             self::assertSame(DimensionStatus::Deleted, $activities->get($code)->status);

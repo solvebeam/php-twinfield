@@ -44,12 +44,19 @@ final class CurrencyResourceTest extends TestCase
         self::assertSame('2', $xpath->evaluate('string(//tw:Search/tw:field)'));
         self::assertSame('21', $xpath->evaluate('string(//tw:Search/tw:firstRow)'));
         self::assertSame('10', $xpath->evaluate('string(//tw:Search/tw:maxRows)'));
-        self::assertSame(0.0, $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'), 'The company comes from the header.');
+        self::assertSame(
+            0.0,
+            $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'),
+            'The company comes from the header.',
+        );
     }
 
     public function testReadsACurrencyAfterCheckingTheFinder(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-read'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-read'),
+        );
 
         $usd = $this->twinfield($http)->currencies()->get('USD');
 
@@ -80,14 +87,20 @@ final class CurrencyResourceTest extends TestCase
 
     public function testReadsACurrencyInACurrenciesElement(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-read-wrapped'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-read-wrapped'),
+        );
 
         self::assertSame('USD', $this->twinfield($http)->currencies()->get('USD')->code);
     }
 
     public function testReadsACurrencyWithoutRatesAndShortName(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies'), ReplayClient::response('currency-read-no-rates'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies'),
+            ReplayClient::response('currency-read-no-rates'),
+        );
 
         $eur = $this->twinfield($http)->currencies()->get('EUR');
 
@@ -121,7 +134,10 @@ final class CurrencyResourceTest extends TestCase
 
     public function testExists(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('finder-currencies-usdt'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('finder-currencies-usdt'),
+        );
         $currencies = $this->twinfield($http)->currencies();
 
         self::assertTrue($currencies->exists('USD'));
@@ -130,17 +146,25 @@ final class CurrencyResourceTest extends TestCase
 
     public function testThrowsOnAnInvalidRate(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-read-invalid-rate'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-read-invalid-rate'),
+        );
 
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('currency/rates/rate/rate is "1,085", expected a positive exchange rate, e.g. 1.0850.');
+        $this->expectExceptionMessage(
+            'currency/rates/rate/rate is "1,085", expected a positive exchange rate, e.g. 1.0850.',
+        );
 
         $this->twinfield($http)->currencies()->get('USD');
     }
 
     public function testThrowsOnAnUnknownStatus(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-read-unknown-status'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-read-unknown-status'),
+        );
 
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('currency/@status is "hide", expected one of active, deleted.');
@@ -168,7 +192,10 @@ final class CurrencyResourceTest extends TestCase
             . '<rates><rate><startdate>20260101</startdate><rate>0.865</rate></rate></rates></currency>',
             $this->xmlRequest($http->requests[1]),
         );
-        self::assertSame('<currency><office>1000</office><code>GBP</code></currency>', $this->xmlRequest($http->requests[2]));
+        self::assertSame(
+            '<currency><office>1000</office><code>GBP</code></currency>',
+            $this->xmlRequest($http->requests[2]),
+        );
         self::assertSame('GBP', $gbp->code);
         self::assertSame('0.865', $gbp->latestRate()?->rate->value);
     }
@@ -195,7 +222,11 @@ final class CurrencyResourceTest extends TestCase
         $currencies = $this->twinfield($http)->currencies();
 
         $usd = $currencies->get('USD');
-        $currencies->update($usd->edit()->rate(new DateTimeImmutable('2026-10-01'), '1.1')->removeRate(new DateTimeImmutable('2026-07-01')));
+        $currencies->update(
+            $usd->edit()->rate(new DateTimeImmutable('2026-10-01'), '1.1')->removeRate(
+                new DateTimeImmutable('2026-07-01'),
+            ),
+        );
 
         self::assertSame(
             '<currency><office>1000</office><code>USD</code><name>US dollar</name><shortname>$</shortname><rates>'
@@ -233,7 +264,10 @@ final class CurrencyResourceTest extends TestCase
 
     public function testDeletesACurrency(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-delete'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-delete'),
+        );
 
         $this->twinfield($http)->currencies()->delete('USD');
 
@@ -254,7 +288,10 @@ final class CurrencyResourceTest extends TestCase
 
     public function testThrowsWhenACurrencyIsStillActiveAfterDeleting(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-currencies-usd'), ReplayClient::response('currency-delete-still-active'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-currencies-usd'),
+            ReplayClient::response('currency-delete-still-active'),
+        );
 
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Currency USD is still active after deleting it.');

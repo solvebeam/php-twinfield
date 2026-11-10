@@ -31,6 +31,12 @@ final class CashTransactionInputTest extends TestCase
 
     private function cashBook(?string $account): CashBook
     {
-        return new CashBook(company: TestTokens::company('1000'), code: 'KAS', name: 'Kas', shortName: null, generalLedgerAccount: $account);
+        return new CashBook(
+            company: TestTokens::company('1000'),
+            code: 'KAS',
+            name: 'Kas',
+            shortName: null,
+            generalLedgerAccount: $account,
+        );
     }
 }

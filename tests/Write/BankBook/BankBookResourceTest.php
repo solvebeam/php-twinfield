@@ -45,7 +45,9 @@ final class BankBookResourceTest extends WriteTestCase
         $bankBook = $this->twinfield->bankBooks()->create(
             BankBookInput::create('BNKTST', 'PHP SDK test')
                 ->shortName('SDK test')
-                ->bankAccount(BankAccountInput::create()->name('Example B.V.')->iban('NL91ABNA0417164300')->country('NL')),
+                ->bankAccount(
+                    BankAccountInput::create()->name('Example B.V.')->iban('NL91ABNA0417164300')->country('NL'),
+                ),
         );
 
         self::assertSame('PHP SDK test', $bankBook->name);

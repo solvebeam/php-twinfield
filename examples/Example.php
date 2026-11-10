@@ -153,7 +153,9 @@ final class Example
             }
         }
 
-        throw new \RuntimeException(sprintf('Account codes %s999 down to %s900 are all in use.', $example[0], $example[0]));
+        throw new \RuntimeException(
+            sprintf('Account codes %s999 down to %s900 are all in use.', $example[0], $example[0]),
+        );
     }
 
     /**
@@ -403,7 +405,9 @@ final class Example
     {
         // Show API errors as one readable line instead of a stack trace.
         set_exception_handler(static function (Throwable $exception): void {
-            fwrite(STDERR, sprintf('%s: %s%s', (new \ReflectionClass($exception))->getShortName(), $exception->getMessage(), PHP_EOL));
+            $name = (new \ReflectionClass($exception))->getShortName();
+
+            fwrite(STDERR, sprintf('%s: %s%s', $name, $exception->getMessage(), PHP_EOL));
             exit(1);
         });
 

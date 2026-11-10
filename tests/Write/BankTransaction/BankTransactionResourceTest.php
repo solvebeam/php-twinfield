@@ -111,7 +111,11 @@ final class BankTransactionResourceTest extends WriteTestCase
 
     private function profitAndLossAccount(): string
     {
-        $row = $this->twinfield->finder(FinderType::Dimensions)->option('dimtype', 'PNL')->limit(1)->get()->rows[0] ?? null;
+        $row = $this->twinfield->finder(FinderType::Dimensions)
+            ->option('dimtype', 'PNL')
+            ->limit(1)
+            ->get()
+            ->rows[0] ?? null;
 
         if ($row === null) {
             self::markTestSkipped('The company has no profit and loss accounts.');

@@ -66,9 +66,18 @@ final class XmlElementTest extends TestCase
     public static function invalidReads(): iterable
     {
         yield 'missing element' => [static fn (XmlElement $d): mixed => $d->string('uid'), 'dimension/uid is missing.'];
-        yield 'empty required string' => [static fn (XmlElement $d): mixed => $d->string('shortname'), 'dimension/shortname is empty.'];
-        yield 'missing nullable element' => [static fn (XmlElement $d): mixed => $d->nullableString('uid'), 'dimension/uid is missing.'];
-        yield 'invalid integer' => [static fn (XmlElement $d): mixed => $d->int('code'), 'dimension/code is "A001", expected an integer.'];
+        yield 'empty required string' => [
+            static fn (XmlElement $d): mixed => $d->string('shortname'),
+            'dimension/shortname is empty.',
+        ];
+        yield 'missing nullable element' => [
+            static fn (XmlElement $d): mixed => $d->nullableString('uid'),
+            'dimension/uid is missing.',
+        ];
+        yield 'invalid integer' => [
+            static fn (XmlElement $d): mixed => $d->int('code'),
+            'dimension/code is "A001", expected an integer.',
+        ];
         yield 'invalid boolean' => [
             static fn (XmlElement $d): mixed => $d->child('projects')->bool('billable'),
             'dimension/projects/billable is "yes", expected a boolean (true or false).',
@@ -94,7 +103,9 @@ final class XmlElementTest extends TestCase
             'dimension/@result is "1", expected one of active, deleted, hide.',
         ];
         yield 'empty item in list' => [
-            static fn (XmlElement $d): mixed => $d->child('projects')->child('quantities')->list('quantity')[1]->string('label'),
+            static fn (XmlElement $d): mixed => $d->child('projects')->child('quantities')->list('quantity')[1]->string(
+                'label',
+            ),
             'dimension/projects/quantities/quantity[2]/label is empty.',
         ];
         yield 'non-integer attribute' => [

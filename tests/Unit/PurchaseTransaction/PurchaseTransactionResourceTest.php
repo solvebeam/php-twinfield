@@ -207,7 +207,10 @@ final class PurchaseTransactionResourceTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dim2 is missing or empty');
 
-        $this->twinfield(new ReplayClient(new Response(200, [], (string) $xml)))->purchaseTransactions()->get('INK', 202600012);
+        $this->twinfield(new ReplayClient(new Response(200, [], (string) $xml)))->purchaseTransactions()->get(
+            'INK',
+            202600012,
+        );
     }
 
     public function testEditKeepsAllValues(): void
@@ -319,11 +322,24 @@ final class PurchaseTransactionResourceTest extends TestCase
         $date = new DateTimeImmutable('2026-11-09');
 
         $result = $this->twinfield($http)->purchaseTransactions()->saveMany(
-            PurchaseTransactionInput::invoice('INK', '2000', 'F-2026-0045', $date)->expense('7000', '50.00', 'IH', '10.50'),
-            PurchaseTransactionInput::invoice('INK', '9999', 'F-2026-0046', $date)->expense('7000', '50.00', 'IH', '10.50'),
+            PurchaseTransactionInput::invoice('INK', '2000', 'F-2026-0045', $date)->expense(
+                '7000',
+                '50.00',
+                'IH',
+                '10.50',
+            ),
+            PurchaseTransactionInput::invoice('INK', '9999', 'F-2026-0046', $date)->expense(
+                '7000',
+                '50.00',
+                'IH',
+                '10.50',
+            ),
         );
 
-        self::assertStringStartsWith('<transactions><transaction destiny="temporary">', $this->xmlRequest($http->lastRequest()));
+        self::assertStringStartsWith(
+            '<transactions><transaction destiny="temporary">',
+            $this->xmlRequest($http->lastRequest()),
+        );
         self::assertFalse($result->allSaved());
 
         $saved = $result->saved()[0];
@@ -426,7 +442,12 @@ final class PurchaseTransactionResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Purchase transactions belong to a company');

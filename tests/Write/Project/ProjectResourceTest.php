@@ -72,8 +72,15 @@ final class ProjectResourceTest extends WriteTestCase
             self::assertSame('SDK test project with a name of more than 40 characters', $updated->name);
             self::assertNull($updated->shortName, 'An update clears values that were removed.');
             self::assertEquals(new DateTimeImmutable('2025-12-31'), $updated->projects->validTill);
-            self::assertSame(['KM', 'Parking'], array_map(static fn (Quantity $q): string => $q->label, $updated->projects->quantities));
-            self::assertSame('Created by the twinfield-php write tests', $updated->projects->invoiceDescription, 'edit() keeps other values.');
+            self::assertSame(
+                ['KM', 'Parking'],
+                array_map(static fn (Quantity $q): string => $q->label, $updated->projects->quantities),
+            );
+            self::assertSame(
+                'Created by the twinfield-php write tests',
+                $updated->projects->invoiceDescription,
+                'edit() keeps other values.',
+            );
 
             self::assertSame(DeleteResult::Deleted, $projects->delete($code));
             self::assertSame(DimensionStatus::Deleted, $projects->get($code)->status);

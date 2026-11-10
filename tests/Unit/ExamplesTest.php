@@ -125,7 +125,11 @@ final class ExamplesTest extends TestCase
         self::assertStringContainsString("require __DIR__ . '/../../../vendor/autoload.php';", $code);
 
         if (!in_array($name, self::OWN_SETUP, true)) {
-            self::assertStringContainsString('$twinfield = Example::twinfield();', $code, 'Examples use the one-line setup.');
+            self::assertStringContainsString(
+                '$twinfield = Example::twinfield();',
+                $code,
+                'Examples use the one-line setup.',
+            );
         }
 
         self::assertMatchesRegularExpression('~^# \S~', $readme, 'README starts with a title.');
@@ -136,7 +140,11 @@ final class ExamplesTest extends TestCase
 
         self::assertStringContainsString("]({$name}/)", $index, 'Example is listed in examples/README.md.');
 
-        exec(sprintf('%s -l %s 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg($directory . '/example.php')), $output, $exitCode);
+        exec(
+            sprintf('%s -l %s 2>&1', escapeshellarg(PHP_BINARY), escapeshellarg($directory . '/example.php')),
+            $output,
+            $exitCode,
+        );
 
         self::assertSame(0, $exitCode, implode("\n", $output));
     }

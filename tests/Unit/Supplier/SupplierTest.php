@@ -47,7 +47,8 @@ final class SupplierTest extends TestCase
 
     public function testReadsFinancials(): void
     {
-        $financials = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->financials;
+        $supplier = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation());
+        $financials = $supplier->financials;
 
         self::assertSame(14, $financials->dueDays);
         self::assertTrue($financials->payAvailable);
@@ -159,7 +160,10 @@ final class SupplierTest extends TestCase
 
     public function testEditSendsWhatTwinfieldReturned(): void
     {
-        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
+        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-full'), TestTokens::organisation())
+            ->edit()
+            ->toXml('1000')
+            ->toXml();
 
         self::assertSame(self::pretty(<<<'XML'
             <dimension>
@@ -300,7 +304,10 @@ final class SupplierTest extends TestCase
 
     public function testEditOfALiveSupplierLeavesOutWhatTwinfieldLeftOut(): void
     {
-        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-posting-rules'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
+        $xml = Supplier::fromXml(CustomerTest::fixture('supplier-read-posting-rules'), TestTokens::organisation())
+            ->edit()
+            ->toXml('1000')
+            ->toXml();
 
         self::assertStringNotContainsString('<groups', $xml);
         self::assertStringNotContainsString('<paymentconditions', $xml);
@@ -308,8 +315,14 @@ final class SupplierTest extends TestCase
         self::assertStringNotContainsString('<ebilling>', $xml);
         self::assertStringContainsString('<banks/>', $xml);
         self::assertStringContainsString('<ratio/><vatcode>#</vatcode>', $xml);
-        self::assertStringContainsString('<payavailable>false</payavailable><meansofpayment>none</meansofpayment><paycode/>', $xml);
-        self::assertStringContainsString('<remittanceadvice><sendtype>ToFileManager</sendtype><sendmail/></remittanceadvice>', $xml);
+        self::assertStringContainsString(
+            '<payavailable>false</payavailable><meansofpayment>none</meansofpayment><paycode/>',
+            $xml,
+        );
+        self::assertStringContainsString(
+            '<remittanceadvice><sendtype>ToFileManager</sendtype><sendmail/></remittanceadvice>',
+            $xml,
+        );
     }
 
     public function testThrowsOnAnotherDimensionType(): void
@@ -317,15 +330,29 @@ final class SupplierTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/type is "DEB", expected CRD.');
 
-        Supplier::fromXml(CustomerTest::fixture('supplier-read', ['<type name="Crediteuren" shortname="Crediteuren">CRD</type>' => '<type>DEB</type>']), TestTokens::organisation());
+        Supplier::fromXml(
+            CustomerTest::fixture(
+                'supplier-read',
+                ['<type name="Crediteuren" shortname="Crediteuren">CRD</type>' => '<type>DEB</type>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAnUnknownMeansOfPayment(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('dimension/financials/meansofpayment is "creditcard", expected one of none, paymentfile, cheques.');
+        $this->expectExceptionMessage(
+            'dimension/financials/meansofpayment is "creditcard", expected one of none, paymentfile, cheques.',
+        );
 
-        Supplier::fromXml(CustomerTest::fixture('supplier-read', ['<meansofpayment>none</meansofpayment>' => '<meansofpayment>creditcard</meansofpayment>']), TestTokens::organisation());
+        Supplier::fromXml(
+            CustomerTest::fixture(
+                'supplier-read',
+                ['<meansofpayment>none</meansofpayment>' => '<meansofpayment>creditcard</meansofpayment>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAMissingRelationsReference(): void
@@ -333,7 +360,10 @@ final class SupplierTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/financials/relationsreference is missing.');
 
-        Supplier::fromXml(CustomerTest::fixture('supplier-read', ['<relationsreference/>' => '']), TestTokens::organisation());
+        Supplier::fromXml(
+            CustomerTest::fixture('supplier-read', ['<relationsreference/>' => '']),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAnUnknownWayOfPayment(): void
@@ -341,7 +371,13 @@ final class SupplierTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/banks/bank[2]/wayofpayment is "9", expected one of 0, 1, 2.');
 
-        Supplier::fromXml(CustomerTest::fixture('supplier-read-full', ['<wayofpayment>1</wayofpayment>' => '<wayofpayment>9</wayofpayment>']), TestTokens::organisation());
+        Supplier::fromXml(
+            CustomerTest::fixture(
+                'supplier-read-full',
+                ['<wayofpayment>1</wayofpayment>' => '<wayofpayment>9</wayofpayment>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     private static function pretty(string $xml): string

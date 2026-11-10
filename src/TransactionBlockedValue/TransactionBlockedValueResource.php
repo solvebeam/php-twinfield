@@ -66,12 +66,14 @@ final readonly class TransactionBlockedValueResource
         self::validate($dayBook, $number, $line);
 
         // Field order follows the WSDL (alphabetical).
-        $this->twinfield->process('TransactionBlockedValueService', new Command('UnregisterBlockedAmountForTransaction', [
+        $command = new Command('UnregisterBlockedAmountForTransaction', [
             'CompanyCode' => $this->companyCode(),
             'TransactionCode' => $dayBook,
             'TransactionLineId' => $line,
             'TransactionNumber' => $number,
-        ]));
+        ]);
+
+        $this->twinfield->process('TransactionBlockedValueService', $command);
     }
 
     /**

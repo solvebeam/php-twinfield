@@ -97,7 +97,12 @@ final class AssetMethodInputTest extends TestCase
      */
     public static function calculations(): iterable
     {
-        yield 'linear' => [static fn (AssetMethodInput $input) => $input->linear(36), CalculationMethod::Linear, 36, null];
+        yield 'linear' => [
+            static fn (AssetMethodInput $input) => $input->linear(36),
+            CalculationMethod::Linear,
+            36,
+            null,
+        ];
         yield 'linear percentage' => [
             static fn (AssetMethodInput $input) => $input->linearPercentage('20'),
             CalculationMethod::LinearPercentage,
@@ -110,7 +115,12 @@ final class AssetMethodInputTest extends TestCase
             null,
             '12.5',
         ];
-        yield 'none' => [static fn (AssetMethodInput $input) => $input->noDepreciation(), CalculationMethod::None, null, null];
+        yield 'none' => [
+            static fn (AssetMethodInput $input) => $input->noDepreciation(),
+            CalculationMethod::None,
+            null,
+            null,
+        ];
         yield 'last one wins' => [
             static fn (AssetMethodInput $input) => $input->reducingBalance('25')->linear(12),
             CalculationMethod::Linear,
@@ -123,8 +133,12 @@ final class AssetMethodInputTest extends TestCase
      * @param Closure(AssetMethodInput): AssetMethodInput $configure
      */
     #[DataProvider('calculations')]
-    public function testSetsTheCalculation(Closure $configure, CalculationMethod $method, ?int $periods, ?string $percentage): void
-    {
+    public function testSetsTheCalculation(
+        Closure $configure,
+        CalculationMethod $method,
+        ?int $periods,
+        ?string $percentage,
+    ): void {
         $input = $configure(AssetMethodInput::create('MACHINE', 'Machine'));
 
         self::assertSame($method, $input->calculationMethod);
@@ -148,13 +162,34 @@ final class AssetMethodInputTest extends TestCase
     {
         yield 'invalid code' => [static fn () => AssetMethodInput::create('machine', 'Machine'), 'is not a code'];
         yield 'empty name' => [static fn () => AssetMethodInput::create('MACHINE', ''), 'name must not be empty'];
-        yield 'zero periods' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->linear(0), 'periods must be 1 or more'];
-        yield 'comma percentage' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->reducingBalance('12,5'), 'Percentage must be'];
-        yield 'zero percentage' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->linearPercentage('0'), 'Percentage must be'];
-        yield 'too high percentage' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->linearPercentage('101'), 'Percentage must be'];
-        yield 'invalid account' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->purchaseValueAccount('05 01'), 'is not a code'];
-        yield 'free text 0' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->freeText(0, 'X'), 'id must be 1 to 5'];
-        yield 'free text 6' => [static fn () => AssetMethodInput::create('MACHINE', 'M')->freeText(6, 'X'), 'id must be 1 to 5'];
+        yield 'zero periods' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->linear(0),
+            'periods must be 1 or more',
+        ];
+        yield 'comma percentage' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->reducingBalance('12,5'),
+            'Percentage must be',
+        ];
+        yield 'zero percentage' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->linearPercentage('0'),
+            'Percentage must be',
+        ];
+        yield 'too high percentage' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->linearPercentage('101'),
+            'Percentage must be',
+        ];
+        yield 'invalid account' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->purchaseValueAccount('05 01'),
+            'is not a code',
+        ];
+        yield 'free text 0' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->freeText(0, 'X'),
+            'id must be 1 to 5',
+        ];
+        yield 'free text 6' => [
+            static fn () => AssetMethodInput::create('MACHINE', 'M')->freeText(6, 'X'),
+            'id must be 1 to 5',
+        ];
     }
 
     /**

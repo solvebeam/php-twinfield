@@ -40,6 +40,7 @@ foreach (array_slice($companies->companies, 0, 3) as $company) {
 }
 
 echo 'Default:       ', $companies->defaultCompany?->code ?? 'chosen after logging in', PHP_EOL;
-echo 'Access here:   ', $user->hasAccessTo((string) $twinfield->companyCode()) ? 'yes' : 'no', ' (', $twinfield->companyCode(), ')', PHP_EOL;
+echo 'Access here:   ', $user->hasAccessTo((string) $twinfield->companyCode()) ? 'yes' : 'no',
+    ' (', $twinfield->companyCode(), ')', PHP_EOL;
 echo 'Week hours:    ', $user->time->weekHours ?? 'not set', PHP_EOL;
 echo 'Changed:       ', $user->modified->format('Y-m-d H:i'), ' by ', $user->modifiedBy->code, PHP_EOL;

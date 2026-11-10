@@ -32,7 +32,10 @@ final class BudgetRestTest extends IntegrationTestCase
 
         self::assertEquals($all[0], $budget);
 
-        $codes = array_map(static fn ($summary): string => $summary->code, iterator_to_array($budgets->search()->all(), false));
+        $codes = array_map(
+            static fn ($summary): string => $summary->code,
+            iterator_to_array($budgets->search()->all(), false),
+        );
 
         self::assertContains($budget->code, $codes, 'The Finder finds the same budget by code.');
 
@@ -41,7 +44,10 @@ final class BudgetRestTest extends IntegrationTestCase
 
             self::assertNotEmpty($lines->items);
             self::assertEquals($lines->items[0], $budgets->line($annual->budget->id, $lines->items[0]->key));
-            self::assertStringStartsWith('Budget code,', $budgets->export($annual->budget->id, $annual->year)->contents);
+            self::assertStringStartsWith(
+                'Budget code,',
+                $budgets->export($annual->budget->id, $annual->year)->contents,
+            );
 
             break;
         }
@@ -49,7 +55,10 @@ final class BudgetRestTest extends IntegrationTestCase
 
     public function testReadsTheImportTemplateAndSpreadingTemplates(): void
     {
-        self::assertStringStartsWith('Budget code,General ledger', $this->twinfield->budgets()->importTemplate()->contents);
+        self::assertStringStartsWith(
+            'Budget code,General ledger',
+            $this->twinfield->budgets()->importTemplate()->contents,
+        );
         self::assertNotEmpty($this->twinfield->spreadingTemplates()->defaultDistribution());
 
         foreach ($this->twinfield->spreadingTemplates()->search()->withDistribution()->all() as $template) {

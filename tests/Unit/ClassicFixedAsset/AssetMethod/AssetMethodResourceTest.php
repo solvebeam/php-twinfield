@@ -53,7 +53,11 @@ final class AssetMethodResourceTest extends TestCase
         self::assertSame('2', $xpath->evaluate('string(//tw:Search/tw:field)'));
         self::assertSame('21', $xpath->evaluate('string(//tw:Search/tw:firstRow)'));
         self::assertSame('10', $xpath->evaluate('string(//tw:Search/tw:maxRows)'));
-        self::assertSame(0.0, $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'), 'The company comes from the header.');
+        self::assertSame(
+            0.0,
+            $xpath->evaluate('count(//tw:Search/tw:options/tw:ArrayOfString)'),
+            'The company comes from the header.',
+        );
     }
 
     public function testSearchIsImmutableAndSearchesCodeAndNameByDefault(): void
@@ -68,7 +72,10 @@ final class AssetMethodResourceTest extends TestCase
 
     public function testSearchesAllAndCounts(): void
     {
-        $http = new ReplayClient(ReplayClient::response('finder-asset-methods'), ReplayClient::response('finder-asset-methods'));
+        $http = new ReplayClient(
+            ReplayClient::response('finder-asset-methods'),
+            ReplayClient::response('finder-asset-methods'),
+        );
         $search = $this->twinfield($http)->classicAssetMethods()->search();
 
         self::assertSame(['CARS', 'MACHINE'], array_map(
@@ -107,15 +114,24 @@ final class AssetMethodResourceTest extends TestCase
 
         $balance = $method->balanceAccounts;
         self::assertNull($balance->purchaseValueGroup);
-        self::assertEquals(new AccountReference('0501', 'Machines purchase value', null, 'BAS'), $balance->purchaseValue);
+        self::assertEquals(
+            new AccountReference('0501', 'Machines purchase value', null, 'BAS'),
+            $balance->purchaseValue,
+        );
         self::assertNull($balance->depreciationGroup);
-        self::assertEquals(new AccountReference('0135', 'Machines cumulative depreciation', 'Cum. depr.', 'BAS'), $balance->depreciation);
+        self::assertEquals(
+            new AccountReference('0135', 'Machines cumulative depreciation', 'Cum. depr.', 'BAS'),
+            $balance->depreciation,
+        );
         self::assertSame('1701', $balance->assetsToActivate?->code);
         self::assertNull($balance->reconciliation);
         self::assertSame('1702', $balance->toBeInvoiced?->code);
 
         $profitLoss = $method->profitLossAccounts;
-        self::assertEquals(new AccountReference('4730', 'Depreciation costs machines', null, 'PNL'), $profitLoss->depreciation);
+        self::assertEquals(
+            new AccountReference('4730', 'Depreciation costs machines', null, 'PNL'),
+            $profitLoss->depreciation,
+        );
         self::assertSame('4980', $profitLoss->sales?->code);
         self::assertNull($profitLoss->reconciliation);
 
@@ -126,14 +142,19 @@ final class AssetMethodResourceTest extends TestCase
 
     public function testReadsAPercentageAssetMethodWithAGroup(): void
     {
-        $method = $this->twinfield(ReplayClient::fixture('asset-method-read-percentage'))->classicAssetMethods()->get('CARS');
+        $method = $this->twinfield(ReplayClient::fixture('asset-method-read-percentage'))->classicAssetMethods()->get(
+            'CARS',
+        );
 
         self::assertFalse($method->inUse);
         self::assertNull($method->shortName);
         self::assertSame(CalculationMethod::ReducingBalance, $method->calculationMethod);
         self::assertSame('12.5', $method->percentage);
         self::assertSame(DepreciationStart::FromPurchaseDate, $method->depreciationStart);
-        self::assertEquals(new AccountReference('VEHICLES', 'Vehicles', 'Veh.', null), $method->balanceAccounts->purchaseValueGroup);
+        self::assertEquals(
+            new AccountReference('VEHICLES', 'Vehicles', 'Veh.', null),
+            $method->balanceAccounts->purchaseValueGroup,
+        );
         self::assertNull($method->balanceAccounts->purchaseValue);
         self::assertEquals(new FreeTextField(2, FreeTextType::Amount, 'Catalogue value'), $method->freeText(2));
     }
@@ -153,8 +174,13 @@ final class AssetMethodResourceTest extends TestCase
 
     public function testFind(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('asset-method-read-not-found'))->classicAssetMethods()->find('M999'));
-        self::assertSame('MACHINE', $this->twinfield(ReplayClient::fixture('asset-method-read'))->classicAssetMethods()->find('MACHINE')?->code);
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('asset-method-read-not-found'))->classicAssetMethods()->find('M999'),
+        );
+        self::assertSame(
+            'MACHINE',
+            $this->twinfield(ReplayClient::fixture('asset-method-read'))->classicAssetMethods()->find('MACHINE')?->code,
+        );
     }
 
     /**
@@ -162,13 +188,33 @@ final class AssetMethodResourceTest extends TestCase
      */
     public static function unexpectedResponses(): iterable
     {
-        yield 'unknown calculation method' => ['<calcmethod>linear</calcmethod>', '<calcmethod>sum</calcmethod>', 'assetmethod/calcmethod is "sum"'];
-        yield 'unknown start' => ['from_reconciliation', 'from_tomorrow', 'assetmethod/depreciatereconciliation is "from_tomorrow"'];
+        yield 'unknown calculation method' => [
+            '<calcmethod>linear</calcmethod>',
+            '<calcmethod>sum</calcmethod>',
+            'assetmethod/calcmethod is "sum"',
+        ];
+        yield 'unknown start' => [
+            'from_reconciliation',
+            'from_tomorrow',
+            'assetmethod/depreciatereconciliation is "from_tomorrow"',
+        ];
         yield 'unknown status' => ['status="active"', 'status="archived"', 'assetmethod/@status is "archived"'];
         yield 'missing inuse' => ['inuse="true" ', '', 'assetmethod/@inuse is missing'];
-        yield 'invalid percentage' => ['<percentage/>', '<percentage>12,5</percentage>', 'assetmethod/percentage is "12,5"'];
-        yield 'account without name' => ['name="Machines purchase value"', 'name=""', 'assetmethod/balanceaccounts/purchasevalue/@name is empty'];
-        yield 'missing free text field' => ['<freetext id="5" type="text"/>', '', 'freetexts has the fields 1, 2, 3, 4, expected 1 to 5'];
+        yield 'invalid percentage' => [
+            '<percentage/>',
+            '<percentage>12,5</percentage>',
+            'assetmethod/percentage is "12,5"',
+        ];
+        yield 'account without name' => [
+            'name="Machines purchase value"',
+            'name=""',
+            'assetmethod/balanceaccounts/purchasevalue/@name is empty',
+        ];
+        yield 'missing free text field' => [
+            '<freetext id="5" type="text"/>',
+            '',
+            'freetexts has the fields 1, 2, 3, 4, expected 1 to 5',
+        ];
         yield 'missing accounts' => ['<profitlossaccounts>', '<other>', 'assetmethod/profitlossaccounts is missing'];
     }
 
@@ -192,7 +238,10 @@ final class AssetMethodResourceTest extends TestCase
 
     public function testSavesAndReadsBack(): void
     {
-        $http = new ReplayClient(ReplayClient::response('asset-method-save'), ReplayClient::response('asset-method-read'));
+        $http = new ReplayClient(
+            ReplayClient::response('asset-method-save'),
+            ReplayClient::response('asset-method-read'),
+        );
 
         $method = $this->twinfield($http)->classicAssetMethods()->save(
             AssetMethodInput::create('MACHINE', 'Machines 5 jaar lineair')->linear(60)->purchaseValueAccount('0501'),
@@ -231,7 +280,9 @@ final class AssetMethodResourceTest extends TestCase
             ReplayClient::response('asset-method-read'),
         );
 
-        $method = $this->twinfield($http)->classicAssetMethods()->create(AssetMethodInput::create('MACHINE', 'Machines')->linear(60));
+        $method = $this->twinfield($http)->classicAssetMethods()->create(
+            AssetMethodInput::create('MACHINE', 'Machines')->linear(60),
+        );
 
         self::assertSame('MACHINE', $method->code);
         self::assertCount(3, $http->requests);
@@ -293,7 +344,8 @@ final class AssetMethodResourceTest extends TestCase
             . '<balanceaccounts><purchasevaluegroup/><purchasevalue>0501</purchasevalue><depreciationgroup/>'
             . '<depreciation>0135</depreciation><assetstoactivate>1701</assetstoactivate><reconciliation/>'
             . '<tobeinvoiced>1702</tobeinvoiced></balanceaccounts>'
-            . '<profitlossaccounts><depreciation>4730</depreciation><sales>4980</sales><reconciliation/></profitlossaccounts>'
+            . '<profitlossaccounts><depreciation>4730</depreciation>'
+            . '<sales>4980</sales><reconciliation/></profitlossaccounts>'
             . '<freetexts><freetext id="1" type="text">Serial number</freetext><freetext id="2" type="text"/>'
             . '<freetext id="3" type="text"/><freetext id="4" type="text"/><freetext id="5" type="text"/></freetexts>'
             . '</assetmethod>',
@@ -306,7 +358,10 @@ final class AssetMethodResourceTest extends TestCase
         $assetMethods = $this->twinfield(ReplayClient::fixture('asset-method-read-percentage'))->classicAssetMethods();
         $request = $assetMethods->get('CARS')->edit()->toXml('1000')->toXml();
 
-        self::assertStringContainsString('<calcmethod>reducebalance</calcmethod><percentage>12.5</percentage>', $request);
+        self::assertStringContainsString(
+            '<calcmethod>reducebalance</calcmethod><percentage>12.5</percentage>',
+            $request,
+        );
         self::assertStringNotContainsString('nrofperiods', $request, 'Not sent, so Twinfield keeps it.');
         self::assertStringContainsString('<purchasevaluegroup>VEHICLES</purchasevaluegroup>', $request);
         self::assertStringContainsString('<freetext id="2" type="amount">Catalogue value</freetext>', $request);
@@ -327,7 +382,9 @@ final class AssetMethodResourceTest extends TestCase
     {
         self::assertSame(
             DeleteResult::Hidden,
-            $this->twinfield(ReplayClient::fixture('asset-method-delete-hidden'))->classicAssetMethods()->delete('MACHINE'),
+            $this->twinfield(ReplayClient::fixture('asset-method-delete-hidden'))->classicAssetMethods()->delete(
+                'MACHINE',
+            ),
         );
     }
 
@@ -361,7 +418,12 @@ final class AssetMethodResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Asset methods belong to a company: use company() first.');

@@ -82,7 +82,12 @@ final class RefreshTokenAccessTokenProviderTest extends TestCase
         $cache = new ArrayAdapter();
         $item = $cache->getItem('twinfield.access_token.' . hash('sha256', 'refresh-1'));
         // Cache entry of a version before organisation().
-        $item->set(['token' => 'old', 'expires' => time() + 3600, 'clusterUrl' => 'https://example.test', 'userCode' => 'JDOE']);
+        $item->set([
+            'token' => 'old',
+            'expires' => time() + 3600,
+            'clusterUrl' => 'https://example.test',
+            'userCode' => 'JDOE',
+        ]);
         $cache->save($item);
 
         $tokens = new RefreshTokenAccessTokenProvider($this->provider($this->mock()), 'refresh-1', $cache);

@@ -104,13 +104,22 @@ final class ClassicFixedAssetInputTest extends TestCase
      */
     public static function invalidInput(): iterable
     {
-        yield 'empty name' => [static fn () => ClassicFixedAssetInput::create(''), 'Fixed asset name must not be empty.'];
+        yield 'empty name' => [
+            static fn () => ClassicFixedAssetInput::create(''),
+            'Fixed asset name must not be empty.',
+        ];
         yield 'long name' => [
             static fn () => ClassicFixedAssetInput::create(str_repeat('a', 81)),
             'Fixed asset name must be at most 80 characters',
         ];
-        yield 'invalid code' => [static fn () => ClassicFixedAssetInput::create('Van')->code('van 1'), '"van 1" is not a code'];
-        yield 'invalid method' => [static fn () => ClassicFixedAssetInput::create('Van')->method('5 years'), '"5 years" is not a code'];
+        yield 'invalid code' => [
+            static fn () => ClassicFixedAssetInput::create('Van')->code('van 1'),
+            '"van 1" is not a code',
+        ];
+        yield 'invalid method' => [
+            static fn () => ClassicFixedAssetInput::create('Van')->method('5 years'),
+            '"5 years" is not a code',
+        ];
         yield 'zero periods' => [
             static fn () => ClassicFixedAssetInput::create('Van')->periods(0),
             'Number of periods must be 1 or more, 0 given.',
@@ -135,7 +144,10 @@ final class ClassicFixedAssetInputTest extends TestCase
             static fn () => ClassicFixedAssetInput::create('Van')->freeText(6, 'x'),
             'Free text field id must be 1 to 5, 6 given.',
         ];
-        yield 'invalid group' => [static fn () => ClassicFixedAssetInput::create('Van')->group('my group'), '"my group" is not a code'];
+        yield 'invalid group' => [
+            static fn () => ClassicFixedAssetInput::create('Van')->group('my group'),
+            '"my group" is not a code',
+        ];
     }
 
     /**

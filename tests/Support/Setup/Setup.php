@@ -76,17 +76,25 @@ final readonly class Setup
         $this->prompt->line();
         $this->prompt->line('Twinfield setup');
         $this->prompt->line('===============');
-        $this->prompt->line('You need an OAuth client from the Twinfield developer portal (https://developers.twinfield.com).');
+        $this->prompt->line(
+            'You need an OAuth client from the Twinfield developer portal (https://developers.twinfield.com).',
+        );
         $this->prompt->line('Values are saved in ' . $envFile->path . ' (only readable by you).');
         $this->prompt->line();
 
         $clientId = $this->prompt->ask('Client ID', $config->get('TWINFIELD_CLIENT_ID'));
-        $clientSecret = $this->prompt->askSecret('Client secret', keepCurrent: $config->get('TWINFIELD_CLIENT_SECRET') !== null);
+        $clientSecret = $this->prompt->askSecret(
+            'Client secret',
+            keepCurrent: $config->get('TWINFIELD_CLIENT_SECRET') !== null,
+        );
 
         $this->prompt->line();
         $this->prompt->line('The redirect URI must be registered for this client exactly as entered here.');
         $this->prompt->line('The login listens on this address to receive the authorization code.');
-        $redirectUri = $this->prompt->ask('Redirect URI', $config->get('TWINFIELD_REDIRECT_URI') ?? self::DEFAULT_REDIRECT_URI);
+        $redirectUri = $this->prompt->ask(
+            'Redirect URI',
+            $config->get('TWINFIELD_REDIRECT_URI') ?? self::DEFAULT_REDIRECT_URI,
+        );
 
         $values = ['TWINFIELD_CLIENT_ID' => $clientId, 'TWINFIELD_REDIRECT_URI' => $redirectUri];
 

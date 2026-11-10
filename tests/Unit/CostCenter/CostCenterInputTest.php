@@ -34,7 +34,8 @@ final class CostCenterInputTest extends TestCase
     public function testBuildsTheRequest(): void
     {
         self::assertSame(
-            '<dimension><office>1000</office><type>KPL</type><code>100</code><name>Sales &amp; marketing</name></dimension>',
+            '<dimension><office>1000</office><type>KPL</type>'
+                . '<code>100</code><name>Sales &amp; marketing</name></dimension>',
             CostCenterInput::create('100', 'Sales & marketing')->toXml('1000')->toXml(),
         );
     }
@@ -65,7 +66,11 @@ final class CostCenterInputTest extends TestCase
         yield 'empty code' => ['', 'Sales', '"" is not a code'];
         yield 'code too long' => [str_repeat('1', 17), 'Sales', 'is not a code'];
         yield 'empty name' => ['100', '', 'Cost center name must not be empty.'];
-        yield 'name too long' => ['100', str_repeat('a', 81), 'Cost center name must be at most 80 characters, 81 given'];
+        yield 'name too long' => [
+            '100',
+            str_repeat('a', 81),
+            'Cost center name must be at most 80 characters, 81 given',
+        ];
     }
 
     #[DataProvider('invalidInputs')]
@@ -89,6 +94,16 @@ final class CostCenterInputTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cost center uid must not be empty.');
 
-        new CostCenter(TestTokens::company('1000'), '100', '', 'Sales', DimensionStatus::Active, false, DimensionBehaviour::Normal, 0, null);
+        new CostCenter(
+            TestTokens::company('1000'),
+            '100',
+            '',
+            'Sales',
+            DimensionStatus::Active,
+            false,
+            DimensionBehaviour::Normal,
+            0,
+            null,
+        );
     }
 }

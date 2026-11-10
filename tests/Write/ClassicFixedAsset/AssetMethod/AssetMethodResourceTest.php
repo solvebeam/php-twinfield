@@ -48,7 +48,10 @@ final class AssetMethodResourceTest extends WriteTestCase
             self::assertSame(CalculationMethod::Linear, $created->calculationMethod);
             self::assertSame(60, $created->periods);
             self::assertSame(DepreciationStart::FromPurchaseDate, $created->depreciationStart);
-            self::assertSame($template->balanceAccounts->purchaseValue?->code, $created->balanceAccounts->purchaseValue?->code);
+            self::assertSame(
+                $template->balanceAccounts->purchaseValue?->code,
+                $created->balanceAccounts->purchaseValue?->code,
+            );
             self::assertSame('Serial number', $created->freeText(1)->label);
             self::assertSame(FreeTextType::Amount, $created->freeText(2)->type);
 
@@ -56,7 +59,11 @@ final class AssetMethodResourceTest extends WriteTestCase
                 $assetMethods->create(AssetMethodInput::create($code, 'Duplicate'));
                 self::fail('Expected an AssetMethodAlreadyExistsException.');
             } catch (AssetMethodAlreadyExistsException) {
-                self::assertSame('SDK test asset method', $assetMethods->get($code)->name, 'The existing method is unchanged.');
+                self::assertSame(
+                    'SDK test asset method',
+                    $assetMethods->get($code)->name,
+                    'The existing method is unchanged.',
+                );
             }
 
             $updated = $assetMethods->update(
@@ -73,7 +80,10 @@ final class AssetMethodResourceTest extends WriteTestCase
             self::assertSame(20.0, (float) $updated->percentage);
             self::assertNull($updated->freeText(2)->label);
             self::assertSame('Serial number', $updated->freeText(1)->label, 'edit() keeps other values.');
-            self::assertSame($template->profitLossAccounts->depreciation?->code, $updated->profitLossAccounts->depreciation?->code);
+            self::assertSame(
+                $template->profitLossAccounts->depreciation?->code,
+                $updated->profitLossAccounts->depreciation?->code,
+            );
 
             self::assertSame(DeleteResult::Deleted, $assetMethods->delete($code));
             self::assertSame(AssetMethodStatus::Deleted, $assetMethods->get($code)->status);
@@ -93,7 +103,11 @@ final class AssetMethodResourceTest extends WriteTestCase
             $method = $this->twinfield->classicAssetMethods()->get($summary->code);
             $balance = $method->balanceAccounts;
 
-            if ($balance->purchaseValue !== null && $balance->depreciation !== null && $method->profitLossAccounts->depreciation !== null) {
+            if (
+                $balance->purchaseValue !== null
+                && $balance->depreciation !== null
+                && $method->profitLossAccounts->depreciation !== null
+            ) {
                 return $method;
             }
         }

@@ -116,7 +116,10 @@ final class BankTransactionResourceTest extends TestCase
 
     public function testEditKeepsAllValues(): void
     {
-        $transaction = $this->twinfield(ReplayClient::fixture('bank-transaction-read'))->bankTransactions()->get('BNK', 202600045);
+        $transaction = $this->twinfield(ReplayClient::fixture('bank-transaction-read'))->bankTransactions()->get(
+            'BNK',
+            202600045,
+        );
 
         $input = $transaction->edit();
 
@@ -177,7 +180,10 @@ final class BankTransactionResourceTest extends TestCase
                 ->receive('1300', '121.00', customer: '1000', invoice: '2026-0043', description: 'Invoice 2026-0043'),
         );
 
-        self::assertStringStartsWith('<transaction destiny="temporary"><header><office>1000</office>', $this->xmlRequest($http->lastRequest()));
+        self::assertStringStartsWith(
+            '<transaction destiny="temporary"><header><office>1000</office>',
+            $this->xmlRequest($http->lastRequest()),
+        );
         self::assertSame(202600046, $transaction->number());
         self::assertSame('1518.46', $transaction->closeValue->value);
         self::assertSame(MatchStatus::Available, $transaction->details[0]->matchStatus);
@@ -274,7 +280,10 @@ final class BankTransactionResourceTest extends TestCase
         self::assertSame('transactions/transaction[2]/lines/line[2]/dim2', $failed->errors[0]->path);
         self::assertSame('Relatie 9999 bestaat niet.', $failed->errors[0]->text);
         self::assertCount(1, $failed->warnings);
-        self::assertSame('transactions/transaction[2]/lines/line[2]/dim2: Relatie 9999 bestaat niet.', $failed->message());
+        self::assertSame(
+            'transactions/transaction[2]/lines/line[2]/dim2: Relatie 9999 bestaat niet.',
+            $failed->message(),
+        );
     }
 
     public function testSaveManyWithoutInputsSendsNothing(): void
@@ -290,7 +299,10 @@ final class BankTransactionResourceTest extends TestCase
     public function testSaveManyChecksTheNumberOfResults(): void
     {
         $http = ReplayClient::fixture('bank-transaction-save-many-partial');
-        $input = BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->receive('1300', '1.00');
+        $input = BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->receive(
+            '1300',
+            '1.00',
+        );
 
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('Sent 3 transactions, got 2 back.');
@@ -343,7 +355,12 @@ final class BankTransactionResourceTest extends TestCase
     public function testNeedsACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Bank transactions belong to a company');
@@ -360,7 +377,9 @@ final class BankTransactionResourceTest extends TestCase
         )));
 
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('transaction/lines/line[4]/@type is "quantity", expected one of total, detail, vat.');
+        $this->expectExceptionMessage(
+            'transaction/lines/line[4]/@type is "quantity", expected one of total, detail, vat.',
+        );
 
         $this->twinfield($http)->bankTransactions()->get('BNK', 202600045);
     }

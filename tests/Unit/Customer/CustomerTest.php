@@ -104,7 +104,10 @@ final class CustomerTest extends TestCase
         self::assertSame('12345678', $customer->chamberOfCommerceNumber());
 
         self::assertSame('Postbus 123', $customer->address(2)?->field2);
-        self::assertSame([2], array_map(static fn ($address) => $address->id, $customer->addressesOfType(AddressType::Postal)));
+        self::assertSame(
+            [2],
+            array_map(static fn ($address) => $address->id, $customer->addressesOfType(AddressType::Postal)),
+        );
         self::assertNull($customer->address(3));
 
         $bank = $customer->defaultBank();
@@ -170,7 +173,10 @@ final class CustomerTest extends TestCase
 
     public function testEditSendsWhatTwinfieldReturned(): void
     {
-        $xml = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
+        $xml = Customer::fromXml(self::fixture('customer-read'), TestTokens::organisation())
+            ->edit()
+            ->toXml('1000')
+            ->toXml();
 
         self::assertSame(self::pretty(<<<'XML'
             <dimension>
@@ -312,15 +318,24 @@ final class CustomerTest extends TestCase
 
     public function testEditOfAMinimalCustomerLeavesOutWhatTwinfieldLeftOut(): void
     {
-        $xml = Customer::fromXml(self::fixture('customer-read-minimal'), TestTokens::organisation())->edit()->toXml('1000')->toXml();
+        $xml = Customer::fromXml(self::fixture('customer-read-minimal'), TestTokens::organisation())
+            ->edit()
+            ->toXml('1000')
+            ->toXml();
 
         self::assertStringNotContainsString('<invoicing>', $xml);
         self::assertStringNotContainsString('<groups', $xml);
         self::assertStringNotContainsString('<paymentconditions', $xml);
         self::assertStringNotContainsString('<collectmandate>', $xml);
         self::assertStringContainsString('<banks/>', $xml);
-        self::assertStringContainsString('<postingrule id="1" status="active"><currency/><amount/><description/><lines/></postingrule>', $xml);
-        self::assertStringContainsString('<payavailable>false</payavailable><meansofpayment>none</meansofpayment><paycode/>', $xml);
+        self::assertStringContainsString(
+            '<postingrule id="1" status="active"><currency/><amount/><description/><lines/></postingrule>',
+            $xml,
+        );
+        self::assertStringContainsString(
+            '<payavailable>false</payavailable><meansofpayment>none</meansofpayment><paycode/>',
+            $xml,
+        );
     }
 
     public function testThrowsOnAnotherDimensionType(): void
@@ -328,15 +343,29 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/type is "CRD", expected DEB.');
 
-        Customer::fromXml(self::fixture('customer-read', ['<type name="Debiteuren" shortname="Debiteuren">DEB</type>' => '<type>CRD</type>']), TestTokens::organisation());
+        Customer::fromXml(
+            self::fixture(
+                'customer-read',
+                ['<type name="Debiteuren" shortname="Debiteuren">DEB</type>' => '<type>CRD</type>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAnUnknownReminderSetting(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('dimension/creditmanagement/sendreminder is "sms", expected one of true, email, false.');
+        $this->expectExceptionMessage(
+            'dimension/creditmanagement/sendreminder is "sms", expected one of true, email, false.',
+        );
 
-        Customer::fromXml(self::fixture('customer-read', ['<sendreminder>email</sendreminder>' => '<sendreminder>sms</sendreminder>']), TestTokens::organisation());
+        Customer::fromXml(
+            self::fixture(
+                'customer-read',
+                ['<sendreminder>email</sendreminder>' => '<sendreminder>sms</sendreminder>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAnInvalidCreditLimit(): void
@@ -344,7 +373,13 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/creditmanagement/basecreditlimit is "5.000,00", expected an amount.');
 
-        Customer::fromXml(self::fixture('customer-read', ['<basecreditlimit>5000.00</basecreditlimit>' => '<basecreditlimit>5.000,00</basecreditlimit>']), TestTokens::organisation());
+        Customer::fromXml(
+            self::fixture(
+                'customer-read',
+                ['<basecreditlimit>5000.00</basecreditlimit>' => '<basecreditlimit>5.000,00</basecreditlimit>'],
+            ),
+            TestTokens::organisation(),
+        );
     }
 
     public function testThrowsOnAMissingBalanceAccount(): void
@@ -352,7 +387,10 @@ final class CustomerTest extends TestCase
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage('dimension/financials/substitutewith is missing.');
 
-        Customer::fromXml(self::fixture('customer-read', ['~<substitutewith[^>]*>1300</substitutewith>~' => '']), TestTokens::organisation());
+        Customer::fromXml(
+            self::fixture('customer-read', ['~<substitutewith[^>]*>1300</substitutewith>~' => '']),
+            TestTokens::organisation(),
+        );
     }
 
     /**

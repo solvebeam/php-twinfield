@@ -22,7 +22,8 @@ final class DimensionTypeTest extends TestCase
         $type = DimensionType::fromXml(self::xml(
             '<dimensiontype status="active" result="1"><office>1000</office><code>PRJ</code><name>Projecten</name>'
             . '<shortname>Projecten</shortname><mask>P[0-9][0-9][0-9][0-9]</mask><touched>35</touched>'
-            . '<levels><financials>3</financials><time>1</time><fixedassets>0</fixedassets><invoices>0</invoices></levels>'
+            . '<levels><financials>3</financials><time>1</time>'
+            . '<fixedassets>0</fixedassets><invoices>0</invoices></levels>'
             . '<address><label1/><label2/><label3/><label4/><label5/><label6/></address></dimensiontype>',
         ), TestTokens::organisation());
 
@@ -39,7 +40,8 @@ final class DimensionTypeTest extends TestCase
         $this->expectExceptionMessage('dimensiontype/mask is missing.');
 
         DimensionType::fromXml(self::xml(
-            '<dimensiontype result="1"><office>1000</office><code>PRJ</code><name>Projecten</name><shortname/><touched>1</touched></dimensiontype>',
+            '<dimensiontype result="1"><office>1000</office><code>PRJ</code>'
+                . '<name>Projecten</name><shortname/><touched>1</touched></dimensiontype>',
         ), TestTokens::organisation());
     }
 
@@ -47,7 +49,10 @@ final class DimensionTypeTest extends TestCase
     {
         $this->expectException(UnexpectedResponseException::class);
 
-        DimensionType::fromXml(self::xml('<dimension result="1"><office>1000</office></dimension>'), TestTokens::organisation());
+        DimensionType::fromXml(
+            self::xml('<dimension result="1"><office>1000</office></dimension>'),
+            TestTokens::organisation(),
+        );
     }
 
     public function testRejectsAnEmptyName(): void
@@ -55,7 +60,16 @@ final class DimensionTypeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Dimension type name must not be empty.');
 
-        new DimensionType(TestTokens::company('1000'), 'DEB', '', null, CodeMask::any(), new DimensionTypeLevels(2, 0, 0, 0), new AddressLabels(), 1);
+        new DimensionType(
+            TestTokens::company('1000'),
+            'DEB',
+            '',
+            null,
+            CodeMask::any(),
+            new DimensionTypeLevels(2, 0, 0, 0),
+            new AddressLabels(),
+            1,
+        );
     }
 
     public function testRejectsANegativeLevel(): void

@@ -56,7 +56,9 @@ final class MatchSetInput
         XmlValue::code($dayBook);
 
         if ($number < 1) {
-            throw new InvalidArgumentException(sprintf('Match line transaction number must be positive, %d given.', $number));
+            throw new InvalidArgumentException(
+                sprintf('Match line transaction number must be positive, %d given.', $number),
+            );
         }
 
         if ($line < 1) {

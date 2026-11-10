@@ -37,7 +37,10 @@ final class JsonValueTest extends TestCase
         self::assertSame('2026-03-15 10:12:45', $json->dateTime('createdAt')->format('Y-m-d H:i:s'));
         self::assertSame(['nl-NL' => 'Fiets'], $json->stringMap('translations'));
         self::assertSame(['A', 'B'], $json->strings('codes'));
-        self::assertSame(['9', '21.5'], array_map(static fn (JsonValue $rate): string => $rate->decimal('percent'), $json->list('rates')));
+        self::assertSame(
+            ['9', '21.5'],
+            array_map(static fn (JsonValue $rate): string => $rate->decimal('percent'), $json->list('rates')),
+        );
     }
 
     /**
@@ -63,7 +66,9 @@ final class JsonValueTest extends TestCase
     public function testReadsTimestampsAsUtcWithOrWithoutZone(): void
     {
         // The list of VAT codes leaves out the `Z` that the VAT code itself has.
-        $json = JsonValue::decode('{"a": "2011-02-23T21:50:21.52", "b": "2011-02-23T21:50:21.52Z", "c": "2011-02-23T22:50:21.52+01:00"}');
+        $json = JsonValue::decode(
+            '{"a": "2011-02-23T21:50:21.52", "b": "2011-02-23T21:50:21.52Z", "c": "2011-02-23T22:50:21.52+01:00"}',
+        );
 
         self::assertSame('2011-02-23T21:50:21.520000+00:00', $json->timestamp('a')->format('Y-m-d\TH:i:s.uP'));
         self::assertEquals($json->timestamp('a'), $json->timestamp('b'));

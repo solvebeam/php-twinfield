@@ -18,7 +18,10 @@ final class MatchingAuditTrailTest extends TestCase
     {
         $http = ReplayClient::jsonFixture('matching-audit-trail');
 
-        $events = TestTokens::restClient($http)->matching()->auditTrail(new DateTimeImmutable('2015-01-01T00:00:00Z'), 2);
+        $events = TestTokens::restClient($http)->matching()->auditTrail(
+            new DateTimeImmutable('2015-01-01T00:00:00Z'),
+            2,
+        );
 
         self::assertCount(3, $events);
         self::assertSame(MatchingEventType::Unmatched, $events[2]->eventType);
@@ -40,7 +43,8 @@ final class MatchingAuditTrailTest extends TestCase
         self::assertSame('-4378.50', (string) $event->lines[0]->matchedAmount);
         self::assertSame('0.00', (string) $event->lines[0]->matchedAmountReportingCurrency);
         self::assertSame(
-            TestTokens::REST_COMPANY_URL . '/bookkeeping/audittrails/matching?since=2015-01-01T00%3A00%3A00.000000%2B00%3A00&limit=2',
+            TestTokens::REST_COMPANY_URL
+                . '/bookkeeping/audittrails/matching?since=2015-01-01T00%3A00%3A00.000000%2B00%3A00&limit=2',
             (string) $http->lastRequest()->getUri(),
         );
     }
@@ -50,7 +54,10 @@ final class MatchingAuditTrailTest extends TestCase
         // Two events per second, so the last two events of the page share their timestamp.
         $start = new DateTimeImmutable('2026-08-03T10:00:00.5Z');
         $first = array_map(
-            static fn (int $i): array => self::event($i, $start->modify(sprintf('+%d seconds', intdiv($i, 2)))->format('Y-m-d\TH:i:s.u\Z')),
+            static fn (int $i): array => self::event(
+                $i,
+                $start->modify(sprintf('+%d seconds', intdiv($i, 2)))->format('Y-m-d\TH:i:s.u\Z'),
+            ),
             range(0, 199),
         );
         // `since` is inclusive: the next page repeats the events at the last timestamp (198 and 199).
@@ -70,7 +77,10 @@ final class MatchingAuditTrailTest extends TestCase
         self::assertCount(201, $events);
         self::assertSame(200, $events[200]->matchNumber);
         self::assertCount(2, $http->requests);
-        self::assertStringContainsString('since=2026-08-03T10%3A01%3A39.500000%2B00%3A00', (string) $http->requests[1]->getUri());
+        self::assertStringContainsString(
+            'since=2026-08-03T10%3A01%3A39.500000%2B00%3A00',
+            (string) $http->requests[1]->getUri(),
+        );
         self::assertContainsOnlyInstancesOf(MatchingAuditTrailEvent::class, $events);
     }
 

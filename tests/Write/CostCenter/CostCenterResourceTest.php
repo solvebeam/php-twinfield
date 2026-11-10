@@ -41,7 +41,11 @@ final class CostCenterResourceTest extends WriteTestCase
                 $costCenters->create(CostCenterInput::create($code, 'Duplicate'));
                 self::fail('Expected a DimensionAlreadyExistsException.');
             } catch (DimensionAlreadyExistsException) {
-                self::assertSame('SDK test cost center', $costCenters->get($code)->name, 'The existing cost center is unchanged.');
+                self::assertSame(
+                    'SDK test cost center',
+                    $costCenters->get($code)->name,
+                    'The existing cost center is unchanged.',
+                );
             }
 
             $updated = $costCenters->update($read->edit()->name('SDK test cost center (updated) & more'));

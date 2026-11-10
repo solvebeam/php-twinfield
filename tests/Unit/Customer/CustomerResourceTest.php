@@ -42,7 +42,10 @@ final class CustomerResourceTest extends TestCase
         self::assertSame('DIM', $xpath->evaluate('string(//tw:Search/tw:type)'));
         self::assertSame('NL91*', $xpath->evaluate('string(//tw:Search/tw:pattern)'));
         self::assertSame('3', $xpath->evaluate('string(//tw:Search/tw:field)'));
-        self::assertSame('DEB', $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString[tw:string[1]="dimtype"]/tw:string[2])'));
+        self::assertSame(
+            'DEB',
+            $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString[tw:string[1]="dimtype"]/tw:string[2])'),
+        );
     }
 
     public function testSearchesCustomersOfTheCompanyOption(): void
@@ -122,7 +125,13 @@ final class CustomerResourceTest extends TestCase
         $customer = $this->twinfield($http)->customers()->create(
             CustomerInput::create('New Customer B.V.')
                 ->dueDays(30)
-                ->address(AddressInput::invoice('New Customer B.V.')->city('Utrecht')->postcode('3511 AA')->country('NL')->default()),
+                ->address(
+                    AddressInput::invoice('New Customer B.V.')
+                        ->city('Utrecht')
+                        ->postcode('3511 AA')
+                        ->country('NL')
+                        ->default(),
+                ),
         );
 
         self::assertCount(1, $http->requests, 'No read: Twinfield gives the code.');
@@ -148,7 +157,10 @@ final class CustomerResourceTest extends TestCase
 
         self::assertCount(2, $http->requests);
         self::assertStringStartsWith('<read>', $this->xmlRequest($http->requests[0]));
-        self::assertStringStartsWith('<dimension><office>1000</office><type>DEB</type><code>1006</code>', $this->xmlRequest($http->requests[1]));
+        self::assertStringStartsWith(
+            '<dimension><office>1000</office><type>DEB</type><code>1006</code>',
+            $this->xmlRequest($http->requests[1]),
+        );
     }
 
     public function testCreateRefusesAnExistingCode(): void
@@ -169,7 +181,9 @@ final class CustomerResourceTest extends TestCase
     {
         try {
             $this->twinfield(ReplayClient::fixture('customer-save-error'))->customers()->save(
-                CustomerInput::create('New Customer B.V.')->address(AddressInput::invoice()->vatNumber('NL123')->default()),
+                CustomerInput::create('New Customer B.V.')->address(
+                    AddressInput::invoice()->vatNumber('NL123')->default(),
+                ),
             );
             self::fail('Expected a ProcessXmlException.');
         } catch (ProcessXmlException $exception) {
@@ -250,7 +264,12 @@ final class CustomerResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Customers belong to a company: use company() first.');

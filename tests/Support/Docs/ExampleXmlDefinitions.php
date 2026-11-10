@@ -29,8 +29,14 @@ final class ExampleXmlDefinitions
                 self::DOCS . 'transaction-data/electronic-bank-statements/',
             ],
             'journal-transactions' => ['Journal transactions', self::DOCS . 'transaction-data/journal-transactions/'],
-            'purchase-transactions' => ['Purchase transactions', self::DOCS . 'transaction-data/purchase-transactions/'],
-            'reversal-transactions' => ['Reversal transactions', self::DOCS . 'transaction-data/reversal-transactions/'],
+            'purchase-transactions' => [
+                'Purchase transactions',
+                self::DOCS . 'transaction-data/purchase-transactions/',
+            ],
+            'reversal-transactions' => [
+                'Reversal transactions',
+                self::DOCS . 'transaction-data/reversal-transactions/',
+            ],
             'sales-invoices' => ['Sales invoices', self::DOCS . 'transaction-data/sales-invoices/'],
             'sales-transactions' => ['Sales transactions', self::DOCS . 'transaction-data/sales-transactions/'],
             'transaction-blocked-values' => [
@@ -45,6 +51,8 @@ final class ExampleXmlDefinitions
      */
     public static function examples(): array
     {
+        // The code in the nowdocs goes into the READMEs as is, with the indentation of the README.
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $bank = self::DOCS . 'transaction-data/bank-transactions/';
         $browse = self::DOCS . 'request-data/browse-data/';
         $cash = self::DOCS . 'transaction-data/cash-transactions/';
@@ -181,8 +189,8 @@ final class ExampleXmlDefinitions
                         PHP,
                     ['bank-transaction-read', 'bank-transaction-read', 'bank-transaction-read'],
                     showResponse: false,
-                    responseNote: '`update()` reads the transaction first, to check that it exists, and then saves the whole '
-                        . 'transaction again. ' . $savedLikeRead('bank-transactions/read-bank-transaction'),
+                    responseNote: '`update()` reads the transaction first, to check that it exists, and then saves '
+                        . 'the whole transaction again. ' . $savedLikeRead('bank-transactions/read-bank-transaction'),
                 ),
             ],
 
@@ -514,7 +522,11 @@ final class ExampleXmlDefinitions
                             )
                             ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
                             ->equal('fin.trs.head.status', 'normal')
-                            ->betweenDateTimes('fin.trs.line.modified', new DateTimeImmutable('2026-03-01 00:00 UTC'), new DateTimeImmutable('2026-03-31 00:00 UTC'))
+                            ->betweenDateTimes(
+                                'fin.trs.line.modified',
+                                new DateTimeImmutable('2026-03-01 00:00 UTC'),
+                                new DateTimeImmutable('2026-03-31 00:00 UTC'),
+                            )
                             ->get();
                         PHP,
                     ['browse-130_2'],
@@ -1292,7 +1304,8 @@ final class ExampleXmlDefinitions
                     $invoices . '#createupdate',
                     "\$twinfield->salesInvoices()->finalize('FACTUUR', 12);",
                     ['sales-invoice-read-concept', 'sales-invoice-save-final'],
-                    responseNote: '`finalize()` reads the concept invoice first, and sends it again with status `final`.',
+                    responseNote: '`finalize()` reads the concept invoice first, '
+                        . 'and sends it again with status `final`.',
                 ),
             ],
             'sales-invoices/list-invoice-types' => [
@@ -1380,5 +1393,6 @@ final class ExampleXmlDefinitions
                 ),
             ],
         ];
+        // phpcs:enable Generic.Files.LineLength.TooLong
     }
 }

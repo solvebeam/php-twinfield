@@ -36,5 +36,6 @@ foreach ($type->addressLabels->toArray() as $field => $label) {
 }
 
 if ($newCode !== null) {
-    echo PHP_EOL, 'Code ', $newCode, ($type->mask->matches($newCode) ? ' matches' : ' does not match'), ' the mask.', PHP_EOL;
+    echo PHP_EOL, 'Code ', $newCode, ($type->mask->matches($newCode) ? ' matches' : ' does not match'), ' the mask.',
+        PHP_EOL;
 }

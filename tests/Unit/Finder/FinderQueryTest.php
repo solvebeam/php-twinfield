@@ -121,7 +121,9 @@ final class FinderQueryTest extends TestCase
     public function testMapsRecordedResponse(): void
     {
         // Anonymized recording of a real Twinfield response: 100 of 247 offices, 5 columns.
-        $result = $this->twinfield(ReplayClient::fixture('search-searches-offices'))->finder(FinderType::Offices)->get();
+        $result = $this->twinfield(ReplayClient::fixture('search-searches-offices'))
+            ->finder(FinderType::Offices)
+            ->get();
 
         self::assertSame(247, $result->totalRows);
         self::assertCount(100, $result);
@@ -141,7 +143,11 @@ final class FinderQueryTest extends TestCase
         $query = $this->twinfield(new ReplayClient())->company('1002')->finder(FinderType::Dimensions);
 
         self::assertEquals(TestTokens::company('1003'), $query->option('company', '1003')->companyReference());
-        self::assertEquals(TestTokens::company('1004'), $query->option('office', '1004')->companyReference(), 'Deprecated office option.');
+        self::assertEquals(
+            TestTokens::company('1004'),
+            $query->option('office', '1004')->companyReference(),
+            'Deprecated office option.',
+        );
     }
 
     public function testCompanyReferenceNeedsACompany(): void
@@ -220,14 +226,19 @@ final class FinderQueryTest extends TestCase
 
     public function testThrowsAllErrorMessages(): void
     {
-        $query = $this->twinfield(ReplayClient::fixture('finder-error-company-and-office'))->finder(FinderType::Dimensions);
+        $query = $this->twinfield(ReplayClient::fixture('finder-error-company-and-office'))->finder(
+            FinderType::Dimensions,
+        );
 
         try {
             $query->get();
             self::fail('Expected a FinderException.');
         } catch (FinderException $exception) {
             self::assertCount(2, $exception->messages);
-            self::assertSame(FinderErrorCode::OptionCompanyAndOptionOfficeCannotBeBothProvided, $exception->messages[0]->code);
+            self::assertSame(
+                FinderErrorCode::OptionCompanyAndOptionOfficeCannotBeBothProvided,
+                $exception->messages[0]->code,
+            );
             self::assertSame([], $exception->messages[0]->parameters);
             self::assertSame(FinderErrorCode::ParameterOutOfRange, $exception->messages[1]->code);
             self::assertSame(['field', '0', '4'], $exception->messages[1]->parameters);

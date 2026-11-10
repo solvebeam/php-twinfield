@@ -41,9 +41,27 @@ final class PeriodResourceTest extends TestCase
 
         self::assertEquals([
             new PeriodDetails(TestTokens::company(), Period::of(2025, 0), 'Openingsbalans 2025', null, true),
-            new PeriodDetails(TestTokens::company(), Period::of(2025, 1), 'januari 2025', new DateTimeImmutable('2025-01-31T00:00:00'), false),
-            new PeriodDetails(TestTokens::company(), Period::of(2025, 2), 'februari 2025', new DateTimeImmutable('2025-02-28T00:00:00'), true),
-            new PeriodDetails(TestTokens::company(), Period::of(2025, 55), 'Voorafgaande journaalposten 2025', null, true),
+            new PeriodDetails(
+                TestTokens::company(),
+                Period::of(2025, 1),
+                'januari 2025',
+                new DateTimeImmutable('2025-01-31T00:00:00'),
+                false,
+            ),
+            new PeriodDetails(
+                TestTokens::company(),
+                Period::of(2025, 2),
+                'februari 2025',
+                new DateTimeImmutable('2025-02-28T00:00:00'),
+                true,
+            ),
+            new PeriodDetails(
+                TestTokens::company(),
+                Period::of(2025, 55),
+                'Voorafgaande journaalposten 2025',
+                null,
+                true,
+            ),
         ], $periods);
 
         self::assertStringContainsString('<a:Year>2025</a:Year>', (string) $http->lastRequest()->getBody());
@@ -56,7 +74,13 @@ final class PeriodResourceTest extends TestCase
 
         self::assertEquals([
             new PeriodDetails(TestTokens::company(), Period::of(2010, 0), null, null, true),
-            new PeriodDetails(TestTokens::company(), Period::of(2010, 1), null, new DateTimeImmutable('2010-01-31T00:00:00'), true),
+            new PeriodDetails(
+                TestTokens::company(),
+                Period::of(2010, 1),
+                null,
+                new DateTimeImmutable('2010-01-31T00:00:00'),
+                true,
+            ),
             new PeriodDetails(TestTokens::company(), Period::of(2010, 55), null, null, false),
         ], $periods);
     }
@@ -88,7 +112,9 @@ final class PeriodResourceTest extends TestCase
     public function testThrowsPeriodNotFoundWhenTheYearDoesNotExist(): void
     {
         try {
-            $this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->get(Period::of(1901, 1));
+            $this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->get(
+                Period::of(1901, 1),
+            );
             self::fail('Expected a PeriodNotFoundException.');
         } catch (PeriodNotFoundException $exception) {
             self::assertInstanceOf(CommandQueryFaultException::class, $exception->getPrevious());
@@ -97,9 +123,18 @@ final class PeriodResourceTest extends TestCase
 
     public function testFindsNothingForAnUnknownPeriod(): void
     {
-        self::assertNull($this->twinfield(ReplayClient::fixture('period-periods'))->periods()->find(Period::of(2025, 13)));
-        self::assertNull($this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->find(Period::of(1901, 1)));
-        self::assertSame('januari 2025', $this->twinfield(ReplayClient::fixture('period-periods'))->periods()->find(Period::of(2025, 1))?->name);
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('period-periods'))->periods()->find(Period::of(2025, 13)),
+        );
+        self::assertNull(
+            $this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->find(
+                Period::of(1901, 1),
+            ),
+        );
+        self::assertSame(
+            'januari 2025',
+            $this->twinfield(ReplayClient::fixture('period-periods'))->periods()->find(Period::of(2025, 1))?->name,
+        );
     }
 
     public function testThrowsWhenAPeriodHasNoName(): void
@@ -124,9 +159,15 @@ final class PeriodResourceTest extends TestCase
             $this->twinfield(ReplayClient::fixture('period-fault-year-not-found', 500))->periods()->list(1901);
             self::fail('Expected a CommandQueryFaultException.');
         } catch (CommandQueryFaultException $exception) {
-            self::assertSame('s:Client: Year 1901 bestaat niet. (PeriodServiceFault, code YearNotFound)', $exception->getMessage());
+            self::assertSame(
+                's:Client: Year 1901 bestaat niet. (PeriodServiceFault, code YearNotFound)',
+                $exception->getMessage(),
+            );
             self::assertSame('PeriodServiceFault', $exception->type);
-            self::assertSame(PeriodServiceFaultCode::YearNotFound, PeriodServiceFaultCode::tryFrom($exception->errorCode));
+            self::assertSame(
+                PeriodServiceFaultCode::YearNotFound,
+                PeriodServiceFaultCode::tryFrom($exception->errorCode),
+            );
             self::assertSame('Year 1901 bestaat niet.', $exception->errorMessage);
         }
     }
@@ -144,14 +185,38 @@ final class PeriodResourceTest extends TestCase
         $periods->resetYears(2020, 12);
         $periods->deleteYear(2021);
 
-        $bodies = array_map(static fn ($request): string => (string) preg_replace('~>\s+<~', '><', (string) $request->getBody()), $http->requests);
+        $bodies = array_map(
+            static fn ($request): string => (string) preg_replace('~>\s+<~', '><', (string) $request->getBody()),
+            $http->requests,
+        );
 
-        self::assertStringContainsString('i:type="a:CreateYear"><a:NumberOfPeriods>12</a:NumberOfPeriods></Command>', $bodies[0]);
-        self::assertStringContainsString('i:type="a:ChangeEndDate"><a:EndDate>2021-02-13T00:00:00</a:EndDate><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>', $bodies[1]);
-        self::assertStringContainsString('i:type="a:ChangeName"><a:Name>February 2021</a:Name><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>', $bodies[2]);
-        self::assertStringContainsString('i:type="a:OpenPeriod"><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>', $bodies[3]);
-        self::assertStringContainsString('i:type="a:ClosePeriod"><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>', $bodies[4]);
-        self::assertStringContainsString('i:type="a:ResetYears"><a:NewNumberOfPeriods>12</a:NewNumberOfPeriods><a:NewYear>2020</a:NewYear></Command>', $bodies[5]);
+        self::assertStringContainsString(
+            'i:type="a:CreateYear"><a:NumberOfPeriods>12</a:NumberOfPeriods></Command>',
+            $bodies[0],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeEndDate"><a:EndDate>2021-02-13T00:00:00</a:EndDate>'
+                . '<a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>',
+            $bodies[1],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ChangeName"><a:Name>February 2021</a:Name>'
+                . '<a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>',
+            $bodies[2],
+        );
+        self::assertStringContainsString(
+            'i:type="a:OpenPeriod"><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>',
+            $bodies[3],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ClosePeriod"><a:PeriodNumber>2</a:PeriodNumber><a:Year>2021</a:Year></Command>',
+            $bodies[4],
+        );
+        self::assertStringContainsString(
+            'i:type="a:ResetYears"><a:NewNumberOfPeriods>12</a:NewNumberOfPeriods>'
+                . '<a:NewYear>2020</a:NewYear></Command>',
+            $bodies[5],
+        );
         self::assertStringContainsString('i:type="a:DeleteYear"><a:Year>2021</a:Year></Command>', $bodies[6]);
 
         foreach ($http->requests as $request) {
@@ -162,7 +227,12 @@ final class PeriodResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

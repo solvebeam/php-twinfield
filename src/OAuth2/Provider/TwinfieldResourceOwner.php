@@ -30,7 +30,9 @@ final class TwinfieldResourceOwner implements ResourceOwnerInterface
         }
 
         if (!is_string($organisationUserCode) || $organisationUserCode == '') {
-            throw new InvalidArgumentException('Missing or invalid "twf.organisationUserCode" in resource owner response.');
+            throw new InvalidArgumentException(
+                'Missing or invalid "twf.organisationUserCode" in resource owner response.',
+            );
         }
 
         if (!is_string($organisationId) || $organisationId == '') {

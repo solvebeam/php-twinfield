@@ -299,7 +299,15 @@ final class OfficeTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new OfficeSummary(TestTokens::organisation(), '', 'Example Holding B.V.', '0f8fad5b-d9cb-469f-a165-70867728950e', 'NL', 1, 21);
+        new OfficeSummary(
+            TestTokens::organisation(),
+            '',
+            'Example Holding B.V.',
+            '0f8fad5b-d9cb-469f-a165-70867728950e',
+            'NL',
+            1,
+            21,
+        );
     }
 
     public function testReferenceRejectsAnEmptyCode(): void

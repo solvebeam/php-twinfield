@@ -54,8 +54,14 @@ final class DeletedTransactionResourceTest extends TestCase
 
         $request = $http->lastRequest();
 
-        self::assertSame('https://example.test/webservices/DeletedTransactionsService.svc', (string) $request->getUri());
-        self::assertSame('"http://www.twinfield.com/DeletedTransactionsService/Query"', $request->getHeaderLine('SOAPAction'));
+        self::assertSame(
+            'https://example.test/webservices/DeletedTransactionsService.svc',
+            (string) $request->getUri(),
+        );
+        self::assertSame(
+            '"http://www.twinfield.com/DeletedTransactionsService/Query"',
+            $request->getHeaderLine('SOAPAction'),
+        );
         self::assertStringContainsString(
             'i:type="a:GetDeletedTransactions"><a:CompanyCode>1000</a:CompanyCode></Query>',
             $this->body($http),
@@ -122,7 +128,8 @@ final class DeletedTransactionResourceTest extends TestCase
     {
         $this->expectException(UnexpectedResponseException::class);
         $this->expectExceptionMessage(
-            'GetDeletedTransactionsResult/DeletedTransactions/DeletedTransaction[1]/TransactionNumber is not a whole number: "965764205.5".',
+            'GetDeletedTransactionsResult/DeletedTransactions/DeletedTransaction[1]/TransactionNumber '
+                . 'is not a whole number: "965764205.5".',
         );
 
         $this->twinfield(ReplayClient::fixture('deleted-transactions-invalid-number'))->deletedTransactions()->list();
@@ -131,7 +138,9 @@ final class DeletedTransactionResourceTest extends TestCase
     public function testThrowsWhenTheReasonIsMissing(): void
     {
         $this->expectException(UnexpectedResponseException::class);
-        $this->expectExceptionMessage('GetDeletedTransactionsResult/DeletedTransactions/DeletedTransaction[1]/ReasonForDeletion is missing.');
+        $this->expectExceptionMessage(
+            'GetDeletedTransactionsResult/DeletedTransactions/DeletedTransaction[1]/ReasonForDeletion is missing.',
+        );
 
         $this->twinfield(ReplayClient::fixture('deleted-transactions-missing-reason'))->deletedTransactions()->list();
     }
@@ -156,7 +165,12 @@ final class DeletedTransactionResourceTest extends TestCase
     public function testRequiresACompany(): void
     {
         $psr17 = new Psr17Factory();
-        $twinfield = Twinfield::create(TestTokens::provider('https://example.test'), new ReplayClient(), $psr17, $psr17);
+        $twinfield = Twinfield::create(
+            TestTokens::provider('https://example.test'),
+            new ReplayClient(),
+            $psr17,
+            $psr17,
+        );
 
         $this->expectException(LogicException::class);
 

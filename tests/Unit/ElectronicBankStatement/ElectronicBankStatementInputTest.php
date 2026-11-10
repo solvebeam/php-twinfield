@@ -44,7 +44,10 @@ final class ElectronicBankStatementInputTest extends TestCase
             ->pay('7.50')
             ->appendTo($xml, $xml->root(), '1000');
 
-        self::assertStringContainsString('<startvalue>-10.00</startvalue><closevalue>133.50</closevalue>', $xml->toXml());
+        self::assertStringContainsString(
+            '<startvalue>-10.00</startvalue><closevalue>133.50</closevalue>',
+            $xml->toXml(),
+        );
     }
 
     public function testRefusesBalancesThatDoNotAddUp(): void
@@ -67,23 +70,67 @@ final class ElectronicBankStatementInputTest extends TestCase
     public static function invalidInputs(): iterable
     {
         yield 'empty IBAN' => [static fn () => ElectronicBankStatementInput::forIban(' '), 'IBAN must not be empty'];
-        yield 'empty account' => [static fn () => ElectronicBankStatementInput::forAccount(''), 'account number must not be empty'];
-        yield 'lowercase bank book' => [static fn () => ElectronicBankStatementInput::forBankBook('bnk'), 'is not a code'];
-        yield 'lowercase currency' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->currency('eur'), 'is not a code'];
-        yield 'number zero' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->number(0), 'must be 1 or more'];
-        yield 'empty sort code' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->sortCode(''), 'sort code must not be empty'];
-        yield 'zero value' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->receive('0.00'), 'must be more than zero'];
-        yield 'negative value' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('-1.00'), 'must be more than zero'];
-        yield 'three decimals' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.005'), 'is not an amount'];
-        yield 'type too long' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', type: 'N1000'), 'at most 4 characters'];
-        yield 'reference too long' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', reference: str_repeat('x', 41)), 'at most 40 characters'];
-        yield 'description too long' => [static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', str_repeat('x', 501)), 'at most 500 characters'];
+        yield 'empty account' => [
+            static fn () => ElectronicBankStatementInput::forAccount(''),
+            'account number must not be empty',
+        ];
+        yield 'lowercase bank book' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('bnk'),
+            'is not a code',
+        ];
+        yield 'lowercase currency' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->currency('eur'),
+            'is not a code',
+        ];
+        yield 'number zero' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->number(0),
+            'must be 1 or more',
+        ];
+        yield 'empty sort code' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->sortCode(''),
+            'sort code must not be empty',
+        ];
+        yield 'zero value' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->receive('0.00'),
+            'must be more than zero',
+        ];
+        yield 'negative value' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('-1.00'),
+            'must be more than zero',
+        ];
+        yield 'three decimals' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.005'),
+            'is not an amount',
+        ];
+        yield 'type too long' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', type: 'N1000'),
+            'at most 4 characters',
+        ];
+        yield 'reference too long' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay(
+                '1.00',
+                reference: str_repeat('x', 41),
+            ),
+            'at most 40 characters',
+        ];
+        yield 'description too long' => [
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', str_repeat('x', 501)),
+            'at most 500 characters',
+        ];
         yield 'both contra fields' => [
-            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', contraIban: 'NL20INGB0001234567', contraAccount: '1234567'),
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay(
+                '1.00',
+                contraIban: 'NL20INGB0001234567',
+                contraAccount: '1234567',
+            ),
             'not both',
         ];
         yield 'contra name without account' => [
-            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay('1.00', contraIban: 'NL20INGB0001234567', contraName: 'Supplier'),
+            static fn () => ElectronicBankStatementInput::forBankBook('BNK')->pay(
+                '1.00',
+                contraIban: 'NL20INGB0001234567',
+                contraName: 'Supplier',
+            ),
             'needs a contra account number',
         ];
     }

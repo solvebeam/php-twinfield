@@ -69,12 +69,20 @@ final class VatCodeInputTest extends TestCase
     public function testPercentageNameDefaultsToTheNameOfTheVatCode(): void
     {
         $xml = VatCodeInput::sales('VH', 'BTW 21%')
-            ->percentage(VatPercentageInput::from(new DateTimeImmutable('2026-01-01'), '21')->account(VatAccountInput::vat('1530')))
+            ->percentage(
+                VatPercentageInput::from(new DateTimeImmutable('2026-01-01'), '21')->account(
+                    VatAccountInput::vat('1530'),
+                ),
+            )
             ->toXml('1000')
             ->toXml();
 
         self::assertStringContainsString('<percentage>21</percentage><name>BTW 21%</name><shortname/>', $xml);
-        self::assertStringContainsString('<account><dim1>1530</dim1><percentage>100</percentage>', $xml, 'No VAT group: not sent.');
+        self::assertStringContainsString(
+            '<account><dim1>1530</dim1><percentage>100</percentage>',
+            $xml,
+            'No VAT group: not sent.',
+        );
     }
 
     public function testKeepsPercentagesSortedAndReplacesTheSameDate(): void
@@ -101,13 +109,17 @@ final class VatCodeInputTest extends TestCase
             . '<shortname>ICV Hoog</shortname><type>sales</type><percentages>'
             . '<percentage><date>20100101</date><percentage>19</percentage><name>IC verwervingen binnnen EU</name>'
             . '<shortname>ICV 19%</shortname><accounts>'
-            . '<account><dim1>16626</dim1><groupcountry>NL</groupcountry><group>NL4B</group><percentage>-100</percentage><linetype>vat</linetype></account>'
-            . '<account><dim1>16627</dim1><groupcountry>NL</groupcountry><group>NL5B</group><percentage>100</percentage><linetype>vat</linetype></account>'
+            . '<account><dim1>16626</dim1><groupcountry>NL</groupcountry><group>NL4B</group>'
+            . '<percentage>-100</percentage><linetype>vat</linetype></account>'
+            . '<account><dim1>16627</dim1><groupcountry>NL</groupcountry><group>NL5B</group>'
+            . '<percentage>100</percentage><linetype>vat</linetype></account>'
             . '</accounts></percentage>'
             . '<percentage><date>20121001</date><percentage>21</percentage><name>IC verwervingen binnnen EU</name>'
             . '<shortname>ICV 21%</shortname><accounts>'
-            . '<account><dim1>16626</dim1><groupcountry>NL</groupcountry><group>NL4B</group><percentage>-100</percentage><linetype>vat</linetype></account>'
-            . '<account><dim1>16627</dim1><groupcountry>NL</groupcountry><group>NL5B</group><percentage>100</percentage><linetype>vat</linetype></account>'
+            . '<account><dim1>16626</dim1><groupcountry>NL</groupcountry><group>NL4B</group>'
+            . '<percentage>-100</percentage><linetype>vat</linetype></account>'
+            . '<account><dim1>16627</dim1><groupcountry>NL</groupcountry><group>NL5B</group>'
+            . '<percentage>100</percentage><linetype>vat</linetype></account>'
             . '</accounts></percentage></percentages></vat>',
             $vatCode->edit()->toXml('1000')->toXml(),
         );
@@ -118,7 +130,10 @@ final class VatCodeInputTest extends TestCase
         $xml = $this->vatCode('vat-read-without-group')->edit()->toXml('1000')->toXml();
 
         self::assertStringContainsString('<name>Geen BTW</name><shortname/><type>purchase</type>', $xml);
-        self::assertStringContainsString('<account><dim1>16619</dim1><percentage>100</percentage><linetype>vat</linetype>', $xml);
+        self::assertStringContainsString(
+            '<account><dim1>16619</dim1><percentage>100</percentage><linetype>vat</linetype>',
+            $xml,
+        );
     }
 
     public function testNewPercentageFromCopiesTheAccountsOfThePreviousPercentage(): void
@@ -149,7 +164,9 @@ final class VatCodeInputTest extends TestCase
     public function testNewPercentageFromNeedsAnEarlierPercentage(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('VAT code VH has no percentage before 2000-01-01 to copy the accounts from: use percentage().');
+        $this->expectExceptionMessage(
+            'VAT code VH has no percentage before 2000-01-01 to copy the accounts from: use percentage().',
+        );
 
         $this->vatCode('vat-read')->edit()->newPercentageFrom(new DateTimeImmutable('2000-01-01'), '20');
     }
@@ -187,7 +204,10 @@ final class VatCodeInputTest extends TestCase
     public static function invalidInput(): iterable
     {
         yield 'invalid code' => [static fn (): mixed => VatCodeInput::sales('vh', 'BTW'), '"vh" is not a code'];
-        yield 'empty name' => [static fn (): mixed => VatCodeInput::sales('VH', ''), 'VAT code name must not be empty.'];
+        yield 'empty name' => [
+            static fn (): mixed => VatCodeInput::sales('VH', ''),
+            'VAT code name must not be empty.',
+        ];
         yield 'long name' => [
             static fn (): mixed => VatCodeInput::sales('VH', str_repeat('x', 41)),
             'VAT code name must be at most 40 characters',
@@ -213,7 +233,9 @@ final class VatCodeInputTest extends TestCase
             'VAT percentage name must be at most 40 characters',
         ];
         yield 'long percentage short name' => [
-            static fn (): mixed => VatPercentageInput::from(new DateTimeImmutable(), '21')->shortName(str_repeat('x', 21)),
+            static fn (): mixed => VatPercentageInput::from(new DateTimeImmutable(), '21')->shortName(
+                str_repeat('x', 21),
+            ),
             'VAT percentage short name must be at most 20 characters',
         ];
         yield 'invalid account' => [static fn (): mixed => VatAccountInput::vat('15 30'), '"15 30" is not a code'];

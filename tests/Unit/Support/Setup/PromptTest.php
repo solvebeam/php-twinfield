@@ -14,7 +14,10 @@ final class PromptTest extends TestCase
 {
     public function testEnterAcceptsDefault(): void
     {
-        self::assertSame('http://localhost:8765/callback', $this->prompt("\n")->ask('Redirect URI', 'http://localhost:8765/callback'));
+        self::assertSame(
+            'http://localhost:8765/callback',
+            $this->prompt("\n")->ask('Redirect URI', 'http://localhost:8765/callback'),
+        );
     }
 
     public function testRequiredQuestionAsksAgain(): void
