@@ -23,7 +23,7 @@ final readonly class DetailLine
     public function __construct(
         public int $id,
         /** `dim1`: balance sheet account (e.g. accounts receivable `1300`) or profit and loss account. */
-        public DimensionReference $account,
+        public DimensionReference $dim1,
         /** `dim2`: customer, supplier or cost centre. */
         public ?DimensionReference $dim2,
         /** `dim3`: project or asset. */
@@ -70,7 +70,7 @@ final readonly class DetailLine
     {
         return new self(
             id: (int) $line->attribute('id'),
-            account: TransactionXml::dimension($line, 'dim1'),
+            dim1: TransactionXml::dimension($line, 'dim1'),
             dim2: TransactionXml::optionalDimension($line, 'dim2'),
             dim3: TransactionXml::optionalDimension($line, 'dim3'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),

@@ -55,8 +55,8 @@ final class PurchaseTransactionResourceTest extends TestCase
         self::assertNull($transaction->paymentReference);
 
         $total = $transaction->total;
-        self::assertSame('1600', $total->account->code);
-        self::assertSame('BAS', $total->account->type);
+        self::assertSame('1600', $total->dim1->code);
+        self::assertSame('BAS', $total->dim1->type);
         self::assertSame('2000', $transaction->supplier()->code);
         self::assertSame('Example supplier', $transaction->supplier()->name);
         self::assertSame('CRD', $transaction->supplier()->type);
@@ -88,7 +88,7 @@ final class PurchaseTransactionResourceTest extends TestCase
 
         self::assertCount(1, $transaction->vat);
         $vat = $transaction->vat[0];
-        self::assertSame('1520', $vat->account->code);
+        self::assertSame('1520', $vat->dim1->code);
         self::assertSame('31.50', $vat->value->value);
         self::assertSame('150.00', $vat->vatTurnover?->value);
         self::assertSame(1, $vat->baseline);
@@ -395,7 +395,7 @@ final class PurchaseTransactionResourceTest extends TestCase
 
         $page = $this->twinfield($http)->purchaseTransactions()->openInvoices()
             ->supplier('2000')
-            ->account('1600')
+            ->dim1('1600')
             ->get();
 
         $body = (string) preg_replace('~>\\s+<~', '><', (string) $http->lastRequest()->getBody());

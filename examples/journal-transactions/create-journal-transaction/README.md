@@ -8,7 +8,7 @@ Twinfield documentation: [Journal transactions](https://developers.twinfield.com
 
 `JournalTransactionInput::create($dayBook, $date)` starts the input. A journal transaction has no total line: every line has its own side.
 
-- `debit($account, $amount, ...)` adds a debit detail line, `credit(...)` a credit one. Both take the same named arguments: `customer`, `supplier` or `costCenter` (`dim2`), `project` (`dim3`), `invoice`, `description`, `vatCode` and `vatValue`.
+- `debit($dim1, $amount, ...)` adds a debit detail line, `credit(...)` a credit one. Both take the same named arguments: `customer`, `supplier` or `costCenter` (`dim2`), `project` (`dim3`), `invoice`, `description`, `vatCode` and `vatValue`.
 - The lines must balance: the sum of the debit lines equals the sum of the credit lines. `balance()` gives the difference, and the input throws an `InvalidArgumentException` before anything is sent when it is not zero.
 - A line with a VAT code needs the VAT amount. Twinfield books the VAT on the VAT account, on the same side as the line, so the other lines include it. With a `VatCode` object instead of a code, the VAT is calculated with its percentage on the transaction date.
 
@@ -54,7 +54,7 @@ echo 'Created: ', $transaction->dayBook(), ' ', $transaction->number(), ' (', $t
     ', period ', $transaction->header->period, PHP_EOL;
 
 foreach ($transaction->details as $line) {
-    echo '  ', $line->id, ' ', $line->account->code, ' ', $line->debitCredit->value, ' ', $line->value,
+    echo '  ', $line->id, ' ', $line->dim1->code, ' ', $line->debitCredit->value, ' ', $line->value,
         PHP_EOL;
 }
 

@@ -71,8 +71,8 @@ final class SalesInvoiceResourceTest extends TestCase
         self::assertNull($line->performance);
         self::assertNull($line->freeText1, 'Empty, with empty attributes.');
         self::assertNull($line->freeText3);
-        self::assertSame('8000', $line->account->code);
-        self::assertNull($line->account->name, 'Live responses have no attributes on dim1.');
+        self::assertSame('8000', $line->dim1->code);
+        self::assertNull($line->dim1->name, 'Live responses have no attributes on dim1.');
         self::assertSame('125.00', $line->valueExcl->value);
         self::assertSame('26.25', $line->vatValue->value);
         self::assertSame('151.25', $line->valueInc->value);
@@ -174,7 +174,7 @@ final class SalesInvoiceResourceTest extends TestCase
 
         self::assertSame(13, $invoice->invoiceNumber);
         self::assertSame('2.00', $invoice->lines[0]->quantity);
-        self::assertSame('Omzet', $invoice->lines[0]->account->name);
+        self::assertSame('Omzet', $invoice->lines[0]->dim1->name);
         self::assertSame('101.57', $invoice->totals->valueInc->value);
     }
 

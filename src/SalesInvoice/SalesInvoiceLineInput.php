@@ -45,8 +45,8 @@ final readonly class SalesInvoiceLineInput
         public ?string $description,
         public ?Performance $performance,
         public array $freeTexts,
-        /** General ledger account (`dim1`). */
-        public ?string $account,
+        /** `dim1`: general ledger account. */
+        public ?string $dim1,
     ) {
         // Article codes are not limited to A-Z, 0-9, _, - and +: the documentation has sub-article
         // `501.01`. So only the length is checked.
@@ -106,8 +106,8 @@ final readonly class SalesInvoiceLineInput
             }
         }
 
-        if ($account !== null) {
-            XmlValue::code($account);
+        if ($dim1 !== null) {
+            XmlValue::code($dim1);
         }
     }
 
@@ -132,14 +132,14 @@ final readonly class SalesInvoiceLineInput
             description: null,
             performance: null,
             freeTexts: [1 => null, 2 => null, 3 => null],
-            account: null,
+            dim1: null,
         );
     }
 
     /**
      * A line with the one-off item `0`, which is in every company: your own description, and a
      * price with unitPriceExcl() or unitPriceInc(). Twinfield books it on the account of the
-     * invoice type, or on account() when the invoice type allows that.
+     * invoice type, or on dim1() when the invoice type allows that.
      *
      * @param string $description At most 110 characters.
      */
@@ -259,13 +259,13 @@ final readonly class SalesInvoiceLineInput
     }
 
     /**
-     * General ledger account (`dim1`) for the one-off item, instead of the account of the
+     * `dim1`: general ledger account for the one-off item, instead of the account of the
      * invoice type. Only when "One-off items > Can adjust general ledger account" is ticked on
      * the invoice type.
      */
-    public function account(?string $account): self
+    public function dim1(?string $dim1): self
     {
-        return $this->with(['account' => $account === '' ? null : $account]);
+        return $this->with(['dim1' => $dim1 === '' ? null : $dim1]);
     }
 
     /**
@@ -323,8 +323,8 @@ final readonly class SalesInvoiceLineInput
             }
         }
 
-        if ($this->account !== null) {
-            $xml->add($line, 'dim1', $this->account);
+        if ($this->dim1 !== null) {
+            $xml->add($line, 'dim1', $this->dim1);
         }
     }
 

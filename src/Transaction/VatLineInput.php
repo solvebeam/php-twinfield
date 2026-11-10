@@ -20,7 +20,7 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
  */
 final class VatLineInput
 {
-    private ?string $account = null;
+    private ?string $dim1 = null;
 
     private ?Amount $turnover = null;
 
@@ -81,7 +81,7 @@ final class VatLineInput
     {
         $input = new self($line->debitCredit, $line->vatCode, $line->value);
 
-        $input->account = $line->account->code;
+        $input->dim1 = $line->dim1->code;
         $input->turnover = $line->vatTurnover;
         $input->baseline = $line->baseline;
         $input->description = $line->description;
@@ -95,14 +95,14 @@ final class VatLineInput
     /**
      * `dim1`: the VAT balance account. Without it, Twinfield takes the account of the VAT code.
      */
-    public function account(?string $account): self
+    public function dim1(?string $dim1): self
     {
-        if ($account !== null) {
-            TransactionXmlWriter::dimension('VAT account (dim1)', $account);
+        if ($dim1 !== null) {
+            TransactionXmlWriter::dimension('VAT account (dim1)', $dim1);
         }
 
         $line = clone $this;
-        $line->account = $account;
+        $line->dim1 = $dim1;
 
         return $line;
     }
@@ -201,7 +201,7 @@ final class VatLineInput
     {
         $line = $xml->add($lines, 'line', null, ['type' => LineType::Vat->value, 'id' => (string) $id]);
 
-        TransactionXmlWriter::add($xml, $line, 'dim1', $this->account);
+        TransactionXmlWriter::add($xml, $line, 'dim1', $this->dim1);
         $xml->add($line, 'debitcredit', $this->debitCredit->value);
         $xml->add($line, 'value', $this->value->value);
         TransactionXmlWriter::add($xml, $line, 'vatturnover', $this->turnover?->value);

@@ -6,10 +6,10 @@ Creates a bank transaction for one bank statement, then deletes it again. This c
 Twinfield documentation: [Bank transactions](https://developers.twinfield.com/documentation/api/transaction-data/bank-transactions/).
 <!-- twinfield-documentation:end -->
 
-`BankTransactionInput::create($dayBook, $account, $date)` takes the bank book, its ledger account and the date; `forBankBook()` takes the code and ledger account from a `BankBook`. Then add a line per bank line:
+`BankTransactionInput::create($dayBook, $dim1, $date)` takes the bank book, its ledger account and the date; `forBankBook()` takes the code and ledger account from a `BankBook`. Then add a line per bank line:
 
-- `receive($account, $amount, …)`: money comes in, e.g. a customer paying an invoice;
-- `pay($account, $amount, …)`: money goes out, e.g. a supplier invoice or a cost.
+- `receive($dim1, $amount, …)`: money comes in, e.g. a customer paying an invoice;
+- `pay($dim1, $amount, …)`: money goes out, e.g. a supplier invoice or a cost.
 
 You never write `debit` or `credit` yourself: `receive()` and `pay()` choose the side, and the input calculates the total line on the bank account and the closing balance from the opening balance in `statement()`. So the transaction always balances.
 

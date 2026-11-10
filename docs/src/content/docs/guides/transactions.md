@@ -78,8 +78,8 @@ Amounts you send are always positive; `debitcredit` gives the side. (Twinfield i
 
 With bank and cash transactions you never write `debit` or `credit` yourself:
 
-- `receive($account, $amount, …)`: money comes in, a credit detail line;
-- `pay($account, $amount, …)`: money goes out, a debit detail line.
+- `receive($dim1, $amount, …)`: money comes in, a credit detail line;
+- `pay($dim1, $amount, …)`: money goes out, a debit detail line.
 
 Both take the details of the line as named arguments: `customer`, `supplier` or `costCenter` (`dim2`, only one of them), `project` (`dim3`), `invoice`, `description`, `vatCode` and `vatValue`.
 
@@ -108,7 +108,7 @@ $input = $input->line(
 );
 ```
 
-The bank account of the total line comes from `create($dayBook, $account, $date)`. For bank transactions, `BankTransactionInput::forBankBook($bankBook, $date)` takes the code and the ledger account of a bank book from `$twinfield->bankBooks()->get('BNK')`. For cash transactions, `CashTransactionInput::forCashBook($cashBook, $date)` does the same with a cash book from `$twinfield->cashBooks()->get('KAS')`.
+The bank account of the total line comes from `create($dayBook, $dim1, $date)`. For bank transactions, `BankTransactionInput::forBankBook($bankBook, $date)` takes the code and the ledger account of a bank book from `$twinfield->bankBooks()->get('BNK')`. For cash transactions, `CashTransactionInput::forCashBook($cashBook, $date)` does the same with a cash book from `$twinfield->cashBooks()->get('KAS')`.
 
 ## Sales transactions
 
@@ -131,7 +131,7 @@ $transaction = $sales->create(
 echo $transaction->invoiceNumber, ': ', $transaction->value(), ', open ', $transaction->total->openBaseValue, PHP_EOL;
 ```
 
-- `revenue($account, $amount, …)` adds a detail line without VAT: `credit` for an invoice, `debit` for a credit note. Amounts stay positive.
+- `revenue($dim1, $amount, …)` adds a detail line without VAT: `credit` for an invoice, `debit` for a credit note. Amounts stay positive.
 - With a `VatCode` from `$twinfield->vatCodes()->get()`, the VAT is calculated with its percentage on the transaction date. With a VAT code as string, give `vatValue` too.
 - The input calculates the **total line** with the customer: the sum including VAT, `debit` when the customer owes it. `total()` gives it before anything is sent; it is negative for a credit note.
 - Without `receivablesAccount()`, Twinfield takes the accounts receivable account of the customer.
@@ -165,7 +165,7 @@ $transaction = $purchases->create(
 echo $transaction->invoiceNumber, ': ', $transaction->value(), ', open ', $transaction->total->openBaseValue, PHP_EOL;
 ```
 
-- `expense($account, $amount, …)` adds a detail line without VAT: `debit` for an invoice, `credit` for a credit note. Amounts stay positive. The account can also be a balance sheet account, e.g. for stock.
+- `expense($dim1, $amount, …)` adds a detail line without VAT: `debit` for an invoice, `credit` for a credit note. Amounts stay positive. The account can also be a balance sheet account, e.g. for stock.
 - The input calculates the **total line** with the supplier: the sum including VAT, `credit` when you owe it. `total()` gives it before anything is sent: positive for an invoice, negative for a credit note.
 - Without `payablesAccount()`, Twinfield takes the accounts payable account of the supplier.
 - `ignoreDuplicateInvoiceWarning()` turns off the warning for an invoice number that is already used. `excludeFromPaymentRuns()` leaves the invoice out of the payment runs of Twinfield.
@@ -197,7 +197,7 @@ $transaction = $journal->create(
 echo $transaction->number(), ': ', $transaction->debit(), ' = ', $transaction->credit(), PHP_EOL;
 ```
 
-- `debit($account, $amount, …)` and `credit(…)` add a detail line, with the same named arguments as `receive()` and `pay()`: `customer`, `supplier` or `costCenter` (`dim2`), `project` (`dim3`), `invoice`, `description`, `vatCode` and `vatValue`. `line(DetailLineInput …)` adds one with full control.
+- `debit($dim1, $amount, …)` and `credit(…)` add a detail line, with the same named arguments as `receive()` and `pay()`: `customer`, `supplier` or `costCenter` (`dim2`), `project` (`dim3`), `invoice`, `description`, `vatCode` and `vatValue`. `line(DetailLineInput …)` adds one with full control.
 - The input checks that the lines balance before anything is sent, and throws an `InvalidArgumentException` with the difference when they don't. `balance()` gives the difference: zero when it balances.
 - A line with a VAT code needs the VAT amount, or a `VatCode` object to calculate it. Twinfield books the VAT on the VAT account, on the **same side** as the line, so the other lines must include it: a credit line of `1000.00` with `210.00` VAT needs `1210.00` on the debit side.
 - `regime(Regime::Fiscal)` books the transaction in one regime (`Fiscal`, `Commercial` or `Economic`). Without it Twinfield books `Generic`: visible in all regimes. `$transaction->regime` has it.

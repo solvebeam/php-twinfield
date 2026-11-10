@@ -54,8 +54,8 @@ final class JournalTransactionResourceTest extends TestCase
         self::assertCount(3, $transaction->details);
         [$revenue, $reversal, $cost] = $transaction->details;
         self::assertSame(1, $revenue->id);
-        self::assertSame('8199', $revenue->account->code);
-        self::assertSame('PNL', $revenue->account->type);
+        self::assertSame('8199', $revenue->dim1->code);
+        self::assertSame('PNL', $revenue->dim1->type);
         self::assertSame(DebitCredit::Credit, $revenue->debitCredit);
         self::assertSame('1000.00', $revenue->value->value);
         self::assertSame('PRIVE-H', $revenue->vatCode);
@@ -74,7 +74,7 @@ final class JournalTransactionResourceTest extends TestCase
         self::assertCount(1, $transaction->vat);
         $vat = $transaction->vat[0];
         self::assertSame(4, $vat->id);
-        self::assertSame('1618', $vat->account->code);
+        self::assertSame('1618', $vat->dim1->code);
         self::assertSame(DebitCredit::Credit, $vat->debitCredit);
         self::assertSame('210.00', $vat->value->value);
         self::assertSame('1000.00', $vat->vatTurnover?->value);

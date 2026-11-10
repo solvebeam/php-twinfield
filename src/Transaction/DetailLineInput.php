@@ -61,11 +61,11 @@ final class DetailLineInput
 
     private function __construct(
         private readonly DebitCredit $debitCredit,
-        private readonly string $account,
+        private readonly string $dim1,
         private readonly Amount $value,
         bool $allowNegative = false,
     ) {
-        TransactionXmlWriter::dimension('account (dim1)', $account);
+        TransactionXmlWriter::dimension('account (dim1)', $dim1);
 
         if ($value->isNegative() && !$allowNegative) {
             throw new InvalidArgumentException(sprintf(
@@ -76,29 +76,29 @@ final class DetailLineInput
     }
 
     /**
-     * @param string $account `dim1`: balance sheet or profit and loss account, e.g. `1300` or `4500`.
+     * @param string $dim1 Balance sheet or profit and loss account, e.g. `1300` or `4500`.
      * @param Amount|numeric-string $value Amount without VAT, e.g. `'121.00'`.
      */
-    public static function debit(string $account, Amount|string $value): self
+    public static function debit(string $dim1, Amount|string $value): self
     {
-        return new self(DebitCredit::Debit, $account, Amount::of($value));
+        return new self(DebitCredit::Debit, $dim1, Amount::of($value));
     }
 
     /**
-     * @param string $account `dim1`: balance sheet or profit and loss account, e.g. `1300` or `8000`.
+     * @param string $dim1 Balance sheet or profit and loss account, e.g. `1300` or `8000`.
      * @param Amount|numeric-string $value Amount without VAT, e.g. `'121.00'`.
      */
-    public static function credit(string $account, Amount|string $value): self
+    public static function credit(string $dim1, Amount|string $value): self
     {
-        return new self(DebitCredit::Credit, $account, Amount::of($value));
+        return new self(DebitCredit::Credit, $dim1, Amount::of($value));
     }
 
     /**
      * @param Amount|numeric-string $value
      */
-    public static function create(DebitCredit $debitCredit, string $account, Amount|string $value): self
+    public static function create(DebitCredit $debitCredit, string $dim1, Amount|string $value): self
     {
-        return new self($debitCredit, $account, Amount::of($value));
+        return new self($debitCredit, $dim1, Amount::of($value));
     }
 
     /**
@@ -111,7 +111,7 @@ final class DetailLineInput
      */
     public static function fromLine(DetailLine $line): self
     {
-        $input = new self($line->debitCredit, $line->account->code, $line->value, allowNegative: true);
+        $input = new self($line->debitCredit, $line->dim1->code, $line->value, allowNegative: true);
 
         $input->dim2 = $line->dim2?->code;
         $input->dim3 = $line->dim3?->code;
@@ -422,9 +422,9 @@ final class DetailLineInput
         return $this->debitCredit;
     }
 
-    public function account(): string
+    public function dim1(): string
     {
-        return $this->account;
+        return $this->dim1;
     }
 
     /**
@@ -467,7 +467,7 @@ final class DetailLineInput
     {
         $line = $xml->add($lines, 'line', null, ['type' => LineType::Detail->value, 'id' => (string) $id]);
 
-        $xml->add($line, 'dim1', $this->account);
+        $xml->add($line, 'dim1', $this->dim1);
         TransactionXmlWriter::add($xml, $line, 'dim2', $this->dim2);
         TransactionXmlWriter::add($xml, $line, 'dim3', $this->dim3);
         $xml->add($line, 'debitcredit', $this->debitCredit->value);

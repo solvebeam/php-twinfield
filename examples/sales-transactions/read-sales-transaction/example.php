@@ -31,7 +31,7 @@ echo 'Invoice:     ', $transaction->invoiceNumber, $transaction->isCreditNote() 
 echo 'Date:        ', $header->date->format('Y-m-d'), ', due ', $transaction->dueDate->format('Y-m-d'),
     ', period ', $header->period, PHP_EOL;
 echo 'Customer:    ', $transaction->customer()->code, ' ', $transaction->customer()->name, ' on ',
-    $total->account->code, PHP_EOL;
+    $total->dim1->code, PHP_EOL;
 echo 'Total:       ', $transaction->value(), ' ', $header->currency, ', VAT ', $total->vatTotal ?? '-', PHP_EOL;
 echo 'Payment:     ', $total->matchStatus->value, ', open ', $total->openBaseValue ?? '-', PHP_EOL;
 
@@ -39,7 +39,7 @@ foreach ($transaction->details as $line) {
     echo sprintf(
         '  %-6s %-6s %10s  %-4s %8s  %s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         $line->value,
         $line->vatCode ?? '',
         $line->vatValue ?? '',
@@ -51,7 +51,7 @@ foreach ($transaction->vat as $line) {
     echo sprintf(
         '  %-6s %-6s %10s  VAT %s on %s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         $line->value,
         $line->vatCode,
         $line->vatTurnover ?? '-',

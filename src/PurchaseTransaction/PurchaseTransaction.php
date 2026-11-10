@@ -29,7 +29,7 @@ use SolveBeam\Twinfield\Transaction\VatLineInput;
  *   echo $transaction->invoiceNumber, ' ', $transaction->supplier()->name, ' ', $transaction->value(), PHP_EOL;
  *
  *   foreach ($transaction->details as $line) {
- *       echo $line->account->code, ' ', $line->value, ' ', $line->vatCode, PHP_EOL;
+ *       echo $line->dim1->code, ' ', $line->value, ' ', $line->vatCode, PHP_EOL;
  *   }
  *
  * To change it, call edit() and pass the result to update().
@@ -151,7 +151,7 @@ final readonly class PurchaseTransaction
             ->period($header->period)
             ->dueDate($this->dueDate)
             ->paymentReference($this->paymentReference)
-            ->payablesAccount($total->account->code)
+            ->payablesAccount($total->dim1->code)
             ->description($total->description)
             ->comment($total->comment)
             ->freeChar($total->freeChar)

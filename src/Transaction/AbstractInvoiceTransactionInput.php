@@ -23,7 +23,7 @@ use SolveBeam\Twinfield\VatCode\VatCode;
  */
 abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
 {
-    private ?string $account = null;
+    private ?string $dim1 = null;
 
     private ?DateTimeImmutable $dueDate = null;
 
@@ -150,14 +150,14 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
      * `dim1` of the total line: the accounts receivable or payable account. Without it, Twinfield
      * takes the account of the customer or supplier.
      */
-    protected function withAccount(string $name, ?string $account): static
+    protected function withDim1(string $name, ?string $dim1): static
     {
-        if ($account !== null) {
-            TransactionXmlWriter::dimension(sprintf('%s (dim1 of the total line)', $name), $account);
+        if ($dim1 !== null) {
+            TransactionXmlWriter::dimension(sprintf('%s (dim1 of the total line)', $name), $dim1);
         }
 
         $input = clone $this;
-        $input->account = $account;
+        $input->dim1 = $dim1;
 
         return $input;
     }
@@ -171,7 +171,7 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
      * @param Amount|numeric-string|null $vatValue
      */
     protected function invoiceLine(
-        string $account,
+        string $dim1,
         Amount|string $amount,
         string|VatCode|null $vatCode,
         Amount|string|null $vatValue,
@@ -192,7 +192,7 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
             $side = $side === DebitCredit::Debit ? DebitCredit::Credit : DebitCredit::Debit;
         }
 
-        $line = DetailLineInput::create($side, $account, $amount)
+        $line = DetailLineInput::create($side, $dim1, $amount)
             ->costCenter($costCenter)
             ->project($project)
             ->description($description)
@@ -237,7 +237,7 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
         $total = $this->linesTotal();
 
         $line = $xml->add($lines, 'line', null, ['type' => LineType::Total->value, 'id' => '1']);
-        TransactionXmlWriter::add($xml, $line, 'dim1', $this->account);
+        TransactionXmlWriter::add($xml, $line, 'dim1', $this->dim1);
         $xml->add($line, 'dim2', $this->dim2);
         $xml->add($line, 'debitcredit', ($total->isNegative() ? DebitCredit::Credit : DebitCredit::Debit)->value);
         $xml->add($line, 'value', $total->absolute()->value);

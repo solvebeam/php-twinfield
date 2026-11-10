@@ -56,7 +56,7 @@ final class SalesInvoiceInputTest extends TestCase
             ->performance(Performance::services(new DateTimeImmutable('2026-11-03')))
             ->freeText(1, 'Order 778')
             ->freeText(3, 'Project X')
-            ->account('8020');
+            ->dim1('8020');
 
         self::assertSame(
             '<line id="1"><article>0</article><quantity>1.5</quantity><units>1</units>'
@@ -71,7 +71,7 @@ final class SalesInvoiceInputTest extends TestCase
     public function testOneOffShortcut(): void
     {
         $input = SalesInvoiceInput::create('FACTUUR', '1000')
-            ->oneOff('Training', '50.00', vatCode: 'VL', quantity: 3, account: '8010');
+            ->oneOff('Training', '50.00', vatCode: 'VL', quantity: 3, dim1: '8010');
 
         self::assertSame(
             '<line id="1"><article>0</article><quantity>3</quantity><unitspriceexcl>50.00</unitspriceexcl>'

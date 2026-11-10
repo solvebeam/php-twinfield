@@ -55,8 +55,8 @@ final class SalesTransactionResourceTest extends TestCase
         self::assertNull($transaction->paymentReference);
 
         $total = $transaction->total;
-        self::assertSame('1300', $total->account->code);
-        self::assertSame('BAS', $total->account->type);
+        self::assertSame('1300', $total->dim1->code);
+        self::assertSame('BAS', $total->dim1->type);
         self::assertSame('1000', $transaction->customer()->code);
         self::assertSame('Example customer', $transaction->customer()->name);
         self::assertSame('DEB', $transaction->customer()->type);
@@ -87,7 +87,7 @@ final class SalesTransactionResourceTest extends TestCase
 
         self::assertCount(1, $transaction->vat);
         $vat = $transaction->vat[0];
-        self::assertSame('1530', $vat->account->code);
+        self::assertSame('1530', $vat->dim1->code);
         self::assertSame('31.50', $vat->value->value);
         self::assertSame('150.00', $vat->vatTurnover?->value);
         self::assertSame(1, $vat->baseline);
@@ -368,7 +368,7 @@ final class SalesTransactionResourceTest extends TestCase
         $page = $this->twinfield($http)->salesTransactions()->openInvoices()
             ->pattern('2026-*')
             ->customer('1000')
-            ->account('1300')
+            ->dim1('1300')
             ->value('181.50')
             ->openValue('181.50')
             ->limit(10)

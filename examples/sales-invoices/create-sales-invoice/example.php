@@ -61,5 +61,5 @@ echo 'Total:    ', $invoice->totals->valueExcl, ' + ', $invoice->totals->vat(), 
 
 foreach ($invoice->lines as $line) {
     echo '  ', $line->quantity, ' x ', $line->description, ' ', $line->valueExcl, ' ', $line->vatCode,
-        ' on ', $line->account->code, PHP_EOL;
+        ' on ', $line->dim1->code, PHP_EOL;
 }

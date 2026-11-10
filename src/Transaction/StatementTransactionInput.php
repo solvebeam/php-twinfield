@@ -38,21 +38,21 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
 
     final protected function __construct(
         string $dayBook,
-        private readonly string $account,
+        private readonly string $dim1,
         DateTimeImmutable $date,
     ) {
         parent::__construct($dayBook, $date);
-        TransactionXmlWriter::dimension('account (dim1 of the total line)', $account);
+        TransactionXmlWriter::dimension('account (dim1 of the total line)', $dim1);
     }
 
     /**
      * @param string $dayBook Day book (transaction type) code, e.g. `BNK`.
-     * @param string $account Balance sheet account of the day book (`dim1` of the total line), e.g. `1010`.
+     * @param string $dim1 Balance sheet account of the day book (`dim1` of the total line), e.g. `1010`.
      * @param DateTimeInterface $date Transaction date; Twinfield derives the period from it.
      */
-    public static function create(string $dayBook, string $account, DateTimeInterface $date): static
+    public static function create(string $dayBook, string $dim1, DateTimeInterface $date): static
     {
-        return new static($dayBook, $account, DateTimeImmutable::createFromInterface($date));
+        return new static($dayBook, $dim1, DateTimeImmutable::createFromInterface($date));
     }
 
     /**
@@ -91,12 +91,12 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
      *
      *   ->receive('1300', '121.00', customer: '1000', invoice: '2026-0042')
      *
-     * @param string $account `dim1`: e.g. accounts receivable `1300`, or a profit and loss account.
+     * @param string $dim1 Accounts receivable, e.g. `1300`, or a profit and loss account.
      * @param Amount|numeric-string $amount Amount without VAT.
      * @param Amount|numeric-string|null $vatValue VAT amount; required with a VAT code, so the total line is right.
      */
     public function receive(
-        string $account,
+        string $dim1,
         Amount|string $amount,
         ?string $customer = null,
         ?string $supplier = null,
@@ -108,7 +108,7 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
         Amount|string|null $vatValue = null,
     ): static {
         return $this->line(self::detail(
-            DetailLineInput::credit($account, $amount),
+            DetailLineInput::credit($dim1, $amount),
             $customer,
             $supplier,
             $costCenter,
@@ -126,12 +126,12 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
      *   ->pay('1600', '50.00', supplier: '2000', invoice: 'INV-778')
      *   ->pay('4500', '10.00', vatCode: 'IH', vatValue: '2.10', description: 'Bank costs')
      *
-     * @param string $account `dim1`: e.g. accounts payable `1600`, or a cost account.
+     * @param string $dim1 Accounts payable, e.g. `1600`, or a cost account.
      * @param Amount|numeric-string $amount Amount without VAT.
      * @param Amount|numeric-string|null $vatValue VAT amount; required with a VAT code, so the total line is right.
      */
     public function pay(
-        string $account,
+        string $dim1,
         Amount|string $amount,
         ?string $customer = null,
         ?string $supplier = null,
@@ -143,7 +143,7 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
         Amount|string|null $vatValue = null,
     ): static {
         return $this->line(self::detail(
-            DetailLineInput::debit($account, $amount),
+            DetailLineInput::debit($dim1, $amount),
             $customer,
             $supplier,
             $costCenter,
@@ -155,9 +155,9 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
         ));
     }
 
-    public function account(): string
+    public function dim1(): string
     {
-        return $this->account;
+        return $this->dim1;
     }
 
     /**
@@ -198,7 +198,7 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
         $balance = $this->balance();
 
         $total = $xml->add($lines, 'line', null, ['type' => LineType::Total->value, 'id' => '1']);
-        $xml->add($total, 'dim1', $this->account);
+        $xml->add($total, 'dim1', $this->dim1);
         $xml->add($total, 'debitcredit', ($balance->isNegative() ? DebitCredit::Credit : DebitCredit::Debit)->value);
         $xml->add($total, 'value', $balance->absolute()->value);
         TransactionXmlWriter::add($xml, $total, 'description', $this->description);

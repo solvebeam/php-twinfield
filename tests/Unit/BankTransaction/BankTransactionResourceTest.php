@@ -65,8 +65,8 @@ final class BankTransactionResourceTest extends TestCase
 
         $total = $transaction->total;
         self::assertSame(1, $total->id);
-        self::assertSame('1010', $total->account->code);
-        self::assertSame('Bank', $total->account->name);
+        self::assertSame('1010', $total->dim1->code);
+        self::assertSame('Bank', $total->dim1->name);
         self::assertSame(DebitCredit::Debit, $total->debitCredit);
         self::assertSame('423.45', $total->value->value);
         self::assertSame('1', $total->rate);
@@ -78,7 +78,7 @@ final class BankTransactionResourceTest extends TestCase
         [$payment, $costs] = $transaction->details;
 
         self::assertSame(2, $payment->id);
-        self::assertSame('1300', $payment->account->code);
+        self::assertSame('1300', $payment->dim1->code);
         self::assertSame('1000', $payment->dim2?->code);
         self::assertSame('Example customer', $payment->dim2->name);
         self::assertTrue($payment->dim2->isCustomer());
@@ -97,7 +97,7 @@ final class BankTransactionResourceTest extends TestCase
         self::assertSame(202600012, $payment->matches[0]->lines[0]->number);
         self::assertSame(1, $payment->matches[0]->lines[0]->line);
 
-        self::assertSame('4500', $costs->account->code);
+        self::assertSame('4500', $costs->dim1->code);
         self::assertSame('KPL01', $costs->dim2?->code);
         self::assertSame(DebitCredit::Debit, $costs->debitCredit);
         self::assertSame('IH', $costs->vatCode);
@@ -107,7 +107,7 @@ final class BankTransactionResourceTest extends TestCase
 
         self::assertCount(1, $transaction->vat);
         $vat = $transaction->vat[0];
-        self::assertSame('1520', $vat->account->code);
+        self::assertSame('1520', $vat->dim1->code);
         self::assertSame('IH', $vat->vatCode);
         self::assertSame('2.10', $vat->value->value);
         self::assertSame('10.00', $vat->vatTurnover?->value);

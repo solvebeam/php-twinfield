@@ -26,7 +26,7 @@ final readonly class InvoiceTotalLine
     public function __construct(
         public int $id,
         /** `dim1`: the accounts receivable (e.g. `1300`) or payable (e.g. `1600`) balance account. */
-        public DimensionReference $account,
+        public DimensionReference $dim1,
         /** `dim2`: the customer or supplier. */
         public DimensionReference $dim2,
         /** Sales: debit for an invoice, credit for a credit note. Purchase: the other way round. */
@@ -73,7 +73,7 @@ final readonly class InvoiceTotalLine
     {
         return new self(
             id: (int) $line->attribute('id'),
-            account: TransactionXml::dimension($line, 'dim1'),
+            dim1: TransactionXml::dimension($line, 'dim1'),
             dim2: TransactionXml::dimension($line, 'dim2'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),
             value: TransactionXml::amount($line, 'value'),

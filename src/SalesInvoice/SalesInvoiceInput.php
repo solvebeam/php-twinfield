@@ -250,21 +250,21 @@ final readonly class SalesInvoiceInput
      *
      * @param Amount|numeric-string $unitPriceExcl
      * @param numeric-string|int $quantity
-     * @param ?string $account General ledger account, only when the invoice type allows it.
+     * @param ?string $dim1 General ledger account, only when the invoice type allows it.
      */
     public function oneOff(
         string $description,
         Amount|string $unitPriceExcl,
         string|VatCode|null $vatCode = null,
         string|int $quantity = '1',
-        ?string $account = null,
+        ?string $dim1 = null,
     ): self {
         return $this->line(
             SalesInvoiceLineInput::oneOff($description)
                 ->unitPriceExcl($unitPriceExcl)
                 ->vatCode($vatCode)
                 ->quantity($quantity)
-                ->account($account),
+                ->dim1($dim1),
         );
     }
 

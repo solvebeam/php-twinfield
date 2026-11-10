@@ -20,7 +20,7 @@ final readonly class VatLine
     public function __construct(
         public int $id,
         /** `dim1`: the VAT balance account. */
-        public DimensionReference $account,
+        public DimensionReference $dim1,
         public DebitCredit $debitCredit,
         /** The VAT amount. In the currency of the transaction; always positive, `debitCredit` gives the side. */
         public Amount $value,
@@ -51,7 +51,7 @@ final readonly class VatLine
     {
         return new self(
             id: (int) $line->attribute('id'),
-            account: TransactionXml::dimension($line, 'dim1'),
+            dim1: TransactionXml::dimension($line, 'dim1'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),
             value: TransactionXml::amount($line, 'value'),
             baseValue: TransactionXml::amount($line, 'basevalue'),

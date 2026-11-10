@@ -282,7 +282,7 @@ final class BankTransactionInputTest extends TestCase
         $input = BankTransactionInput::forBankBook($this->bankBook('1010'), new DateTimeImmutable('2026-11-03'));
 
         self::assertSame('ING', $input->dayBook());
-        self::assertSame('1010', $input->account());
+        self::assertSame('1010', $input->dim1());
     }
 
     public function testForBankBookNeedsALedgerAccount(): void

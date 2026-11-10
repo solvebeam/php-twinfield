@@ -6,13 +6,13 @@ Lists open (unpaid) invoices with Finder type `IVT`, optionally of one customer.
 Twinfield documentation: [Sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/).
 <!-- twinfield-documentation:end -->
 
-`openInvoices()` returns an `OpenInvoiceSearch`. Filter with `customer()` (Finder option `dim2`), `account()` (the accounts receivable account, `dim1`), `value()` (the original amount) or `openValue()` (the outstanding amount), and search with `pattern()` on customer code, name, amount and invoice number. `get()` gives one page, `all()` every result page by page.
+`openInvoices()` returns an `OpenInvoiceSearch`. Filter with `customer()` (Finder option `dim2`), `dim1()` (the accounts receivable account), `value()` (the original amount) or `openValue()` (the outstanding amount), and search with `pattern()` on customer code, name, amount and invoice number. `get()` gives one page, `all()` every result page by page.
 
 Each `OpenInvoice` has the invoice number, the amount, the customer code and name, and a side. The Finder gives no day book or transaction number.
 
 Two things the Twinfield documentation does not say:
 
-- Without `customer()` or `account()`, the results also include open **purchase** invoices, with the supplier in the customer column.
+- Without `customer()` or `dim1()`, the results also include open **purchase** invoices, with the supplier in the customer column.
 - The side is the opposite of the total line of the invoice: `C` (credit) for a sales invoice, `D` (debit) for a purchase invoice or a sales credit note.
 
 ## Code

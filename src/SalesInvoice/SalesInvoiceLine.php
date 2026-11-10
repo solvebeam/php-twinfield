@@ -47,8 +47,8 @@ final readonly class SalesInvoiceLine
         public ?string $freeText1,
         public ?string $freeText2,
         public ?string $freeText3,
-        /** The general ledger account Twinfield books the line on (`dim1`). */
-        public DimensionReference $account,
+        /** `dim1`: the general ledger account Twinfield books the line on. */
+        public DimensionReference $dim1,
         public Amount $valueExcl,
         public Amount $vatValue,
         public Amount $valueInc,
@@ -96,7 +96,7 @@ final readonly class SalesInvoiceLine
                 freeText1: $line->nullableString('freetext1'),
                 freeText2: $line->nullableString('freetext2'),
                 freeText3: $line->nullableString('freetext3'),
-                account: TransactionXml::dimension($line, 'dim1'),
+                dim1: TransactionXml::dimension($line, 'dim1'),
                 valueExcl: TransactionXml::amount($line, 'valueexcl'),
                 vatValue: TransactionXml::amount($line, 'vatvalue'),
                 valueInc: TransactionXml::amount($line, 'valueinc'),
@@ -151,7 +151,7 @@ final readonly class SalesInvoiceLine
         }
 
         if ($this->isOneOff()) {
-            $input = $input->account($this->account->code);
+            $input = $input->dim1($this->dim1->code);
         }
 
         return $input;

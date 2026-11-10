@@ -19,7 +19,7 @@ use SolveBeam\Twinfield\Finder\FinderQuery;
  *       echo $invoice->invoiceNumber, ' ', $invoice->amount, PHP_EOL;
  *   }
  *
- * The Finder gives open sales and purchase invoices together: customer(), supplier() or account()
+ * The Finder gives open sales and purchase invoices together: customer(), supplier() or dim1()
  * narrows it down. Every method returns a new search, so a base search can be reused.
  *
  * @see https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/
@@ -65,7 +65,7 @@ final readonly class OpenInvoiceSearch
      * Only invoices on this accounts receivable (e.g. `1300`) or payable (e.g. `1600`) account:
      * Finder option `dim1`. This leaves out the invoices of the other kind.
      */
-    public function account(string $code): self
+    public function dim1(string $code): self
     {
         TransactionXmlWriter::dimension('account (dim1)', $code);
 

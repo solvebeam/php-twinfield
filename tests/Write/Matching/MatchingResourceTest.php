@@ -45,7 +45,7 @@ final class MatchingResourceTest extends WriteTestCase
             $payment = $journal->create(
                 JournalTransactionInput::create('MEMO', $date)
                     ->credit(
-                        $invoice->total->account->code,
+                        $invoice->total->dim1->code,
                         $invoice->value(),
                         customer: $customer,
                         invoice: $invoiceNumber,

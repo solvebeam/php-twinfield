@@ -35,7 +35,7 @@ foreach ($transaction->details as $line) {
     echo sprintf(
         '  %-6s %-6s %-6s %10s  %-7s %8s  %s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         $line->dim2->code ?? '',
         $line->value,
         $line->vatCode ?? '',
@@ -48,7 +48,7 @@ foreach ($transaction->vat as $line) {
     echo sprintf(
         '  %-6s %-6s %-6s %10s  VAT %s on %s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         '',
         $line->value,
         $line->vatCode,

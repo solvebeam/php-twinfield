@@ -75,15 +75,15 @@ final class PurchaseTransactionInput extends AbstractInvoiceTransactionInput
      * With a VatCode and no VAT amount, the VAT is calculated with the percentage of the VAT
      * code on the transaction date. With a VAT code as string, give the VAT amount too.
      *
-     * @param string $account `dim1`: the profit and loss account, e.g. `7000`, or a balance sheet
-     *                        account, e.g. for stock.
+     * @param string $dim1 The profit and loss account, e.g. `7000`, or a balance sheet
+     *                     account, e.g. for stock.
      * @param Amount|numeric-string $amount Amount without VAT.
      * @param Amount|numeric-string|null $vatValue VAT amount; Twinfield refuses the transaction when it differs.
      * @param ?string $costCenter `dim2`: cost center.
      * @param ?string $project `dim3`: project or asset.
      */
     public function expense(
-        string $account,
+        string $dim1,
         Amount|string $amount,
         string|VatCode|null $vatCode = null,
         Amount|string|null $vatValue = null,
@@ -91,16 +91,16 @@ final class PurchaseTransactionInput extends AbstractInvoiceTransactionInput
         ?string $project = null,
         ?string $description = null,
     ): self {
-        return $this->invoiceLine($account, $amount, $vatCode, $vatValue, $costCenter, $project, $description);
+        return $this->invoiceLine($dim1, $amount, $vatCode, $vatValue, $costCenter, $project, $description);
     }
 
     /**
      * `dim1` of the total line: the accounts payable account, e.g. `1600`. Without it,
      * Twinfield takes the account of the supplier.
      */
-    public function payablesAccount(?string $account): self
+    public function payablesAccount(?string $dim1): self
     {
-        return $this->withAccount('payables account', $account);
+        return $this->withDim1('payables account', $dim1);
     }
 
     /**

@@ -18,7 +18,7 @@ final class CashTransactionInputTest extends TestCase
         $input = CashTransactionInput::forCashBook($this->cashBook('1000'), new DateTimeImmutable('2026-11-03'));
 
         self::assertSame('KAS', $input->dayBook());
-        self::assertSame('1000', $input->account());
+        self::assertSame('1000', $input->dim1());
     }
 
     public function testForCashBookNeedsALedgerAccount(): void

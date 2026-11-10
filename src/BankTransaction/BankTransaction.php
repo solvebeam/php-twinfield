@@ -25,7 +25,7 @@ final readonly class BankTransaction extends StatementTransaction
 {
     public function edit(): BankTransactionInput
     {
-        $input = BankTransactionInput::create($this->header->dayBook, $this->total->account->code, $this->header->date);
+        $input = BankTransactionInput::create($this->header->dayBook, $this->total->dim1->code, $this->header->date);
 
         return $this->fill($input);
     }

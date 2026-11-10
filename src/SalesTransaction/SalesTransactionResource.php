@@ -141,7 +141,7 @@ final readonly class SalesTransactionResource
     /**
      * Search open (unpaid) invoices, Finder type `IVT`, e.g. `openInvoices()->customer('1000')->get()`.
      *
-     * Without customer() or account(), the results include open purchase invoices.
+     * Without customer() or dim1(), the results include open purchase invoices.
      */
     public function openInvoices(): OpenInvoiceSearch
     {

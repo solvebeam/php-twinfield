@@ -51,7 +51,7 @@ foreach ($invoice->lines as $line) {
         $line->valueExcl,
         $line->vatCode,
         $line->vatValue,
-        $line->account->code,
+        $line->dim1->code,
     ), PHP_EOL;
 }
 

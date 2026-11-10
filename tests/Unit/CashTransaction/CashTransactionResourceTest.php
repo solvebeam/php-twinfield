@@ -31,7 +31,7 @@ final class CashTransactionResourceTest extends TestCase
         );
         self::assertInstanceOf(CashTransaction::class, $transaction);
         self::assertSame('KAS', $transaction->dayBook());
-        self::assertSame('1000', $transaction->total->account->code);
+        self::assertSame('1000', $transaction->total->dim1->code);
         self::assertSame('121.00', $transaction->balance()->value);
         self::assertInstanceOf(CashTransactionInput::class, $transaction->edit());
         self::assertSame('KAS', $transaction->edit()->dayBook());

@@ -34,13 +34,13 @@ echo 'Date:        ', $header->date->format('Y-m-d'), ', period ', $header->peri
 echo 'Statement:   ', $transaction->statementNumber ?? '-', PHP_EOL;
 echo 'Balance:     ', $transaction->startValue, ' → ', $transaction->closeValue, ' ', $header->currency, PHP_EOL;
 echo 'Total:       ', $transaction->total->debitCredit->value, ' ', $transaction->total->value,
-    ' on ', $transaction->total->account->code, PHP_EOL;
+    ' on ', $transaction->total->dim1->code, PHP_EOL;
 
 foreach ($transaction->details as $line) {
     echo sprintf(
         '  %-6s %-6s %-8s %10s  %-12s %s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         $line->dim2->code ?? '',
         $line->value,
         $line->matchStatus->value,
@@ -59,7 +59,7 @@ foreach ($transaction->vat as $line) {
     echo sprintf(
         '  %-6s %-6s VAT %-4s %10s',
         $line->debitCredit->value,
-        $line->account->code,
+        $line->dim1->code,
         $line->vatCode,
         $line->value,
     ), PHP_EOL;

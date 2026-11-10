@@ -25,7 +25,7 @@ final readonly class CashTransaction extends StatementTransaction
 {
     public function edit(): CashTransactionInput
     {
-        $input = CashTransactionInput::create($this->header->dayBook, $this->total->account->code, $this->header->date);
+        $input = CashTransactionInput::create($this->header->dayBook, $this->total->dim1->code, $this->header->date);
 
         return $this->fill($input);
     }

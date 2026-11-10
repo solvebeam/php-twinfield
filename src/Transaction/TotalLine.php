@@ -21,7 +21,7 @@ final readonly class TotalLine
     public function __construct(
         public int $id,
         /** `dim1`: the bank or cash balance account, e.g. `1010`. */
-        public DimensionReference $account,
+        public DimensionReference $dim1,
         /** Bank and cash: debit when money comes in, credit when it goes out. */
         public DebitCredit $debitCredit,
         /** Total including VAT. In the currency of the transaction; always positive, `debitCredit` gives the side. */
@@ -49,7 +49,7 @@ final readonly class TotalLine
     {
         return new self(
             id: (int) $line->attribute('id'),
-            account: TransactionXml::dimension($line, 'dim1'),
+            dim1: TransactionXml::dimension($line, 'dim1'),
             debitCredit: $line->enum('debitcredit', DebitCredit::class),
             value: TransactionXml::amount($line, 'value'),
             baseValue: TransactionXml::amount($line, 'basevalue'),
