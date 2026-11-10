@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Rest;
 use SolveBeam\Twinfield\Guid;
 use BackedEnum;
 use DateTimeImmutable;
+use DateTimeZone;
 use Exception;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\UnexpectedResponseException;
@@ -252,6 +253,43 @@ final readonly class JsonValue
     public function nullableDateTime(string $name): ?DateTimeImmutable
     {
         return $this->has($name) ? $this->dateTime($name) : null;
+    }
+
+    /**
+     * A moment such as `createdAt` or `modified`, in UTC. The REST API sends them with `Z`, but not
+     * always: the list of VAT codes leaves it out where the VAT code itself has it. Without a zone the
+     * value is UTC as well.
+     */
+    public function timestamp(string $name): DateTimeImmutable
+    {
+        $dateTime = $this->dateTime($name);
+        $value = $this->data[$name];
+        $utc = new DateTimeZone('UTC');
+
+        if (is_string($value) && preg_match('~(Z|[+-]\d{2}:\d{2})$~', $value) !== 1) {
+            return new DateTimeImmutable($dateTime->format('Y-m-d\TH:i:s.u'), $utc);
+        }
+
+        return $dateTime->setTimezone($utc);
+    }
+
+    public function nullableTimestamp(string $name): ?DateTimeImmutable
+    {
+        return $this->has($name) ? $this->timestamp($name) : null;
+    }
+
+    /**
+     * A date without time such as `startDate` or `investmentDate` (`2021-04-26T00:00:00`, sometimes
+     * with `Z`), at midnight in the time zone of PHP, like the other dates this library reads.
+     */
+    public function date(string $name): DateTimeImmutable
+    {
+        return new DateTimeImmutable($this->dateTime($name)->format('Y-m-d'));
+    }
+
+    public function nullableDate(string $name): ?DateTimeImmutable
+    {
+        return $this->has($name) ? $this->date($name) : null;
     }
 
     /**

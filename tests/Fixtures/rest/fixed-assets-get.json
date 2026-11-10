@@ -24,7 +24,7 @@
             "stopValue": 0.0,
             "methods": [
                 {
-                    "lifetime": 656.0,
+                    "lifetime": 250.0,
                     "lifetimeType": "linear",
                     "depreciationMethod": "straightLine",
                     "period": {
@@ -46,7 +46,7 @@
             "stopValue": 0.0,
             "methods": [
                 {
-                    "lifetime": 656.0,
+                    "lifetime": 250.0,
                     "lifetimeType": "linear",
                     "depreciationMethod": "straightLine",
                     "period": {
@@ -68,7 +68,7 @@
             "stopValue": 0.0,
             "methods": [
                 {
-                    "lifetime": 656.0,
+                    "lifetime": 250.0,
                     "lifetimeType": "linear",
                     "depreciationMethod": "straightLine",
                     "period": {

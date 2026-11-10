@@ -25,13 +25,13 @@ final readonly class JsonAnonymizer
         'status', 'type', 'regime', 'culture', 'cultureCode', 'unitOfMeasure', 'rel', 'method', 'balanceType',
         'searchScope', 'action', 'actionType', 'scope', 'state', 'reportStatus', 'lifetimeType',
         'depreciationMethod', 'subanalysis', 'activationStatus', 'currency', 'language', 'fixedAssetAction',
-        'spreadFor',
+        'spreadFor', 'eventType',
     ];
 
     /** Properties whose number is kept as is: counts, versions and periods, not data. */
     private const KEEP_NUMBER_KEYS = [
         'total', 'filteredTotal', 'version', 'year', 'period', 'periodNumber', 'periodFrom', 'month', 'day',
-        'weight', 'startYear', 'targetYear', 'matchLevel', 'yearFrom',
+        'weight', 'startYear', 'targetYear', 'matchLevel', 'yearFrom', 'percent', 'ratio', 'lifetime',
     ];
 
     public function __construct(
@@ -54,7 +54,8 @@ final readonly class JsonAnonymizer
         $data = json_decode($preserved, false, 512, JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING);
         $anonymized = $this->walk($data, null, $numbers);
 
-        $encoded = json_encode($anonymized, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
+        $encoded = json_encode($anonymized, $flags);
 
         return (string) preg_replace('~"@number:(-?\d+(?:\.\d+)?)@"~', '$1', $encoded) . "\n";
     }
@@ -93,7 +94,9 @@ final readonly class JsonAnonymizer
                 continue;
             }
 
-            if (preg_match('~-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?~A', $json, $matches, 0, $i) === 1 && ($character === '-' || ctype_digit($character))) {
+            $isNumberStart = $character === '-' || ctype_digit($character);
+
+            if ($isNumberStart && preg_match('~-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?~A', $json, $matches, 0, $i) === 1) {
                 $numbers[] = $matches[0];
                 $result .= sprintf('"@n%d@"', count($numbers) - 1);
                 $i += strlen($matches[0]) - 1;
@@ -146,7 +149,9 @@ final readonly class JsonAnonymizer
         }
 
         // Culture codes such as `nl-NL` are not data.
-        if (($key !== null && in_array($key, self::KEEP_KEYS, true)) || preg_match('~^[a-z]{2}-[A-Z]{2}$~', $value) === 1) {
+        $isCultureCode = preg_match('~^[a-z]{2}-[A-Z]{2}$~', $value) === 1;
+
+        if (($key !== null && in_array($key, self::KEEP_KEYS, true)) || $isCultureCode) {
             $this->values->keepValue($value);
 
             return $value;

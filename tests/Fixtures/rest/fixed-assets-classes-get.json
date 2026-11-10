@@ -6,19 +6,19 @@
         {
             "regime": "fiscal",
             "depreciationMethod": "straightLine",
-            "lifetime": 417.0,
+            "lifetime": 130.0,
             "lifetimeType": "linear"
         },
         {
             "regime": "commercial",
             "depreciationMethod": "straightLine",
-            "lifetime": 417.0,
+            "lifetime": 130.0,
             "lifetimeType": "linear"
         },
         {
             "regime": "economic",
             "depreciationMethod": "straightLine",
-            "lifetime": 417.0,
+            "lifetime": 130.0,
             "lifetimeType": "linear"
         }
     ],

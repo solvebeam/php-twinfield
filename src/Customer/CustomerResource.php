@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Customer;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Dimension\DimensionAlreadyExistsException;
+use SolveBeam\Twinfield\Dimension\DimensionChangeSearch;
 use SolveBeam\Twinfield\Dimension\DimensionNotFoundException;
 use SolveBeam\Twinfield\Dimension\DimensionRequests;
 use SolveBeam\Twinfield\Finder\CodeNameSearch;
@@ -41,7 +43,7 @@ final readonly class CustomerResource
 {
     private DimensionRequests $requests;
 
-    public function __construct(Twinfield $twinfield)
+    public function __construct(private Twinfield $twinfield)
     {
         $this->requests = new DimensionRequests($twinfield, 'DEB', 'Customer', 'Customers');
     }
@@ -143,5 +145,25 @@ final readonly class CustomerResource
     public function activate(string $code): void
     {
         $this->requests->activate($code);
+    }
+
+    /**
+     * Customers changed on or after this moment (REST API), also deleted and archived ones, with
+     * their GUID (the `uid` of the dimension). Use it to keep a copy in sync: read the changed ones with
+     * `get()` by code, or match on `uid`. Scope `readCustomers`.
+     *
+     *   $changes = $twinfield->company('1000')->customers()->changes(new DateTimeImmutable('-1 hour'));
+     *
+     *   foreach ($changes->all() as $change) {
+     *       echo $change->id, ' ', $change->status->value, PHP_EOL;
+     *   }
+     */
+    public function changes(DateTimeInterface $since): DimensionChangeSearch
+    {
+        return new DimensionChangeSearch(
+            $this->twinfield,
+            '/organisations/{organisationId}/companies/{companyId}/sales/customers/changes',
+            ['modifiedSince' => $since->format(DATE_ATOM)],
+        );
     }
 }

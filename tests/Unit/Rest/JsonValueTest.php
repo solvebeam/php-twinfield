@@ -60,6 +60,24 @@ final class JsonValueTest extends TestCase
         self::assertSame($expected, JsonValue::decode(sprintf('{"value": %s}', $number))->decimal('value'));
     }
 
+    public function testReadsTimestampsAsUtcWithOrWithoutZone(): void
+    {
+        // The list of VAT codes leaves out the `Z` that the VAT code itself has.
+        $json = JsonValue::decode('{"a": "2011-02-23T21:50:21.52", "b": "2011-02-23T21:50:21.52Z", "c": "2011-02-23T22:50:21.52+01:00"}');
+
+        self::assertSame('2011-02-23T21:50:21.520000+00:00', $json->timestamp('a')->format('Y-m-d\TH:i:s.uP'));
+        self::assertEquals($json->timestamp('a'), $json->timestamp('b'));
+        self::assertEquals($json->timestamp('a'), $json->timestamp('c'));
+    }
+
+    public function testReadsDatesWithoutTime(): void
+    {
+        $json = JsonValue::decode('{"a": "2021-04-26T00:00:00Z", "b": "2021-04-26T00:00:00"}');
+
+        self::assertEquals(new \DateTimeImmutable('2021-04-26'), $json->date('a'));
+        self::assertEquals(new \DateTimeImmutable('2021-04-26'), $json->date('b'));
+    }
+
     public function testRefusesAnAmountWithMoreThanTwoDecimals(): void
     {
         $this->expectException(UnexpectedResponseException::class);

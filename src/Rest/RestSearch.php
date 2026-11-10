@@ -26,8 +26,11 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 abstract readonly class RestSearch
 {
-    /** Page size of all(): Twinfield accepts thousands, 500 keeps responses small. */
-    private const PAGE_SIZE = 500;
+    /**
+     * Page size of all(). The maximum differs per endpoint: 250 for VAT codes, 1000 for posting rules,
+     * changes and fixed asset classes, 10000 for budgets and fixed assets.
+     */
+    private const PAGE_SIZE = 250;
 
     /**
      * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $parameters
@@ -54,7 +57,8 @@ abstract readonly class RestSearch
     }
 
     /**
-     * Items per page; Twinfield gives 50 without a limit.
+     * Items per page; Twinfield gives 50 without a limit. The maximum differs per endpoint (250 for
+     * VAT codes); Twinfield refuses more with a ValidationException.
      *
      * @return static
      */

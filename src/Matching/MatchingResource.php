@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Matching;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+use Generator;
 use InvalidArgumentException;
 use LogicException;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeCode;
+use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Rest\JsonValue;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -28,6 +33,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  *
  * Matching is a request on the XML web services (`<match>`), undoing one is UndoMatch on
  * matching.asmx. The match number for undo() is in browse data (`fin.trs.line.matchnumber`).
+ * The matching audit trail (auditTrail()) is on the REST API.
  *
  * @see https://developers.twinfield.com/documentation/api/miscellaneous/matching/
  * @see https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/
@@ -134,5 +140,111 @@ final readonly class MatchingResource
         $nil = $parameter->element->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'nil');
 
         return $nil === 'true' ? null : $parameter->text();
+    }
+
+    /**
+     * One page of the matching audit trail (REST API): matches logged on or after `$since`, oldest
+     * first. Scope `readBookkeepingMatches`.
+     *
+     *   $since = new DateTimeImmutable('-1 day');
+     *
+     *   foreach ($twinfield->company('1000')->matching()->auditTrail($since) as $event) {
+     *       echo $event->matchNumber, ' ', $event->dimensionCode, PHP_EOL;
+     *   }
+     *
+     * `$since` is inclusive, so the next page starts at the `logTimestamp` of the last event and repeats
+     * it: auditTrailSince() pages through the trail for you and skips those.
+     *
+     * @param int $limit 1 to 200; Twinfield gives 50 without a limit.
+     *
+     * @return list<MatchingAuditTrailEvent>
+     *
+     * @see https://api.accounting.twinfield.com/Api/swagger/ui/index#!/Bookkeeping32Audit32Trails
+     */
+    public function auditTrail(DateTimeInterface $since, int $limit = 200): array
+    {
+        if ($limit < 1 || $limit > 200) {
+            throw new InvalidArgumentException(sprintf('Limit must be 1 to 200, %d given.', $limit));
+        }
+
+        $json = $this->twinfield->rest(
+            'GET',
+            '/organisations/{organisationId}/companies/{companyId}/bookkeeping/audittrails/matching',
+            ['since' => DateTimeImmutable::createFromInterface($since)->format('Y-m-d\TH:i:s.uP'), 'limit' => $limit],
+        )->json();
+
+        $company = $this->twinfield->companyReference();
+
+        return array_map(
+            static fn (JsonValue $event): MatchingAuditTrailEvent => self::event($event, $company),
+            $json->list('items'),
+        );
+    }
+
+    /**
+     * All matches logged on or after `$since`, over all pages, each event once.
+     *
+     * @return Generator<int, MatchingAuditTrailEvent>
+     */
+    public function auditTrailSince(DateTimeInterface $since): Generator
+    {
+        $seen = [];
+
+        while (true) {
+            $events = $this->auditTrail($since);
+            $new = array_values(array_filter(
+                $events,
+                static fn (MatchingAuditTrailEvent $event): bool => !isset($seen[$event->eventId]),
+            ));
+
+            yield from $new;
+
+            if (count($events) < 200 || $new === []) {
+                return;
+            }
+
+            $since = end($events)->logTimestamp;
+            $seen = [];
+
+            foreach ($events as $event) {
+                if ($event->logTimestamp == $since) {
+                    $seen[$event->eventId] = true;
+                }
+            }
+        }
+    }
+
+    private static function event(JsonValue $event, CompanyReference $company): MatchingAuditTrailEvent
+    {
+        $type = $event->enum('eventType', MatchingEventType::class);
+        // Unmatched events have no match date.
+        $date = $type === MatchingEventType::Unmatched ? null : $event->object('matchDate');
+
+        return new MatchingAuditTrailEvent(
+            company: $company,
+            eventId: $event->uuid('eventId'),
+            eventType: $type,
+            logTimestamp: $event->timestamp('logTimestamp'),
+            eventTimestamp: $event->timestamp('eventTimestamp'),
+            userCode: $event->string('userCode'),
+            matchId: $event->uuid('matchId'),
+            matchLevel: $event->int('matchLevel'),
+            dimensionCode: $event->string('dimensionCode'),
+            matchNumber: $event->int('matchNumber'),
+            matchDate: $date === null ? null : new DateTimeImmutable(
+                sprintf('%04d-%02d-%02d', $date->int('year'), $date->int('month'), $date->int('day')),
+            ),
+            lines: array_map(
+                static fn (JsonValue $line): MatchingAuditTrailLine => new MatchingAuditTrailLine(
+                    dayBook: $line->string('transactionTypeCode'),
+                    number: $line->int('transactionNumber'),
+                    lineId: $line->int('transactionLineId'),
+                    matchedAmount: $line->amount('matchedAmount'),
+                    matchedAmountTransactionCurrency: $line->amount('matchedAmountTransactionCurrency'),
+                    matchedAmountReportingCurrency: $line->amount('matchedAmountReportingCurrency'),
+                ),
+                $event->list('transactionLines'),
+            ),
+        );
     }
 }

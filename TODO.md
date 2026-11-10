@@ -705,3 +705,12 @@ To check, on a test company:
 - `createYear()`: which numbers of periods are accepted (`InvalidNumberOfPeriods`), e.g. 13 or 52?
 - `deleteYear()` of a year with transactions: `YearCanNotBeDeleted`? Never run `resetYears()` on a
   company with data.
+
+## Posting rule lines without general ledger account
+
+In company `1000` two posting rule lines of suppliers have no general ledger account, only a VAT
+code (seen with the REST API, `postingRules()`). The XML web services then send an empty
+`<dimension1>`, and `suppliers()->get()` throws `dimension/postingrules/postingrule/lines/line[1]/dimension1
+is empty`. Make `Dimension\PostingRuleLine::$generalLedger` nullable, like
+`PostingRule\PostingRuleLine::$generalLedgerAccountId`, and record a fixture.
+

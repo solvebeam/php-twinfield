@@ -1,0 +1,19 @@
+{
+    "items": [
+        {
+            "id": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+            "consentOn": "2026-02-01T09:15:00Z",
+            "expiresOn": "2026-07-31T09:15:00Z",
+            "feedAccount": {
+                "id": "6fa459ea-ee8a-3ca4-894e-db77e160355e",
+                "bankAccountId": "16fd2706-8baf-433b-82eb-8c7fada847da",
+                "companyId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                "companyCode": "1000",
+                "companyName": "Example Holding B.V.",
+                "iban": "NL91ABNA0417164300"
+            }
+        }
+    ],
+    "total": 1,
+    "filteredTotal": 1
+}

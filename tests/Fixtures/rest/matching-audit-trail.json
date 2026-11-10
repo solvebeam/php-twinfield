@@ -1,0 +1,104 @@
+{
+    "items": [
+        {
+            "logTimestamp": "2025-07-02T10:48:25.7211876Z",
+            "eventTimestamp": "2025-07-02T10:48:25.5795372Z",
+            "companyId": "ba10adc6-290b-5eda-080a-007db8518f74",
+            "userCode": "HXPEQ",
+            "eventId": "bb50dcff-20da-cb05-8c15-3f72e4780c15",
+            "eventType": "Matched",
+            "matchId": "395cd584-d84e-2a8c-87bf-1f28eccb6d64",
+            "matchLevel": 1,
+            "dimensionCode": "92082",
+            "matchNumber": 799,
+            "matchDate": {
+                "year": 2026,
+                "month": 7,
+                "day": 20
+            },
+            "transactionLines": [
+                {
+                    "transactionTypeCode": "OFCEXWS",
+                    "transactionNumber": 640335678,
+                    "transactionLineId": 3,
+                    "matchedAmount": -4378.50,
+                    "matchedAmountTransactionCurrency": -4378.50,
+                    "matchedAmountReportingCurrency": 0.0
+                },
+                {
+                    "transactionTypeCode": "VSFVBGQT",
+                    "transactionNumber": 820682246,
+                    "transactionLineId": 2,
+                    "matchedAmount": 1846.10,
+                    "matchedAmountTransactionCurrency": 1846.10,
+                    "matchedAmountReportingCurrency": 0.0
+                }
+            ]
+        },
+        {
+            "logTimestamp": "2025-07-02T10:48:55.0781077Z",
+            "eventTimestamp": "2025-07-02T10:48:54.7645338Z",
+            "companyId": "ba10adc6-290b-5eda-080a-007db8518f74",
+            "userCode": "HXPEQ",
+            "eventId": "fa5971a3-67a5-bf70-7ba1-1ffb2384aa57",
+            "eventType": "Matched",
+            "matchId": "585b17f9-c84d-d5aa-bdb2-aac9beffd652",
+            "matchLevel": 1,
+            "dimensionCode": "92082",
+            "matchNumber": 799,
+            "matchDate": {
+                "year": 2026,
+                "month": 7,
+                "day": 20
+            },
+            "transactionLines": [
+                {
+                    "transactionTypeCode": "OFCEXWS",
+                    "transactionNumber": 640335678,
+                    "transactionLineId": 3,
+                    "matchedAmount": -4378.50,
+                    "matchedAmountTransactionCurrency": -4378.50,
+                    "matchedAmountReportingCurrency": 0.0
+                },
+                {
+                    "transactionTypeCode": "VSFVBGQT",
+                    "transactionNumber": 820682246,
+                    "transactionLineId": 2,
+                    "matchedAmount": 1846.10,
+                    "matchedAmountTransactionCurrency": 1846.10,
+                    "matchedAmountReportingCurrency": 0.0
+                }
+            ]
+        },
+        {
+            "logTimestamp": "2025-07-02T10:52:51.1551847Z",
+            "eventTimestamp": "2025-07-02T10:48:25.2342135Z",
+            "companyId": "ba10adc6-290b-5eda-080a-007db8518f74",
+            "userCode": "HXPEQ",
+            "eventId": "e3374aef-09af-12fd-3605-793096c74fb0",
+            "eventType": "Unmatched",
+            "matchId": "eb833eb1-28a4-1812-052a-02a7fd301ec8",
+            "matchLevel": 1,
+            "dimensionCode": "92082",
+            "matchNumber": 799,
+            "transactionLines": [
+                {
+                    "transactionTypeCode": "VSFVBGQT",
+                    "transactionNumber": 820682246,
+                    "transactionLineId": 2,
+                    "matchedAmount": 1846.10,
+                    "matchedAmountTransactionCurrency": 1846.10,
+                    "matchedAmountReportingCurrency": 0.0
+                },
+                {
+                    "transactionTypeCode": "OFCEXWS",
+                    "transactionNumber": 640335678,
+                    "transactionLineId": 3,
+                    "matchedAmount": -4378.50,
+                    "matchedAmountTransactionCurrency": -4378.50,
+                    "matchedAmountReportingCurrency": 0.0
+                }
+            ]
+        }
+    ]
+}

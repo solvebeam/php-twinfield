@@ -28,7 +28,7 @@
                 {
                     "ruleId": "bc173135-6fbb-cb40-35b8-7fe8ed9dfda8",
                     "isVatLine": true,
-                    "percent": 846.0,
+                    "percent": 100.0,
                     "generalLedgerAccountId": "d68597e8-0cba-c83a-ae07-cbb60c6e3ec7",
                     "costCenterAccountId": null,
                     "vatGroupId": "f8a32f9e-8cea-4aa0-a215-15a0971f807a"

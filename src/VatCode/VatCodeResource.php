@@ -8,11 +8,13 @@ use LogicException;
 use SolveBeam\Twinfield\Dimension\DeleteResult;
 use SolveBeam\Twinfield\Finder\CodeNameSearch;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\Guid;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
+use SolveBeam\Twinfield\Rest\NotFoundException;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -45,6 +47,8 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class VatCodeResource
 {
+    private const REST_PATH = '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes';
+
     public function __construct(
         private Twinfield $twinfield,
     ) {
@@ -190,5 +194,36 @@ final readonly class VatCodeResource
     {
         return $this->twinfield->companyCode()
             ?? throw new LogicException('VAT codes belong to a company: use company() first.');
+    }
+
+    /**
+     * Search the VAT codes on the REST API, with their GUIDs, rates over time and allocation rules
+     * (accounts and VAT groups by GUID). Scope `readVat`.
+     *
+     *   $search = $twinfield->company('1000')->vatCodes()->searchDetails()->type(VatCodeType::Sales);
+     *
+     *   foreach ($search->all() as $vatCode) {
+     *       echo $vatCode->code, ' ', $vatCode->rateOn(new DateTimeImmutable())?->percentage, PHP_EOL;
+     *   }
+     *
+     * @see https://api.accounting.twinfield.com/Api/swagger/ui/index#!/VAT32Codes
+     */
+    public function searchDetails(string $pattern = '*'): VatCodeDetailsSearch
+    {
+        $search = new VatCodeDetailsSearch($this->twinfield, self::REST_PATH);
+
+        return $pattern === '*' ? $search : $search->pattern($pattern);
+    }
+
+    /**
+     * A VAT code by GUID on the REST API, e.g. the `vatId` of a sales article. Scope `readVat`.
+     *
+     * @throws NotFoundException When the company has no VAT code with this GUID.
+     */
+    public function getDetails(string $id): VatCodeDetails
+    {
+        $json = $this->twinfield->rest('GET', self::REST_PATH . '/' . Guid::of($id))->json();
+
+        return VatCodeDetailsReader::read($json, $this->twinfield->companyReference());
     }
 }

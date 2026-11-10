@@ -16,6 +16,7 @@ use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
 use SolveBeam\Twinfield\BankBook\BankBookResource;
+use SolveBeam\Twinfield\BankFeed\BankFeedResource;
 use SolveBeam\Twinfield\CashBook\CashBookResource;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionResource;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionResource;
@@ -52,6 +53,7 @@ use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Period\PeriodResource;
+use SolveBeam\Twinfield\PostingRule\PostingRuleResource;
 use SolveBeam\Twinfield\Project\ProjectResource;
 use SolveBeam\Twinfield\PurchaseTransaction\PurchaseTransactionResource;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
@@ -375,6 +377,22 @@ final readonly class Twinfield
     public function ledgerAccounts(): LedgerAccountResource
     {
         return new LedgerAccountResource($this);
+    }
+
+    /**
+     * Posting rules of the customers and suppliers of the company (REST API). Read-only.
+     */
+    public function postingRules(): PostingRuleResource
+    {
+        return new PostingRuleResource($this);
+    }
+
+    /**
+     * Bank feeds of the company: PSD2 feeds (REST API). Read-only.
+     */
+    public function bankFeeds(): BankFeedResource
+    {
+        return new BankFeedResource($this);
     }
 
     /**

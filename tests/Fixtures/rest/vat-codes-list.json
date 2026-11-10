@@ -30,7 +30,7 @@
                         {
                             "ruleId": "bc173135-6fbb-cb40-35b8-7fe8ed9dfda8",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "d68597e8-0cba-c83a-ae07-cbb60c6e3ec7",
                             "costCenterAccountId": null,
                             "vatGroupId": "f8a32f9e-8cea-4aa0-a215-15a0971f807a"
@@ -69,7 +69,7 @@
                         {
                             "ruleId": "4fce285a-231b-c195-b624-d1891051a310",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "2960b553-0a93-203a-05e0-2f92ba25c1cd",
                             "costCenterAccountId": null,
                             "vatGroupId": "4016e169-264e-fd43-8ec2-c5d0dc36569c"
@@ -108,7 +108,7 @@
                         {
                             "ruleId": "c4977b7c-5979-3e85-97b9-5a3088de2aae",
                             "isVatLine": true,
-                            "percent": -486.0,
+                            "percent": -100.0,
                             "generalLedgerAccountId": "ee9fd464-fde8-21a3-65d8-feb93285daf0",
                             "costCenterAccountId": null,
                             "vatGroupId": "e3b0b8d4-b377-ce41-c786-d4def43b46a2"
@@ -116,7 +116,7 @@
                         {
                             "ruleId": "86caa98d-3f94-3030-4b8d-d1e188a19668",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -140,7 +140,7 @@
                         {
                             "ruleId": "98e21b57-af94-df9d-5acd-c9045dbdc38a",
                             "isVatLine": true,
-                            "percent": -486.0,
+                            "percent": -100.0,
                             "generalLedgerAccountId": "ee9fd464-fde8-21a3-65d8-feb93285daf0",
                             "costCenterAccountId": null,
                             "vatGroupId": "e3b0b8d4-b377-ce41-c786-d4def43b46a2"
@@ -148,7 +148,7 @@
                         {
                             "ruleId": "8d07d284-0757-f3de-dc22-63c4118eebcf",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -187,7 +187,7 @@
                         {
                             "ruleId": "f007e1ed-d1a4-5515-2eed-313a55cf5b3d",
                             "isVatLine": true,
-                            "percent": -486.0,
+                            "percent": -100.0,
                             "generalLedgerAccountId": "ee9fd464-fde8-21a3-65d8-feb93285daf0",
                             "costCenterAccountId": null,
                             "vatGroupId": "e3b0b8d4-b377-ce41-c786-d4def43b46a2"
@@ -195,7 +195,7 @@
                         {
                             "ruleId": "29ba8170-6dd3-7f44-9511-6e94303a93e5",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -219,7 +219,7 @@
                         {
                             "ruleId": "66d735a8-3440-3d29-7041-ada47dfc2576",
                             "isVatLine": true,
-                            "percent": -486.0,
+                            "percent": -100.0,
                             "generalLedgerAccountId": "ee9fd464-fde8-21a3-65d8-feb93285daf0",
                             "costCenterAccountId": null,
                             "vatGroupId": "e3b0b8d4-b377-ce41-c786-d4def43b46a2"
@@ -227,7 +227,7 @@
                         {
                             "ruleId": "bdc5c63c-18c8-75fa-54e6-c6b62b210db1",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -266,7 +266,7 @@
                         {
                             "ruleId": "e711884e-f40e-76a0-16f6-79ff395bcceb",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -290,7 +290,7 @@
                         {
                             "ruleId": "df5e11a6-8b29-5697-022e-33089b9f33f8",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -329,7 +329,7 @@
                         {
                             "ruleId": "f0a939ec-5fdb-d301-0272-cd6d0bffa4a3",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -353,7 +353,7 @@
                         {
                             "ruleId": "affdba0c-4c42-8aa7-8275-3ef1fd01c9f1",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -392,7 +392,7 @@
                         {
                             "ruleId": "0ddcc5ac-0d69-ef22-548f-07d215f5dee0",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "ffc0ccb9-391b-579d-781b-203cfd0355dd",
                             "costCenterAccountId": null,
                             "vatGroupId": "b6d3a3ab-d9c7-0d29-adae-85c40692e206"
@@ -431,7 +431,7 @@
                         {
                             "ruleId": "7d83cd06-b2bc-ed73-a697-cdd261bbb441",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "700b81a0-339a-2d51-2555-d7bef609a274",
                             "costCenterAccountId": null,
                             "vatGroupId": "0ecd4842-44b7-03f7-39fa-62fcd30af30f"
@@ -455,7 +455,7 @@
                         {
                             "ruleId": "836ca6bb-0543-f9c4-e137-dd6af9cf5677",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "700b81a0-339a-2d51-2555-d7bef609a274",
                             "costCenterAccountId": null,
                             "vatGroupId": "0ecd4842-44b7-03f7-39fa-62fcd30af30f"
@@ -494,7 +494,7 @@
                         {
                             "ruleId": "fe62a85e-a028-cd34-35ad-c63d6f49c0ce",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "700b81a0-339a-2d51-2555-d7bef609a274",
                             "costCenterAccountId": null,
                             "vatGroupId": "0ecd4842-44b7-03f7-39fa-62fcd30af30f"
@@ -518,7 +518,7 @@
                         {
                             "ruleId": "d829d335-06a9-654b-d5da-f88432e4460d",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "700b81a0-339a-2d51-2555-d7bef609a274",
                             "costCenterAccountId": null,
                             "vatGroupId": "0ecd4842-44b7-03f7-39fa-62fcd30af30f"
@@ -557,7 +557,7 @@
                         {
                             "ruleId": "987f3c49-7fe4-83c8-451a-0c43cc7273be",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "6727d914-67ca-e48b-7a63-8fcba74e0ac7",
                             "costCenterAccountId": null,
                             "vatGroupId": "c60fe5cc-49cf-bdcc-6dec-fc742252b95e"
@@ -581,7 +581,7 @@
                         {
                             "ruleId": "20016755-6c9f-13b2-5c76-7006b35f73c3",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "6727d914-67ca-e48b-7a63-8fcba74e0ac7",
                             "costCenterAccountId": null,
                             "vatGroupId": "c60fe5cc-49cf-bdcc-6dec-fc742252b95e"
@@ -620,7 +620,7 @@
                         {
                             "ruleId": "35d6787d-7dc7-2706-6084-9601d9e5b1dd",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "afa664a9-3c58-035f-b9d5-37a74ab101c4",
                             "costCenterAccountId": null,
                             "vatGroupId": "f25a5eb2-dcf7-39a6-16b1-8c7b17ecda78"
@@ -644,7 +644,7 @@
                         {
                             "ruleId": "0d3b28de-3c47-b6fb-5025-cd9744609773",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "afa664a9-3c58-035f-b9d5-37a74ab101c4",
                             "costCenterAccountId": null,
                             "vatGroupId": "f25a5eb2-dcf7-39a6-16b1-8c7b17ecda78"
@@ -683,7 +683,7 @@
                         {
                             "ruleId": "d765bc80-df4b-e9a9-c365-dfe8d0f36da2",
                             "isVatLine": true,
-                            "percent": 846.0,
+                            "percent": 100.0,
                             "generalLedgerAccountId": "f8385c06-5f08-3257-7b8f-667b50c30765",
                             "costCenterAccountId": null,
                             "vatGroupId": "4ec7f4ce-18f0-f9e3-b2e7-b4879aa38bee"

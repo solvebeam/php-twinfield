@@ -44,7 +44,27 @@ final readonly class Environment
         $twinfield = Twinfield::create($this->session, $this->httpClient(), $psr17, $psr17);
         $company = $this->config->get('TWINFIELD_COMPANY');
 
-        return $company === null ? $twinfield : $twinfield->company($company);
+        return $company === null ? $twinfield : $twinfield->company($company, self::companyId($twinfield, $company));
+    }
+
+    /**
+     * GUID of the company for the REST API, looked up once per process: every test gets a new client,
+     * and the Finder lookup of all offices would hit the rate limit.
+     */
+    private static function companyId(Twinfield $twinfield, string $company): ?string
+    {
+        /** @var ?array<string, string> $ids */
+        static $ids = null;
+
+        if ($ids === null) {
+            $ids = [];
+
+            foreach ($twinfield->offices()->list() as $office) {
+                $ids[$office->code] = $office->companyId;
+            }
+        }
+
+        return $ids[$company] ?? null;
     }
 
     public function httpClient(): ClientInterface
