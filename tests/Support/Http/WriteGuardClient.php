@@ -22,6 +22,14 @@ final readonly class WriteGuardClient implements ClientInterface
     /** SOAP actions that only read data (matched on the local name prefix). */
     private const READ_ACTION_PREFIXES = ['Search', 'Get', 'Query', 'Read', 'List'];
 
+    /**
+     * SOAP actions that only read data, matched exactly: `Load` of hierarchies.asmx (a prefix would
+     * also match a future `LoadAndSave`).
+     *
+     * @see https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/#load
+     */
+    private const READ_ACTIONS = ['Load'];
+
     /** ProcessXml actions; the embedded XML request decides read or write. */
     private const PROCESS_XML_ACTIONS = ['ProcessXmlString', 'ProcessXmlDocument'];
 
@@ -77,6 +85,10 @@ final readonly class WriteGuardClient implements ClientInterface
             $requests = self::processXmlRequests($body);
 
             return $requests !== [] && array_filter($requests, self::isReadRequest(...)) === $requests;
+        }
+
+        if (in_array($action, self::READ_ACTIONS, true)) {
+            return true;
         }
 
         foreach (self::READ_ACTION_PREFIXES as $prefix) {

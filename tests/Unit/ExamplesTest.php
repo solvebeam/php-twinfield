@@ -58,6 +58,10 @@ final class ExamplesTest extends TestCase
         'general-ledger-accounts/create-general-ledger-account',
         'general-ledger-accounts/delete-general-ledger-account',
         'general-ledger-accounts/update-general-ledger-account',
+        // Save and delete change a reporting structure of the whole organisation, not only of the company.
+        'hierarchies/bind-accounts',
+        'hierarchies/delete-hierarchy',
+        'hierarchies/save-hierarchy',
         'periods/rename-period',
         'projects/create-project',
         'projects/delete-project',

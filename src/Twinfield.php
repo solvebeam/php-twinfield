@@ -39,6 +39,7 @@ use SolveBeam\Twinfield\Finder\FinderQuery;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
+use SolveBeam\Twinfield\Hierarchy\HierarchyResource;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\Office;
@@ -420,6 +421,15 @@ final readonly class Twinfield
     public function declarations(): DeclarationResource
     {
         return new DeclarationResource($this);
+    }
+
+    /**
+     * Reporting structures (hierarchies.asmx): search, read with all nodes and the accounts of the
+     * company, save, bind and unbind accounts, hide and delete.
+     */
+    public function hierarchies(): HierarchyResource
+    {
+        return new HierarchyResource($this);
     }
 
     /**

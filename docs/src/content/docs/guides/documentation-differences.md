@@ -363,6 +363,45 @@ Checked live (November 2026), read-only, on an organisation with 5,828 returns o
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Statuses other than `Created` and `Approved`, and filled `ExtraInformation` (e.g. for `Error while sending`).
 
+## Reporting structures
+
+Checked live on 10 November 2026, read-only: Load of the four reporting structures of an organisation (up to 3,858 nodes and 2,949 accounts) for three companies, an unknown and an empty code, and the Finder types `HIE` and `HND`. Documentation: [Hierarchy](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/) and the WSDL (`hierarchies.asmx?wsdl`, the same as in `wsdl/accounting/`). The SDK follows the WSDL and the live responses. See the [reporting structures guide](/guides/hierarchies/).
+
+### Mistakes in the documentation
+
+| Documentation | WSDL and live responses | SDK |
+|---|---|---|
+| `Hierarchy.Rootnode` | `RootNode`, as in the Save example of the documentation | `Hierarchy::$rootNode` |
+| `LoadResponse` has `String LoadResult[]` and `Hierarchy hierarchy[]` | `LoadResult` is a list of `MessageOfHierarchyLoadMessage`; `hierarchy` is one reporting structure, left out on an error | `get()` returns one `Hierarchy` |
+| `AccessRights` is one `HierarchyAccess` in the Load response, a list in Save | A list in both (`ArrayOfHierarchyAccess`) | `list<HierarchyAccess>` |
+| `HierarchyAccess.Messages` is `String[]` | `ArrayOfMessageOfHierarchyAccessMessage`, with codes like the other messages | `HierarchyAccessMessage` |
+| Message codes only for Save | Every operation has codes in the WSDL: Load, Hide and Delete `InvalidCode` and `UserRoleNotAllowedToPerformThisAction`; Bind `BindingConflict`, `BindingNotUnique`, `InvalidNode`, `ReadOnly`, `BindingInvalid`; Unbind `InvalidNode`; nodes and access rights their own lists | An enum per list, all `HierarchyMessageCode` |
+| Load, Bind, Unbind, Save and Hide | The WSDL also has `Delete` (`hierarchyCode`), answered with the messages of Load | `delete()` |
+| `HierarchyNode.Id` is an `Int` | `nillable` in the WSDL, for a new node | `HierarchyNodeInput::$id` is null for a new node and left out of the request |
+
+### Requests
+
+- **The company in the header is required**: without it Twinfield answers SOAP fault 359 ("Company ontbreekt in request header"). The SDK throws a `LogicException` before sending.
+- **Accounts per company.** The nodes are the same for every company; the accounts in the Load response are those of the company in the header (2,949, 3,146 and 2,489 accounts for the same reporting structure in three companies). Bind and Unbind have an `office` parameter; the SDK sends the company of the client.
+- **An unknown or empty code** gives an `Error` message `InvalidCode` with the code as parameter ("De rapportagestructuur X bestaat niet."), not a SOAP fault. The SDK throws a `HierarchyNotFoundException`.
+
+### Responses
+
+- **Every element is there** in every node: `Id`, `Code`, `Name`, `Description`, `Accounts`, `ChildNodes`, `Messages` and `Touched`, also when empty. `Description` is an empty element in most nodes; the SDK gives null.
+- **Node codes are unique** within a reporting structure; the root node has the code and name of the reporting structure.
+- **A node has either accounts or child nodes**, never both, in all 4,558 nodes.
+- **`BalanceType`** is `Balance`, `Debit` or `Credit`. The 49 accounts with `Debit` were each also bound with `Credit`, to the same or another node.
+- **`Messages`** of nodes and access rights are always empty in a Load response.
+- **Access rights**: one per user (`UserCode`, `AccessRightTabAccesible` `true`) and a last one for everyone else (all codes empty, `false`), with `Type` `Edit`, `Bind`, `Use` or `None`. `OfficeCode` and `RoleCode` were always empty elements; the SDK gives null for an empty code.
+- **`HIE`** gives the same reporting structures in every company; with `company=*` there are no extra company columns. `HierarchySummary` has the organisation, not a company.
+- **`HND`** with option `hierarchy` gives every node of the reporting structure, the root node included, with code and name, but not in tree order, nor by code or ID (for one reporting structure the root node came first, for another one 320th). There is no node ID.
+
+### Not yet verified
+
+- Save, Bind, Unbind, Hide and Delete: their responses and messages. Only tested offline, with responses after the WSDL. Open questions: does Save accept a new node without `Id`; what does Twinfield do with `AccessRightTabAccesible` in a request (the SDK sends `true` for an access right of a user, role or company, `false` otherwise); is an empty list of access rights accepted; can a hidden reporting structure be shown again; does Save return the IDs of new nodes.
+- Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
+- Access rights for a role or a company.
+
 ## Finder
 
 The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a search of every documented type (`maxRows` 3) on a test company, `company=*` for 15 types, and the documented search fields and options with the errors they give. Documentation: [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and the WSDL (`finder.asmx?wsdl`, in `wsdl/accounting/`).
@@ -393,7 +432,7 @@ The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a sear
 
 ### Not yet verified
 
-- Types without rows in the test companies: `BSN`, `DVT`, `GRP`, `GWY`, `HND`, `ICTCOUNTRY`, `OIC`, `PIS`, `SPM`. Twinfield accepts the search and gives the columns, but the values were not seen.
+- Types without rows in the test companies: `BSN`, `DVT`, `GRP`, `GWY`, `ICTCOUNTRY`, `OIC`, `PIS`, `SPM`. `HND` is verified with the [reporting structures](#reporting-structures). Twinfield accepts the search and gives the columns, but the values were not seen.
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Search field 3 on projects that have a customer: the test company has three projects, none of them found on field 3.
 

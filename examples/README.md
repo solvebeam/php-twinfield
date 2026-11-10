@@ -261,6 +261,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [List declarations](declarations/list-declarations/): VAT, ICT and tax group returns of the company or the organisation.
 - [Download VAT return](declarations/download-vat-return/): a VAT return as XBRL, with its payment reference.
 
+## Reporting structures
+
+- [List reporting structures](hierarchies/list-hierarchies/): code and name of the reporting structures of the organisation.
+- [Print reporting structure tree](hierarchies/print-hierarchy-tree/): nodes and accounts as an ASCII tree with `RecursiveTreeIterator`.
+- [Accounts of a node](hierarchies/node-accounts/): the accounts of a node and of the nodes below it.
+- [Save reporting structure](hierarchies/save-hierarchy/): create one with nodes, accounts and access rights, or change one (write).
+- [Bind accounts](hierarchies/bind-accounts/): bind an account to a node and unbind it again (write).
+- [Delete reporting structure](hierarchies/delete-hierarchy/): delete or hide one (write).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

@@ -49,6 +49,10 @@ final class WriteGuardClientTest extends TestCase
         yield 'compressed (cannot inspect)' => ['ProcessXmlCompressed', self::envelope('<ProcessXmlCompressed />'), false];
         yield 'command & query: query' => ['Query', self::envelope('<Query />'), true];
         yield 'command & query: process (command)' => ['Process', self::envelope('<Command />'), false];
+        yield 'hierarchy load' => ['Load', self::envelope('<Load />'), true];
+        yield 'hierarchy save' => ['Save', self::envelope('<Save />'), false];
+        yield 'hierarchy bind' => ['Bind', self::envelope('<Bind />'), false];
+        yield 'hierarchy hide' => ['Hide', self::envelope('<Hide />'), false];
         yield 'unknown action' => ['SetToApproved', self::envelope('<SetToApproved />'), false];
     }
 

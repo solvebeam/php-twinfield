@@ -42,6 +42,8 @@ final class XmlAnonymizer
         'NoAccess', 'InvalidCode', 'InvalidParameter', 'NotSupported', 'InvalidDocumentType', 'ParameterIsRequired',
         'ParametersAreRequired', 'DocumentDoesNotExist', 'StartStatusInCorrectForTransition',
         'UnableToPerformTransition',
+        // Message codes of the hierarchies service (InvalidCode is above)
+        'UserRoleNotAllowedToPerformThisAction', 'InvalidNode', 'BindingConflict', 'BindingNotUnique',
     ];
 
     /** Elements whose text is kept as is. */
@@ -51,6 +53,8 @@ final class XmlAnonymizer
         'Sense', 'Recognition', 'AmountOperator', 'AllocationRuleStorageLevel',
         // Declarations service: the kind of return
         'DocumentCode',
+        // Hierarchies service: which balance of an account a node shows
+        'BalanceType',
     ];
 
     /** Text within these elements is kept (column headers, not data). */

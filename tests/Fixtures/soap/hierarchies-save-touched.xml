@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><SaveResponse xmlns="http://www.twinfield.com/"><SaveResult><MessageOfHierarchySaveMessage><Type>Error</Type><Text>De rapportagestructuur is gewijzigd door een andere gebruiker.</Text><Code>Touched</Code><Parameters/></MessageOfHierarchySaveMessage></SaveResult></SaveResponse></soap:Body></soap:Envelope>

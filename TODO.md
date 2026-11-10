@@ -578,3 +578,38 @@ To check:
 - Statuses other than Created and Approved (Sent, Rejected, Error while sending): does
   `ExtraInformation` get a value, e.g. the rejection reason?
 - Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`).
+
+## Reporting structures: verify writing live
+
+Reading reporting structures (`get()`, `search()`, `searchNodes()`) is verified live (read-only,
+see the reporting structures section of the documentation differences). `save()`, `bind()`,
+`unbind()`, `hide()` and `delete()` are only tested offline, with fictitious responses after the
+WSDL (`hierarchies-save*.xml`, `-bind*.xml`, `-unbind.xml`, `-hide.xml`, `-delete*.xml`).
+
+```sh
+TWINFIELD_RECORD=1 composer test:write -- --company=1002_3 --filter=Hierarchy
+```
+
+Reporting structures belong to the organisation: the write test creates SDKTEST9xx, which every
+company sees until the test deletes it again at the end. Bind and unbind only change the accounts
+of the write company.
+
+To check:
+
+- Does Save accept a new node without `Id`, and does it return the reporting structure with the
+  IDs of the new nodes?
+- Is an empty list of access rights accepted, or is the access right of everyone else required?
+  What does Twinfield do with `AccessRightTabAccesible` in a request (the SDK sends `true` for an
+  access right of a user, role or company, `false` for everyone else)?
+- A stale `touched`: `Touched` in `SaveResult`, or in the node messages? And Save with an existing
+  code from `HierarchyInput::create()` (touched 0): replaced or refused?
+- Where do the node errors come (`NodeNotUnique` for a duplicate code, `BindingNotUnique` for an
+  account bound twice): in the node `Messages` of the returned `hierarchy`, as the SDK expects?
+- Bind of an account that is already bound with the same balance type, and Unbind of an account
+  that is not bound: which messages?
+- Hide: is the reporting structure still in `search()` and `get()`, and can it be shown again
+  (Save)? Then run `examples/hierarchies/delete-hierarchy` with `--hide`.
+- Delete (only in the WSDL): does it delete, and what does it give for a reporting structure that
+  is in use (e.g. by a report)?
+- Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`), and run the
+  write examples `save-hierarchy`, `bind-accounts` and `delete-hierarchy`.

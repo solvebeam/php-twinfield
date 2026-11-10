@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><LoadResponse xmlns="http://www.twinfield.com/"><LoadResult><MessageOfHierarchyLoadMessage><Type>Error</Type><Text>Jf xfuafjqcnwzimcilcjw URS-TIQX-QRJ-VQVJJ rnuyjqq uywz.</Text><Code>InvalidCode</Code><Parameters><string>JRG-UQHG-BNB-OHOHG</string></Parameters></MessageOfHierarchyLoadMessage></LoadResult></LoadResponse></soap:Body></soap:Envelope>
