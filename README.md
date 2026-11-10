@@ -523,30 +523,18 @@ All live calls go through a write guard. Requests that may change data (anything
 
 ## About
 
-<table>
-	<tr>
-		<td align="center" width="50%">
-			Made by<br><br>
-			<a href="https://www.solvebeam.com/">
-				<picture>
-					<source media="(prefers-color-scheme: dark)" srcset="images/solvebeam/solvebeam-logo-dark.svg">
-					<img src="images/solvebeam/solvebeam-logo.svg" alt="SolveBeam" height="40">
-				</picture>
-			</a>
-		</td>
-		<td align="center" width="50%">
-			Twinfield is a product of<br><br>
-			<a href="https://www.twinfield.com/">
-				<picture>
-					<source media="(prefers-color-scheme: dark)" srcset="images/wolters-kluwer/wolters-kluwer-logo-dark.svg">
-					<img src="images/wolters-kluwer/wolters-kluwer-logo.svg" alt="Wolters Kluwer" height="32">
-				</picture>
-			</a>
-		</td>
-	</tr>
-</table>
+<p align="center">
+	<a href="https://www.solvebeam.com/">
+		<img src="images/solvebeam/solvebeam-icon.svg" alt="SolveBeam" width="48" height="48">
+	</a>
+</p>
 
-Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and logos are used only to refer to their products. See [images/](images/) for the logo files.
+<p align="center">
+	Made by <a href="https://www.solvebeam.com/">SolveBeam</a>.<br>
+	Twinfield is a product of <a href="https://www.twinfield.com/">Wolters Kluwer</a>.
+</p>
+
+Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and logos are used only to refer to their products. See [images/](images/) for the sources of the logo files.
 
 ## Links
 
