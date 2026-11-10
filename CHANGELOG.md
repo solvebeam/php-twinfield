@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- MIT license: `LICENSE` and `"license": "MIT"` in `composer.json`.
 - The PHP extensions the SDK uses are required in `composer.json`: `ext-bcmath`, `ext-dom`, `ext-libxml`, `ext-mbstring` and `ext-simplexml`.
 
 #### Client and authentication

@@ -530,6 +530,12 @@ This library is made by [SolveBeam](https://www.solvebeam.com/). It is not an of
 
 Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and logos are used only to refer to their products. See [images/](images/) for the sources of the logo files.
 
+## License
+
+This library is released under the [MIT License](LICENSE).
+
+The license covers the code and documentation written by SolveBeam. Material from Twinfield in this repository, such as the WSDL files, the OpenAPI specification, the web services manuals, the browse definitions and the quoted knowledge base articles, remains the property of Wolters Kluwer and is included for reference only.
+
 ## Links
 
 - [Changelog](CHANGELOG.md)

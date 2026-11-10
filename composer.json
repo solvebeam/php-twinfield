@@ -2,6 +2,7 @@
   "name": "solvebeam/twinfield",
   "description": "Modern PHP SDK for the Twinfield API",
   "homepage": "https://github.com/solvebeam/twinfield-php",
+  "license": "MIT",
   "authors": [
     {
       "name": "Remco Tolsma",
