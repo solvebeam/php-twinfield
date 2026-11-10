@@ -8,6 +8,7 @@ use DateTimeInterface;
 use DOMElement;
 use InvalidArgumentException;
 use LogicException;
+use SolveBeam\Twinfield\EmailAddress;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
@@ -120,15 +121,13 @@ final readonly class UserInput
     }
 
     /**
-     * At most 128 characters.
+     * At most 128 characters, and an address Twinfield accepts: see EmailAddress for the rules.
+     *
+     * @throws InvalidArgumentException When Twinfield would refuse the address.
      */
-    public function email(string $email): self
+    public function email(EmailAddress|string $email): self
     {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException(sprintf('"%s" is not an email address.', $email));
-        }
-
-        return $this->set('email', XmlValue::maxLength('user email', $email, 128));
+        return $this->set('email', XmlValue::maxLength('user email', EmailAddress::of($email)->value, 128));
     }
 
     /**
@@ -371,21 +370,17 @@ final readonly class UserInput
      * on request.
      *
      * @param string $domain Domain of the identity provider registered in the Wolters Kluwer account.
-     * @param string $email Email address of the user at the identity provider, at most 128 characters.
+     * @param EmailAddress|string $email Email address of the user at the identity provider, at most 128 characters.
      */
-    public function federation(string $domain, string $email): self
+    public function federation(string $domain, EmailAddress|string $email): self
     {
         if ($domain === '') {
             throw new InvalidArgumentException('Federation domain must not be empty.');
         }
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException(sprintf('"%s" is not an email address.', $email));
-        }
-
         return $this
             ->set('federation/domain', $domain)
-            ->set('federation/email', XmlValue::maxLength('federation email', $email, 128));
+            ->set('federation/email', XmlValue::maxLength('federation email', EmailAddress::of($email)->value, 128));
     }
 
     /**

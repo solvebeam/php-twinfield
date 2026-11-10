@@ -50,6 +50,21 @@ final class AddressInputTest extends TestCase
         self::assertNull($address->name);
     }
 
+    public function testChecksTheEmailAddressWithTheRulesOfTwinfield(): void
+    {
+        // An underscore in the domain is fine for Twinfield, white space around it is removed.
+        self::assertSame(
+            'post@my_company.example.com',
+            AddressInput::postal()->email(' post@my_company.example.com ')->email,
+        );
+        self::assertNull(AddressInput::postal()->email('post@example.com')->email(null)->email);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('""Post room"@example.com" is not an email address.');
+
+        AddressInput::postal()->email('"Post room"@example.com');
+    }
+
     public function testRefusesAnInvalidCountry(): void
     {
         $this->expectException(InvalidArgumentException::class);

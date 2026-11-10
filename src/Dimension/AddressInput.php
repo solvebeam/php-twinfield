@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\Dimension;
 
 use DOMElement;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\EmailAddress;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 
@@ -184,9 +185,18 @@ final readonly class AddressInput
         return $this->with(['telefax' => self::nullIfEmpty($telefax)]);
     }
 
-    public function email(?string $email): self
+    /**
+     * One email address, at most 200 characters. Null or an empty string clears it.
+     *
+     * @throws InvalidArgumentException When Twinfield would refuse the address: see EmailAddress for the rules.
+     */
+    public function email(EmailAddress|string|null $email): self
     {
-        return $this->with(['email' => self::nullIfEmpty($email)]);
+        if ($email === null || $email === '') {
+            return $this->with(['email' => null]);
+        }
+
+        return $this->with(['email' => EmailAddress::of($email)->value]);
     }
 
     /**

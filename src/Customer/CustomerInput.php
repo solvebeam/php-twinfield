@@ -196,7 +196,8 @@ final readonly class CustomerInput
     }
 
     /**
-     * Email address for invoices, at most 200 characters.
+     * Email address for invoices, at most 200 characters. Not checked as one EmailAddress:
+     * Twinfield keeps several addresses here, separated by a comma.
      */
     public function eInvoicingEmail(?string $email): self
     {

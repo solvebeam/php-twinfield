@@ -236,6 +236,7 @@ The read model `Customer` groups the settings like Twinfield does:
 - `CustomerInput` is immutable and only sends what you set: when creating, everything else gets the default of the dimension type; when updating, it stays as it is. Setting a value to `null` clears it.
 - Settings that belong together are set together, so they cannot contradict each other: `directDebit($payCode)` also sets the means of payment to a payment file, `withoutDirectDebit()` to none; `sendReminder(SendReminder::ByEmail, $email)` requires the email address.
 - Addresses, bank accounts, groups and payment conditions are sent as a whole once set. `address()` and `bank()` replace the entry with the same id, or add one; a new default makes the others non-default. `withoutAddress($id)` and `withoutBank($id)` remove one; `withoutPostingRule($id)` deletes a posting rule (`status="deleted"`).
+- The email address of an address is checked with [Twinfield's own rules](https://developers.twinfield.com/documentation/api/types/guidelines#e-mail-address-validation), which `EmailAddress` knows: an underscore in the domain is accepted, a quoted local part such as `"John Doe"@example.com` is not. The email fields for invoices, reminders and remittance advices are only checked for their length: the one for invoices can hold several addresses, separated by a comma.
 - IBANs are normalised (spaces removed, upper case) and checked with the ISO 13616 checksum. Amounts are numeric strings or `Amount`s, never floats.
 - `Address`, `Bank`, `PostingRule`, `PaymentCondition` and `RemittanceAdvice` live in `SolveBeam\Twinfield\Dimension`, as [suppliers](#suppliers) (`CRD`) have them too.
 
@@ -1109,6 +1110,7 @@ $users->delete('JSMITH', UserDeleteReason::NoLongerOperative, 'Left the company'
 - A `User` has `role` (`UserRole` with code, name and level), `type`, `culture`, `invitationStatus`, `companies` (`CompanyAccess`), `account` (`UserAccount`: locked, last logon, single sign-on, password expiry, disabled period), `smsLogin`, `time`, `expenseDefaults`, `federation` and who changed it last. The password is never returned.
 - A user is either `restricted` to the listed companies, or has access to all companies of the organisation with an empty list.
 - `UserInput` sends only what you set. `edit()` leaves out what Twinfield locks or what would change access by accident: the password, the invitation status, `demo` for users that are no client of an accountant, the password expiry with single sign-on, and the company list of users with access to all companies. `grantAccessTo()` and `revokeAccessTo()` therefore need a company list, and throw a `LogicException` without one.
+- `email()` and the email address of `federation()` are checked with [Twinfield's own rules](https://developers.twinfield.com/documentation/api/types/guidelines#e-mail-address-validation) through `EmailAddress`, and throw an `InvalidArgumentException` before sending.
 - Inconsistent input throws before sending: `invite()` without `culture()` and `role()`, `demo()` for another type than `UserType::AccountantCustomer`, or a password expiry date with single sign-on.
 
 ### The user of the access token

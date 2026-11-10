@@ -181,6 +181,14 @@ final class UserInputTest extends TestCase
             static fn () => UserInput::create('JDOE', 'J')->email('john.doe'),
             '"john.doe" is not an email address.',
         ];
+        yield 'quoted email' => [
+            static fn () => UserInput::create('JDOE', 'J')->email('"John Doe"@example.com'),
+            '""John Doe"@example.com" is not an email address.',
+        ];
+        yield 'invalid federation email' => [
+            static fn () => UserInput::create('JDOE', 'J')->federation('example.com', 'john.doe@'),
+            '"john.doe@" is not an email address.',
+        ];
         yield 'empty password' => [
             static fn () => UserInput::create('JDOE', 'J')->password(''),
             'Password must not be empty.',
