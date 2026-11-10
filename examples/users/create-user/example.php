@@ -12,7 +12,7 @@ require __DIR__ . '/../../../vendor/autoload.php';
 $twinfield = Example::twinfield();
 
 // Creating a user can cost money, so the code and email address must be given.
-[, $code, $email] = $argv + [null, null, null];
+[, $code, $email] = ($argv ?? []) + [null, null, null];
 
 if ($code === null || $email === null) {
     exit('Usage: php examples/users/create-user/example.php CODE EMAIL (a new user can cost money)' . PHP_EOL);

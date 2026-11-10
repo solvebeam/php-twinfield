@@ -187,12 +187,6 @@ parameters:
 			path: examples/time-entries/create-time-entry/example.php
 
 		-
-			message: '#^Variable \$argv might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: examples/users/create-user/example.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
