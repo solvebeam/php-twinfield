@@ -11,7 +11,7 @@ use SolveBeam\Twinfield\GeneralLedgerAccount\ChildValidationType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountInput;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\GeneralLedgerAccount\SubAnalysis;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 final class GeneralLedgerAccountInputTest extends TestCase
 {
@@ -27,8 +27,8 @@ final class GeneralLedgerAccountInputTest extends TestCase
     {
         $input = GeneralLedgerAccountInput::profitAndLoss('8010', 'Omzet diensten')
             ->shortName('Diensten')
-            ->activeFrom(FinancialPeriod::of(2026, 1))
-            ->activeUntil(FinancialPeriod::of(2027, 12))
+            ->activeFrom(Period::of(2026, 1))
+            ->activeUntil(Period::of(2027, 12))
             ->matchable()
             ->subAnalysis(SubAnalysis::Required)
             ->vatCode('VH', fixed: true)

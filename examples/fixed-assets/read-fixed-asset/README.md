@@ -5,7 +5,7 @@ Shows one fixed asset: its status, asset method, depreciation settings, free tex
 `get()` throws a `DimensionNotFoundException` for an unknown code; `find()` returns null instead.
 
 - `assetStatus` is where the asset is in its life: `ToBeActivated`, `Active`, `Inactive` or `Sold`. `status` is the status of the dimension (active, deleted or hidden), as for every dimension.
-- Periods are `FinancialPeriod` objects and amounts are `Amount` objects (numeric strings, never floats). Both print as Twinfield writes them, e.g. `2026/04` and `2500.00`.
+- Periods are `Period` objects and amounts are `Amount` objects (numeric strings, never floats). Both print as Twinfield writes them, e.g. `2026/04` and `2500.00`.
 - `periodsInherited` is true when the number of periods comes from the asset method.
 - The asset only has the values of the free texts; their labels are on the asset method, so the example reads that too.
 - `transactionLines` are the purchase and later transactions with the asset as dimension 3. Twinfield links them when you book such a transaction.

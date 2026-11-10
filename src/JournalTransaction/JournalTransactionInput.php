@@ -32,7 +32,7 @@ use SolveBeam\Twinfield\VatCode\VatCode;
  * amount: Twinfield books it on the VAT account, on the same side as the line.
  *
  * The kind of journal (memorial, wages, opening balance, year end) is the day book. An opening
- * balance goes in period 0, a year end booking in period 55: `->period(FinancialPeriod::of(2026, 0))`.
+ * balance goes in period 0, a year end booking in period 55: `->period(Period::of(2026, 0))`.
  * New transactions are provisional unless you call final().
  *
  * @see https://developers.twinfield.com/documentation/api/transaction-data/journal-transactions/

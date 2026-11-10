@@ -202,7 +202,7 @@ echo $transaction->number(), ': ', $transaction->debit(), ' = ', $transaction->c
 - A line with a VAT code needs the VAT amount, or a `VatCode` object to calculate it. Twinfield books the VAT on the VAT account, on the **same side** as the line, so the other lines must include it: a credit line of `1000.00` with `210.00` VAT needs `1210.00` on the debit side.
 - `regime(Regime::Fiscal)` books the transaction in one regime (`Fiscal`, `Commercial` or `Economic`). Without it Twinfield books `Generic`: visible in all regimes. `$transaction->regime` has it.
 
-Twinfield has several kinds of journal: memorial, wages, opening balance and year end. They are journal transactions in their own day book, e.g. `MEMO`, `SALARIS`, `BEGINBALANS` and `VJP`; the codes differ per company (Finder `TRS` lists them). An opening balance goes in period 0 and a year end booking in period 55: `->period(FinancialPeriod::of(2026, 0))`.
+Twinfield has several kinds of journal: memorial, wages, opening balance and year end. They are journal transactions in their own day book, e.g. `MEMO`, `SALARIS`, `BEGINBALANS` and `VJP`; the codes differ per company (Finder `TRS` lists them). An opening balance goes in period 0 and a year end booking in period 55: `->period(Period::of(2026, 0))`. Whether a period is open, and its name, comes from the PeriodService: `$twinfield->periods()->get($transaction->header->period)`, see [Periods](/guides/periods/).
 
 `get()` returns a `JournalTransaction` with the `header`, the `regime`, the `details` and the `vat` lines; `debit()` and `credit()` are the sums of both sides.
 

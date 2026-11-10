@@ -5,7 +5,7 @@ declare(strict_types=1);
 use SolveBeam\Twinfield\Examples\Example;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionInput;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -19,7 +19,7 @@ $year = (int) date('Y');
 
 // An opening balance goes in period 0 of the year. Twinfield refuses it in another period.
 $input = JournalTransactionInput::create('BEGINBALANS', new DateTimeImmutable($year . '-01-01'))
-    ->period(FinancialPeriod::of($year, 0))
+    ->period(Period::of($year, 0))
     ->debit($bank, '2500.00', description: 'Opening balance')
     ->credit($equity, '2500.00', description: 'Opening balance');
 

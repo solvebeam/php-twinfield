@@ -21,7 +21,7 @@ use SolveBeam\Twinfield\FixedAsset\FixedAssetSummary;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -103,7 +103,7 @@ final class FixedAssetResourceTest extends TestCase
                 ->method('5YVEH')
                 ->costCenter('00000')
                 ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-                ->depreciateFrom(FinancialPeriod::of(2026, 4)),
+                ->depreciateFrom(Period::of(2026, 4)),
         );
 
         self::assertSame(

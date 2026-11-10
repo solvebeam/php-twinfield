@@ -19,7 +19,7 @@ use SolveBeam\Twinfield\Supplier\Supplier;
 use SolveBeam\Twinfield\Supplier\SupplierInput;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Tests\Unit\Customer\CustomerTest;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 final class SupplierInputTest extends TestCase
 {
@@ -39,7 +39,7 @@ final class SupplierInputTest extends TestCase
             ->code('2100')
             ->shortName('Supplies')
             ->website('www.example.com')
-            ->activeFrom(FinancialPeriod::of(2026, 1))
+            ->activeFrom(Period::of(2026, 1))
             ->dueDays(30)
             ->creditTransfer('SEPANLCT')
             ->balanceAccount('1600')

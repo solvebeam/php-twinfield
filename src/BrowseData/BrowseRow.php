@@ -12,7 +12,7 @@ use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 use SolveBeam\Twinfield\Transaction\Amount;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\TransactionLineReference;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -23,7 +23,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  *   $row->int('fin.trs.head.number');             // 202600003
  *   $row->amount('fin.trs.line.valuesigned');     // Amount -121.00
  *   $row->date('fin.trs.head.date');              // DateTimeImmutable
- *   $row->period('fin.trs.head.yearperiod');      // FinancialPeriod 2026/03
+ *   $row->period('fin.trs.head.yearperiod');      // Period 2026/03
  *   $row->displayName('fin.trs.head.status');     // Final (in the language of the user)
  *
  * A reader throws an InvalidArgumentException for a field that is not a column of the result, and
@@ -238,12 +238,12 @@ final readonly class BrowseRow
     /**
      * A year and period (`yyyy/pp`), e.g. `fin.trs.head.yearperiod`.
      */
-    public function period(string $field): FinancialPeriod
+    public function period(string $field): Period
     {
         $value = $this->cell($field)['value'];
 
         try {
-            return FinancialPeriod::fromString($value);
+            return Period::fromString($value);
         } catch (InvalidArgumentException) {
             throw new UnexpectedResponseException(sprintf('%s is "%s", expected a period yyyy/pp.', $field, $value));
         }

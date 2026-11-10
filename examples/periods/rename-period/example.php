@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use SolveBeam\Twinfield\Examples\Example;
+use SolveBeam\Twinfield\Period\Period;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -19,25 +20,22 @@ if ($years === []) {
     exit;
 }
 
-$year = max($years);
+$period = Period::of(max($years), 1);
 
-$nameOf = static function (int $number) use ($periods, $year): string {
-    foreach ($periods->list($year) as $period) {
-        if ($period->number === $number) {
-            return $period->name;
-        }
-    }
+$original = $periods->get($period)->name;
 
-    throw new RuntimeException("Period {$number} of {$year} not found.");
-};
+if ($original === null) {
+    echo 'Period ', $period, ' has no name to restore.', PHP_EOL;
 
-$original = $nameOf(1);
+    exit;
+}
+
 echo 'Before:   ', $original, PHP_EOL;
 
 try {
-    $periods->changeName($year, 1, $original . ' (renamed)');
-    echo 'Renamed:  ', $nameOf(1), PHP_EOL;
+    $periods->changeName($period, $original . ' (renamed)');
+    echo 'Renamed:  ', $periods->get($period)->name, PHP_EOL;
 } finally {
-    $periods->changeName($year, 1, $original);
-    echo 'Restored: ', $nameOf(1), PHP_EOL;
+    $periods->changeName($period, $original);
+    echo 'Restored: ', $periods->get($period)->name, PHP_EOL;
 }

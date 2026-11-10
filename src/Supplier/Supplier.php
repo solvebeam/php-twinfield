@@ -17,7 +17,7 @@ use SolveBeam\Twinfield\Dimension\RemittanceAdvice;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * A supplier (dimension type `CRD`) as Twinfield returns it.
@@ -65,9 +65,9 @@ final readonly class Supplier
         /** Website, at most 40 characters; null when not set. */
         public ?string $website,
         /** First period the supplier can be used in; null for no limit. */
-        public ?FinancialPeriod $activeFrom,
+        public ?Period $activeFrom,
         /** Last period the supplier can be used in; null for no limit. */
-        public ?FinancialPeriod $activeUntil,
+        public ?Period $activeUntil,
         public SupplierFinancials $financials,
         /** Null when Twinfield leaves it out: it is not in the documented response. */
         public ?RemittanceAdvice $remittanceAdvice,

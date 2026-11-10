@@ -169,7 +169,7 @@ These need a live write on a test company (`composer test:write -- --company=…
 | `matchstatus` of a VAT line is "always notmatchable" | `notmatchable` or `available` (with `matchlevel` 1, `relation` 0 and a negative `basevalueopen`), as for sales transactions | `VatLine::$matchStatus` stays required |
 | `invoicenumber` only when set | An empty `<invoicenumber/>` on every line | Null |
 | – | Never a total line | A response with a total line throws |
-| – | Period `00` for an opening balance, and periods `13` | `FinancialPeriod` |
+| – | Period `00` for an opening balance, and periods `13` | `Period` |
 
 How the lines balance is not documented. Live, the detail lines plus the VAT lines always balance; a detail line with a VAT code has `vatvalue`, and the VAT line Twinfield made for it has that amount on the same side. Without VAT lines in the input, the SDK therefore counts the VAT amount of a detail line on its side: that is what `balance()` checks.
 
@@ -443,7 +443,7 @@ Checked on 10 November 2026 against the documentation ([Pay & Collect](https://d
 ### Requests
 
 - **CreateRun2 instead of CreateRun.** CreateRun2 has the same fields plus `DiscountDaysTolerance` (`minOccurs="1"`: the SDK sends 0 by default). `Method`, `DirectRemove` and `MaxDuedate` are nillable: the SDK leaves them out when they are not set, so the pay type decides.
-- **The period** is a string in the create request (`2026/11`, as in the manual); the run has `Year` and `Period` as numbers. The SDK uses `FinancialPeriod` for both.
+- **The period** is a string in the create request (`2026/11`, as in the manual); the run has `Year` and `Period` as numbers. The SDK uses `Period` for both.
 - **Custom and export settings** are an array of string arrays. The manual shows `[name, value]` pairs (`["PayCostNational", "0"]`, `["FileType", "production"]`); the SDK takes `[name => value]`. The only documented setting is `SEPANLDDcollectionschema` (0 Core, 1 B2B).
 - **Modify sends every summary and detail.** `SummarySettings` has `Relation`, `Currency` and `Id` as key; `DetailSettings` requires `Value` and `Included`. The SDK sends the whole run with the current values for what did not change.
 - **`modified`** is sent back exactly as Twinfield returned it.
@@ -465,6 +465,31 @@ The fixtures are fictitious and follow the WSDL, except the empty `GetRuns` resp
 - The error for an outdated version, and for a step in the wrong phase.
 - What `GetRunInfo` gives for an unknown run.
 - Post, CreateFiles and Finish after posting: the write test never posts, because it can't be undone.
+
+## Periods
+
+Checked on 10 November 2026 against the documentation ([Periods](https://developers.twinfield.com/documentation/api/miscellaneous/periods/)) and the WSDL (`PeriodService.svc?wsdl`, in `wsdl/accounting/`). Live, read-only: `GetYears` and `GetPeriods` for all 61 years of one test company. The commands change data and are not checked live yet, except `ChangeName` in `composer test:write`. See the [Periods guide](/guides/periods/).
+
+### Mistakes in the documentation
+
+- **`GetYearsResult.Years`** is documented as `int`; the comment says "Array of all years", and the response is a list of ints.
+- **The `Period` data contract is not documented.** The GetPeriods example uses `period.Period` and `period.IsOpen`; the response has `Number` and `Open`, next to `Name` and `EndDate`. The example also loops over `result` instead of `result.Periods`.
+- **The ChangeEndDate example** sends `<a:PeriodNumber>02</a:PeriodNumber>` for an `int`; the SDK sends `2`.
+- **Field order.** The C# classes list `Year`, `PeriodNumber`, then `EndDate` or `Name`; the example envelopes send them in alphabetical order, as in the WSDL. The SDK sends the WSDL order.
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| `EndDate` is a `DateTime` | `i:nil="true"` for the special periods 0 (opening balance) and 55 (preceding journal entries) | `PeriodDetails::$endDate` is null for those |
+| `Name` is a `string` | An empty `<Name/>` for all periods of 49 of the 61 years, mostly before 2013 | `PeriodDetails::$name` is null then; a missing `<Name>` still throws |
+| – | Periods are sorted by number | `list()` keeps the order |
+| – | An unknown year gives fault `YearNotFound` with the message in the language of the user (`Year 1901 bestaat niet.`) | `CommandQueryFaultException`; `get()` throws `PeriodNotFoundException` |
+
+### Not yet verified
+
+- The commands other than `ChangeName`: whether `ChangeEndDate` also moves the start of the next period, and which numbers of periods `CreateYear` and `ResetYears` accept.
+- The message when a transaction is saved in a closed period.
 
 ## Finder
 

@@ -22,7 +22,7 @@ use SolveBeam\Twinfield\Budget\Regime;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Twinfield;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -45,7 +45,7 @@ final class BrowseQueryTest extends TestCase
     {
         $query = $this->twinfield(new ReplayClient())->browse(BrowseCode::GeneralLedgerDetailsV3)
             ->columns('fin.trs.head.code', 'fin.trs.head.status')
-            ->between('fin.trs.head.yearperiod', FinancialPeriod::of(2026, 0), '2026/55')
+            ->between('fin.trs.head.yearperiod', Period::of(2026, 0), '2026/55')
             ->equal('fin.trs.head.status', 'normal')
             ->notBetween('fin.trs.line.dim1', 1000, 1999)
             ->like('fin.trs.line.dim2', '13*')

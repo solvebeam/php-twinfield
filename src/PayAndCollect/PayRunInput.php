@@ -10,7 +10,7 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\Data\ArrayOfArrayOfString;
 use SolveBeam\Twinfield\Data\ArrayOfString;
 use SolveBeam\Twinfield\PayAndCollect\Request\CreateRunRequest;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * A new pay run: which open invoices to select, and when to pay them. Send it with
@@ -54,7 +54,7 @@ final class PayRunInput
         public readonly string $payType,
         public readonly DateTimeImmutable $payDate,
         /** Year and period the payments are posted in. */
-        public readonly FinancialPeriod $period,
+        public readonly Period $period,
     ) {
         if ($payType === '') {
             throw new InvalidArgumentException('Pay type must not be empty.');
@@ -63,14 +63,14 @@ final class PayRunInput
 
     /**
      * @param string $payType Code of the pay type, e.g. `SEPANLCT` or `SEPANLDD` (Finder type `PAY`).
-     * @param FinancialPeriod|string $period E.g. `2026/11`.
+     * @param Period|string $period E.g. `2026/11`.
      */
-    public static function create(string $payType, DateTimeInterface $payDate, FinancialPeriod|string $period): self
+    public static function create(string $payType, DateTimeInterface $payDate, Period|string $period): self
     {
         return new self(
             $payType,
             DateTimeImmutable::createFromInterface($payDate)->setTime(0, 0),
-            $period instanceof FinancialPeriod ? $period : FinancialPeriod::fromString($period),
+            $period instanceof Period ? $period : Period::fromString($period),
         );
     }
 

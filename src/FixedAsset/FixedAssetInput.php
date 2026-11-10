@@ -11,7 +11,7 @@ use LogicException;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 use SolveBeam\Twinfield\Transaction\Amount;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * A fixed asset to create or update. Immutable: every method returns a new input.
@@ -20,7 +20,7 @@ use SolveBeam\Twinfield\Transaction\FinancialPeriod;
  *       ->method('5YLIN')
  *       ->costCenter('00000')
  *       ->purchaseDate(new DateTimeImmutable('2026-03-15'))
- *       ->depreciateFrom(FinancialPeriod::of(2026, 4))
+ *       ->depreciateFrom(Period::of(2026, 4))
  *       ->periods(60)
  *       ->residualValue('2500.00')
  *       ->freeText(1, 'VIN WDB9066331S123456')
@@ -167,9 +167,9 @@ final readonly class FixedAssetInput
     }
 
     /**
-     * First period of depreciation (`beginperiod`), e.g. `FinancialPeriod::of(2026, 4)`.
+     * First period of depreciation (`beginperiod`), e.g. `Period::of(2026, 4)`.
      */
-    public function depreciateFrom(?FinancialPeriod $period): self
+    public function depreciateFrom(?Period $period): self
     {
         return $this->guarded(FixedAssetField::DepreciateFrom, $period?->__toString());
     }
@@ -222,7 +222,7 @@ final readonly class FixedAssetInput
      * Period of the last depreciation, e.g. for an asset that was depreciated before it was
      * added to Twinfield.
      */
-    public function lastDepreciation(?FinancialPeriod $period): self
+    public function lastDepreciation(?Period $period): self
     {
         return $this->guarded(FixedAssetField::LastDepreciation, $period?->__toString());
     }

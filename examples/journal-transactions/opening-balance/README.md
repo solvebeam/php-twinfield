@@ -2,7 +2,7 @@
 
 Books an opening balance in day book `BEGINBALANS`, period 0 of this year, then deletes it again. Without `--save` it only shows the request. With `--save` it changes data in Twinfield.
 
-Twinfield has several kinds of journal: memorial, wages, opening balance and year end. They are all journal transactions; the day book decides the kind. An opening balance can only be booked in period 0, a year end booking only in period 55. Give the period with `period(FinancialPeriod::of($year, 0))`: without it Twinfield derives the period from the date.
+Twinfield has several kinds of journal: memorial, wages, opening balance and year end. They are all journal transactions; the day book decides the kind. An opening balance can only be booked in period 0, a year end booking only in period 55. Give the period with `period(Period::of($year, 0))`: without it Twinfield derives the period from the date.
 
 The day book codes differ per company: look them up in Twinfield, or with Finder `TRS` (`$twinfield->finder(FinderType::TransactionTypes)`).
 
@@ -21,7 +21,7 @@ $year = (int) date('Y');
 
 // An opening balance goes in period 0 of the year. Twinfield refuses it in another period.
 $input = JournalTransactionInput::create('BEGINBALANS', new DateTimeImmutable($year . '-01-01'))
-    ->period(FinancialPeriod::of($year, 0))
+    ->period(Period::of($year, 0))
     ->debit($bank, '2500.00', description: 'Opening balance')
     ->credit($equity, '2500.00', description: 'Opening balance');
 

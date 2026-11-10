@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\Query;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
-use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -17,11 +17,12 @@ use SolveBeam\Twinfield\Twinfield;
  *
  *   $periods = $twinfield->company('1000')->periods();
  *
- *   foreach ($periods->list(2025) as $period) {
- *       echo $period->number, ' ', $period->name, PHP_EOL;
+ *   foreach ($periods->list(2025) as $details) {
+ *       echo $details->period, ' ', $details->name ?? '-', PHP_EOL;
  *   }
  *
- *   $periods->close(2025, 1);
+ *   $periods->get($transaction->header->period)->open;
+ *   $periods->close(Period::of(2025, 1));
  *
  * Errors are thrown as CommandQueryFaultException; `errorCode` holds a PeriodServiceFaultCode value.
  *
@@ -51,7 +52,7 @@ final readonly class PeriodResource
     /**
      * All periods of a year, including special periods such as 0 (opening balance).
      *
-     * @return list<Period>
+     * @return list<PeriodDetails>
      */
     public function list(int $year): array
     {
@@ -64,15 +65,56 @@ final readonly class PeriodResource
         $company = $this->twinfield->companyReference();
 
         return array_map(
-            static fn (ResultElement $period): Period => new Period(
+            static fn (ResultElement $period): PeriodDetails => new PeriodDetails(
                 company: $company,
-                number: $period->int('Number'),
-                name: $period->string('Name'),
+                // Twinfield does not return the year per period.
+                period: Period::of($year, $period->int('Number')),
+                name: $period->nullableString('Name'),
                 endDate: $period->nullableDateTime('EndDate'),
                 open: $period->bool('Open'),
             ),
             $result->list('Periods', 'Period'),
         );
+    }
+
+    /**
+     * Name, end date and status of one period, e.g. the period of a transaction.
+     *
+     * Reads all periods of the year: use `list()` for many periods of the same year.
+     *
+     * @throws PeriodNotFoundException When the year does not exist, or has no period with this number.
+     */
+    public function get(Period $period): PeriodDetails
+    {
+        try {
+            $periods = $this->list($period->year);
+        } catch (CommandQueryFaultException $exception) {
+            if (PeriodServiceFaultCode::tryFrom($exception->errorCode) === PeriodServiceFaultCode::YearNotFound) {
+                throw new PeriodNotFoundException($period, $exception);
+            }
+
+            throw $exception;
+        }
+
+        foreach ($periods as $details) {
+            if ($details->period->equals($period)) {
+                return $details;
+            }
+        }
+
+        throw new PeriodNotFoundException($period);
+    }
+
+    /**
+     * The period, or null when the year does not exist or has no period with this number.
+     */
+    public function find(Period $period): ?PeriodDetails
+    {
+        try {
+            return $this->get($period);
+        } catch (PeriodNotFoundException) {
+            return null;
+        }
     }
 
     /**
@@ -90,19 +132,19 @@ final readonly class PeriodResource
     /**
      * Changes the end date of a period.
      */
-    public function changeEndDate(int $year, int $period, DateTimeInterface $endDate): void
+    public function changeEndDate(Period $period, DateTimeInterface $endDate): void
     {
         $this->process(new Command('ChangeEndDate', [
             'EndDate' => $endDate,
-            'PeriodNumber' => $period,
-            'Year' => $year,
+            'PeriodNumber' => $period->number,
+            'Year' => $period->year,
         ]));
     }
 
     /**
      * Changes the name of a period.
      */
-    public function changeName(int $year, int $period, string $name): void
+    public function changeName(Period $period, string $name): void
     {
         if ($name === '') {
             throw new InvalidArgumentException('Period name must not be empty.');
@@ -110,25 +152,25 @@ final readonly class PeriodResource
 
         $this->process(new Command('ChangeName', [
             'Name' => $name,
-            'PeriodNumber' => $period,
-            'Year' => $year,
+            'PeriodNumber' => $period->number,
+            'Year' => $period->year,
         ]));
     }
 
     /**
      * Opens a period, so transactions can be posted in it.
      */
-    public function open(int $year, int $period): void
+    public function open(Period $period): void
     {
-        $this->process(new Command('OpenPeriod', ['PeriodNumber' => $period, 'Year' => $year]));
+        $this->process(new Command('OpenPeriod', ['PeriodNumber' => $period->number, 'Year' => $period->year]));
     }
 
     /**
      * Closes a period, so no transactions can be posted in it.
      */
-    public function close(int $year, int $period): void
+    public function close(Period $period): void
     {
-        $this->process(new Command('ClosePeriod', ['PeriodNumber' => $period, 'Year' => $year]));
+        $this->process(new Command('ClosePeriod', ['PeriodNumber' => $period->number, 'Year' => $period->year]));
     }
 
     /**

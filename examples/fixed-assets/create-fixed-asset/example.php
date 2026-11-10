@@ -5,7 +5,7 @@ declare(strict_types=1);
 use SolveBeam\Twinfield\Examples\Example;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
@@ -17,7 +17,7 @@ $input = FixedAssetInput::create('Example delivery van')
     ->method(Example::assetMethodCode($twinfield))
     ->costCenter(Example::costCenterCode($twinfield))
     ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-    ->depreciateFrom(FinancialPeriod::of(2026, 4))
+    ->depreciateFrom(Period::of(2026, 4))
     ->residualValue('2500.00')
     ->freeText(1, 'WDB9066331S123456');
 

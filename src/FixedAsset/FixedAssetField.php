@@ -11,7 +11,7 @@ use InvalidArgumentException;
  * period once the asset is active. The value is the element name.
  *
  *   if (!$asset->isLocked(FixedAssetField::DepreciateFrom)) {
- *       $input = $asset->edit()->depreciateFrom(FinancialPeriod::of(2026, 1));
+ *       $input = $asset->edit()->depreciateFrom(Period::of(2026, 1));
  *   }
  */
 enum FixedAssetField: string

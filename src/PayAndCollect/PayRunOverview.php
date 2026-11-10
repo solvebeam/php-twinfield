@@ -7,7 +7,7 @@ namespace SolveBeam\Twinfield\PayAndCollect;
 use DateTimeImmutable;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 /**
@@ -37,7 +37,7 @@ final readonly class PayRunOverview
         public string $bank,
         public DateTimeImmutable $payDate,
         /** Year and period the payments are posted in. */
-        public FinancialPeriod $period,
+        public Period $period,
         /** Whether excluded invoices are available again right after posting (`DirectRemove`). */
         public bool $directRemove,
         public array $customSettings,
@@ -63,7 +63,7 @@ final readonly class PayRunOverview
             status: $run->enum('Status', PayRunStatus::class),
             bank: PayAndCollectXml::string($run, 'Bank'),
             payDate: PayAndCollectXml::date($run, 'PayDate'),
-            period: FinancialPeriod::of($run->int('Year'), $run->int('Period')),
+            period: Period::of($run->int('Year'), $run->int('Period')),
             directRemove: $run->bool('DirectRemove'),
             customSettings: PayAndCollectXml::settings($run, 'CustomSettings'),
         );

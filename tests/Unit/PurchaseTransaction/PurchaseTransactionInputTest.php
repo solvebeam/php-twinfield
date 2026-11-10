@@ -14,7 +14,7 @@ use SolveBeam\Twinfield\PurchaseTransaction\PurchaseTransactionInput;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\VatLineInput;
 use SolveBeam\Twinfield\Twinfield;
 
@@ -25,7 +25,7 @@ final class PurchaseTransactionInputTest extends TestCase
         // The create example of the Twinfield documentation, in the element order of the SDK.
         $input = PurchaseTransactionInput::invoice('INK', '2000', '20210-5481', new DateTimeImmutable('2021-05-02'))
             ->currency('EUR')
-            ->period(FinancialPeriod::fromString('2021/05'))
+            ->period(Period::fromString('2021/05'))
             ->dueDate(new DateTimeImmutable('2021-05-06'))
             ->paymentReference('+++100/0160/01495+++')
             ->payablesAccount('1600')

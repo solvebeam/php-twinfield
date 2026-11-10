@@ -18,7 +18,7 @@ use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\MatchSetInput;
 use SolveBeam\Twinfield\Transaction\Performance;
 use SolveBeam\Twinfield\Transaction\PerformanceType;
@@ -119,7 +119,7 @@ final class BankTransactionInputTest extends TestCase
             ->autoBalanceVat()
             ->raiseWarnings(false)
             ->ignoreDateWarning()
-            ->period(FinancialPeriod::of(2026, 10))
+            ->period(Period::of(2026, 10))
             ->description('Statement 245')
             ->freeText(2, 'Imported')
             ->receive('1300', '1.00');

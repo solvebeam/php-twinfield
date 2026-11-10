@@ -49,6 +49,7 @@ export default defineConfig({
 						{ label: 'Hierarchies', slug: 'guides/hierarchies' },
 						{ label: 'Matching', slug: 'guides/matching' },
 						{ label: 'Pay & Collect', slug: 'guides/pay-and-collect' },
+						{ label: 'Periods', slug: 'guides/periods' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 					],

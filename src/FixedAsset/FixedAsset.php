@@ -13,7 +13,7 @@ use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\Transaction\DimensionReference;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\TransactionXml;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -80,9 +80,9 @@ final readonly class FixedAsset
         /** Book value at which depreciation stops. */
         public Amount $stopValue,
         /** First period of depreciation (`beginperiod`); null when not set yet. */
-        public ?FinancialPeriod $depreciateFrom,
+        public ?Period $depreciateFrom,
         /** Period of the last depreciation; null when the asset was not depreciated yet. */
-        public ?FinancialPeriod $lastDepreciation,
+        public ?Period $lastDepreciation,
         /** Null when not set. */
         public ?DateTimeImmutable $purchaseDate,
         /** Null when the asset is not sold. */
@@ -295,7 +295,7 @@ final readonly class FixedAsset
         );
     }
 
-    private static function nullablePeriod(XmlElement $fixedAssets, string $name): ?FinancialPeriod
+    private static function nullablePeriod(XmlElement $fixedAssets, string $name): ?Period
     {
         return $fixedAssets->child($name)->text() === '' ? null : TransactionXml::period($fixedAssets, $name);
     }

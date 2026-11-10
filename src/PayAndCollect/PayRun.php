@@ -7,7 +7,7 @@ namespace SolveBeam\Twinfield\PayAndCollect;
 use DateTimeImmutable;
 use SolveBeam\Twinfield\CommandQuery\ResultElement;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * A pay run with its summaries (`PayRun`), from PayAndCollectResource::get() or create().
@@ -40,7 +40,7 @@ final readonly class PayRun
         public string $bank,
         public DateTimeImmutable $payDate,
         /** Year and period the payments are posted in. */
-        public FinancialPeriod $period,
+        public Period $period,
         /** Whether excluded invoices are available again right after posting (`DirectRemove`). */
         public bool $directRemove,
         public array $customSettings,

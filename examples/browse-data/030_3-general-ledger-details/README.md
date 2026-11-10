@@ -2,7 +2,7 @@
 
 Browse code `030_3` (`BrowseCode::GeneralLedgerDetailsV3`, "Grootboek (details) (v3)"): every transaction line with all its details, such as the relation, VAT code, user and change date. This is the browse code Twinfield advises for a [shadow database](../../shadow-database/initial-load/). `030_1` and `030_2` are older versions with fewer fields.
 
-- `between('fin.trs.head.yearperiod', $from, $to)` with `FinancialPeriod` values: a range of periods. In 030_3 the period can only be a criterion: as column it gives a server error. Use `fin.trs.head.year` and `fin.trs.head.period` as columns instead.
+- `between('fin.trs.head.yearperiod', $from, $to)` with `Period` values: a range of periods. In 030_3 the period can only be a criterion: as column it gives a server error. Use `fin.trs.head.year` and `fin.trs.head.period` as columns instead.
 - `equal('fin.trs.head.status', 'normal')`: provisional and final. Without it you also get drafts, with number `-1`.
 - `equal('fin.trs.head.code', $dayBook)`: one day book, e.g. `VRK`.
 - `$row->transactionLine`: the day book, number and line number of the row, e.g. to read the whole transaction with `$row->transactionLine->transaction()`.
@@ -16,8 +16,8 @@ Criteria: period, status, input date, change date, the three dimensions, regime 
 $twinfield = Example::twinfield();
 
 $year = Example::lastYear($twinfield);
-$from = FinancialPeriod::fromString($argv[1] ?? $year . '/00');
-$to = FinancialPeriod::fromString($argv[2] ?? $year . '/55');
+$from = Period::fromString($argv[1] ?? $year . '/00');
+$to = Period::fromString($argv[2] ?? $year . '/55');
 $dayBook = $argv[3] ?? null;
 
 $query = $twinfield->browse(BrowseCode::GeneralLedgerDetailsV3)

@@ -11,7 +11,7 @@ use SolveBeam\Twinfield\Dimension\DimensionStatus;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\VatCode\VatCodeReference;
 
 /**
@@ -61,9 +61,9 @@ final readonly class GeneralLedgerAccount
         /** Last change. Null when Twinfield leaves it out: it is not in every documented response. */
         public ?DateTimeImmutable $modified,
         /** First period the account can be used in; null for no limit. */
-        public ?FinancialPeriod $activeFrom,
+        public ?Period $activeFrom,
         /** Last period the account can be used in; null for no limit. */
-        public ?FinancialPeriod $activeUntil,
+        public ?Period $activeUntil,
         /** True when transaction lines on the account can be matched, e.g. a suspense account. */
         public bool $matchable,
         public SubAnalysis $subAnalysis,
@@ -197,11 +197,11 @@ final readonly class GeneralLedgerAccount
     /**
      * A period from a year and period element; Twinfield uses 0 for "no limit".
      */
-    private static function period(XmlElement $dimension, string $yearElement, string $periodElement): ?FinancialPeriod
+    private static function period(XmlElement $dimension, string $yearElement, string $periodElement): ?Period
     {
         $year = $dimension->int($yearElement);
         $period = $dimension->int($periodElement);
 
-        return $year === 0 ? null : FinancialPeriod::of($year, $period);
+        return $year === 0 ? null : Period::of($year, $period);
     }
 }

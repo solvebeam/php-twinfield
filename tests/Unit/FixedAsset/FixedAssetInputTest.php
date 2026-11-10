@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
 use SolveBeam\Twinfield\Transaction\Amount;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 final class FixedAssetInputTest extends TestCase
 {
@@ -32,14 +32,14 @@ final class FixedAssetInputTest extends TestCase
             ->periods(60)
             ->freeText(1, 'WDB9066331S123456')
             ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-            ->depreciateFrom(FinancialPeriod::of(2026, 4))
+            ->depreciateFrom(Period::of(2026, 4))
             ->method('5YVEH')
             ->stopValue('0')
             ->residualValue(Amount::of('2500'))
             ->vatCode('IH')
             ->costCenter('00000')
             ->percentage('12.5')
-            ->lastDepreciation(FinancialPeriod::of(2026, 3));
+            ->lastDepreciation(Period::of(2026, 3));
 
         self::assertSame(
             '<dimension><office>1000</office><type>AST</type><code>60010</code>'
@@ -178,7 +178,7 @@ final class FixedAssetInputTest extends TestCase
             . 'e.g. because the asset is active.',
         );
 
-        $input->depreciateFrom(FinancialPeriod::of(2026, 5));
+        $input->depreciateFrom(Period::of(2026, 5));
     }
 
     public function testEditOfAnAssetToBeActivatedKeepsEverything(): void
@@ -194,7 +194,7 @@ final class FixedAssetInputTest extends TestCase
         self::assertNull($input->groups, 'No groups: <groups> is not sent.');
 
         // Unlocked, so it may be changed.
-        self::assertSame('2016/01', $input->depreciateFrom(FinancialPeriod::of(2016, 1))->value('fixedassets/beginperiod'));
+        self::assertSame('2016/01', $input->depreciateFrom(Period::of(2016, 1))->value('fixedassets/beginperiod'));
     }
 
     public function testEditKeepsInheritedPeriodsInherited(): void

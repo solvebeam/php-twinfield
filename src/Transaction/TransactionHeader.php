@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
@@ -25,7 +26,7 @@ final readonly class TransactionHeader
         /** Transaction number, e.g. `202600045`. */
         public int $number,
         public TransactionStatus $status,
-        public FinancialPeriod $period,
+        public Period $period,
         /** Currency code, e.g. `EUR`. */
         public string $currency,
         public DateTimeImmutable $date,

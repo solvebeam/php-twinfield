@@ -13,7 +13,7 @@ use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetStatus;
 use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * Creates a temporary fixed asset with the next free code, changes it, deletes and reactivates
@@ -37,7 +37,7 @@ final class FixedAssetResourceTest extends WriteTestCase
                     ->method($method)
                     ->costCenter($costCenter)
                     ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-                    ->depreciateFrom(FinancialPeriod::of(2026, 4))
+                    ->depreciateFrom(Period::of(2026, 4))
                     ->periods(60)
                     ->residualValue('2500.00')
                     ->freeText(1, 'SN-12345'),

@@ -14,7 +14,7 @@ use SolveBeam\Twinfield\PayAndCollect\PayRunPhase;
 use SolveBeam\Twinfield\PayAndCollect\PayRunType;
 use SolveBeam\Twinfield\Tests\Support\WriteTestCase;
 use SolveBeam\Twinfield\Transaction\DebitCredit;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\OpenInvoice;
 
 /**
@@ -38,7 +38,7 @@ final class PayAndCollectResourceTest extends WriteTestCase
             PayRunInput::create(
                 'SEPANLCT',
                 $today->modify('+1 day'),
-                FinancialPeriod::of((int) $today->format('Y'), (int) $today->format('n')),
+                Period::of((int) $today->format('Y'), (int) $today->format('n')),
             )
                 ->dimensions($invoice->relation, $invoice->relation)
                 ->invoiceNumber($invoice->invoiceNumber),

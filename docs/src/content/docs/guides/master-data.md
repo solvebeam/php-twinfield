@@ -221,7 +221,7 @@ The read model `Customer` groups the settings like Twinfield does:
 | Property | Contents |
 |---|---|
 | `code`, `name`, `shortName`, `website`, `status`, `inUse`, `uid`, `modified` | The dimension itself |
-| `activeFrom`, `activeUntil` | `FinancialPeriod`s, `null` for no limit (Twinfield's `0`) |
+| `activeFrom`, `activeUntil` | `Period`s, `null` for no limit (Twinfield's `0`) |
 | `financials` | `dueDays`, `directDebit`, `meansOfPayment`, `payCode`, `eInvoicing`, `eInvoicingEmail`, `balanceAccount`, `vatCode`, `collectMandate` (SEPA mandate id and signature date), `collectionSchema` (`core`, `b2b`) |
 | `creditManagement` | `creditLimit` (an `Amount`), `sendReminder`, `reminderEmail`, `responsibleUser`, `blocked`, `rightOfUse`, `segmentCode`, `comment` |
 | `remittanceAdvice` | `sendType` and `email` |
@@ -334,7 +334,7 @@ Fixed assets (dimension type `AST`, level 3) are the third dimension (`dim3`) on
 ```php
 use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
 use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 $fixedAssets = $twinfield->fixedAssets();
 
@@ -348,7 +348,7 @@ $asset = $fixedAssets->create(
         ->method('5YVEH')
         ->costCenter('00000')
         ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-        ->depreciateFrom(FinancialPeriod::of(2026, 4))
+        ->depreciateFrom(Period::of(2026, 4))
         ->residualValue('2500.00')
         ->freeText(1, 'WDB9066331S123456')
         ->group('VEHICLES'),
@@ -372,7 +372,7 @@ $fixedAssets->delete($asset->code); // DeleteResult::Hidden when it is used in a
 | `periods`, `periodsInherited` | `nrofperiods` | `periodsInherited` is true when the number comes from the asset method. |
 | `percentage` | `percentage` | Numeric string such as `'12.5'`; null for methods without percentage. |
 | `residualValue`, `stopValue` | `residualvalue`, `stopvalue` | `Amount`. |
-| `depreciateFrom`, `lastDepreciation` | `beginperiod`, `lastdepreciation` | `FinancialPeriod`, also for weekly periods such as `2015/48`; null until set. |
+| `depreciateFrom`, `lastDepreciation` | `beginperiod`, `lastdepreciation` | `Period`, also for weekly periods such as `2015/48`; null until set. |
 | `purchaseDate`, `sellDate` | `purchasedate`, `selldate` | Null until set or sold. |
 | `freeTexts`, `freeText(1)` | `freetext1`–`freetext5` | Values only; the asset method has the labels (`$method->freeText(1)->label`). |
 | `transactionLines` | `translines` | `FixedAssetTransactionLine`: transaction type and number, line, `amount`, `period`, `account()` (dim1), `costCenter()` (dim2), `dimension(1–6)`. |
@@ -386,7 +386,7 @@ Twinfield locks settings depending on the status of the asset. The status and se
 $input = $asset->edit()->residualValue('1000.00');
 
 if (!$asset->isLocked(FixedAssetField::DepreciateFrom)) {
-    $input = $input->depreciateFrom(FinancialPeriod::of(2026, 5));
+    $input = $input->depreciateFrom(Period::of(2026, 5));
 }
 ```
 
@@ -446,7 +446,7 @@ The code is required, as it is part of the chart of accounts (customers and fixe
 | Property | Element | Notes |
 |---|---|---|
 | `type` | `type` | `GeneralLedgerAccountType::BalanceSheet` or `ProfitAndLoss`; also `isBalanceSheet()` and `isProfitAndLoss()`. |
-| `activeFrom`, `activeUntil` | `beginyear`/`beginperiod`, `endyear`/`endperiod` | `FinancialPeriod`; null for no limit (Twinfield sends 0). |
+| `activeFrom`, `activeUntil` | `beginyear`/`beginperiod`, `endyear`/`endperiod` | `Period`; null for no limit (Twinfield sends 0). |
 | `matchable` | `financials/matchtype` | True for `matchable`, e.g. a suspense account. |
 | `subAnalysis` | `financials/subanalyse` | `SubAnalysis`, see below. |
 | `childValidations` | `financials/childvalidations` | List of `ChildValidation`, see below. |

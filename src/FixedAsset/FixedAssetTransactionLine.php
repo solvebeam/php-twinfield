@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\Transaction\Amount;
 use SolveBeam\Twinfield\Transaction\DimensionReference;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\TransactionXml;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -40,7 +40,7 @@ final readonly class FixedAssetTransactionLine
         public int $line,
         /** Amount of the line; negative for credit. */
         public Amount $amount,
-        public FinancialPeriod $period,
+        public Period $period,
         public array $dimensions,
         /** As Twinfield returns it in `@inuse`. */
         public bool $inUse,

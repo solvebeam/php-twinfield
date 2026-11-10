@@ -8,6 +8,7 @@ use Closure;
 use DateTimeImmutable;
 use DOMElement;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 
@@ -25,7 +26,7 @@ abstract class AbstractTransactionInput implements TransactionInput
 
     private ?string $currency = null;
 
-    private ?FinancialPeriod $period = null;
+    private ?Period $period = null;
 
     /** @var array{1: ?string, 2: ?string, 3: ?string} */
     private array $freeText = [1 => null, 2 => null, 3 => null];
@@ -84,7 +85,7 @@ abstract class AbstractTransactionInput implements TransactionInput
     /**
      * Financial period; without it, Twinfield derives it from the date.
      */
-    public function period(?FinancialPeriod $period): static
+    public function period(?Period $period): static
     {
         $input = clone $this;
         $input->period = $period;

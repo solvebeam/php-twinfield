@@ -293,6 +293,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 ## Periods
 
 - [List periods](periods/list-periods/): years of the company and the periods of a year.
+- [Period of transaction](periods/period-of-transaction/): name of the period of each transaction, and whether it is open.
 - [Rename period](periods/rename-period/): change a period with a command (changes data).
 
 ## ProcessXml

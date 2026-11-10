@@ -12,7 +12,7 @@ use SolveBeam\Twinfield\Budget\Regime;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -82,7 +82,7 @@ final readonly class BrowseQuery
      * Rows where the field has this value, e.g. `equal('fin.trs.head.code', 'VRK')`. Setting a
      * criterion on a field again replaces it.
      */
-    public function equal(string $field, string|int|FinancialPeriod|Regime $value): self
+    public function equal(string $field, string|int|Period|Regime $value): self
     {
         return $this->criterion($field, BrowseCriterion::equal(self::value($value)));
     }
@@ -102,8 +102,8 @@ final readonly class BrowseQuery
      */
     public function between(
         string $field,
-        string|int|FinancialPeriod|Regime $from,
-        string|int|FinancialPeriod|Regime $to,
+        string|int|Period|Regime $from,
+        string|int|Period|Regime $to,
     ): self {
         return $this->criterion($field, BrowseCriterion::between(self::value($from), self::value($to)));
     }
@@ -113,8 +113,8 @@ final readonly class BrowseQuery
      */
     public function notBetween(
         string $field,
-        string|int|FinancialPeriod|Regime $from,
-        string|int|FinancialPeriod|Regime $to,
+        string|int|Period|Regime $from,
+        string|int|Period|Regime $to,
     ): self {
         return $this->criterion($field, BrowseCriterion::notBetween(self::value($from), self::value($to)));
     }
@@ -267,7 +267,7 @@ final readonly class BrowseQuery
         }
     }
 
-    private static function value(string|int|FinancialPeriod|Regime $value): string
+    private static function value(string|int|Period|Regime $value): string
     {
         return match (true) {
             $value instanceof Regime => $value->value,

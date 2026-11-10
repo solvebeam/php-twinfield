@@ -4,35 +4,57 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Period;
 
-use DateTimeImmutable;
 use InvalidArgumentException;
-use SolveBeam\Twinfield\Organisation\CompanyReference;
+use SolveBeam\Twinfield\ProcessXml\XmlValue;
+use Stringable;
 
 /**
- * A period of a financial year, as returned by the PeriodService.
+ * Year and period, e.g. `2026/11`, as in transactions (`<period>`) and browse data
+ * (`fin.trs.head.yearperiod`).
+ *
+ *   Period::of(2026, 11);
+ *   Period::fromString('2026/11');
+ *
+ * The name, end date and whether the period is open come from the PeriodService:
+ * `$twinfield->periods()->get(Period::of(2026, 11))` returns PeriodDetails.
  */
-final readonly class Period
+final readonly class Period implements Stringable
 {
-    public function __construct(
-        /** Company (office) with its organisation; `$company->code` is the office code. */
-        public CompanyReference $company,
-        /** Period number: 1–12 for a year with 12 periods, plus special periods such as 0 (opening balance). */
+    private function __construct(
+        public int $year,
+        /** 1–12 for a year with 12 periods; 0 is the opening balance, 55 the preceding journal entries. */
         public int $number,
-        /** Name in the language of the company, e.g. `januari 2025`. */
-        public string $name,
-        /**
-         * Last day of the period. Twinfield returns no end date (nil) for special periods,
-         * such as 0 (opening balance) and 55 (preceding journal entries).
-         */
-        public ?DateTimeImmutable $endDate,
-        public bool $open,
     ) {
-        if ($number < 0) {
-            throw new InvalidArgumentException('Period number must be 0 or more.');
-        }
+    }
 
-        if ($name === '') {
-            throw new InvalidArgumentException('Period name must not be empty.');
-        }
+    public static function of(int $year, int $number): self
+    {
+        // Validates the range.
+        XmlValue::period($year, $number);
+
+        return new self($year, $number);
+    }
+
+    /**
+     * @throws InvalidArgumentException When the value is not `yyyy/p` or `yyyy/pp`.
+     */
+    public static function fromString(string $period): self
+    {
+        $parsed = XmlValue::toPeriod($period);
+
+        return self::of($parsed['year'], $parsed['number']);
+    }
+
+    public function equals(self $other): bool
+    {
+        return $this->year === $other->year && $this->number === $other->number;
+    }
+
+    /**
+     * `yyyy/pp`, as Twinfield expects it.
+     */
+    public function __toString(): string
+    {
+        return XmlValue::period($this->year, $this->number);
     }
 }

@@ -684,3 +684,24 @@ To check:
 - Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`), and run the
   examples `matching/match-transactions`, `list-match-sets` and `undo-match` with real output in
   their READMEs.
+
+## Periods: verify the commands live
+
+Reading years and periods (`years()`, `list()`, `get()`) is verified live (read-only, see the
+periods section of the documentation differences). `changeName()` runs in `composer test:write`
+(it restores the name). The other commands are only tested offline, with the fictitious response
+`period-process.xml`.
+
+```sh
+composer test:write -- --company=1002_3 --filter=Period
+```
+
+To check, on a test company:
+
+- `close()` and `open()` of a period: does `list()` show it, and what does saving a transaction in a
+  closed period give (`ProcessXmlException` message)?
+- `changeEndDate()`: does the next period start a day later, and what gives
+  `EndDateCanNotBeChanged`?
+- `createYear()`: which numbers of periods are accepted (`InvalidNumberOfPeriods`), e.g. 13 or 52?
+- `deleteYear()` of a year with transactions: `YearCanNotBeDeleted`? Never run `resetYears()` on a
+  company with data.

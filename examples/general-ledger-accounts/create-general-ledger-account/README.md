@@ -11,7 +11,7 @@ GeneralLedgerAccountInput::profitAndLoss('8010', 'Revenue services')
     ->childValidation(ChildValidation::dimensionType('KPL'))
     ->childValidation(ChildValidation::dimension('P0001', 3))
     ->group('REVENUE')
-    ->activeFrom(FinancialPeriod::of(2026, 1));
+    ->activeFrom(Period::of(2026, 1));
 ```
 
 Twinfield refusals, e.g. a code outside the code format of the company, are thrown as a `ProcessXmlException` with the messages per element.

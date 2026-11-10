@@ -21,7 +21,7 @@ $input = FixedAssetInput::create('Example delivery van')
     ->method(Example::assetMethodCode($twinfield))
     ->costCenter(Example::costCenterCode($twinfield))
     ->purchaseDate(new DateTimeImmutable('2026-03-15'))
-    ->depreciateFrom(FinancialPeriod::of(2026, 4))
+    ->depreciateFrom(Period::of(2026, 4))
     ->residualValue('2500.00')
     ->freeText(1, 'WDB9066331S123456');
 

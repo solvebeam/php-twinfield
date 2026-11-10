@@ -21,28 +21,21 @@ final class PeriodResourceTest extends WriteTestCase
             self::markTestSkipped('The company has no years.');
         }
 
-        $year = max($years);
-        $original = $this->period($year, 1)->name;
+        $period = Period::of(max($years), 1);
+        $original = $periods->get($period)->name;
+
+        if ($original === null) {
+            self::markTestSkipped("Period {$period} has no name to restore.");
+        }
 
         try {
-            $periods->changeName($year, 1, $original . ' (test)');
+            $periods->changeName($period, $original . ' (test)');
 
-            self::assertSame($original . ' (test)', $this->period($year, 1)->name);
+            self::assertSame($original . ' (test)', $periods->get($period)->name);
         } finally {
-            $periods->changeName($year, 1, $original);
+            $periods->changeName($period, $original);
         }
 
-        self::assertSame($original, $this->period($year, 1)->name);
-    }
-
-    private function period(int $year, int $number): Period
-    {
-        foreach ($this->twinfield->periods()->list($year) as $period) {
-            if ($period->number === $number) {
-                return $period;
-            }
-        }
-
-        self::fail("Period {$number} of {$year} not found.");
+        self::assertSame($original, $periods->get($period)->name);
     }
 }

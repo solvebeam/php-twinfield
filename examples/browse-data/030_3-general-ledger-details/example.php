@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 use SolveBeam\Twinfield\BrowseData\BrowseCode;
 use SolveBeam\Twinfield\Examples\Example;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
 $twinfield = Example::twinfield();
 
 $year = Example::lastYear($twinfield);
-$from = FinancialPeriod::fromString($argv[1] ?? $year . '/00');
-$to = FinancialPeriod::fromString($argv[2] ?? $year . '/55');
+$from = Period::fromString($argv[1] ?? $year . '/00');
+$to = Period::fromString($argv[2] ?? $year . '/55');
 $dayBook = $argv[3] ?? null;
 
 $query = $twinfield->browse(BrowseCode::GeneralLedgerDetailsV3)

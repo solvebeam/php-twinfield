@@ -30,7 +30,7 @@ use SolveBeam\Twinfield\Twinfield;
  *           ->method('5YLIN')
  *           ->costCenter('00000')
  *           ->purchaseDate(new DateTimeImmutable('2026-03-15'))
- *           ->depreciateFrom(FinancialPeriod::of(2026, 4)),
+ *           ->depreciateFrom(Period::of(2026, 4)),
  *   );
  *
  *   $fixedAssets->update($asset->edit()->residualValue('1000.00'));

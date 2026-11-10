@@ -19,7 +19,7 @@ use SolveBeam\Twinfield\Dimension\PostingRuleInput;
 use SolveBeam\Twinfield\Dimension\PostingRuleLine;
 use SolveBeam\Twinfield\Dimension\RemittanceAdviceSendType;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 final class CustomerInputTest extends TestCase
 {
@@ -39,7 +39,7 @@ final class CustomerInputTest extends TestCase
             ->code('1100')
             ->shortName('Example')
             ->website('www.example.com')
-            ->activeFrom(FinancialPeriod::of(2026, 1))
+            ->activeFrom(Period::of(2026, 1))
             ->dueDays(30)
             ->vatCode('VH')
             ->balanceAccount('1300')

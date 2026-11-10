@@ -15,7 +15,7 @@ use SolveBeam\Twinfield\JournalTransaction\JournalTransactionInput;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
 use SolveBeam\Twinfield\Transaction\DetailLineInput;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\TransactionStatus;
 use SolveBeam\Twinfield\Transaction\VatLineInput;
 use SolveBeam\Twinfield\Twinfield;
@@ -52,7 +52,7 @@ final class JournalTransactionInputTest extends TestCase
     {
         $input = JournalTransactionInput::create('MEMO', new DateTimeImmutable('2026-01-01'))
             ->number(202600003)
-            ->period(FinancialPeriod::of(2026, 0))
+            ->period(Period::of(2026, 0))
             ->currency('EUR')
             ->regime(Regime::Fiscal)
             ->ignoreDateWarning()

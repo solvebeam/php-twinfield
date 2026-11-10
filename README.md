@@ -32,8 +32,8 @@ $debtors = $twinfield->finder(FinderType::Dimensions)
     ->limit(10)
     ->get();
 
-foreach ($twinfield->periods()->list(2025) as $period) {
-    echo $period->number, ' ', $period->name, PHP_EOL;
+foreach ($twinfield->periods()->list(2025) as $details) {
+    echo $details->period, ' ', $details->name ?? '-', PHP_EOL;
 }
 
 $activity = $twinfield->activities()->create(
@@ -211,7 +211,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 
 | Service | Resource | Status |
 |---|---|---|
-| PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`; all commands. See [List periods](examples/periods/list-periods/) and [Rename period](examples/periods/rename-period/). |
+| PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`, `get()`/`find()` for one `Period` (e.g. of a transaction); all commands. See [Periods](https://php-twinfield.solvebeam.com/guides/periods/), [List periods](examples/periods/list-periods/), [Period of transaction](examples/periods/period-of-transaction/) and [Rename period](examples/periods/rename-period/). |
 | BudgetService | `$twinfield->budgets()` | All queries: `totals()->byProfitAndLoss()`, `byCostCenter()`, `byProject()`. See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 | BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
 | CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |

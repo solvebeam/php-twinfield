@@ -107,7 +107,7 @@ See [Read browse definition](/examples/browse-data/read-browse-definition/) and 
 | `betweenDateTimes($field, $from, $to)` | `between` with moments `yyyymmddhhmmss`, converted to UTC | `betweenDateTimes('fin.trs.head.modified', $lastSync, $now)` |
 | `sortBy($field, $order)` | `<sort>`, at most 3 fields | `sortBy('fin.trs.head.number', SortOrder::Descending)` |
 
-Values can be a string, an int, a `FinancialPeriod` (`2026/03`) or a `Regime`. A criterion on a field that is not one of the columns only selects: the field is not in the result. Setting a criterion on a field again replaces it.
+Values can be a string, an int, a `Period` (`2026/03`, see [Periods](/guides/periods/)) or a `Regime`. A criterion on a field that is not one of the columns only selects: the field is not in the result. Setting a criterion on a field again replaces it.
 
 Keep in mind:
 
@@ -142,7 +142,7 @@ $query = $twinfield->browse(BrowseCode::AnnualReportTotals)
 | `amount()` | `Value` | An `Amount`, e.g. `-121.00` |
 | `date()`, `nullableDate()` | `Date` | A `DateTimeImmutable` from `yyyymmdd` |
 | `dateTime()` | `Datetime` | A `DateTimeImmutable` in UTC from `yyyymmddhhmmss` |
-| `period()` | any | A `FinancialPeriod` from `yyyy/pp` |
+| `period()` | any | A `Period` from `yyyy/pp` |
 | `displayName()` | any | The value as Twinfield shows it, in the language of the user (e.g. `Definitief` for `final`), or null |
 | `values()` | – | All values as Twinfield returned them, by field |
 

@@ -8,7 +8,7 @@ use DOMElement;
 use InvalidArgumentException;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * A general ledger account to create or update. Immutable: every method returns a new input.
@@ -128,7 +128,7 @@ final readonly class GeneralLedgerAccountInput
     /**
      * First period the account can be used in; null for no limit.
      */
-    public function activeFrom(?FinancialPeriod $period): self
+    public function activeFrom(?Period $period): self
     {
         return $this->setMany([
             'beginperiod' => (string) ($period->number ?? 0),
@@ -139,7 +139,7 @@ final readonly class GeneralLedgerAccountInput
     /**
      * Last period the account can be used in; null for no limit.
      */
-    public function activeUntil(?FinancialPeriod $period): self
+    public function activeUntil(?Period $period): self
     {
         return $this->setMany([
             'endperiod' => (string) ($period->number ?? 0),

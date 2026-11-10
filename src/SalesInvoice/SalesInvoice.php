@@ -10,7 +10,7 @@ use LogicException;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\Transaction\TransactionXml;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -52,7 +52,7 @@ final readonly class SalesInvoice
         public string $bank,
         /** Customer code, e.g. `1000`. */
         public string $customer,
-        public FinancialPeriod $period,
+        public Period $period,
         /** Currency code, e.g. `EUR`. */
         public string $currency,
         public SalesInvoiceStatus $status,

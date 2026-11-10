@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Dimension;
 
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * Shortcuts to the addresses and bank accounts of a customer (Customer) or supplier
@@ -104,11 +104,11 @@ trait RelationShortcuts
     /**
      * A period from a year and period element; Twinfield uses 0 for "no limit".
      */
-    private static function period(XmlElement $dimension, string $yearElement, string $periodElement): ?FinancialPeriod
+    private static function period(XmlElement $dimension, string $yearElement, string $periodElement): ?Period
     {
         $year = $dimension->int($yearElement);
         $period = $dimension->int($periodElement);
 
-        return $year === 0 ? null : FinancialPeriod::of($year, $period);
+        return $year === 0 ? null : Period::of($year, $period);
     }
 }

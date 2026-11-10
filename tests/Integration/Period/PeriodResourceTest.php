@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Integration\Period;
 
+use SolveBeam\Twinfield\Period\Period;
+use SolveBeam\Twinfield\Period\PeriodDetails;
+use SolveBeam\Twinfield\Period\PeriodNotFoundException;
 use SolveBeam\Twinfield\Period\PeriodServiceFaultCode;
 use SolveBeam\Twinfield\Soap\CommandQueryFaultException;
 use SolveBeam\Twinfield\Tests\Support\IntegrationTestCase;
@@ -34,17 +37,48 @@ final class PeriodResourceTest extends IntegrationTestCase
 
         self::assertNotEmpty($periods);
 
-        $numbers = array_map(static fn ($period): int => $period->number, $periods);
+        $numbers = array_map(static fn (PeriodDetails $details): int => $details->period->number, $periods);
         $sorted = $numbers;
         sort($sorted);
 
         self::assertSame($sorted, $numbers, 'Periods are in order.');
 
-        foreach ($periods as $period) {
-            if ($period->endDate !== null) {
-                self::assertSame($year, (int) $period->endDate->format('Y'), "Period {$period->number} ends in {$year}.");
+        // A financial year does not have to follow the calendar year, so only check that end dates go up.
+        $previous = null;
+
+        foreach ($periods as $details) {
+            self::assertSame($year, $details->period->year);
+
+            if ($details->endDate === null) {
+                continue;
             }
+
+            if ($previous !== null) {
+                self::assertGreaterThan($previous, $details->endDate, "Period {$details->period} ends after the previous period.");
+            }
+
+            $previous = $details->endDate;
         }
+    }
+
+    public function testGetsTheFirstPeriodOfTheLastYear(): void
+    {
+        $years = $this->twinfield->periods()->years();
+
+        if ($years === []) {
+            self::markTestSkipped('The company has no years.');
+        }
+
+        $period = Period::of(max($years), 1);
+
+        self::assertTrue($this->twinfield->periods()->get($period)->period->equals($period));
+    }
+
+    public function testThrowsPeriodNotFoundForAYearThatDoesNotExist(): void
+    {
+        $this->expectException(PeriodNotFoundException::class);
+
+        $this->twinfield->periods()->get(Period::of(1901, 1));
     }
 
     public function testThrowsYearNotFound(): void

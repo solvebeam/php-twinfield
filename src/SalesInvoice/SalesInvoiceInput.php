@@ -11,7 +11,7 @@ use LogicException;
 use SolveBeam\Twinfield\ProcessXml\XmlBuilder;
 use SolveBeam\Twinfield\ProcessXml\XmlValue;
 use SolveBeam\Twinfield\Transaction\Amount;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\VatCode\VatCode;
 
 /**
@@ -45,7 +45,7 @@ final readonly class SalesInvoiceInput
         public ?DateTimeImmutable $dueDate,
         public ?DateTimeImmutable $performanceDate,
         public ?string $bank,
-        public ?FinancialPeriod $period,
+        public ?Period $period,
         /** False to suppress warnings about a date outside the period. */
         public bool $periodRaiseWarning,
         public ?string $currency,
@@ -168,15 +168,15 @@ final readonly class SalesInvoiceInput
     }
 
     /**
-     * Financial period, e.g. `'2026/11'` or `FinancialPeriod::of(2026, 11)`.
+     * Financial period, e.g. `'2026/11'` or `Period::of(2026, 11)`.
      *
      * @param bool $raiseWarning False to suppress the warning that the invoice date is outside
      *                           the period.
      */
-    public function period(FinancialPeriod|string|null $period, bool $raiseWarning = true): self
+    public function period(Period|string|null $period, bool $raiseWarning = true): self
     {
         return $this->with([
-            'period' => is_string($period) ? FinancialPeriod::fromString($period) : $period,
+            'period' => is_string($period) ? Period::fromString($period) : $period,
             'periodRaiseWarning' => $raiseWarning,
         ]);
     }

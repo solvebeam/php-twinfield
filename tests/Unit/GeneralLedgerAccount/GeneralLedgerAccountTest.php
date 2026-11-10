@@ -20,7 +20,7 @@ use SolveBeam\Twinfield\VatCode\VatCodeReference;
 use SolveBeam\Twinfield\VatCode\VatCodeType;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
-use SolveBeam\Twinfield\Transaction\FinancialPeriod;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class GeneralLedgerAccountTest extends TestCase
@@ -81,8 +81,8 @@ final class GeneralLedgerAccountTest extends TestCase
         $account = self::account('general-ledger-account-read-full');
 
         self::assertSame('Diensten', $account->shortName);
-        self::assertEquals(FinancialPeriod::of(2026, 1), $account->activeFrom);
-        self::assertEquals(FinancialPeriod::of(2027, 12), $account->activeUntil);
+        self::assertEquals(Period::of(2026, 1), $account->activeFrom);
+        self::assertEquals(Period::of(2027, 12), $account->activeUntil);
         self::assertTrue($account->matchable);
         self::assertEquals(new VatCodeReference('VH', 'BTW 21%', 'VH', VatCodeType::Sales), $account->vatCode);
         self::assertTrue($account->vatCodeFixed);

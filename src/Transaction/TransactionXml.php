@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield\Transaction;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Period\Period;
 use SolveBeam\Twinfield\ProcessXml\XmlElement;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
@@ -109,12 +110,12 @@ final class TransactionXml
         );
     }
 
-    public static function period(XmlElement $parent, string $name): FinancialPeriod
+    public static function period(XmlElement $parent, string $name): Period
     {
         $child = $parent->child($name);
 
         try {
-            return FinancialPeriod::fromString($child->text());
+            return Period::fromString($child->text());
         } catch (InvalidArgumentException) {
             throw $child->invalid('a period yyyy/pp');
         }

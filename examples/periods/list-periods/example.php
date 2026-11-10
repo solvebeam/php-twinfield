@@ -20,12 +20,12 @@ if ($years === []) {
 
 echo count($years), ' years, from ', min($years), ' to ', max($years), PHP_EOL;
 
-foreach ($twinfield->periods()->list(max($years)) as $period) {
+foreach ($twinfield->periods()->list(max($years)) as $details) {
     echo sprintf(
-        '%2d  %-35s %-10s  %s',
-        $period->number,
-        $period->name,
-        $period->endDate?->format('Y-m-d') ?? '-',
-        $period->open ? 'open' : 'closed',
+        '%s  %-35s %-10s  %s',
+        $details->period,
+        $details->name ?? '-',
+        $details->endDate?->format('Y-m-d') ?? '-',
+        $details->open ? 'open' : 'closed',
     ), PHP_EOL;
 }
