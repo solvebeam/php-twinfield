@@ -532,6 +532,7 @@ Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and l
 
 ## Links
 
+- [Changelog](CHANGELOG.md)
 - https://oauth2-client.thephpleague.com/providers/league/
 - https://oauth2-client.thephpleague.com/providers/thirdparty/
 - https://github.com/php-fig/cache

@@ -3,6 +3,7 @@
 /.github            export-ignore
 /.gitignore         export-ignore
 /AGENTS.md          export-ignore
+/CHANGELOG.md       export-ignore
 /TODO.md            export-ignore
 /bin                export-ignore
 /browse-definitions export-ignore

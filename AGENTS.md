@@ -34,6 +34,10 @@ Twinfield has SOAP/XML web services now and is moving towards a REST/JSON API (h
 
 - Write guides and example READMEs for developers who connect to their own organisation. Don't mention the numbers, dates or results of our own live tests (`557 customers changed since 1 October`, `491 VAT codes of 12 companies`, `18 against 31 users`): describe the behaviour instead. Such details belong in `TODO.md` and on the "Differences with the documentation" page, which record how something was verified.
 
+## Changelog
+
+- Add a line under `## [Unreleased]` in `CHANGELOG.md` for every change that developers using the SDK notice, in the sections of https://keepachangelog.com/en/1.1.0/ (Added, Changed, Deprecated, Removed, Fixed, Security). Name the class or method. Leave out changes to docs, examples, tests and tooling.
+
 ## Twinfield knowledge base
 
 - Articles from the Twinfield community go in `docs/src/content/docs/knowledge-base/`: the article text quoted unchanged in a blockquote, with the source link and dates, followed by a "With this SDK" section with code and links to examples. See the `index.md` there.
