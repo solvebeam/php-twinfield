@@ -110,6 +110,7 @@ Master data such as customers, general ledger accounts, activities, cost centers
 
 | Other master data | Resource | Status |
 |---|---|---|
+| Articles | `$twinfield->articles()` | Search, read, create, update, delete, activate; the articles (items) of Classic sales invoices, with their sub-articles: prices, revenue account and cost center. See [Read article](examples/articles/read-article/) and [Create article](examples/articles/create-article/). |
 | Asset methods, classic module | `$twinfield->classicAssetMethods()` | Search, read, create, update, delete, activate. See [Read asset method](examples/classic-asset-methods/read-asset-method/) and [Create asset method](examples/classic-asset-methods/create-asset-method/). |
 | Bank books | `$twinfield->bankBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read bank book](examples/bank-books/read-bank-book/) and [Update bank book](examples/bank-books/update-bank-book/). |
 | Cash books | `$twinfield->cashBooks()` | Search, read, create, update (Command & Query; Twinfield cannot delete them). See [Read cash book](examples/cash-books/read-cash-book/) and [Update cash book](examples/cash-books/update-cash-book/). |
@@ -300,7 +301,7 @@ Twinfield also has a [REST API](https://api.accounting.twinfield.com/Api/swagger
 | Swagger tag | Resource | Status |
 |---|---|---|
 | Fixed Assets | `$twinfield->fixedAssets()` | The new fixed assets module: search, read with depreciation per regime, history, classes, groups, reconciliation report. Read-only. The classic module is `classicFixedAssets()`. See [Fixed assets](https://php.twinfield.solvebeam.com/guides/fixed-assets/), [List fixed assets](examples/fixed-assets/list-fixed-assets/) and [Read fixed asset](examples/fixed-assets/read-fixed-asset/). |
-| Sales Articles | `$twinfield->salesArticles()` | Search, read, create, update, delete, cultures, import and export (CSV, XLSX). See [List sales articles](examples/sales-articles/list-sales-articles/) and [Create sales article](examples/sales-articles/create-sales-article/). |
+| Sales Articles | `$twinfield->salesArticles()` | Search, read (`get()`, `find()`), create, update, `save()`, delete, cultures, import and export (CSV, XLSX). A separate list: the articles of Classic sales invoices are `articles()`. See [List sales articles](examples/sales-articles/list-sales-articles/) and [Create sales article](examples/sales-articles/create-sales-article/). |
 | Budgets | `$twinfield->budgets()` | Next to search and totals: budgets with GUIDs, create, update, delete, annual balances, periods, lines, copy, spread, import and export. See [List budget lines](examples/budgets/list-budget-lines/) and [Create budget](examples/budgets/create-budget/). |
 | Budgeting Spreading Templates | `$twinfield->spreadingTemplates()` | Search, read, create, update, delete and the default distribution. |
 | Bookkeeping Ledger Accounts | `$twinfield->ledgerAccounts()` | Search and read all accounts and dimensions with their GUID (the `uid` of the dimension). See [List ledger accounts](examples/ledger-accounts/list-ledger-accounts/). |

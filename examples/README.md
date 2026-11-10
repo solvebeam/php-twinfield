@@ -260,6 +260,14 @@ The new fixed assets module, on the REST API. For the classic module see [Fixed 
 - [Delete VAT code](vat-codes/delete-vat-code/): delete or hide a VAT code (changes data).
 - [List VAT code rates](vat-codes/list-vat-code-rates/): the rate on a date and the accounts of each VAT code (REST API).
 
+## Articles
+
+- [List articles](articles/list-articles/): code and name of all articles, or those matching a pattern.
+- [Read article](articles/read-article/): settings of one article and the prices and accounts of its sub-articles.
+- [Create article](articles/create-article/): create an article with two sub-articles (changes data).
+- [Update article price](articles/update-article-price/): change the price of a sub-article and add one (changes data).
+- [Delete article](articles/delete-article/): delete or hide an article, and activate it again (changes data).
+
 ## Sales articles
 
 - [List sales articles](sales-articles/list-sales-articles/): prices, VAT code and translations of the articles (REST API).

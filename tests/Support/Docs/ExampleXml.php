@@ -36,6 +36,8 @@ final class ExampleXml
 
     /** Classes the code of the definitions can use without namespace. */
     private const IMPORTS = [
+        'SolveBeam\Twinfield\Article\ArticleInput',
+        'SolveBeam\Twinfield\Article\SubArticleInput',
         'SolveBeam\Twinfield\BankTransaction\BankTransactionInput',
         'SolveBeam\Twinfield\BrowseData\BrowseCode',
         'SolveBeam\Twinfield\BrowseData\SortOrder',
@@ -140,8 +142,13 @@ final class ExampleXml
             ));
         }
 
-        $request = $http->lastRequest();
-        $fixture = $call->fixtures[count($call->fixtures) - 1];
+        $index = $call->request ?? count($call->fixtures) - 1;
+        $request = $http->requests[$index] ?? throw new RuntimeException(sprintf(
+            '"%s" has no request %d.',
+            $call->title,
+            $index,
+        ));
+        $fixture = $call->fixtures[$index];
         [$requestXml, $isProcessXml] = self::requestXml($request);
         $service = basename($request->getUri()->getPath());
 

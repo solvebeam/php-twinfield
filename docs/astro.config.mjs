@@ -72,6 +72,7 @@ export default defineConfig({
 					label: 'Master Data',
 					items: [
 						{ label: 'Activities', collapsed: true, items: [{ autogenerate: { directory: 'examples/activities' } }] },
+						{ label: 'Articles', collapsed: true, items: [{ autogenerate: { directory: 'examples/articles' } }] },
 						{ label: 'Asset methods (classic)', collapsed: true, items: [{ autogenerate: { directory: 'examples/classic-asset-methods' } }] },
 						{ label: 'Bank book', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-books' } }] },
 						{ label: 'Budget', collapsed: true, items: [{ autogenerate: { directory: 'examples/budgets' } }] },

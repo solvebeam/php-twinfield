@@ -20,6 +20,7 @@ final class ExampleXmlDefinitions
     public static function pages(): array
     {
         return [
+            'articles' => ['Articles', self::DOCS . 'master-data/articles/'],
             'bank-transactions' => ['Bank transactions', self::DOCS . 'transaction-data/bank-transactions/'],
             'browse-data' => ['Browse data', self::DOCS . 'request-data/browse-data/'],
             'cash-transactions' => ['Cash transactions', self::DOCS . 'transaction-data/cash-transactions/'],
@@ -55,6 +56,7 @@ final class ExampleXmlDefinitions
     {
         // The code in the nowdocs goes into the READMEs as is, with the indentation of the README.
         // phpcs:disable Generic.Files.LineLength.TooLong
+        $articles = self::DOCS . 'master-data/articles/';
         $bank = self::DOCS . 'transaction-data/bank-transactions/';
         $browse = self::DOCS . 'request-data/browse-data/';
         $cash = self::DOCS . 'transaction-data/cash-transactions/';
@@ -75,6 +77,71 @@ final class ExampleXmlDefinitions
         );
 
         return [
+            // Articles.
+            'articles/create-article' => [
+                new XmlExample(
+                    'Create/Update/Delete',
+                    $articles . '#createupdatedelete',
+                    <<<'PHP'
+                    $twinfield->articles()->create(
+                        ArticleInput::normal('BIKE', 'Bike summer edition')
+                            ->shortName('Bike summer')
+                            ->unitNames('Piece', 'Pieces')
+                            ->vatCode('VH')
+                            ->subArticle(SubArticleInput::create("Lady's bike summer edition", '8050', 'BIKE.L')->unitPriceExcl('750.00'))
+                            ->subArticle(SubArticleInput::create("Man's bike summer edition", '8051', 'BIKE.M')->unitPriceExcl('760.00')),
+                    );
+                    PHP,
+                    ['article-read-not-found', 'article-save', 'article-read'],
+                    responseNote: '`create()` first reads the article, to check that the code is free, and reads it back after saving: '
+                        . 'see [Read article](../read-article/). The response follows the documentation; it is not recorded yet.',
+                    request: 1,
+                ),
+            ],
+            'articles/delete-article' => [
+                new XmlExample(
+                    'Create/Update/Delete',
+                    $articles . '#createupdatedelete',
+                    "\$twinfield->articles()->delete('BIKE');",
+                    ['article-read', 'article-delete'],
+                    responseNote: '`delete()` first reads the article, to check that it exists. '
+                        . 'The response follows the documentation; it is not recorded yet.',
+                ),
+            ],
+            'articles/list-articles' => [
+                new XmlExample(
+                    'Find',
+                    $articles . '#find',
+                    "\$twinfield->articles()->search('*BIKE*')->limit(20)->get();",
+                    ['finder-articles'],
+                ),
+            ],
+            'articles/read-article' => [
+                new XmlExample(
+                    'Read',
+                    $articles . '#read',
+                    "\$twinfield->articles()->get('BIKE');",
+                    ['article-read'],
+                ),
+            ],
+            'articles/update-article-price' => [
+                new XmlExample(
+                    'Create/Update/Delete',
+                    $articles . '#createupdatedelete',
+                    <<<'PHP'
+                    $article = $twinfield->articles()->get('BIKE');
+
+                    $twinfield->articles()->update(
+                        $article->edit()->subArticle($article->subArticles[0]->edit()->unitPriceExcl('799.00')),
+                    );
+                    PHP,
+                    ['article-read', 'article-read', 'article-save', 'article-read'],
+                    responseNote: '`edit()` sends all sub-articles back, also the deleted one (`status="deleted"`). '
+                        . 'The response follows the documentation; it is not recorded yet.',
+                    request: 2,
+                ),
+            ],
+
             // Bank transactions.
             'bank-transactions/bank-costs-with-vat' => [
                 new XmlExample(

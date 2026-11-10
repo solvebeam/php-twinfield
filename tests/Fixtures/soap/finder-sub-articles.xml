@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult />
+      <data>
+        <TotalRows>2</TotalRows>
+        <Columns>
+          <string>Code</string>
+          <string>Naam</string>
+        </Columns>
+        <Items>
+          <ArrayOfString>
+            <string>BIKE.L</string>
+            <string>Lady's bike summer edition</string>
+          </ArrayOfString>
+          <ArrayOfString>
+            <string>BIKE.M</string>
+            <string>Man's bike summer edition</string>
+          </ArrayOfString>
+        </Items>
+      </data>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

@@ -249,6 +249,41 @@ To check:
 Then run the write examples in `examples/suppliers/{create,update,delete}-supplier` and replace the
 illustrative output in their READMEs with the real output.
 
+## Articles: verify writing live
+
+Articles (`article`, Finder `ART` and `SAR`) are tested offline with fixtures and read-only live on
+company 1002. The read fixtures have the shape of the live responses, with fictitious values; the
+save, delete and activate fixtures follow the documentation. Creating, updating and deleting are not
+yet tested live: the write test needs an interactive confirmation.
+
+```sh
+composer test:write -- --company=1002_3 --filter=Article
+```
+
+To check:
+
+- The shape of the live save response, and whether its lines have an `id` (the read response has
+  none). `save()` reads the article back, so this does not block anything, but update
+  `article-save.xml` with a recorded response.
+- Delete: is `<article><header status="deleted"><office/><code/></header></article>` enough, or does
+  Twinfield want the whole article ("At least one sub-article is required")? Delete gives `deleted`
+  (or `hide` when an invoice uses the article) and activate gives `active`.
+- Does `<line status="deleted">` with only the `subcode` remove a sub-article (`removeSubArticle()`),
+  and does `status="active"` recover one that is in use? `edit()` sends a sub-article that is
+  already deleted back with `status="deleted"`: does Twinfield accept that, or must it be left out?
+- Do empty `shortname`, `unitnamesingular`, `unitnameplural` and `vatcode` elements clear the value?
+  The write test expects `shortName` null after `shortName(null)`.
+- The defaults of `allowchangevatcode`, `allowdiscountorpremium`, `allowchangeunitsprice` and
+  `allowdecimalquantity` when they are left out, and whether `percentage` is accepted for type `normal`.
+- Sending `unitspriceexcl` and `unitspriceinc` together (`edit()` sends both back unchanged), prices
+  with more than two decimals, and an article with prices including VAT.
+- A response with a cost center (`freetext2`) and `freetext3`: `article-read.xml` follows `freetext1`.
+- Finder `ART` with option `vat`: live it adds the special items `-`, `0` and `T`, and `inclusive`
+  and `exclusive` give the same number of rows. Find a company where the two differ.
+
+Then run the write examples in `examples/articles/{create-article,update-article-price,delete-article}`
+and replace the illustrative output in their READMEs with the real output.
+
 ## Rates: verify writing live
 
 Rates (`projectrate`, Finder `TRT`) are tested offline with fixtures and read-only live on company
@@ -495,14 +530,17 @@ To check:
 - An invoice type with prices including VAT (`unitspriceinc`): none in the test companies.
 - Performance type and date on lines and header (ICT): never seen live.
 - Is the sub-article in the documentation (`501.01`) a valid code? The SDK only checks the length
-  of article codes.
+  of article codes. Live sub-article codes are empty, the article code or codes of their own (`11`, `12`); the Articles
+  page has `BIKE.L`. Check which sub-article an invoice line needs for an article whose only
+  sub-article has no code.
 
 Then run `examples/sales-invoices/create-sales-invoice` with `--calculate` and `--save`, and
 `finalize-sales-invoice` with `--save`, and replace the illustrative output in their READMEs with
 the real output.
 
-Not yet implemented: articles (items) themselves (`<article>`, Finder `ART`). The old manual (`manuals/Webservices-Manual-Sales-Invoices.pdf`) is not read yet: it needs
-`pdftotext` (`brew install poppler`).
+Articles (items) themselves are `articles()`: see "Articles: verify writing live". The old manual
+(`manuals/Webservices-Manual-Sales-Invoices.pdf`) is not read yet: it needs `pdftotext`
+(`brew install poppler`).
 
 ## Reversal transactions: verify writing live
 

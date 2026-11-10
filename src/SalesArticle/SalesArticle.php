@@ -12,6 +12,8 @@ use SolveBeam\Twinfield\Rate\UnitPrice;
 /**
  * A sales article (REST API, Sales Articles): a product or service with a price, VAT code and revenue
  * account, used on sales invoices. Prices have four decimals.
+ *
+ * Not an article of the Classic invoicing module: those are `Article\Article`, from `articles()`.
  */
 final readonly class SalesArticle
 {

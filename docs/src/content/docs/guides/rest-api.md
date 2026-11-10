@@ -133,8 +133,8 @@ The body is an array (encoded with `JsonWriter`, which writes `Amount` and `Json
 | Customers | `GET /sales/customers/changes` | `customers()->changes()` | Verified live; HTTP 500 in some companies |
 | Suppliers | `GET /purchase/suppliers/changes` | `suppliers()->changes()` | Verified live |
 | VAT Codes | `GET /vat/vatcodes`, `/{id}` | `vatCodes()->searchDetails()`, `getDetails()` | Verified live |
-| Sales Articles | `GET /sales/articles`, `/{id}`, `/sales/articlecultures`, `/sales/articles/export` | `salesArticles()->search()`, `get()`, `cultures()`, `export()` | Verified live |
-| Sales Articles | `POST`, `PUT`, `DELETE /sales/articles`, `POST /sales/articles/import` | `create()`, `update()`, `delete()`, `import()` | Tested offline |
+| Sales Articles | `GET /sales/articles`, `/{id}`, `/sales/articlecultures`, `/sales/articles/export` | `salesArticles()->search()`, `get()`, `find()`, `cultures()`, `export()` | Verified live |
+| Sales Articles | `POST`, `PUT`, `DELETE /sales/articles`, `POST /sales/articles/import` | `create()`, `update()`, `save()`, `delete()`, `import()` | Tested offline |
 | Budgets | `GET /budgeting/budgets`, `/{id}`, `/annual`, `/periods/{year}`, lines, export, import template | `budgets()->list()`, `getById()`, `annual()`, `periods()`, `lines()`, `accountLines()`, `line()`, `export()`, `importTemplate()` | Verified live |
 | Budgets | `POST`, `PUT`, `DELETE` budgets and lines, copy, spread, import | `create()`, `update()`, `delete()`, `createLine()`, `updateLine()`, `deleteLine()`, `deleteLines()`, `deleteAccountLines()`, `copyLines()`, `spread()`, `import()` | Tested offline |
 | Budgeting Spreading Templates | `GET /budgeting/spreadingtemplates/defaultdistribution` | `spreadingTemplates()->defaultDistribution()` | Verified live |

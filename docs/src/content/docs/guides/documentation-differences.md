@@ -306,6 +306,43 @@ These need a live write on a test company (`composer test:write -- --company=…
 - Whether an update keeps or removes the lines left out of the request, and how Twinfield handles a price for an article whose price can't be changed.
 - Which header fields are really optional on create.
 
+## Articles
+
+[Articles](/guides/master-data/#articles) are read live; creating, updating and deleting are tested offline, with requests after the documentation. Documentation: [Articles](https://developers.twinfield.com/documentation/api/master-data/articles/).
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| `line/@id` ("Line ID") in the response | No `id` on the lines of a read response | No id in `SubArticle`; a sub-article is recognised by its `subcode` |
+| `performancetype` and `allowchangeperformancetype` in the response structure | Left out for an article of type `discount`; `performancetype` is empty for the other articles | `null` when left out or empty |
+| `vatcode`: "Default VAT code" | Empty for a discount | `Article::$vatCode` is `null` |
+| `unitnamesingular`, `unitnameplural` | Often empty | `null` |
+| `subcode`: "Can only be empty if there is just one sub article" | Empty for some articles with one sub-article; other articles with one sub-article have a `subcode`, e.g. the article code | `SubArticle::$code` is `null` |
+| `unitspriceinc` is empty in the response example | Both prices are filled | Both required in `SubArticle` |
+| "If the article does not exist an empty article element is returned containing an error" | `<article msgtype="error" msg="Artikel X bestaat niet." result="0"/>` | `ArticleNotFoundException`, recognised by the structure (one error on the root, no `<header>`), not by the text |
+| `freetext1`: "The general ledger code linked to the article" | `<freetext1 name="…" shortname="" dimensiontype="PNL">`; `freetext2` has the same attributes, empty without cost center | `generalLedgerAccount` and `generalLedgerAccountName`, `costCenter` and `costCenterName` |
+
+### Finder
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| `ART`, option `vat`: "filters articles based on vat configuration on the article" | With `inclusive` or `exclusive` the result also has the special items `-`, `0` and `T`; both values give the same number of rows in the test company. Another value: `InvalidEnumerationOptionValue` | `search()->articleVat(ArticleVat::Exclusive)` |
+| `SAR` (not on the Articles page) | Code and name of the sub-articles; an empty code for a sub-article without code; no rows and no error for an unknown article | `articles()->subArticles($code)`: `SubArticleSummary` with `code` `null`, or an empty list |
+
+### Found in the SDK
+
+- The articles of the REST API (`salesArticles()`) are a separate list: in the test company they have no code, and the articles of `ART` are not among them.
+
+### Not yet verified
+
+- The save response, and whether it has line ids. `save()` reads the article back, so nothing depends on it.
+- Deleting: the status `deleted`, or `hide` for an article used in an invoice, and whether a request with only `office` and `code` in the header is enough.
+- Deleting and recovering a sub-article with `line/@status`, without a line id, and sending an already deleted sub-article back with `status="deleted"`.
+- Whether empty `shortname`, `unitnamesingular`, `unitnameplural` and `vatcode` elements clear the value, and the defaults of the `allow…` settings when they are left out.
+- Prices with more than two decimals, sending both prices, and an article with prices including VAT.
+- A sub-article with a cost center (`freetext2`) or `freetext3` in a response: the fixture follows `freetext1`.
+
 ## Browse data
 
 [Browse data](/guides/browse-data/) was checked on 9 November 2026, read-only, on a test company with 603 transaction lines and with a query over 216,710 lines: the definitions of all 38 browse codes, the browse fields, and about 40 queries on 030_3, 040_1 and 130_3. Documentation: [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/), and the old [browse manual](/reference/manuals/) (version 5.4, 2009).

@@ -118,6 +118,39 @@ final class SalesArticleResourceTest extends TestCase
         self::assertStringContainsString('"netPrice":13.0000', (string) $request->getBody());
     }
 
+    public function testFindGivesNullForAnUnknownArticle(): void
+    {
+        $http = new ReplayClient(ReplayClient::raw(404, '"Article not found"'));
+
+        self::assertNull(TestTokens::restClient($http)->salesArticles()->find(self::ARTICLE_ID));
+        self::assertSame(
+            self::ARTICLE_ID,
+            TestTokens::restClient(ReplayClient::jsonFixture('sales-articles-get'))
+                ->salesArticles()
+                ->find(self::ARTICLE_ID)
+                ?->id,
+        );
+    }
+
+    public function testSaveCreatesWithoutIdAndUpdatesWithId(): void
+    {
+        $http = new ReplayClient(
+            ReplayClient::jsonResponse('sales-articles-get', 201),
+            ReplayClient::jsonResponse('sales-articles-get'),
+        );
+        $articles = TestTokens::restClient($http)->salesArticles();
+
+        $created = $articles->save(SalesArticleInput::create('Bike', self::VAT_CODE_ID)->netPrice('825'));
+
+        self::assertSame('POST', $http->requests[0]->getMethod());
+
+        $articles->save($created->edit()->name('Grass'));
+
+        self::assertSame('PUT', $http->requests[1]->getMethod());
+        self::assertStringEndsWith('/sales/articles/' . self::ARTICLE_ID, (string) $http->requests[1]->getUri());
+        self::assertSame('2', $http->requests[1]->getHeaderLine('If-Match'));
+    }
+
     public function testThrowsAVersionConflict(): void
     {
         $article = self::article();

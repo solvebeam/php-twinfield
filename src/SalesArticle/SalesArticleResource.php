@@ -23,6 +23,9 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  * Sales articles of the company (REST API, Sales Articles): search, read, create, update and delete,
  * import and export as CSV or XLSX. Scope `readArticles`, and `writeArticles` to change them.
  *
+ * These are not the articles of the Classic invoicing module: a line of `salesInvoices()` refers to
+ * an article and sub-article of `articles()` (XML web services), which is a separate list.
+ *
  *   $articles = $twinfield->company('1000')->salesArticles();
  *
  *   foreach ($articles->search('Bike*')->all() as $article) {
@@ -32,6 +35,9 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  *   $created = $articles->create(SalesArticleInput::create('Bike', $vatCodeId)->code('BIKE')->netPrice('825'));
  *   $updated = $articles->update($created->edit()->netPrice('799'));
  *   $articles->delete($updated->id, $updated->version);
+ *
+ * `find()` gives null instead of a NotFoundException, and `save()` creates or updates depending on
+ * whether the input has an ID.
  *
  * @see https://api.accounting.twinfield.com/Api/swagger/ui/index#!/Sales32Articles
  */
@@ -57,6 +63,18 @@ final readonly class SalesArticleResource
     public function get(string $id): SalesArticle
     {
         return self::read($this->twinfield->rest('GET', self::PATH . '/' . Guid::of($id))->json(), $this->company());
+    }
+
+    /**
+     * The article, or null when the company has no article with this GUID.
+     */
+    public function find(string $id): ?SalesArticle
+    {
+        try {
+            return $this->get($id);
+        } catch (NotFoundException) {
+            return null;
+        }
     }
 
     /**
@@ -95,6 +113,18 @@ final readonly class SalesArticleResource
         );
 
         return $this->savedArticle($response, $article->id);
+    }
+
+    /**
+     * Creates the article when the input has no ID, and updates it otherwise (an input from
+     * `$article->edit()`).
+     *
+     * @throws VersionConflictException When the article changed since you read it (HTTP 412).
+     * @throws ValidationException      When Twinfield refuses the article.
+     */
+    public function save(SalesArticleInput $article): SalesArticle
+    {
+        return $article->id === null ? $this->create($article) : $this->update($article);
     }
 
     /**

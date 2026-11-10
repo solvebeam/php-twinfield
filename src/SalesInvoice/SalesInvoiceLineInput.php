@@ -113,7 +113,8 @@ final readonly class SalesInvoiceLineInput
 
     /**
      * A line with an article (item) of the company. Without a price, Twinfield takes the price
-     * of the article.
+     * of the article. Look articles up with `articles()->search()`, and their sub-articles with
+     * `articles()->subArticles($article)` or `articles()->get($article)`.
      *
      * @param string $article Article code, e.g. `510`.
      */

@@ -20,6 +20,7 @@ Other master data works the same way, but is not a dimension:
 
 | Master data | Resource | Status |
 |---|---|---|
+| [Articles](#articles) | `$twinfield->articles()` | Search, read, create, update, delete, activate; sub-articles with prices and revenue accounts |
 | [Asset methods (classic)](#asset-methods-classic) | `$twinfield->classicAssetMethods()` | Search, read, create, update, delete, activate |
 | [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
 | [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
@@ -525,6 +526,73 @@ What differs from activities:
 - The default code format is `P[0-9][0-9][0-9][0-9]` (in Twinfield under dimension types, `PRJ`).
 
 The read model `Project` has the same fields as `Activity`, with the time & expenses settings in `$project->projects` (a `ProjectSettings`). Use projects as `dim3` on transaction lines and per project in budgets: `$twinfield->budgets()->totals($code, 2026)->byProject()` (see [Budgets](#budgets)).
+
+## Articles
+
+An article (item) is what a sales invoice line of the Classic invoicing module refers to, together with one of its sub-articles: `SalesInvoiceLineInput::article('BIKE', subarticle: 'BIKE.L')`. The article has the settings: the VAT code, the unit and what may be changed on the invoice line. The sub-articles have the prices and the revenue accounts; every article has at least one. Articles are no dimensions, but `$twinfield->articles()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+
+These are not the [sales articles of the REST API](/guides/rest-api/) (`salesArticles()`): that is a separate list, in which an article is identified by a GUID.
+
+```php
+use SolveBeam\Twinfield\Article\ArticleInput;
+use SolveBeam\Twinfield\Article\SubArticleInput;
+
+$articles = $twinfield->articles();
+
+// Search: Finder type ART
+foreach ($articles->search('BIKE*')->all() as $summary) {
+    echo $summary->code, ' ', $summary->name, PHP_EOL;
+}
+
+// Read
+$article = $articles->get('BIKE');   // or find(): null when it does not exist
+
+foreach ($article->activeSubArticles() as $subArticle) {
+    echo $subArticle->code, ' ', $subArticle->unitPriceExcl, ' ', $subArticle->generalLedgerAccount, PHP_EOL;
+}
+
+// Only code and name of the sub-articles: Finder type SAR
+$subArticles = $articles->subArticles('BIKE');
+
+// Create
+$articles->create(
+    ArticleInput::normal('BIKE', 'Bike summer edition')
+        ->unitNames('Piece', 'Pieces')
+        ->vatCode('VH')
+        ->subArticle(SubArticleInput::create("Lady's bike", '8050', 'BIKE.L')->unitPriceExcl('750.00'))
+        ->subArticle(SubArticleInput::create("Man's bike", '8051', 'BIKE.M')->unitPriceExcl('750.00')),
+);
+
+// Change the price of a sub-article
+$articles->update(
+    $article->edit()->subArticle($article->subArticles[0]->edit()->unitPriceExcl('799.00')),
+);
+
+// Delete: DeleteResult::Hidden when an invoice uses the article
+$articles->delete('BIKE');
+```
+
+- `search()` gives `ArticleSummary` results with code and name. `articleVat(ArticleVat::Exclusive)` sends the Finder option `vat`; with it Twinfield also returns its special items `-` (free text), `0` (one-off item) and `T` (projects).
+- `subArticles($articleCode)` gives `SubArticleSummary` results with code and name. The code is `null` for the only sub-article of an article, which may have no code. An unknown article gives an empty list: the Finder has no error for it.
+- `get()` sends a `<read>` of type `article`. Not found is an `ArticleNotFoundException`, an existing code on `create()` an `ArticleAlreadyExistsException`. `create()`, `update()` and `save()` read the article back after saving, so you always get the complete `Article`.
+- An `Article` has `type` (`ArticleType::Normal`, `Discount` or `Premium`), `status`, `vatCode`, the unit names, `percentage` (a discount or premium as a percentage) and what may be changed on the invoice line: `allowChangeVatCode`, `allowChangeUnitPrice`, `allowDiscountOrPremium` and `allowDecimalQuantity`. `performanceType` and `allowChangePerformanceType` are for ICT VAT codes.
+- A `SubArticle` has `code`, `name`, `units`, `unitPriceExcl` and `unitPriceInc`, `generalLedgerAccount` (the revenue account, with its name), `costCenter`, `freeText3`, `status` and `inUse`. `$article->subArticles` also has the deleted ones; `activeSubArticles()` leaves them out and `subArticle($code)` gives one.
+- Prices are `Amount` objects: numeric strings with two decimals (`'750.00'`), never floats. For a discount or premium with `percentage`, the price is the percentage.
+- `edit()` gives an `ArticleInput` with all values and sub-articles, so an update sends them again. `subArticle()` adds a sub-article or replaces the one with the same code, and `removeSubArticle($code)` deletes one when the article is saved. A sub-article has a price excluding or including VAT: setting one clears the other, and Twinfield calculates it with the VAT code.
+- The `allow…` settings are only sent when you set them, so a new article gets the defaults of Twinfield for the others. The SDK refuses an input without sub-articles, and several sub-articles of which one has no code.
+- `delete()` and `activate()` read the article first: an `<article>` request for an unknown code would create it.
+
+### Differences with the documentation
+
+The read model is based on live responses, which differ from the [documentation](https://developers.twinfield.com/documentation/api/master-data/articles/):
+
+- Sub-articles have no `id` in a read response. The SDK recognises a sub-article by its code.
+- A discount has no `performancetype` and `allowchangeperformancetype`, and an empty `vatcode`.
+- The only sub-article of an article can have an empty `subcode`, as documented. The Finder then gives a row with an empty code.
+- Not found is `<article msgtype="error" msg="…" result="0"/>` without child elements.
+- `freetext1` (general ledger account) and `freetext2` (cost center) have the attributes `name`, `shortname` and `dimensiontype`.
+
+Creating, updating and deleting are tested offline, with requests after the documentation. See [Differences with the documentation](/guides/documentation-differences/#articles).
 
 ## Asset methods (classic)
 
@@ -1124,6 +1192,11 @@ Creating, updating and deleting are not yet verified live, see [`TODO.md`](https
 - [Create project](/examples/projects/create-project/)
 - [Update project](/examples/projects/update-project/)
 - [Delete project](/examples/projects/delete-project/)
+- [List articles](/examples/articles/list-articles/)
+- [Read article](/examples/articles/read-article/)
+- [Create article](/examples/articles/create-article/)
+- [Update article price](/examples/articles/update-article-price/)
+- [Delete article](/examples/articles/delete-article/)
 - [List rates](/examples/rates/list-rates/)
 - [Search rates](/examples/rates/search-rates/)
 - [Read rate](/examples/rates/read-rate/)

@@ -49,6 +49,23 @@ final class WriteGuardClientTest extends TestCase
             self::processXml('<dimension><office>1002</office></dimension>'),
             false,
         ];
+        yield 'process xml article read' => [
+            'ProcessXmlString',
+            self::processXml('<read><type>article</type><office>1002</office><code>BIKE</code></read>'),
+            true,
+        ];
+        yield 'process xml article save' => [
+            'ProcessXmlString',
+            self::processXml('<article><header><office>1002</office><code>BIKE</code></header></article>'),
+            false,
+        ];
+        yield 'process xml article delete' => [
+            'ProcessXmlString',
+            self::processXml(
+                '<article><header status="deleted"><office>1002</office><code>BIKE</code></header></article>',
+            ),
+            false,
+        ];
         yield 'process xml asset method read' => [
             'ProcessXmlString',
             self::processXml('<assetmethod><office>1002</office><code>10JRGEB</code></assetmethod>'),

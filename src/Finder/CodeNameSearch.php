@@ -8,6 +8,7 @@ use Closure;
 use DateTimeInterface;
 use Generator;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Article\ArticleVat;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Rate\RateType;
@@ -327,6 +328,18 @@ final readonly class CodeNameSearch
     public function vatType(VatCodeType $type): self
     {
         return $this->option('vattype', $type->value);
+    }
+
+    /**
+     * Finder option `vat` of articles, e.g. `articleVat(ArticleVat::Exclusive)`. With this option
+     * Twinfield also returns its special items (`-` free text, `0` one-off item and `T` projects).
+     * Article searches only.
+     *
+     * @return self<T>
+     */
+    public function articleVat(ArticleVat $vat): self
+    {
+        return $this->option('vat', $vat->value);
     }
 
     /**

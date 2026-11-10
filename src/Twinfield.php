@@ -15,6 +15,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
 use SolveBeam\Twinfield\Authentication\AuthenticationHeader;
 use SolveBeam\Twinfield\Activity\ActivityResource;
+use SolveBeam\Twinfield\Article\ArticleResource;
 use SolveBeam\Twinfield\BankBook\BankBookResource;
 use SolveBeam\Twinfield\BankFeed\BankFeedResource;
 use SolveBeam\Twinfield\CashBook\CashBookResource;
@@ -440,8 +441,17 @@ final readonly class Twinfield
     }
 
     /**
+     * Articles (items) of the Classic invoicing module, with their sub-articles: search, read,
+     * create, update, delete and activate. Sales invoice lines refer to them by code.
+     */
+    public function articles(): ArticleResource
+    {
+        return new ArticleResource($this);
+    }
+
+    /**
      * Sales articles of the company (REST API): search, read, create, update, delete, import and
-     * export.
+     * export. A separate list: not the articles of Classic sales invoices, see articles().
      */
     public function salesArticles(): SalesArticleResource
     {

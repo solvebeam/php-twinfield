@@ -35,7 +35,7 @@ The resource searches (`CodeNameSearch`) map the rows to summaries and have meth
 
 | Type | Case | Columns and notes |
 |---|---|---|
-| `ART` | `Articles` | Items |
+| `ART` | `Articles` | Items; `articles()->search()`. With option `vat` also the special items `-`, `0` and `T` |
 | `ASM` | `AssetMethods` | |
 | `BDS` | `Budgets` | |
 | `BNK` | `CashbooksAndBanks` | Option `banktype`: `0` bank books, `1` cash books |
@@ -67,7 +67,7 @@ The resource searches (`CodeNameSearch`) map the rows to summaries and have meth
 | `REW` | `WordTemplates` | |
 | `RMD` | `ReminderScenarios` | |
 | `ROL` | `UserRoles` | |
-| `SAR` | `SubItems` | Option `article` is mandatory |
+| `SAR` | `SubItems` | Option `article` is mandatory; `articles()->subArticles($code)`. The only sub-article of an article can have an empty code |
 | `SPM` | `DistributionsByPeriods` | |
 | `TEQ` | `TimeAndQuantitiesTransactionTypes` | |
 | `TRS` | `TransactionTypes` | Day books |

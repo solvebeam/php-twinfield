@@ -255,6 +255,23 @@ final class Example
     }
 
     /**
+     * The first article code from EXAMPLE999 down that does not exist, for the examples that
+     * create an article.
+     */
+    public static function unusedArticleCode(Twinfield $twinfield): string
+    {
+        for ($number = 999; $number >= 900; $number--) {
+            $code = sprintf('EXAMPLE%03d', $number);
+
+            if ($twinfield->articles()->find($code) === null) {
+                return $code;
+            }
+        }
+
+        throw new \RuntimeException('Article codes EXAMPLE900–EXAMPLE999 are all in use.');
+    }
+
+    /**
      * The first VAT code from EXAMPLE999 down that does not exist, for the examples that
      * create a VAT code.
      */

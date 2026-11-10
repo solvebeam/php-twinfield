@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;article result="1"&gt;&lt;header status="active"&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;5DISCOUNT&lt;/code&gt;&lt;type&gt;discount&lt;/type&gt;&lt;name&gt;5% discount&lt;/name&gt;&lt;shortname&gt;5% discount&lt;/shortname&gt;&lt;unitnamesingular/&gt;&lt;unitnameplural/&gt;&lt;vatcode/&gt;&lt;allowchangevatcode&gt;false&lt;/allowchangevatcode&gt;&lt;percentage&gt;true&lt;/percentage&gt;&lt;allowdiscountorpremium&gt;true&lt;/allowdiscountorpremium&gt;&lt;allowchangeunitsprice&gt;false&lt;/allowchangeunitsprice&gt;&lt;allowdecimalquantity&gt;false&lt;/allowdecimalquantity&gt;&lt;/header&gt;&lt;lines&gt;&lt;line inuse="true" status="active"&gt;&lt;unitspriceexcl&gt;5.00&lt;/unitspriceexcl&gt;&lt;unitspriceinc&gt;5.00&lt;/unitspriceinc&gt;&lt;units&gt;1&lt;/units&gt;&lt;name&gt;5% discount&lt;/name&gt;&lt;shortname&gt;5% discount&lt;/shortname&gt;&lt;subcode/&gt;&lt;freetext1 name="Discount" shortname="" dimensiontype="PNL"&gt;8199&lt;/freetext1&gt;&lt;freetext2 name="" shortname="" dimensiontype=""/&gt;&lt;freetext3/&gt;&lt;freetext4/&gt;&lt;freetext5/&gt;&lt;freetext6/&gt;&lt;/line&gt;&lt;/lines&gt;&lt;/article&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
