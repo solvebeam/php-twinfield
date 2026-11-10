@@ -8,6 +8,9 @@ use ArrayIterator;
 use IteratorAggregate;
 use SolveBeam\Twinfield\Soap\SoapArray;
 
+/**
+ * @implements IteratorAggregate<int, ArrayOfString>
+ */
 #[SoapArray(elementName: 'ArrayOfString', type: ArrayOfString::class)]
 final readonly class ArrayOfArrayOfString implements IteratorAggregate
 {

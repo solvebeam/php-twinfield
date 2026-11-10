@@ -28,6 +28,6 @@ echo 'Validations:   ', implode(', ', array_map(
     static fn (ChildValidation $validation): string => $validation->type->value . ' ' . $validation->value,
     $account->childValidations,
 )) ?: '-', PHP_EOL;
-echo 'VAT code:      ', $account->vatCode?->code ?? '-', $account->vatCodeFixed ? ' (fixed)' : '', PHP_EOL;
+echo 'VAT code:      ', $account->vatCode->code ?? '-', $account->vatCodeFixed ? ' (fixed)' : '', PHP_EOL;
 echo 'Groups:        ', implode(', ', $account->groups) ?: '-', PHP_EOL;
 echo 'Modified:      ', $account->modified?->format('Y-m-d H:i') ?? '-', PHP_EOL;

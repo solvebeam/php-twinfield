@@ -45,7 +45,7 @@ final class TwinfieldResourceOwner implements ResourceOwnerInterface
         $this->response = $response;
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->sub;
     }

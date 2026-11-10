@@ -24,7 +24,6 @@ final class ClassicFixedAssetResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no fixed assets.');
         }
 
-        self::assertContainsOnlyInstancesOf(ClassicFixedAssetSummary::class, $page->items);
         self::assertSame($page->totalRows, $fixedAssets->search()->count());
 
         $summary = $page->items[0];

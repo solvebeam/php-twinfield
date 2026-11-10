@@ -34,4 +34,4 @@ foreach ($currency->rates as $rate) {
 }
 
 echo PHP_EOL;
-echo 'Rate today:  ', $currency->rateOn(new DateTimeImmutable('today'))?->rate ?? '-', PHP_EOL;
+echo 'Rate today:  ', $currency->rateOn(new DateTimeImmutable('today'))->rate ?? '-', PHP_EOL;

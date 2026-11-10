@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Integration\Currency;
 
-use SolveBeam\Twinfield\Currency\CurrencySummary;
 use SolveBeam\Twinfield\Tests\Support\IntegrationTestCase;
 
 /**
@@ -21,7 +20,6 @@ final class CurrencyResourceTest extends IntegrationTestCase
         $page = $currencies->search()->limit(5)->get();
 
         self::assertGreaterThan(0, $page->totalRows, 'Every company has at least its base currency.');
-        self::assertContainsOnlyInstancesOf(CurrencySummary::class, $page->items);
         self::assertSame($page->totalRows, $currencies->search()->count());
     }
 

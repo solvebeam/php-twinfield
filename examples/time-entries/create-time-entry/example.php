@@ -48,7 +48,7 @@ try {
 }
 
 echo 'Saved: ', $entry->type->value, ' ', $entry->date->format('Y-m-d'), ' ', $entry->user->code, ' on ',
-    $entry->project?->code ?? '-', ' / ', $entry->activity?->code ?? '-', PHP_EOL;
+    $entry->project->code ?? '-', ' / ', $entry->activity->code ?? '-', PHP_EOL;
 
 foreach ($entry->timeLines as $line) {
     echo '  ', $line->id, ' time ', $line->duration, ' at ', $line->rate->code, ': ', $line->internalValue,

@@ -293,6 +293,7 @@ final class CustomerInputTest extends TestCase
             'Due days must be 0 or more',
         ];
         yield 'float credit limit' => [
+            // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
             static fn () => CustomerInput::create('A')->creditLimit('1,50'),
             'is not an amount',
         ];

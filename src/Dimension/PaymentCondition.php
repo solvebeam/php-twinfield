@@ -52,6 +52,10 @@ final readonly class PaymentCondition
     {
         $percentage = $condition->child('discountpercentage');
 
+        if (!is_numeric($percentage->text())) {
+            throw $percentage->invalid('a percentage from 0 to 100');
+        }
+
         try {
             return self::of($condition->int('discountdays'), $percentage->text());
         } catch (InvalidArgumentException) {

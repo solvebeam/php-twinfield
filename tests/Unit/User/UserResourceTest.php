@@ -67,7 +67,7 @@ final class UserResourceTest extends TestCase
         self::assertSame(
             ['mutualoffices', '1', 'accessrules', '0'],
             array_map(
-                static fn (\DOMNode $node): string => $node->textContent,
+                static fn (\DOMNode|\DOMNameSpaceNode $node): ?string => $node->nodeValue,
                 iterator_to_array($xpath->query('//tw:Search/tw:options/tw:ArrayOfString/tw:string') ?: []),
             ),
         );

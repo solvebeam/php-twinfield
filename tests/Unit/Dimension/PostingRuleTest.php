@@ -57,6 +57,7 @@ final class PostingRuleTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('"78,4" is not a ratio');
 
+        // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
         PostingRuleLine::create('8000', '78,4');
     }
 

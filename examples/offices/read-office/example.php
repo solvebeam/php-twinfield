@@ -29,20 +29,20 @@ echo 'VAT number:      ', $general->vatNumber ?? '-', PHP_EOL;
 echo 'CoC number:      ', $general->cocNumber ?? '-', PHP_EOL;
 echo 'Address:         ', $general->address->field1 ?? '-', ', ', $general->address->city ?? '-', PHP_EOL;
 echo 'Last closed:     ', $general->lastClosedYear ?? '-', PHP_EOL;
-echo 'Tax group:       ', $vat->taxGroup?->code ?? '-', PHP_EOL;
+echo 'Tax group:       ', $vat->taxGroup->code ?? '-', PHP_EOL;
 echo 'VAT period:      ', $vat->declarationTimeframe, ', starting quarter ', $vat->startingQuarter, PHP_EOL;
-echo 'Receivable:      ', $dimensions->accountsReceivable?->code ?? '-', ' ',
+echo 'Receivable:      ', $dimensions->accountsReceivable->code ?? '-', ' ',
     $dimensions->accountsReceivable?->name, PHP_EOL;
-echo 'Payable:         ', $dimensions->accountsPayable?->code ?? '-', ' ', $dimensions->accountsPayable?->name, PHP_EOL;
+echo 'Payable:         ', $dimensions->accountsPayable->code ?? '-', ' ', $dimensions->accountsPayable?->name, PHP_EOL;
 echo 'Customers:       dimension type ', $office->systemDimensionTypes->accountsReceivable->code, PHP_EOL;
 echo 'Intercompany:    ', $office->intercompany->status->name, PHP_EOL;
 
 foreach ($office->intercompany->outgoing as $relation) {
-    echo '  to ', $relation->office->code, ' on ', $relation->dimension1?->code ?? '-', PHP_EOL;
+    echo '  to ', $relation->office->code, ' on ', $relation->dimension1->code ?? '-', PHP_EOL;
 }
 
 foreach ($office->intercompany->incoming as $relation) {
-    echo '  from ', $relation->office->code, ' on ', $relation->dimension1?->code ?? '-', PHP_EOL;
+    echo '  from ', $relation->office->code, ' on ', $relation->dimension1->code ?? '-', PHP_EOL;
 }
 
 echo 'Locked:          ',

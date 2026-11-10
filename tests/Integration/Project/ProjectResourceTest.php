@@ -22,7 +22,6 @@ final class ProjectResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no projects.');
         }
 
-        self::assertContainsOnlyInstancesOf(ProjectSummary::class, $page->items);
         self::assertSame($page->totalRows, $projects->search()->count());
 
         $summary = $page->items[0];

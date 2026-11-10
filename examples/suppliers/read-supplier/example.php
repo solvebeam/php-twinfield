@@ -37,7 +37,7 @@ echo 'Our number:    ', $financials->relationsReference ?? '-', PHP_EOL;
 echo 'VAT code:      ', $financials->vatCode ?? '-', PHP_EOL;
 echo 'Account:       ', $financials->balanceAccount, PHP_EOL;
 echo 'Remittance:    ',
-    $supplier->remittanceAdvice?->email ?? $supplier->remittanceAdvice?->sendType->name ?? '-', PHP_EOL;
+    $supplier->remittanceAdvice->email ?? $supplier->remittanceAdvice?->sendType->name ?? '-', PHP_EOL;
 echo 'VAT number:    ', $supplier->vatNumber() ?? '-', PHP_EOL;
 echo 'CoC number:    ', $supplier->chamberOfCommerceNumber() ?? '-', PHP_EOL;
 

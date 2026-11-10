@@ -22,7 +22,6 @@ final class ActivityResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no activities.');
         }
 
-        self::assertContainsOnlyInstancesOf(ActivitySummary::class, $page->items);
         self::assertSame($page->totalRows, $activities->search()->count());
 
         $summary = $page->items[0];

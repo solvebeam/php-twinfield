@@ -158,6 +158,7 @@ final readonly class SalesInvoiceResource
      *
      * @throws SalesInvoiceNotFoundException When there is no invoice with this number.
      * @throws LogicException When the invoice is already final.
+     * @throws ProcessXmlException When Twinfield refuses it.
      */
     public function finalize(string $invoiceType, int $invoiceNumber): SalesInvoice
     {

@@ -55,7 +55,10 @@ final class CustomerResourceTest extends WriteTestCase
             self::assertSame(SendReminder::ByEmail, $read->creditManagement->sendReminder);
             self::assertSame('reminders@example.com', $read->creditManagement->reminderEmail);
             self::assertCount(1, $read->addresses);
-            self::assertSame('Amsterdam', $read->defaultAddress()?->city);
+            $defaultAddress = $read->defaultAddress();
+
+            self::assertNotNull($defaultAddress);
+            self::assertSame('Amsterdam', $defaultAddress->city);
             self::assertSame('NL91ABNA0417164300', $read->defaultBank()?->iban);
 
             try {
@@ -70,7 +73,7 @@ final class CustomerResourceTest extends WriteTestCase
             }
 
             // Change the invoice address, add a postal address and a second bank account.
-            $invoice = $read->defaultAddress()?->edit() ?? self::fail('Expected an invoice address.');
+            $invoice = $defaultAddress->edit();
             $updated = $customers->update(
                 $read->edit()
                     ->name('SDK test customer (updated) & more')

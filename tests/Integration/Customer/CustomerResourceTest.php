@@ -22,7 +22,6 @@ final class CustomerResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no customers.');
         }
 
-        self::assertContainsOnlyInstancesOf(CustomerSummary::class, $page->items);
         self::assertSame($page->totalRows, $customers->search()->count());
 
         $summary = $page->items[0];

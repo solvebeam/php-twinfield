@@ -21,22 +21,26 @@ final class JsonAnonymizerTest extends TestCase
             self::GUID,
         );
 
-        $result = json_decode($this->anonymizer()->anonymize($json), false, 512, JSON_THROW_ON_ERROR);
+        $output = $this->anonymizer()->anonymize($json);
+        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertIsObject($result);
+        self::assertIsArray($result);
         self::assertMatchesRegularExpression(
             '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~',
-            $result->id,
+            $result['id'],
         );
-        self::assertNotSame(self::GUID, $result->id);
-        self::assertNotSame('Fiets 10:30, [12]', $result->name);
-        self::assertSame(3, $result->version);
-        self::assertSame('active', $result->status);
-        self::assertNotSame('2025-03-01T10:00:00Z', $result->createdAt);
-        self::assertMatchesRegularExpression('~^\d{4}-\d{2}-\d{2}T10:00:00Z$~', $result->createdAt);
-        self::assertEquals(new \stdClass(), $result->translations);
-        self::assertNull($result->none);
-        self::assertSame('https://example.test/Api/companies/' . $result->id . '/x', $result->_links->self->href);
+        self::assertNotSame(self::GUID, $result['id']);
+        self::assertNotSame('Fiets 10:30, [12]', $result['name']);
+        self::assertSame(3, $result['version']);
+        self::assertSame('active', $result['status']);
+        self::assertNotSame('2025-03-01T10:00:00Z', $result['createdAt']);
+        self::assertMatchesRegularExpression('~^\d{4}-\d{2}-\d{2}T10:00:00Z$~', $result['createdAt']);
+        self::assertStringContainsString('"translations": {}', $output, 'An empty object stays an object.');
+        self::assertNull($result['none']);
+        self::assertSame(
+            'https://example.test/Api/companies/' . $result['id'] . '/x',
+            $result['_links']['self']['href'],
+        );
     }
 
     public function testKeepsTheDigitsOfNumbers(): void

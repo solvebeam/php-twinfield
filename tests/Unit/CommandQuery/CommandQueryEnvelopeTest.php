@@ -117,6 +117,7 @@ final class CommandQueryEnvelopeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Command & Query field "Amount" has an unsupported type: float.');
 
+        // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
         $command = new Command('Change', ['Amount' => 1.5]);
 
         CommandQueryEnvelope::command('BudgetService', $command, $this->authentication())->toXml();

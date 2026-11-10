@@ -84,15 +84,16 @@ final readonly class PostingRuleLine
     public static function fromXml(XmlElement $line): self
     {
         $ratio = $line->child('ratio');
+        $ratioText = $ratio->text();
 
         // Empty for a line without fixed share, as seen in live posting rules of suppliers.
-        if ($ratio->text() !== '' && preg_match('~^\d+(?:\.\d+)?$~', $ratio->text()) !== 1) {
+        if ($ratioText !== '' && (!is_numeric($ratioText) || preg_match('~^\d+(?:\.\d+)?$~', $ratioText) !== 1)) {
             throw $ratio->invalid('a ratio');
         }
 
         return new self(
             generalLedger: $line->string('dimension1'),
-            ratio: $ratio->text() === '' ? null : $ratio->text(),
+            ratio: $ratioText === '' ? null : $ratioText,
             // Twinfield leaves out <dimension2> and <dimension3> when they are not set.
             costCenter: $line->nullableChild('dimension2')?->text() ?: null,
             project: $line->nullableChild('dimension3')?->text() ?: null,

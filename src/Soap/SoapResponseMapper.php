@@ -14,6 +14,13 @@ use SolveBeam\Twinfield\Soap\SoapName;
 
 final class SoapResponseMapper
 {
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $responseClass
+     *
+     * @return T
+     */
     public function mapFromResponseElement(string $responseClass, DOMElement $element): object
     {
         if (!class_exists($responseClass)) {
@@ -39,11 +46,21 @@ final class SoapResponseMapper
             ));
         }
 
-        return $this->mapObject($responseClass, $responseElement);
+        $response = $this->mapObject($responseClass, $responseElement);
+
+        if (!$response instanceof $responseClass) {
+            throw new LogicException(sprintf('Mapped response is not a "%s".', $responseClass));
+        }
+
+        return $response;
     }
 
     private function mapObject(string $className, DOMElement $element): object
     {
+        if (!class_exists($className)) {
+            throw new LogicException(sprintf('Class "%s" does not exist.', $className));
+        }
+
         $reflection = new ReflectionClass($className);
 
         // Check if this class is a SoapArray type

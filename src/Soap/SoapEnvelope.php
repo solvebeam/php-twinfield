@@ -83,6 +83,14 @@ final class SoapEnvelope implements SoapMessage
         $soapArrayAttrs = $reflection->getAttributes(SoapArray::class);
         if ($soapArrayAttrs !== []) {
             $soapArray = $soapArrayAttrs[0]->newInstance();
+
+            if (!property_exists($element, 'items') || !is_iterable($element->items)) {
+                throw new LogicException(sprintf(
+                    'Class "%s" with #[SoapArray] must have an iterable "items" property.',
+                    $element::class,
+                ));
+            }
+
             foreach ($element->items as $item) {
                 if (is_object($item)) {
                     $inner->appendChild($this->buildInnerElement($doc, $item, $namespace, $soapArray->elementName));
@@ -128,6 +136,13 @@ final class SoapEnvelope implements SoapMessage
         return $element;
     }
 
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     *
+     * @return T|null
+     */
     private function readAttribute(object $object, string $attributeClass): ?object
     {
         $attrs = (new ReflectionClass($object))->getAttributes($attributeClass);
@@ -135,6 +150,13 @@ final class SoapEnvelope implements SoapMessage
         return $attrs !== [] ? $attrs[0]->newInstance() : null;
     }
 
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     *
+     * @return T
+     */
     private function readRequiredClassAttribute(object $object, string $attributeClass): object
     {
         $attribute = $this->readAttribute($object, $attributeClass);

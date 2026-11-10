@@ -388,6 +388,8 @@ final class DimensionGroupResourceTest extends TestCase
         $nodes = $xpath->query('//tw:Search/tw:options/tw:ArrayOfString');
 
         foreach ($nodes === false ? [] : $nodes as $option) {
+            self::assertInstanceOf(\DOMElement::class, $option);
+
             $name = $xpath->evaluate('string(tw:string[1])', $option);
             $value = $xpath->evaluate('string(tw:string[2])', $option);
 

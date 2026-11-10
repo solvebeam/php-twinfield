@@ -116,6 +116,7 @@ final class TransactionBlockedValueResourceTest extends TestCase
         $http = new ReplayClient();
 
         try {
+            // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
             $this->twinfield($http)->transactionBlockedValues()->register($dayBook, $number, $line, $value);
             self::fail('Expected an InvalidArgumentException.');
         } catch (InvalidArgumentException) {

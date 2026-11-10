@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Support\Setup;
 
-use SolveBeam\Twinfield\Office\Office;
+use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Tests\Support\Config;
 use SolveBeam\Twinfield\Tests\Support\Environment;
 use SolveBeam\Twinfield\Tests\Support\Session;
@@ -134,7 +134,7 @@ final readonly class Setup
             $this->prompt->line(sprintf('  … and %d more', count($offices) - self::OFFICES_SHOWN));
         }
 
-        $codes = array_map(static fn (Office $office): string => $office->code, $offices);
+        $codes = array_map(static fn (OfficeSummary $office): string => $office->code, $offices);
         $default = $config->get('TWINFIELD_COMPANY') ?? $codes[0];
 
         while (true) {

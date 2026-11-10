@@ -212,7 +212,13 @@ final class BankTransactionInputTest extends TestCase
         $xpath = $this->xpath(
             BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026-11-03'))->line($line),
         );
+        $nodes = $xpath->query('//line[@id="2"]');
 
+        self::assertNotFalse($nodes);
+
+        $element = $nodes->item(0);
+
+        self::assertInstanceOf(DOMElement::class, $element);
         self::assertSame(
             '<line type="detail" id="2"><dim1>1300</dim1><dim2>1000</dim2>'
             . '<debitcredit>credit</debitcredit><value>635.55</value>'
@@ -223,7 +229,7 @@ final class BankTransactionInputTest extends TestCase
             . '<method>payment</method><matchvalue>200.00</matchvalue></line>'
             . '</lines><matchvalue>635.55</matchvalue></set></matches>'
             . '</line>',
-            $xpath->document->saveXML($xpath->query('//line[@id="2"]')->item(0)),
+            $xpath->document->saveXML($element),
         );
     }
 

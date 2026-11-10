@@ -315,11 +315,7 @@ final readonly class RateInput
         }
 
         foreach ($this->prices as $otherKey => $other) {
-            $overlaps = $otherKey !== $key
-                && ($other['until'] === null || $price['from'] <= $other['until'])
-                && ($price['until'] === null || $other['from'] <= $price['until']);
-
-            if ($overlaps) {
+            if ($otherKey !== $key && self::overlaps($price, $other)) {
                 throw new InvalidArgumentException(sprintf(
                     'Rate %s: the price from %s overlaps the price from %s%s.',
                     $this->code,
@@ -391,6 +387,18 @@ final readonly class RateInput
         ksort($prices);
 
         return $prices;
+    }
+
+    /**
+     * Whether two price lines share a day. A line without end date runs on indefinitely.
+     *
+     * @param PriceLine $a
+     * @param PriceLine $b
+     */
+    private static function overlaps(array $a, array $b): bool
+    {
+        return ($b['until'] === null || $a['from'] <= $b['until'])
+            && ($a['until'] === null || $b['from'] <= $a['until']);
     }
 
     private static function key(DateTimeInterface $date): int

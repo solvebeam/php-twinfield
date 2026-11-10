@@ -107,7 +107,7 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
         if ($cached !== null) {
             $cached->set($this->current);
             $cached->expiresAt(new DateTimeImmutable('@' . $this->current['expires']));
-            $this->cache?->save($cached);
+            $this->cache->save($cached);
         }
 
         $this->refreshToken = $token->getRefreshToken() ?? $this->refreshToken;

@@ -91,7 +91,7 @@ try {
                 $endDate = $period->endDate?->format('Y-m-d') ?? '-';
                 $status = $period->open ? 'open' : 'closed';
 
-                echo $period->number, ' | ', $period->name, ' | ', $endDate, ' | ', $status, PHP_EOL;
+                echo $period->period->number, ' | ', $period->name, ' | ', $endDate, ' | ', $status, PHP_EOL;
             }
             break;
 

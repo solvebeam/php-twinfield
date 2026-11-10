@@ -30,10 +30,10 @@ enum ChangeMode
      */
     public static function fromXml(bool $locked, bool $inherit, string $path): self
     {
-        return match (true) {
-            !$locked && !$inherit => self::Allow,
-            $locked && !$inherit => self::Disallow,
-            $locked && $inherit => self::Inherit,
+        return match ([$locked, $inherit]) {
+            [false, false] => self::Allow,
+            [true, false] => self::Disallow,
+            [true, true] => self::Inherit,
             default => throw new UnexpectedResponseException(sprintf(
                 '%s has inherit="true" with locked="false", which is not a valid change mode.',
                 $path,

@@ -93,9 +93,10 @@ final class XmlAnonymizerTest extends TestCase
             '<r><a>20250131</a><b>2025-02-10</b><c>2025-02-10T12:00:00</c></r>',
         );
 
-        preg_match('~<a>(\d{8})</a><b>([\d-]{10})</b><c>([\d-]{10})T12:00:00</c>~', $xml, $matches);
+        if (preg_match('~<a>(\d{8})</a><b>([\d-]{10})</b><c>([\d-]{10})T12:00:00</c>~', $xml, $matches) !== 1) {
+            self::fail($xml);
+        }
 
-        self::assertCount(4, $matches, $xml);
         self::assertNotSame('20250131', $matches[1]);
 
         $a = \DateTimeImmutable::createFromFormat('!Ymd', $matches[1]);

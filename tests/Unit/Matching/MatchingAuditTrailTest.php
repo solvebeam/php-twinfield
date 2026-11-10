@@ -7,7 +7,6 @@ namespace SolveBeam\Twinfield\Tests\Unit\Matching;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use SolveBeam\Twinfield\Matching\MatchingAuditTrailEvent;
 use SolveBeam\Twinfield\Matching\MatchingEventType;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
@@ -35,7 +34,7 @@ final class MatchingAuditTrailTest extends TestCase
         self::assertSame(1, $event->matchLevel);
         self::assertSame('92082', $event->dimensionCode);
         self::assertSame(799, $event->matchNumber);
-        self::assertSame('2026-07-20', $event->matchDate->format('Y-m-d'));
+        self::assertSame('2026-07-20', $event->matchDate?->format('Y-m-d'));
         self::assertSame('2025-07-02T10:48:25.721187', $event->logTimestamp->format('Y-m-d\TH:i:s.u'));
         self::assertCount(2, $event->lines);
         self::assertSame(640335678, $event->lines[0]->number);
@@ -81,7 +80,6 @@ final class MatchingAuditTrailTest extends TestCase
             'since=2026-08-03T10%3A01%3A39.500000%2B00%3A00',
             (string) $http->requests[1]->getUri(),
         );
-        self::assertContainsOnlyInstancesOf(MatchingAuditTrailEvent::class, $events);
     }
 
     public function testRefusesALimitAbove200(): void

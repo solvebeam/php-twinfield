@@ -29,6 +29,9 @@ final class Twinfield extends AbstractProvider
         return self::AUTHORIZATION_URL;
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     public function getBaseAccessTokenUrl(array $params): string
     {
         return self::ACCESS_TOKEN_URL;
@@ -50,6 +53,12 @@ final class Twinfield extends AbstractProvider
         $url = self::ACCESS_TOKEN_VALIDATION_URL . '?token=' . rawurlencode($tokenValue);
         $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
         $response = $this->getResponse($request);
+        /**
+         * League documents parseResponse() as returning an array, but it returns the body as a
+         * string when it is not JSON.
+         *
+         * @var array<mixed>|string $data
+         */
         $data = $this->parseResponse($response);
 
         $this->checkResponse($response, $data);
@@ -61,6 +70,9 @@ final class Twinfield extends AbstractProvider
         return AccessTokenValidation::fromArray($data);
     }
 
+    /**
+     * @return list<string>
+     */
     protected function getDefaultScopes(): array
     {
         return [];
@@ -89,6 +101,9 @@ final class Twinfield extends AbstractProvider
         return ' ';
     }
 
+    /**
+     * @param array<mixed>|string $data Parsed response data, or the body when it is not JSON.
+     */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         $statusCode = $response->getStatusCode();
@@ -101,6 +116,9 @@ final class Twinfield extends AbstractProvider
         }
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     protected function createResourceOwner(array $response, AccessToken $token): TwinfieldResourceOwner
     {
         return new TwinfieldResourceOwner($response);

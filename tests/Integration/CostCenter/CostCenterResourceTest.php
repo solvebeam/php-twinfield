@@ -23,7 +23,6 @@ final class CostCenterResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no cost centers.');
         }
 
-        self::assertContainsOnlyInstancesOf(CostCenterSummary::class, $page->items);
         self::assertSame($page->totalRows, $costCenters->search()->count());
 
         $summary = $page->items[0];

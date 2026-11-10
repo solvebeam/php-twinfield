@@ -66,13 +66,14 @@ final readonly class CodeNameSearch
             if (!$query->isAllCompanies()) {
                 $company = $query->companyReference();
 
-                return static fn (array $row, int $index): object => $mapRow($row, $index, $company);
+                return self::rowMapperOf(static fn (array $row, int $index): object => $mapRow($row, $index, $company));
             }
 
             $organisation = $query->organisation();
 
-            return static fn (array $row, int $index): object
-                => self::mapInCompany($row, $index, $organisation, $mapRow);
+            return self::rowMapperOf(
+                static fn (array $row, int $index): object => self::mapInCompany($row, $index, $organisation, $mapRow),
+            );
         });
     }
 
@@ -91,7 +92,9 @@ final readonly class CodeNameSearch
         return new self($query, static function (FinderQuery $query) use ($mapRow): Closure {
             $organisation = $query->organisation();
 
-            return static fn (array $row, int $index): object => $mapRow($row, $index, $organisation);
+            return self::rowMapperOf(
+                static fn (array $row, int $index): object => $mapRow($row, $index, $organisation),
+            );
         });
     }
 
@@ -443,6 +446,21 @@ final readonly class CodeNameSearch
         $company = new CompanyReference($organisation, $row[count($row) - 2]);
 
         return $mapRow(array_slice($row, 0, -2), $index, $company);
+    }
+
+    /**
+     * Returns the row mapper unchanged. PHPStan infers the parameter types of a closure only from
+     * the parameter it is passed to, so this gives `$row` its type `list<string>`.
+     *
+     * @template TSummary of object
+     *
+     * @param Closure(list<string>, int): TSummary $mapRow
+     *
+     * @return Closure(list<string>, int): TSummary
+     */
+    private static function rowMapperOf(Closure $mapRow): Closure
+    {
+        return $mapRow;
     }
 
     /**

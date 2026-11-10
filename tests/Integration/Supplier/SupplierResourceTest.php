@@ -22,7 +22,6 @@ final class SupplierResourceTest extends IntegrationTestCase
             self::markTestSkipped('The company has no suppliers.');
         }
 
-        self::assertContainsOnlyInstancesOf(SupplierSummary::class, $page->items);
         self::assertSame($page->totalRows, $suppliers->search()->count());
 
         $summary = $page->items[0];

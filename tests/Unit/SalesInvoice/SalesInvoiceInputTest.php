@@ -170,6 +170,7 @@ final class SalesInvoiceInputTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
+        // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
         SalesInvoiceLineInput::article('510')->quantity('1,5');
     }
 
@@ -220,7 +221,9 @@ final class SalesInvoiceInputTest extends TestCase
     {
         $xml = $this->xml($input);
 
-        self::assertSame(1, preg_match('~<line id="\d+">.*</line>~', $xml, $matches));
+        if (preg_match('~<line id="\d+">.*</line>~', $xml, $matches) !== 1) {
+            self::fail('No line in ' . $xml);
+        }
 
         return $matches[0];
     }

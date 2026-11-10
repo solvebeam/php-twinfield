@@ -125,6 +125,7 @@ final class ClassicFixedAssetInputTest extends TestCase
             'Number of periods must be 1 or more, 0 given.',
         ];
         yield 'percentage with comma' => [
+            // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
             static fn () => ClassicFixedAssetInput::create('Van')->percentage('12,5'),
             'Percentage must be a number from 0 to 100 with a dot, e.g. "12.5", "12,5" given.',
         ];
@@ -137,6 +138,7 @@ final class ClassicFixedAssetInputTest extends TestCase
             'The residual value must not be negative, -1.00 given.',
         ];
         yield 'float-like amount' => [
+            // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
             static fn () => ClassicFixedAssetInput::create('Van')->stopValue('1,50'),
             '"1,50" is not an amount',
         ];

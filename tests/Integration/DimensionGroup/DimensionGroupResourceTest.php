@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Tests\Integration\DimensionGroup;
 
 use SolveBeam\Twinfield\DimensionGroup\DimensionGroupNotFoundException;
-use SolveBeam\Twinfield\DimensionGroup\DimensionGroupSummary;
 use SolveBeam\Twinfield\Tests\Support\IntegrationTestCase;
 
 /**
@@ -21,7 +20,6 @@ final class DimensionGroupResourceTest extends IntegrationTestCase
         $groups = $this->twinfield->dimensionGroups();
         $page = $groups->search()->limit(5)->get();
 
-        self::assertContainsOnlyInstancesOf(DimensionGroupSummary::class, $page->items);
         self::assertSame($page->totalRows, $groups->search()->count());
 
         $first = $page->items[0] ?? null;

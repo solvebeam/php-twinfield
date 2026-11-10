@@ -68,7 +68,7 @@ foreach ($transactions as $key => $transaction) {
         $key,
         $transaction['date']->format('Y-m-d'),
         $period,
-        $details?->name ?? '-',
+        $details->name ?? '-',
         $details === null ? 'unknown period' : ($details->open ? 'open' : 'closed'),
     ), PHP_EOL;
 }

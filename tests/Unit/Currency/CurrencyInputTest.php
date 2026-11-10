@@ -125,6 +125,7 @@ final class CurrencyInputTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
+        // @phpstan-ignore argument.type (deliberately invalid input, for callers without static analysis)
         CurrencyInput::create('USD', 'US dollar')->rate(new DateTimeImmutable('2026-01-01'), '1,085');
     }
 }
