@@ -185,7 +185,7 @@ foreach ($codes as $code) {
 
 To stay under the limits:
 
-- Save many transactions in one request with `saveMany()` instead of one request per transaction. It is on every transaction type: `salesTransactions()`, `purchaseTransactions()`, `cashTransactions()`, `journalTransactions()` and `bankTransactions()`. See [Saving many transactions](/guides/transactions/#saving-many-transactions). For electronic bank statements, `createMany()` does the same: see [Electronic bank statements](/guides/transactions/#electronic-bank-statements).
+- Save many transactions in one request with `saveMany()` instead of one request per transaction. It is on every transaction type: `salesTransactions()`, `purchaseTransactions()`, `cashTransactions()`, `journalTransactions()` and `bankTransactions()`. See [Saving many transactions](/guides/transactions/#saving-many-transactions), also for the number of transactions and lines Twinfield recommends per request. For electronic bank statements, `createMany()` does the same: see [Electronic bank statements](/guides/transactions/#electronic-bank-statements).
 - Keep a shadow database instead of reading the same data again and again: see [Keys for a shadow database](/guides/organisations/#keys-for-a-shadow-database).
 - Find changed master data of all companies at once: `search()->inAllCompanies()->modifiedSince($since)` is one request for the whole organisation instead of one per company. See [Changes in a whole organisation](/guides/finder/#changes-in-a-whole-organisation).
 - Send requests one after another per organisation, or limit your workers to at most 10 at the same time per organisation.

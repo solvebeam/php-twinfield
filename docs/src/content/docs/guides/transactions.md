@@ -547,6 +547,26 @@ foreach ($result->failed() as $failed) {
 }
 ```
 
+Twinfield sets [limits](https://developers.twinfield.com/documentation/getting-started/fair-use-policy#limitations) on such a request. The SDK does not check them and does not split a request: it sends all inputs in one `<transactions>` element.
+
+| Limit | Twinfield |
+|---|---|
+| Transactions per request | At most 25 recommended |
+| Lines per transaction | At most 500 recommended |
+| Lines per transaction | Never more than 1000: Twinfield refuses the transaction with HTTP 400 |
+
+Twinfield does not guarantee that a request over the recommended numbers is processed. To save more transactions, call `saveMany()` per 25:
+
+```php
+foreach (array_chunk($inputs, 25) as $chunk) {
+    $result = $bank->saveMany(...$chunk);
+
+    // …
+}
+```
+
+`$failed->index` is then the position within the chunk, not within `$inputs`.
+
 ## Warnings
 
 By default Twinfield returns warnings, e.g. when the date is outside the period. `raiseWarnings(false)` turns them off for the whole transaction; `ignoreDateWarning()` only for the date. With `saveMany()`, warnings are in `$saved->warnings` and `$failed->warnings`.
