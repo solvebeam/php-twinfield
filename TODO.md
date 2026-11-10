@@ -1,5 +1,8 @@
 # TODO
 
+When a resource is verified live (reading or writing), also update its row in
+[Status per resource](docs/src/content/docs/guides/status.md).
+
 ## Bank transactions: verify reading and writing live
 
 Bank transactions (`transaction`, day book `BNK`) are tested offline with fixtures that follow the

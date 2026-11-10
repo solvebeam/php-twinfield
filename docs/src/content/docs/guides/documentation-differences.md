@@ -15,7 +15,7 @@ The SDK never hides an unexpected response behind a default value. When a respon
 2. **Compare the structure.** Every element and attribute path with the values it has, compared with the documented request and response.
 3. **Parse everything.** Every live response is read with the SDK and written back with `edit()`, so a value the SDK can't handle shows up as an error.
 4. **Record fixtures.** A few responses are recorded with `TWINFIELD_RECORD=1` and anonymized with `composer twinfield:anonymize`, so the unit tests use the real structure without real data.
-5. **Write later.** Creating, updating and deleting need an interactive confirmation (`composer test:write`), so they are checked separately. Until then, open questions are in [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
+5. **Write later.** Creating, updating and deleting need an interactive confirmation (`composer test:write`), so they are checked separately. Until then, open questions are in [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md). [Status per resource](/guides/status/) shows what is verified live for reading and for writing.
 
 ## Suppliers
 

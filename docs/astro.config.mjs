@@ -55,6 +55,7 @@ export default defineConfig({
 						{ label: 'Periods', slug: 'guides/periods' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
+						{ label: 'Status per resource', slug: 'guides/status' },
 					],
 				},
 				{
