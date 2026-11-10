@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.head.inpdate` is a criterion only: `betweenDateTimes('fin.trs.head.inpdate', $from, $to)` counts the transactions entered in that time.
 - The rows are totals: `$row->transactionLine` is null.
 
-Criteria: period and input date. See [`browse-definitions/670.xml`](../../../browse-definitions/670.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period and input date. See [`browse-definitions/670.xml`](../../../browse-definitions/670.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

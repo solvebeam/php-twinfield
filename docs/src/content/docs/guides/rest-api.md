@@ -17,7 +17,7 @@ foreach ($twinfield->fixedAssets()->search()->all() as $asset) {
 
 ## Swagger definitions in the repository
 
-The Swagger UI loads two definitions, which the repository keeps in [`openapi/`](https://github.com/solvebeam/php-twinfield/tree/main/openapi) and updates daily, like the WSDL files:
+The Swagger UI loads two definitions, which the repository keeps in [`openapi/`](https://github.com/solvebeam/twinfield-php/tree/main/openapi) and updates daily, like the WSDL files:
 
 | Definition | Content | In the SDK |
 |---|---|---|

@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - Amounts of supplier invoices are negative (credit).
 - `like('fin.trs.head.code', 'INK*')`: the day book is a `like` criterion in 230_1.
 
-Criteria: period, day book, status, general ledger account, supplier and payment status. See [`browse-definitions/230_1.xml`](../../../browse-definitions/230_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, status, general ledger account, supplier and payment status. See [`browse-definitions/230_1.xml`](../../../browse-definitions/230_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

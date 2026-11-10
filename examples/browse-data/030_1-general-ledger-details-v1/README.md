@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.line.dim1type` is the dimension type of the account, e.g. `BAS` or `PNL`; `fin.trs.line.dim2type` and `dim3type` tell what is in `dim2` and `dim3` (`DEB`, `CRD`, `KPL`, `PRJ`, …).
 - `fin.trs.head.origin` is how the transaction was made (e.g. `import`), with the display name in `displayName()`.
 
-Criteria: period, status, input date, change date and the three dimensions. See [`browse-definitions/030_1.xml`](../../../browse-definitions/030_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, input date, change date and the three dimensions. See [`browse-definitions/030_1.xml`](../../../browse-definitions/030_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://php-twinfield.solvebeam.com/">
+	<a href="https://php.twinfield.solvebeam.com/">
 		<img src="images/twinfield/twinfield-icon.svg" alt="Twinfield" width="96" height="96">
 	</a>
 </p>
@@ -9,7 +9,7 @@
 <p align="center">
 	Modern PHP SDK for the Twinfield API, built on PSR standards.
 	<br>
-	<a href="https://php-twinfield.solvebeam.com/"><strong>Documentation</strong></a>
+	<a href="https://php.twinfield.solvebeam.com/"><strong>Documentation</strong></a>
 	·
 	<a href="examples/">Examples</a>
 </p>
@@ -45,7 +45,7 @@ See [examples/](examples/) for small, runnable examples, starting with [Authenti
 
 ## Organisations and companies
 
-Company and user codes are only unique within a Twinfield organisation: company `1000` can exist in several organisations. Every model the SDK reads therefore carries the organisation of the access token, either as `$office->organisation` and `$user->organisation`, or as `$customer->company` (a `CompanyReference` with the organisation and the company code). `$twinfield->company($customer->company)` refuses a company of another organisation. See [Organisations and companies](https://php-twinfield.solvebeam.com/guides/organisations/) for the keys to use in a shadow database.
+Company and user codes are only unique within a Twinfield organisation: company `1000` can exist in several organisations. Every model the SDK reads therefore carries the organisation of the access token, either as `$office->organisation` and `$user->organisation`, or as `$customer->company` (a `CompanyReference` with the organisation and the company code). `$twinfield->company($customer->company)` refuses a company of another organisation. See [Organisations and companies](https://php.twinfield.solvebeam.com/guides/organisations/) for the keys to use in a shadow database.
 
 ```php
 $customer = $twinfield->customers()->get('1000');
@@ -55,7 +55,7 @@ echo $customer->company->organisation->code, ' ', $customer->company->code, ' ',
 
 ## Master data
 
-Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php-twinfield.solvebeam.com/guides/master-data/). Where live Twinfield responses differ from the API documentation, the SDK follows the live responses: see [Differences with the documentation](https://php-twinfield.solvebeam.com/guides/documentation-differences/).
+Master data such as customers, general ledger accounts, activities, cost centers and fixed assets are dimensions, read and written with the XML web services. See the [master data guide](https://php.twinfield.solvebeam.com/guides/master-data/). Where live Twinfield responses differ from the API documentation, the SDK follows the live responses: see [Differences with the documentation](https://php.twinfield.solvebeam.com/guides/documentation-differences/).
 
 | Dimension type | Resource | Status |
 |---|---|---|
@@ -83,7 +83,7 @@ Master data such as customers, general ledger accounts, activities, cost centers
 
 ## Transactions
 
-Transactions are read and written with the XML web services. You add lines with `receive()` and `pay()`; the SDK chooses debit or credit and calculates the total line and the closing balance. Amounts are exact numeric strings (`Amount`), never floats. See the [transactions guide](https://php-twinfield.solvebeam.com/guides/transactions/).
+Transactions are read and written with the XML web services. You add lines with `receive()` and `pay()`; the SDK chooses debit or credit and calculates the total line and the closing balance. Amounts are exact numeric strings (`Amount`), never floats. See the [transactions guide](https://php.twinfield.solvebeam.com/guides/transactions/).
 
 ```php
 use SolveBeam\Twinfield\BankTransaction\BankTransactionInput;
@@ -109,7 +109,7 @@ $transaction = $twinfield->bankTransactions()->create(
 
 ## Browse data
 
-Financial data such as general ledger transaction lines, open items and balances comes from [browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/): a browse code with the columns you want and selection criteria. The query is immutable and the rows are read strictly, with amounts as `Amount`. See the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Financial data such as general ledger transaction lines, open items and balances comes from [browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/): a browse code with the columns you want and selection criteria. The query is immutable and the rows are read strictly, with amounts as `Amount`. See the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 ```php
 use SolveBeam\Twinfield\BrowseData\BrowseCode;
@@ -129,7 +129,7 @@ The definitions of all browse codes are in [`browse-definitions/`](browse-defini
 
 ## Declarations
 
-VAT, ICT and tax group returns come from the [declarations service](https://developers.twinfield.com/documentation/api/miscellaneous/declarations/): list them per company or for the whole organisation, download them as XBRL or XML, get the payment reference and mark them as sent, approved or rejected. See the [declarations guide](https://php-twinfield.solvebeam.com/guides/declarations/).
+VAT, ICT and tax group returns come from the [declarations service](https://developers.twinfield.com/documentation/api/miscellaneous/declarations/): list them per company or for the whole organisation, download them as XBRL or XML, get the payment reference and mark them as sent, approved or rejected. See the [declarations guide](https://php.twinfield.solvebeam.com/guides/declarations/).
 
 ```php
 use SolveBeam\Twinfield\Declaration\DeclarationType;
@@ -147,7 +147,7 @@ See [List declarations](examples/declarations/list-declarations/) and [Download 
 
 ## Hierarchies
 
-Hierarchies, reporting structures (rapportagestructuren) such as RGS, come from the [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/): read them with their nodes and the general ledger accounts of a company, draw them with `RecursiveTreeIterator`, save them, bind and unbind accounts, hide and delete them. See the [hierarchies guide](https://php-twinfield.solvebeam.com/guides/hierarchies/).
+Hierarchies, reporting structures (rapportagestructuren) such as RGS, come from the [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/): read them with their nodes and the general ledger accounts of a company, draw them with `RecursiveTreeIterator`, save them, bind and unbind accounts, hide and delete them. See the [hierarchies guide](https://php.twinfield.solvebeam.com/guides/hierarchies/).
 
 ```php
 $hierarchy = $twinfield->company('1000')->hierarchies()->get('TWFRGS32');
@@ -161,7 +161,7 @@ See [Print hierarchy tree](examples/hierarchies/print-hierarchy-tree/) and the o
 
 ## Matching
 
-[Matching](https://developers.twinfield.com/documentation/api/miscellaneous/matching/) (afletteren) links existing transaction lines with each other, e.g. a sales invoice and its payment: fully, partly, or with a discount, write-off or exchange rate difference. [Undo match](https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/) undoes a match set by its match number, which is in browse data. See the [matching guide](https://php-twinfield.solvebeam.com/guides/matching/).
+[Matching](https://developers.twinfield.com/documentation/api/miscellaneous/matching/) (afletteren) links existing transaction lines with each other, e.g. a sales invoice and its payment: fully, partly, or with a discount, write-off or exchange rate difference. [Undo match](https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/) undoes a match set by its match number, which is in browse data. See the [matching guide](https://php.twinfield.solvebeam.com/guides/matching/).
 
 ```php
 use SolveBeam\Twinfield\DimensionType\DimensionTypeCode;
@@ -183,7 +183,7 @@ See [Match transactions](examples/matching/match-transactions/), [List match set
 
 ## Pay & Collect
 
-[Pay & Collect](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/) creates payment runs (paying suppliers) and direct debit runs (collecting from customers): select the open invoices, change the run, authorise it, post it to the in-transfer ledger and create the SEPA file(s). Every step checks the version of the run. See the [Pay & Collect guide](https://php-twinfield.solvebeam.com/guides/pay-and-collect/).
+[Pay & Collect](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/) creates payment runs (paying suppliers) and direct debit runs (collecting from customers): select the open invoices, change the run, authorise it, post it to the in-transfer ledger and create the SEPA file(s). Every step checks the version of the run. See the [Pay & Collect guide](https://php.twinfield.solvebeam.com/guides/pay-and-collect/).
 
 ```php
 use SolveBeam\Twinfield\PayAndCollect\PayRunInput;
@@ -211,7 +211,7 @@ Twinfield has three kinds of web services: classic SOAP services such as the Fin
 
 | Service | Resource | Status |
 |---|---|---|
-| PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`, `get()`/`find()` for one `Period` (e.g. of a transaction); all commands. See [Periods](https://php-twinfield.solvebeam.com/guides/periods/), [List periods](examples/periods/list-periods/), [Period of transaction](examples/periods/period-of-transaction/) and [Rename period](examples/periods/rename-period/). |
+| PeriodService | `$twinfield->periods()` | Queries `years()`, `list()`, `get()`/`find()` for one `Period` (e.g. of a transaction); all commands. See [Periods](https://php.twinfield.solvebeam.com/guides/periods/), [List periods](examples/periods/list-periods/), [Period of transaction](examples/periods/period-of-transaction/) and [Rename period](examples/periods/rename-period/). |
 | BudgetService | `$twinfield->budgets()` | All queries: `totals()->byProfitAndLoss()`, `byCostCenter()`, `byProject()`. See [Budget vs. actual](examples/budgets/budget-vs-actual/). |
 | BankBookService | `$twinfield->bankBooks()` | All queries and commands. See [Read bank book](examples/bank-books/read-bank-book/). |
 | CashBookService | `$twinfield->cashBooks()` | All queries and commands. See [Read cash book](examples/cash-books/read-cash-book/). |
@@ -248,15 +248,15 @@ echo $result->xpath()->evaluate('string(/dimension/name)'), PHP_EOL;
 
 Comments and whitespace between elements are removed before sending. A response with `result="0"` throws a `ProcessXmlException` with every error and warning and the path of its element. `XmlValue` formats and checks the value types (date, money, period, boolean, code). Listing companies works without company: `$twinfield->withoutCompany()->processXml('<list><type>offices</type></list>')`.
 
-Not supported, because Twinfield deprecated them or they are only for .NET: `ProcessXmlCompressed`, `ProcessXmlDocument` and the `<general>` root element for bulk requests. See the [ProcessXml guide](https://php-twinfield.solvebeam.com/guides/process-xml/) and the examples [List companies](examples/process-xml/list-companies/) and [Read dimension](examples/process-xml/read-dimension/).
+Not supported, because Twinfield deprecated them or they are only for .NET: `ProcessXmlCompressed`, `ProcessXmlDocument` and the `<general>` root element for bulk requests. See the [ProcessXml guide](https://php.twinfield.solvebeam.com/guides/process-xml/) and the examples [List companies](examples/process-xml/list-companies/) and [Read dimension](examples/process-xml/read-dimension/).
 
 ## REST API
 
-Twinfield also has a [REST API](https://api.accounting.twinfield.com/Api/swagger/ui/index) with JSON. The SDK supports all endpoints of its public definition; the definitions are in [`openapi/`](openapi/), updated daily like the WSDL files. Every REST operation needs its own scope (`readFixedAssets`, `readVat`, `writeArticles`, …, see the `Scope` enum), and the REST API identifies the company by GUID: `$twinfield->companyId()` looks it up once. See the [REST API guide](https://php-twinfield.solvebeam.com/guides/rest-api/).
+Twinfield also has a [REST API](https://api.accounting.twinfield.com/Api/swagger/ui/index) with JSON. The SDK supports all endpoints of its public definition; the definitions are in [`openapi/`](openapi/), updated daily like the WSDL files. Every REST operation needs its own scope (`readFixedAssets`, `readVat`, `writeArticles`, …, see the `Scope` enum), and the REST API identifies the company by GUID: `$twinfield->companyId()` looks it up once. See the [REST API guide](https://php.twinfield.solvebeam.com/guides/rest-api/).
 
 | Swagger tag | Resource | Status |
 |---|---|---|
-| Fixed Assets | `$twinfield->fixedAssets()` | The new fixed assets module: search, read with depreciation per regime, history, classes, groups, reconciliation report. Read-only. The classic module is `classicFixedAssets()`. See [Fixed assets](https://php-twinfield.solvebeam.com/guides/fixed-assets/), [List fixed assets](examples/fixed-assets/list-fixed-assets/) and [Read fixed asset](examples/fixed-assets/read-fixed-asset/). |
+| Fixed Assets | `$twinfield->fixedAssets()` | The new fixed assets module: search, read with depreciation per regime, history, classes, groups, reconciliation report. Read-only. The classic module is `classicFixedAssets()`. See [Fixed assets](https://php.twinfield.solvebeam.com/guides/fixed-assets/), [List fixed assets](examples/fixed-assets/list-fixed-assets/) and [Read fixed asset](examples/fixed-assets/read-fixed-asset/). |
 | Sales Articles | `$twinfield->salesArticles()` | Search, read, create, update, delete, cultures, import and export (CSV, XLSX). See [List sales articles](examples/sales-articles/list-sales-articles/) and [Create sales article](examples/sales-articles/create-sales-article/). |
 | Budgets | `$twinfield->budgets()` | Next to search and totals: budgets with GUIDs, create, update, delete, annual balances, periods, lines, copy, spread, import and export. See [List budget lines](examples/budgets/list-budget-lines/) and [Create budget](examples/budgets/create-budget/). |
 | Budgeting Spreading Templates | `$twinfield->spreadingTemplates()` | Search, read, create, update, delete and the default distribution. |
@@ -377,7 +377,7 @@ The OpenID Connect scopes identify the user and keep the session; every API need
 
 #### REST API scopes
 
-Every operation of the REST API needs one of the `read…`/`write…` scopes on top of the identity scopes; without it Twinfield answers HTTP 403. The `Scope` enum has them all (`Scope::rest()` lists the REST API scopes); see the [REST API guide](https://php-twinfield.solvebeam.com/guides/rest-api/#scopes) for which endpoint needs which scope.
+Every operation of the REST API needs one of the `read…`/`write…` scopes on top of the identity scopes; without it Twinfield answers HTTP 403. The `Scope` enum has them all (`Scope::rest()` lists the REST API scopes); see the [REST API guide](https://php.twinfield.solvebeam.com/guides/rest-api/#scopes) for which endpoint needs which scope.
 
 | Scope | Description | SDK |
 |-------|-------------|-----|

@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `between('fin.trs.line.dim2', $from, $to)`: a range of cost centres.
 - `equal('fin.trs.head.browseregime', $regime)`: the regime. The status is not a criterion in 900: you get all transactions, also drafts (number `-1`).
 
-Criteria: period, general ledger account, cost centre, day book, number and regime. See [`browse-definitions/900.xml`](../../../browse-definitions/900.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, general ledger account, cost centre, day book, number and regime. See [`browse-definitions/900.xml`](../../../browse-definitions/900.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

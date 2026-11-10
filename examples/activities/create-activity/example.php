@@ -17,7 +17,7 @@ $code = $argv[1] ?? Example::unusedActivityCode($twinfield);
 $activity = $activities->create(
     ActivityInput::create($code, 'Example activity')
         ->shortName('Example')
-        ->invoiceDescription('Created by the php-twinfield examples')
+        ->invoiceDescription('Created by the twinfield-php examples')
         ->billable(true, ChangeMode::Disallow)
         ->quantity(Quantity::create('KM')->billable(false)),
 );

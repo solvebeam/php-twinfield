@@ -117,4 +117,4 @@ What we found while building the examples, beyond the article:
 - **Large responses.** Twinfield returns all rows at once, without paging: a query over 216,710 lines was 25 MB and took 34 seconds. The SDK reads such responses completely; before, text over 10 MB was cut off by libxml without an error.
 - **Key per organisation.** Company codes are only unique within an organisation: see [Keys for a shadow database](/guides/organisations/#keys-for-a-shadow-database).
 
-The definitions of 030_3 and 040_1, with all fields and criteria, are in [`browse-definitions/`](https://github.com/solvebeam/php-twinfield/tree/main/browse-definitions) in the repository.
+The definitions of 030_3 and 040_1, with all fields and criteria, are in [`browse-definitions/`](https://github.com/solvebeam/twinfield-php/tree/main/browse-definitions) in the repository.

@@ -7,10 +7,10 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 <!-- twinfield-documentation:end -->
 
 - `fin.trs.head.relation` and `fin.trs.head.relationname`: the customer or supplier of the transaction, also on the lines that have no relation in `dim2`.
-- `equal('fin.trs.head.regime', $regime)`: `Fiscal`, `Commercial` or `Economic` give the lines of that regime plus the generic lines; `Generic` only the generic lines. See [Regimes](https://php-twinfield.solvebeam.com/guides/browse-data/#regimes).
+- `equal('fin.trs.head.regime', $regime)`: `Fiscal`, `Commercial` or `Economic` give the lines of that regime plus the generic lines; `Generic` only the generic lines. See [Regimes](https://php.twinfield.solvebeam.com/guides/browse-data/#regimes).
 - `between('fin.trs.head.yearperiod', $from, $to)`: the period can only be a criterion.
 
-Criteria: period, status, input date, change date, the three dimensions and regime. See [`browse-definitions/030_2.xml`](../../../browse-definitions/030_2.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, input date, change date, the three dimensions and regime. See [`browse-definitions/030_2.xml`](../../../browse-definitions/030_2.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

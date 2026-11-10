@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `betweenDates('fin.trs.line.actiondate', $from, $to)`: the actions in a period. The browse code has no period criterion.
 - `between('fin.trs.line.dim2', $customer, $customer)`: one customer; `fin.trs.costcenter` can be a criterion as well.
 
-Criteria: customer, cost centre and action date. See [`browse-definitions/164.xml`](../../../browse-definitions/164.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: customer, cost centre and action date. See [`browse-definitions/164.xml`](../../../browse-definitions/164.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

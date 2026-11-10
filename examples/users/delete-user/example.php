@@ -18,7 +18,7 @@ if ($code === $twinfield->userCode()) {
 }
 
 $users = $twinfield->users();
-$result = $users->delete($code, UserDeleteReason::NoLongerOperative, 'Deleted by the php-twinfield example');
+$result = $users->delete($code, UserDeleteReason::NoLongerOperative, 'Deleted by the twinfield-php example');
 
 echo match ($result) {
     DeleteResult::Deleted => "Deleted {$code}.",

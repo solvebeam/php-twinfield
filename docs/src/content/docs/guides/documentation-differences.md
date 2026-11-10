@@ -5,7 +5,7 @@ description: Where live Twinfield responses differ from the API documentation, h
 
 The [Twinfield API documentation](https://developers.twinfield.com/documentation/api/) shows how requests and responses should look. Live responses don't always match it: elements are missing or extra, values are empty where the documentation shows a value, and some examples have mistakes. The SDK follows the live responses. This page records what was found, how it was checked, and how the SDK handles it, so you know why the code does what it does and what is still unverified.
 
-Besides the online documentation, the repository has the SOAP service definitions in [`wsdl/`](https://github.com/solvebeam/php-twinfield/tree/main/wsdl), the REST API definitions (Swagger) in [`openapi/`](https://github.com/solvebeam/php-twinfield/tree/main/openapi) and [old Twinfield web services manuals](/reference/manuals/) (PDF) in `manuals/`. The manuals can be outdated, but sometimes explain an element that the online documentation leaves out.
+Besides the online documentation, the repository has the SOAP service definitions in [`wsdl/`](https://github.com/solvebeam/twinfield-php/tree/main/wsdl), the REST API definitions (Swagger) in [`openapi/`](https://github.com/solvebeam/twinfield-php/tree/main/openapi) and [old Twinfield web services manuals](/reference/manuals/) (PDF) in `manuals/`. The manuals can be outdated, but sometimes explain an element that the online documentation leaves out.
 
 The SDK never hides an unexpected response behind a default value. When a response doesn't match what is known, it throws an `UnexpectedResponseException` with the path of the element, e.g. `dimension/financials/meansofpayment is "creditcard", expected one of none, paymentfile, cheques.` Only behaviour that was seen in live responses is accepted.
 
@@ -15,7 +15,7 @@ The SDK never hides an unexpected response behind a default value. When a respon
 2. **Compare the structure.** Every element and attribute path with the values it has, compared with the documented request and response.
 3. **Parse everything.** Every live response is read with the SDK and written back with `edit()`, so a value the SDK can't handle shows up as an error.
 4. **Record fixtures.** A few responses are recorded with `TWINFIELD_RECORD=1` and anonymized with `composer twinfield:anonymize`, so the unit tests use the real structure without real data.
-5. **Write later.** Creating, updating and deleting need an interactive confirmation (`composer test:write`), so they are checked separately. Until then, open questions are in [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+5. **Write later.** Creating, updating and deleting need an interactive confirmation (`composer test:write`), so they are checked separately. Until then, open questions are in [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
 
 ## Suppliers
 
@@ -241,7 +241,7 @@ These need a live write on a test company (`composer test:write -- --company=…
 
 ### Not yet verified
 
-These need a live write on a test company (`composer test:write -- --company=… --filter=SalesInvoice`); the list is in [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md):
+These need a live write on a test company (`composer test:write -- --company=… --filter=SalesInvoice`); the list is in [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md):
 
 - The shape of the save and `calculateonly` responses. The fixtures follow the documented response example. If a live save response leaves out an element that the read response has, `create()` throws after Twinfield saved the invoice.
 - The one-off item `0` in a response: its `subarticle` and `description`.
@@ -543,7 +543,7 @@ The differences for the other resources are in the [master data guide](/guides/m
 
 ## REST API
 
-Checked live (November 2026) with the scopes of the REST API on four test companies, against the Swagger definition `open-v1` (in [`openapi/`](https://github.com/solvebeam/php-twinfield/tree/main/openapi)). The models of the definition match the live responses field for field; the differences are in the envelopes, the parameters and the documentation around them.
+Checked live (November 2026) with the scopes of the REST API on four test companies, against the Swagger definition `open-v1` (in [`openapi/`](https://github.com/solvebeam/twinfield-php/tree/main/openapi)). The models of the definition match the live responses field for field; the differences are in the envelopes, the parameters and the documentation around them.
 
 | Swagger definition | Live | SDK |
 |---|---|---|

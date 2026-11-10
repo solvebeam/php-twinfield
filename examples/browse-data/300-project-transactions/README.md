@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - The status is not a criterion in 300: you get all transactions, also drafts (number `-1`). Ask for `fin.trs.head.status` as column and skip them when needed.
 - `fin.trs.head.yearperiod` is visible in 300: it can be a column as well as a criterion.
 
-Criteria: period, day book, number, the three dimensions, invoice number and regime. See [`browse-definitions/300.xml`](../../../browse-definitions/300.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, number, the three dimensions, invoice number and regime. See [`browse-definitions/300.xml`](../../../browse-definitions/300.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

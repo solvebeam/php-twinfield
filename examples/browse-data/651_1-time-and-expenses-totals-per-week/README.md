@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `teq.trs.line.timevalueext` is the external value of the hours, `timevalueint` the internal value.
 - Time & Expenses is a separate module of Twinfield: a company without it gives no rows.
 
-Criteria: year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project, activity and status. See [`browse-definitions/651_1.xml`](../../../browse-definitions/651_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project, activity and status. See [`browse-definitions/651_1.xml`](../../../browse-definitions/651_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

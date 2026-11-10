@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `betweenDates('teq.trs.head.date', $from, $to)`: the date is a criterion only.
 - Time & Expenses is a separate module of Twinfield: a company without it gives no rows.
 
-Criteria: year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project and activity. See [`browse-definitions/661_1.xml`](../../../browse-definitions/661_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project and activity. See [`browse-definitions/661_1.xml`](../../../browse-definitions/661_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

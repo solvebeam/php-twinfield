@@ -13,7 +13,7 @@ const repoDir = path.resolve(docsDir, '..');
 const examplesDir = path.join(repoDir, 'examples');
 const outDir = path.join(docsDir, 'src/content/docs/examples');
 
-const repoUrl = 'https://github.com/solvebeam/php-twinfield';
+const repoUrl = 'https://github.com/solvebeam/twinfield-php';
 
 // Repository files that have their own page in the docs.
 const pageForRepoFile = {

@@ -32,5 +32,5 @@ echo count($result->saved()), ' saved, ', count($result->failed()), ' failed', P
 
 // Clean up: delete the provisional example transactions again.
 foreach ($result->saved() as $saved) {
-    $bank->delete($saved->transaction->dayBook(), $saved->transaction->number(), 'php-twinfield example');
+    $bank->delete($saved->transaction->dayBook(), $saved->transaction->number(), 'twinfield-php example');
 }

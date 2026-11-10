@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `$definition->criteria()`: the fields with `ask`, which can be a criterion, with the proposed `operator`, `from` and `to`. Twinfield does not apply these proposals to a query: send every criterion you need.
 - A field with `visible` false is meant as criterion only, e.g. `fin.trs.head.yearperiod` in 030_3: asking for it as column can give a server error.
 
-The definitions of all browse codes are also in [`browse-definitions/`](../../../browse-definitions/) in the repository, so you can look them up without running this example. See the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+The definitions of all browse codes are also in [`browse-definitions/`](../../../browse-definitions/) in the repository, so you can look them up without running this example. See the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 ## Code
 

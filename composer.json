@@ -1,7 +1,7 @@
 {
   "name": "solvebeam/twinfield",
   "description": "Modern PHP SDK for the Twinfield API",
-  "homepage": "https://github.com/solvebeam/php-twinfield",
+  "homepage": "https://github.com/solvebeam/twinfield-php",
   "authors": [
     {
       "name": "Remco Tolsma",

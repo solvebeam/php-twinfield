@@ -2,7 +2,7 @@
 
 Old manuals of the Twinfield web services, kept for reference. They describe the XML web services (ProcessXml) and some classic SOAP services, often with more detail than the current documentation.
 
-They can be outdated. The [Twinfield API documentation](https://developers.twinfield.com/documentation/api/) is leading, and where live responses differ from the documentation the SDK follows the live responses: see [Differences with the documentation](https://php-twinfield.solvebeam.com/guides/documentation-differences/). For the current service definitions, see the WSDL files in [`../wsdl/`](../wsdl/).
+They can be outdated. The [Twinfield API documentation](https://developers.twinfield.com/documentation/api/) is leading, and where live responses differ from the documentation the SDK follows the live responses: see [Differences with the documentation](https://php.twinfield.solvebeam.com/guides/documentation-differences/). For the current service definitions, see the WSDL files in [`../wsdl/`](../wsdl/).
 
 | Manual | Pages | Subject |
 | --- | ---: | --- |

@@ -1,6 +1,6 @@
 # VAT return status (690)
 
-Browse code `690` (`BrowseCode::VatReturnStatus`, "Btw-aangifte status"): the VAT and ICT returns of a year with their period, status and when they were sent. The returns themselves are in [Declarations](https://php-twinfield.solvebeam.com/guides/declarations/).
+Browse code `690` (`BrowseCode::VatReturnStatus`, "Btw-aangifte status"): the VAT and ICT returns of a year with their period, status and when they were sent. The returns themselves are in [Declarations](https://php.twinfield.solvebeam.com/guides/declarations/).
 
 <!-- twinfield-documentation:start -->
 Twinfield documentation: [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/).
@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.vat.statusname` is the status (`created`, `authorised`, `sent`, `approved`, `rejected`, …); `fin.vat.status` the status code.
 - `fin.vat.sent` is a `Datetime`, empty when the return is not sent yet.
 
-Criteria: year and status. See [`browse-definitions/690.xml`](../../../browse-definitions/690.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: year and status. See [`browse-definitions/690.xml`](../../../browse-definitions/690.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

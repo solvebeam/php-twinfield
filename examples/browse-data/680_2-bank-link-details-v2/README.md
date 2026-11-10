@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `equal('fin.bnk.accountstatus', 'active')`: only active bank books, not the archived ones. It is the only criterion.
 - `fin.bnk.consentexpirydate` is a date and empty without a bank link: `nullableDate()`.
 
-Criteria: status. See [`browse-definitions/680_2.xml`](../../../browse-definitions/680_2.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: status. See [`browse-definitions/680_2.xml`](../../../browse-definitions/680_2.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - A bank book without IBAN has `-` in `fin.bnk.iban`.
 - The rows are not transactions: `$row->transactionLine` is null.
 
-Criteria: bank book. See [`browse-definitions/680.xml`](../../../browse-definitions/680.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: bank book. See [`browse-definitions/680.xml`](../../../browse-definitions/680.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

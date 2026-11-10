@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.line.matchstatus`, `matchdate` and `matchnumber`: whether the line is paid (`matched`), when, and with which match.
 - `fin.trs.line.openvaluesigned` is the open amount in the currency of the transaction and can be a criterion, e.g. `notBetween('fin.trs.line.openvaluesigned', '0.00', '0.00')`.
 
-Criteria: period, day book, status, change date of the transaction and of the line, general ledger account, customer, open amount and payment status. See [`browse-definitions/130_2.xml`](../../../browse-definitions/130_2.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, status, change date of the transaction and of the line, general ledger account, customer, open amount and payment status. See [`browse-definitions/130_2.xml`](../../../browse-definitions/130_2.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

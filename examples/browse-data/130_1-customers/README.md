@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `like('fin.trs.head.code', 'VRK*')`: the day book is a `like` criterion in 130_1.
 - `between('fin.trs.head.yearperiod', '2000/00', …)`: open items can be old, so start early.
 
-Criteria: period, day book, status, general ledger account, customer and payment status. See [`browse-definitions/130_1.xml`](../../../browse-definitions/130_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, status, general ledger account, customer and payment status. See [`browse-definitions/130_1.xml`](../../../browse-definitions/130_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

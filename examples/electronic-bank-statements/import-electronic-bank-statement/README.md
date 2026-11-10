@@ -135,7 +135,7 @@ Dry run; add --save to import it (a statement cannot be changed afterwards):
 
 With `--save`, it shows how Twinfield allocated each line, e.g. `121.00 Example customer Invoice 2026-0042 → 1300 (Debtors control), 1000 (Example customer)`.
 
-See [Transactions: Electronic bank statements](https://php-twinfield.solvebeam.com/guides/transactions/#electronic-bank-statements) and the [Twinfield documentation](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/).
+See [Transactions: Electronic bank statements](https://php.twinfield.solvebeam.com/guides/transactions/#electronic-bank-statements) and the [Twinfield documentation](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/).
 
 <!-- xml:start -->
 ## XML

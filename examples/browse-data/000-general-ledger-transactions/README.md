@@ -13,7 +13,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `sortBy()`: 000 sorts on up to three fields; here by account, period and number (newest first). Not every browse code sorts: 030_3 ignores it.
 - `displayName('fin.trs.head.status')` gives the status as Twinfield shows it, in the language of the user.
 
-Criteria: period, day book, number, status, general ledger account, amount and regime (`fin.trs.head.browseregime`). See [`browse-definitions/000.xml`](../../../browse-definitions/000.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, number, status, general ledger account, amount and regime (`fin.trs.head.browseregime`). See [`browse-definitions/000.xml`](../../../browse-definitions/000.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

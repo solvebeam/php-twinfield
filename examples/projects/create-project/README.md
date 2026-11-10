@@ -37,7 +37,7 @@ $code = $argv[1] ?? Example::unusedProjectCode($twinfield);
 $project = $projects->create(
     ProjectInput::create($code, 'Example project: website redesign and API documentation')
         ->shortName('Example')
-        ->invoiceDescription('Created by the php-twinfield examples')
+        ->invoiceDescription('Created by the twinfield-php examples')
         ->validFrom(new DateTimeImmutable('first day of january this year'))
         ->validTill(new DateTimeImmutable('last day of december this year'))
         ->billable(true, ChangeMode::Disallow)

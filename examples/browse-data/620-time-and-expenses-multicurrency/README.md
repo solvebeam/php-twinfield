@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.head.curcode` with `fin.trs.line.valuesigned`: the total in the currency of the transactions; `basevaluesigned` in the base currency.
 - The rows are totals: `$row->transactionLine` is null.
 
-Criteria: period, the three dimensions and status. See [`browse-definitions/620.xml`](../../../browse-definitions/620.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, the three dimensions and status. See [`browse-definitions/620.xml`](../../../browse-definitions/620.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

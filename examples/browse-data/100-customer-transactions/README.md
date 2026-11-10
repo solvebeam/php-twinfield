@@ -12,7 +12,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `between('fin.trs.line.dim2', $customer, $customer)`: one customer.
 - `nullableDate('fin.trs.line.datedue')`: the due date can be empty, e.g. for a payment.
 
-Criteria: period, day book, number, status, customer, amount, invoice number, match status, payment date and change date (`fin.trs.line.modified`). See [`browse-definitions/100.xml`](../../../browse-definitions/100.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/). The open invoices are also available with the Finder: `salesTransactions()->openInvoices()`.
+Criteria: period, day book, number, status, customer, amount, invoice number, match status, payment date and change date (`fin.trs.line.modified`). See [`browse-definitions/100.xml`](../../../browse-definitions/100.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/). The open invoices are also available with the Finder: `salesTransactions()->openInvoices()`.
 
 <!-- browse-fields:start -->
 ## Fields

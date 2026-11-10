@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `between('fin.trs.line.dim3', $asset, $asset)`: one asset.
 - The status is not a criterion in 301: you get all transactions, also drafts (number `-1`).
 
-Criteria: period, the three dimensions, day book and number. See [`browse-definitions/301.xml`](../../../browse-definitions/301.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, the three dimensions, day book and number. See [`browse-definitions/301.xml`](../../../browse-definitions/301.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `like('fin.trs.head.typecategory', 'SALESINVOICE')`: the day book category is a `like` criterion, e.g. only sales invoices.
 - `equal('fin.trs.line.matchstatus', 'available')`: open items.
 
-Criteria: period, day book category, day book, status, change date of the transaction and of the line, general ledger account, customer, amount, open amount and payment status. See [`browse-definitions/130_3.xml`](../../../browse-definitions/130_3.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book category, day book, status, change date of the transaction and of the line, general ledger account, customer, amount, open amount and payment status. See [`browse-definitions/130_3.xml`](../../../browse-definitions/130_3.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

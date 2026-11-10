@@ -13,7 +13,7 @@ use RuntimeException;
 final readonly class EnvFile
 {
     private const HEADER = [
-        '# Twinfield credentials for local development, tests and examples (php-twinfield).',
+        '# Twinfield credentials for local development, tests and examples (twinfield-php).',
         '# Keep this file private: chmod 600.',
         '',
     ];

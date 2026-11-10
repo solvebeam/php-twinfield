@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.line.openbasevaluesigned`: the amount that is still open, in the base currency.
 - `between('fin.trs.head.yearperiod', '2000/00', …)`: all years up to the last one. Status is not a criterion in 010.
 
-Criteria: period, general ledger account, day book, number, match status and regime. See [`browse-definitions/010.xml`](../../../browse-definitions/010.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/). For open items of customers and suppliers use [100](../100-customer-transactions/) and [200](../200-supplier-transactions/).
+Criteria: period, general ledger account, day book, number, match status and regime. See [`browse-definitions/010.xml`](../../../browse-definitions/010.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/). For open items of customers and suppliers use [100](../100-customer-transactions/) and [200](../200-supplier-transactions/).
 
 <!-- browse-fields:start -->
 ## Fields

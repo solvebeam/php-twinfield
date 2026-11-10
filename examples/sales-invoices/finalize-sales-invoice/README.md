@@ -8,7 +8,7 @@ Twinfield documentation: [Sales invoices](https://developers.twinfield.com/docum
 
 `finalize($invoiceType, $invoiceNumber)` reads the invoice and saves it with status `final`; it throws a `LogicException` when the invoice is already final. The result has the booked transaction in `$invoice->transaction`, and `salesTransaction($invoice)` reads it.
 
-From the sales transaction on, you can match a payment against it, see it in the open items and send reminders: see [Sales invoice or sales transaction?](https://php-twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/).
+From the sales transaction on, you can match a payment against it, see it in the open items and send reminders: see [Sales invoice or sales transaction?](https://php.twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/).
 
 To make an invoice final when you create it, call `final()` on the `SalesInvoiceInput`.
 

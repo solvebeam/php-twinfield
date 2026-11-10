@@ -407,7 +407,7 @@ foreach ($statement->lines as $line) {
 - Duplicates: by default (`importduplicate="0"`) Twinfield does not import a statement it already has. Pass `importDuplicate: true` to `create()` or `createMany()` to import it anyway.
 - `createMany([$input, …])` imports several statements in one request, like [`saveMany()`](#saving-many-transactions): it does not throw when some fail, and `failed()` has the errors per statement.
 
-Not yet verified live: the shape of the response, and what Twinfield answers for a duplicate. See [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md). Example: [Import electronic bank statement](/examples/electronic-bank-statements/import-electronic-bank-statement/).
+Not yet verified live: the shape of the response, and what Twinfield answers for a duplicate. See [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md). Example: [Import electronic bank statement](/examples/electronic-bank-statements/import-electronic-bank-statement/).
 
 ### Reading bank statements
 
@@ -457,7 +457,7 @@ $blocked->unregister('INK', $invoice->number(), $invoice->total->id);
 - Both commands return nothing. When Twinfield refuses one, you get a `CommandQueryFaultException` with `errorCode` `BlockedValueCannotBeRegistered` or `BlockedValueCannotBeUnregistered` (`TransactionBlockedValueServiceFaultCode`).
 - The service cannot read a blocked value back, and the transaction responses don't show it.
 
-Not yet verified live: which lines and which transactions (provisional or final) accept a blocked value, and whether it may be negative or more than the open amount. See [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+Not yet verified live: which lines and which transactions (provisional or final) accept a blocked value, and whether it may be negative or more than the open amount. See [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
 
 ## Saving many transactions
 

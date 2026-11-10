@@ -34,4 +34,4 @@ foreach ($updated->details as $line) {
 }
 
 // Clean up: delete the provisional example transaction again.
-$bank->delete($updated->dayBook(), $updated->number(), 'php-twinfield example');
+$bank->delete($updated->dayBook(), $updated->number(), 'twinfield-php example');

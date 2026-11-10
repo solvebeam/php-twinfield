@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `equal('fin.trs.head.balanceregimeprompt', $regime)`: the regime is required; Twinfield uses `Generic` when you leave it out.
 - Twinfield groups the lines by the columns you ask for, so ask only for the columns you want totals by. The rows are totals: `$row->transactionLine` is null.
 
-Criteria: period, status, general ledger account and regime. See [`browse-definitions/050_1.xml`](../../../browse-definitions/050_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, general ledger account and regime. See [`browse-definitions/050_1.xml`](../../../browse-definitions/050_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

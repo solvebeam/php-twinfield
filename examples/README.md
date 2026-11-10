@@ -270,7 +270,7 @@ The new fixed assets module, on the REST API. For the classic module see [Fixed 
 
 ## Browse data
 
-One example per browse code; see [Browse codes](https://php-twinfield.solvebeam.com/guides/browse-codes/) for all codes and their fields.
+One example per browse code; see [Browse codes](https://php.twinfield.solvebeam.com/guides/browse-codes/) for all codes and their fields.
 
 - [Read browse definition](browse-data/read-browse-definition/): the fields of a browse code and which can be a criterion.
 - [List browse fields](browse-data/list-browse-fields/): data types and the values of fields with a fixed list.

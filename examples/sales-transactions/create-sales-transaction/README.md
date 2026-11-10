@@ -6,7 +6,7 @@ Books an invoice from your own software as sales transaction in day book `VRK`, 
 Twinfield documentation: [Sales transactions](https://developers.twinfield.com/documentation/api/transaction-data/sales-transactions/).
 <!-- twinfield-documentation:end -->
 
-Use a sales transaction when the invoice is already made in your own software: Twinfield only gets the booking, not an invoice. See [Sales invoice or sales transaction?](https://php-twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/) for the difference with a sales invoice.
+Use a sales transaction when the invoice is already made in your own software: Twinfield only gets the booking, not an invoice. See [Sales invoice or sales transaction?](https://php.twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/) for the difference with a sales invoice.
 
 `SalesTransactionInput::invoice($dayBook, $customer, $invoiceNumber, $date)` starts the input. A sales transaction has:
 
@@ -70,7 +70,7 @@ foreach ($transaction->vat as $line) {
 }
 
 // Clean up: delete the provisional example transaction again.
-$sales->delete($transaction->dayBook(), $transaction->number(), 'php-twinfield example');
+$sales->delete($transaction->dayBook(), $transaction->number(), 'twinfield-php example');
 
 echo 'Deleted:  ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;
 ```

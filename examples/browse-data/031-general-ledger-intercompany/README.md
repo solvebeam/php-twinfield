@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - Only intercompany transactions are returned: a company without them gives no rows.
 - `between('fin.trs.head.yearperiod', $from, $to)`: the period can only be a criterion.
 
-Criteria: period, status, the three dimensions and regime. See [`browse-definitions/031.xml`](../../../browse-definitions/031.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, the three dimensions and regime. See [`browse-definitions/031.xml`](../../../browse-definitions/031.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

@@ -1,13 +1,13 @@
 # Initial load
 
-Step 1 of a shadow database: downloads all transaction lines of the company once, one year at a time, and stores them in a local database. After this, the [incremental load](../incremental-load/) keeps it up to date and [validate balances](../validate-balances/) checks it. This is what Twinfield asks in [Keeping a shadow database with transactions](https://php-twinfield.solvebeam.com/knowledge-base/shadow-database-with-transactions/).
+Step 1 of a shadow database: downloads all transaction lines of the company once, one year at a time, and stores them in a local database. After this, the [incremental load](../incremental-load/) keeps it up to date and [validate balances](../validate-balances/) checks it. This is what Twinfield asks in [Keeping a shadow database with transactions](https://php.twinfield.solvebeam.com/knowledge-base/shadow-database-with-transactions/).
 
 - `browse(BrowseCode::GeneralLedgerDetailsV3)`: browse code 030_3, the general ledger transaction lines, as Twinfield advises for the initial load.
 - `columns(…)`: only the fields you store. Twinfield returns all rows of a query at once, so every extra column makes each download bigger.
 - `between('fin.trs.head.yearperiod', '2025/00', '2025/55')`: one year, periods 0 (opening balance) to 55 (year end). When a year of a large company times out, ask one period at a time: `2025/00` to `2025/00`, then `2025/01`, and so on. `yearperiod` itself can't be a column in 030_3 (server error), so the year and period are read from `fin.trs.head.year` and `fin.trs.head.period`.
 - `equal('fin.trs.head.status', 'normal')`: provisional and final transactions. Without it you also get drafts, which have number `-1` and can't be told apart.
 - `equal('fin.trs.head.regime', Regime::Generic)`: only the generic lines, the same lines as the generic balances of 040_1 in the validation. Leave it out for a company with regimes when you need the fiscal, commercial or economic lines too.
-- Each row has a `transactionLine` (day book, number and line), which with the company is the key of the line. [`ShadowDatabase`](../../ShadowDatabase.php) stores the lines in SQLite, keyed by organisation id, company, day book, number and line (see [Keys for a shadow database](https://php-twinfield.solvebeam.com/guides/organisations/#keys-for-a-shadow-database)), and replaces all lines of a transaction at once.
+- Each row has a `transactionLine` (day book, number and line), which with the company is the key of the line. [`ShadowDatabase`](../../ShadowDatabase.php) stores the lines in SQLite, keyed by organisation id, company, day book, number and line (see [Keys for a shadow database](https://php.twinfield.solvebeam.com/guides/organisations/#keys-for-a-shadow-database)), and replaces all lines of a transaction at once.
 - The start time is saved as "synced until": the incremental load asks for the changes from that moment.
 
 Add `fin.trs.head.code` or `fin.trs.line.dim1` criteria to download only some day books or accounts, e.g. `equal('fin.trs.head.code', 'VRK')` or `between('fin.trs.line.dim1', '8000', '8999')`.

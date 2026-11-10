@@ -4,7 +4,7 @@ import starlight from '@astrojs/starlight';
 import mermaid from 'astro-mermaid';
 
 export default defineConfig({
-	site: 'https://php-twinfield.solvebeam.com',
+	site: 'https://php.twinfield.solvebeam.com',
 	integrations: [
 		// Before Starlight, so ```mermaid code blocks are rendered as diagrams instead of code.
 		mermaid({ theme: 'default', autoTheme: true }),
@@ -17,7 +17,7 @@ export default defineConfig({
 			},
 			favicon: '/favicon.svg',
 			editLink: {
-				baseUrl: 'https://github.com/solvebeam/php-twinfield/edit/main/docs/',
+				baseUrl: 'https://github.com/solvebeam/twinfield-php/edit/main/docs/',
 			},
 			lastUpdated: true,
 			customCss: ['./src/styles/custom.css'],

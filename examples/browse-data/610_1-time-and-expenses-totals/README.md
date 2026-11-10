@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `teq.trs.head.project1` is the project and `project2` the activity.
 - Time & Expenses is a separate module of Twinfield: a company without it gives no rows.
 
-Criteria: date, project, activity and user. See [`browse-definitions/610_1.xml`](../../../browse-definitions/610_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: date, project, activity and user. See [`browse-definitions/610_1.xml`](../../../browse-definitions/610_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `teq.trs.line.time` are the billable hours, `time_nb` the hours that are not billable; the same for `expense` and `quantity`.
 - Time & Expenses is a separate module of Twinfield: a company without it gives no rows.
 
-Criteria: year/month, year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project, activity and status. See [`browse-definitions/650_1.xml`](../../../browse-definitions/650_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: year/month, year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project, activity and status. See [`browse-definitions/650_1.xml`](../../../browse-definitions/650_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

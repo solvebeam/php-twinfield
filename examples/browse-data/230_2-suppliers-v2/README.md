@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `betweenDateTimes('fin.trs.line.modified', $since, $now)`: the lines that changed in that time, e.g. because they were paid.
 - `fin.trs.line.openvaluesigned` is the open amount in the currency of the transaction and can be a criterion.
 
-Criteria: period, day book, status, change date of the transaction and of the line, general ledger account, supplier, amount, open amount and payment status. See [`browse-definitions/230_2.xml`](../../../browse-definitions/230_2.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, status, change date of the transaction and of the line, general ledger account, supplier, amount, open amount and payment status. See [`browse-definitions/230_2.xml`](../../../browse-definitions/230_2.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

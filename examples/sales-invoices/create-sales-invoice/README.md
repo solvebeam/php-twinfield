@@ -6,7 +6,7 @@ Lets Twinfield make a sales invoice in the Classic invoicing module. Without opt
 Twinfield documentation: [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/).
 <!-- twinfield-documentation:end -->
 
-Use a sales invoice when Twinfield makes and sends the invoice. Twinfield gives the invoice number, calculates the amounts and VAT from the articles, and books the sales transaction when the invoice is final. See [Sales invoice or sales transaction?](https://php-twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/) for the difference with a sales transaction.
+Use a sales invoice when Twinfield makes and sends the invoice. Twinfield gives the invoice number, calculates the amounts and VAT from the articles, and books the sales transaction when the invoice is final. See [Sales invoice or sales transaction?](https://php.twinfield.solvebeam.com/knowledge-base/sales-invoice-or-sales-transaction/) for the difference with a sales transaction.
 
 `SalesInvoiceInput::create($invoiceType, $customer)` starts a concept invoice:
 

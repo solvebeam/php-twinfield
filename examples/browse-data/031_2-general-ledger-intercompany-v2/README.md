@@ -6,11 +6,11 @@ Browse code `031_2` (`BrowseCode::GeneralLedgerIntercompanyV2`, "Grootboek (reke
 Twinfield documentation: [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/).
 <!-- twinfield-documentation:end -->
 
-- `equal('fin.trs.head.reportingstructure', $code)`: only the accounts of a reporting structure (see [Hierarchies](https://php-twinfield.solvebeam.com/guides/hierarchies/)). It is a criterion only.
+- `equal('fin.trs.head.reportingstructure', $code)`: only the accounts of a reporting structure (see [Hierarchies](https://php.twinfield.solvebeam.com/guides/hierarchies/)). It is a criterion only.
 - `fin.trs.line.destination.*`: the company and account on the other side of the line.
 - Only intercompany transactions are returned: a company without them gives no rows.
 
-Criteria: period, status, the three dimensions, regime and reporting structure. See [`browse-definitions/031_2.xml`](../../../browse-definitions/031_2.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, the three dimensions, regime and reporting structure. See [`browse-definitions/031_2.xml`](../../../browse-definitions/031_2.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

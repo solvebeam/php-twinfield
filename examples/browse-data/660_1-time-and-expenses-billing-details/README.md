@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `ivb.trs.line.value` is the proposed amount, `teq.trs.line.valueext` the external value of the entry.
 - Time & Expenses is a separate module of Twinfield: a company without it gives no rows.
 
-Criteria: year/month, year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project and activity. See [`browse-definitions/660_1.xml`](../../../browse-definitions/660_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: year/month, year/week, date, user, cost centre of the user, hour code, authoriser, customer, project, cost centre of the project and activity. See [`browse-definitions/660_1.xml`](../../../browse-definitions/660_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

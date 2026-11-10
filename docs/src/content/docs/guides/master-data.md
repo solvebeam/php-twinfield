@@ -922,7 +922,7 @@ The [documentation](https://developers.twinfield.com/documentation/api/master-da
 - The Finder returns two columns, code and name.
 - Not found is `<vat msgtype="error" msg="…" result="0">` with only the code.
 
-Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
 
 ## Offices
 
@@ -1068,7 +1068,7 @@ The read model is based on live responses. Documentation: [Users](https://develo
 - The Finder returns two columns, code and name. With `mutualoffices=1` it can return more users than without; the extra users can be read, so the default search can leave out users of the organisation.
 - Not found is `<user status="default" msgtype="error" msg="…" result="0">` with only the code.
 
-Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
 
 ## Examples
 

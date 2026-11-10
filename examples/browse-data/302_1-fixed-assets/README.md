@@ -8,9 +8,9 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 
 - `fin.trs.line.asset.beginyear`, `beginperiod` and `depreciationterm` are numbers: `int()`.
 - `between('fin.trs.line.dim3', $asset, $asset)`: one asset. The day book can be a criterion as well, e.g. the depreciation day book.
-- For the fixed assets themselves (not their transactions) see [Fixed assets](https://php-twinfield.solvebeam.com/guides/fixed-assets/).
+- For the fixed assets themselves (not their transactions) see [Fixed assets](https://php.twinfield.solvebeam.com/guides/fixed-assets/).
 
-Criteria: period, day book, status and asset. See [`browse-definitions/302_1.xml`](../../../browse-definitions/302_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book, status and asset. See [`browse-definitions/302_1.xml`](../../../browse-definitions/302_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

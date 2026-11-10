@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `equal('fin.trs.head.status', 'normal')`: provisional and final. Without it you also get the drafts, with number `-1`.
 - `fin.trs.line.currencydate` is the value date of the line.
 
-Criteria: period, cash book, number, statement number, general ledger account, amount and status. See [`browse-definitions/400.xml`](../../../browse-definitions/400.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, cash book, number, statement number, general ledger account, amount and status. See [`browse-definitions/400.xml`](../../../browse-definitions/400.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

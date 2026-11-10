@@ -1,6 +1,6 @@
 # Images
 
-Logos used in the README and on the [documentation site](https://php-twinfield.solvebeam.com/). The docs copy this folder with `docs/scripts/sync-images.mjs`, so this is the single source.
+Logos used in the README and on the [documentation site](https://php.twinfield.solvebeam.com/). The docs copy this folder with `docs/scripts/sync-images.mjs`, so this is the single source.
 
 The files are optimized with [SVGO](https://svgo.dev/). A `-dark` file is the same logo with white text, for dark backgrounds.
 

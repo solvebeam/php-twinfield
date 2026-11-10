@@ -12,7 +12,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `$row->transactionLine`: the day book, number and line number of the row, e.g. to read the whole transaction with `$row->transactionLine->transaction()`.
 - `fin.trs.head.modified` is the last change of the transaction, a `Datetime` in UTC: `dateTime()`.
 
-Criteria: period, status, input date, change date, the three dimensions, regime and reporting structure. 030_3 ignores sort fields. See [`browse-definitions/030_3.xml`](../../../browse-definitions/030_3.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, status, input date, change date, the three dimensions, regime and reporting structure. 030_3 ignores sort fields. See [`browse-definitions/030_3.xml`](../../../browse-definitions/030_3.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

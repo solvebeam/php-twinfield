@@ -26,6 +26,6 @@ echo 'Total:    ', $transaction->total->debitCredit->value, ' ', $transaction->t
 echo 'Balance:  ', $transaction->startValue, ' → ', $transaction->closeValue, PHP_EOL;
 
 // Clean up: delete the provisional example transaction again.
-$bank->delete($transaction->dayBook(), $transaction->number(), 'php-twinfield example');
+$bank->delete($transaction->dayBook(), $transaction->number(), 'twinfield-php example');
 
 echo 'Deleted:  ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;

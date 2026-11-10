@@ -12,7 +12,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - Twinfield can return more than one row per account, so the example adds them up.
 - The rows are totals: `$row->transactionLine` is null.
 
-Criteria: period, status, the three dimensions, regime and reporting structure. See [`browse-definitions/040_1.xml`](../../../browse-definitions/040_1.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/). `050_1` gives year-to-date totals, `060` totals per currency.
+Criteria: period, status, the three dimensions, regime and reporting structure. See [`browse-definitions/040_1.xml`](../../../browse-definitions/040_1.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/). `050_1` gives year-to-date totals, `060` totals per currency.
 
 <!-- browse-fields:start -->
 ## Fields

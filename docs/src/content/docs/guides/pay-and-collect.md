@@ -16,7 +16,7 @@ description: Payment runs and direct debit runs, from selecting the open invoice
 | [CreateFiles](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/#createfiles) | `createFiles()` | Only tested offline |
 | [Finish](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/#finish-1) | `finish()` | Only tested offline |
 
-Every operation needs a company: `$twinfield->company('1000')->payAndCollect()`. The write test (`tests/Write/PayAndCollect`) creates, changes, authorises and deletes a run; see [TODO.md](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
+Every operation needs a company: `$twinfield->company('1000')->payAndCollect()`. The write test (`tests/Write/PayAndCollect`) creates, changes, authorises and deletes a run; see [TODO.md](https://github.com/solvebeam/twinfield-php/blob/main/TODO.md).
 
 ## At a glance
 

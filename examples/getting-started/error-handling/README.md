@@ -11,7 +11,7 @@ Twinfield reports errors in two ways:
   Use `errorCode` to act on an error. `errorMessage` is readable text in the language of the user, only for logging or showing to the user. A fault without such details is a plain `SoapFaultException`.
 - **Authorization errors**: HTTP 401 or 403. Without a SOAP fault in the response (Twinfield sends an HTML page for an invalid access token), the SDK throws an `AccessDeniedException`; the HTTP status is the exception code.
 
-Too many requests give a `RateLimitExceededException`: `concurrencyLimitExceeded` says which limit was exceeded, and `retryAfterSeconds` and the `rateLimit…` properties have the response headers. See [Rate limits](https://php-twinfield.solvebeam.com/guides/rate-limits/).
+Too many requests give a `RateLimitExceededException`: `concurrencyLimitExceeded` says which limit was exceeded, and `retryAfterSeconds` and the `rateLimit…` properties have the response headers. See [Rate limits](https://php.twinfield.solvebeam.com/guides/rate-limits/).
 
 ## Code
 

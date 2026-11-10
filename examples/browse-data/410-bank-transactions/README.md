@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.head.stmnumber` is the statement number, `startvalue` and `closevalue` the balance before and after the statement.
 - `equal('fin.trs.head.status', 'normal')`: provisional and final. Without it you also get the drafts, with number `-1`.
 
-Criteria: period, bank book, number, statement number, general ledger account, amount and status. See [`browse-definitions/410.xml`](../../../browse-definitions/410.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, bank book, number, statement number, general ledger account, amount and status. See [`browse-definitions/410.xml`](../../../browse-definitions/410.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

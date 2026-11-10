@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.head.inpdate` is when the transaction was entered, a `Datetime`: `dateTime()`. It is also a criterion, like `fin.trs.head.modified` and `fin.trs.head.user`.
 - `fin.trs.head.browseregime` is the regime of the transaction (`Generic`, `Fiscal`, …) and can be a criterion.
 
-Criteria: period, day book category, day book, number, status, date, input date, change date, the three dimensions, amount, invoice number, user and regime. See [`browse-definitions/020.xml`](../../../browse-definitions/020.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: period, day book category, day book, number, status, date, input date, change date, the three dimensions, amount, invoice number, user and regime. See [`browse-definitions/020.xml`](../../../browse-definitions/020.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

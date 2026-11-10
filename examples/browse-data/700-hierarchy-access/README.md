@@ -1,6 +1,6 @@
 # Hierarchy access (700)
 
-Browse code `700` (`BrowseCode::HierarchyAccess`, "Rapportagestructuurtoegang"): which users and roles have access to which reporting structure, and with which access type. See [Hierarchies](https://php-twinfield.solvebeam.com/guides/hierarchies/) for the reporting structures themselves.
+Browse code `700` (`BrowseCode::HierarchyAccess`, "Rapportagestructuurtoegang"): which users and roles have access to which reporting structure, and with which access type. See [Hierarchies](https://php.twinfield.solvebeam.com/guides/hierarchies/) for the reporting structures themselves.
 
 <!-- twinfield-documentation:start -->
 Twinfield documentation: [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/).
@@ -10,7 +10,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - A row has a user (`hie.xss.user`) or a role (`hie.xss.role`).
 - `hie.xss.hierarchyhidden` is `true` for a hidden reporting structure.
 
-Criteria: access type. See [`browse-definitions/700.xml`](../../../browse-definitions/700.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/).
+Criteria: access type. See [`browse-definitions/700.xml`](../../../browse-definitions/700.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/).
 
 <!-- browse-fields:start -->
 ## Fields

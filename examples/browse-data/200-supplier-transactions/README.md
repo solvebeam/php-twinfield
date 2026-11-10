@@ -11,7 +11,7 @@ Twinfield documentation: [Browse data](https://developers.twinfield.com/document
 - `fin.trs.line.openbasevaluesigned`: what is still open in the base currency; negative for an invoice you still have to pay.
 - `between('fin.trs.line.dim2', $supplier, $supplier)`: one supplier.
 
-Criteria: period, day book, number, status, supplier, amount, invoice number, match status, payment date and change date. See [`browse-definitions/200.xml`](../../../browse-definitions/200.xml) and the [browse data guide](https://php-twinfield.solvebeam.com/guides/browse-data/). The open invoices are also available with the Finder: `purchaseTransactions()->openInvoices()`.
+Criteria: period, day book, number, status, supplier, amount, invoice number, match status, payment date and change date. See [`browse-definitions/200.xml`](../../../browse-definitions/200.xml) and the [browse data guide](https://php.twinfield.solvebeam.com/guides/browse-data/). The open invoices are also available with the Finder: `purchaseTransactions()->openInvoices()`.
 
 <!-- browse-fields:start -->
 ## Fields

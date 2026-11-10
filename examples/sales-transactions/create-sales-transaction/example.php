@@ -56,6 +56,6 @@ foreach ($transaction->vat as $line) {
 }
 
 // Clean up: delete the provisional example transaction again.
-$sales->delete($transaction->dayBook(), $transaction->number(), 'php-twinfield example');
+$sales->delete($transaction->dayBook(), $transaction->number(), 'twinfield-php example');
 
 echo 'Deleted:  ', $transaction->dayBook(), ' ', $transaction->number(), PHP_EOL;

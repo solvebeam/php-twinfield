@@ -37,7 +37,7 @@ foreach ($result as $row) {
 The steps, as in the [Twinfield documentation](https://developers.twinfield.com/documentation/api/request-data/browse-data/#steps-to-be-taken):
 
 1. **Choose a browse code**, e.g. `030_3` for general ledger transaction lines or `040_1` for balances per account. See [Browse codes](/guides/browse-codes/) for all codes.
-2. **Read the browse definition** to see the fields and which of them can be a criterion. The definitions of all browse codes are in [`browse-definitions/`](https://github.com/solvebeam/php-twinfield/tree/main/browse-definitions) in the repository, so you don't have to ask Twinfield.
+2. **Read the browse definition** to see the fields and which of them can be a criterion. The definitions of all browse codes are in [`browse-definitions/`](https://github.com/solvebeam/twinfield-php/tree/main/browse-definitions) in the repository, so you don't have to ask Twinfield.
 3. **Fill in the criteria** and choose the columns.
 4. **Send the query** with `get()`.
 
