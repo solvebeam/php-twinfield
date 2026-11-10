@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2f93a5b464dfbdac17d9f12829cdad",
+    "content-hash": "875953b68d90c7395e4bfeebcb7d1e7f",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -1827,11 +1827,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.38",
+            "version": "2.3.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dfaf1f530e1663aa167bc3e52197adb221582629",
-                "reference": "dfaf1f530e1663aa167bc3e52197adb221582629",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/645a1bd6bead15fc1b8474137467961d0fa30a79",
+                "reference": "645a1bd6bead15fc1b8474137467961d0fa30a79",
                 "shasum": ""
             },
             "require": {
@@ -1853,6 +1853,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -1876,8 +1887,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-30T17:12:46+00:00",
-            "published-time": "2026-01-30T17:12:57+00:00"
+            "time": "2026-11-03T12:14:22+00:00",
+            "published-time": "2026-11-03T12:14:36+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

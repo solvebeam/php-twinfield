@@ -325,6 +325,12 @@ parameters:
 			path: src/Dimension/BankInput.php
 
 		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: src/Dimension/ChangeMode.php
+
+		-
 			message: '#^Parameter \#2 \$discountPercentage of static method SolveBeam\\Twinfield\\Dimension\\PaymentCondition\:\:of\(\) expects numeric\-string, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -413,6 +419,18 @@ parameters:
 			identifier: return.unusedType
 			count: 1
 			path: src/OAuth2/Provider/TwinfieldResourceOwner.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Psr\\Cache\\CacheItemPoolInterface\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/OAuth2/RefreshTokenAccessTokenProvider.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between DateTimeImmutable and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Rate/RateInput.php
 
 		-
 			message: '#^Parameter \#1 \$invoiceType of class SolveBeam\\Twinfield\\SalesInvoice\\SalesInvoiceInput constructor expects string, mixed given\.$#'
@@ -679,7 +697,7 @@ parameters:
 			path: tests/Unit/Project/ProjectResourceTest.php
 
 		-
-			message: '#^Offset 0 might not exist on array\{0\?\: string\}\.$#'
+			message: '#^Offset 0 might not exist on array\{\}\|array\{non\-falsy\-string\}\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: tests/Unit/SalesInvoice/SalesInvoiceInputTest.php
@@ -761,6 +779,24 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, non\-falsy\-string&numeric\-string, non\-falsy\-string, non\-falsy\-string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/Unit/Support/XmlAnonymizerTest.php
+
+		-
+			message: '#^Offset 2 might not exist on array\{\}\|array\{non\-falsy\-string, non\-falsy\-string&numeric\-string, non\-falsy\-string, non\-falsy\-string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: tests/Unit/Support/XmlAnonymizerTest.php
+
+		-
+			message: '#^Offset 3 might not exist on array\{\}\|array\{non\-falsy\-string, non\-falsy\-string&numeric\-string, non\-falsy\-string, non\-falsy\-string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Unit/Support/XmlAnonymizerTest.php
 
 		-
 			message: '#^Parameter \#4 \$value of method SolveBeam\\Twinfield\\TransactionBlockedValue\\TransactionBlockedValueResource\:\:register\(\) expects SolveBeam\\Twinfield\\Transaction\\Amount\|numeric\-string, string given\.$#'
