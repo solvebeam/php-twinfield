@@ -270,6 +270,12 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Bind accounts](hierarchies/bind-accounts/): bind an account to a node and unbind it again (write).
 - [Delete hierarchy](hierarchies/delete-hierarchy/): delete or hide one (write).
 
+## Matching
+
+- [Match transactions](matching/match-transactions/): match an invoice with its payment, partly or with a discount (write).
+- [List match sets](matching/list-match-sets/): the matched lines of a customer with their match number (browse data).
+- [Undo match](matching/undo-match/): undo a match set by its match number (write).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.

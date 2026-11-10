@@ -40,6 +40,7 @@ use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Hierarchy\HierarchyResource;
+use SolveBeam\Twinfield\Matching\MatchingResource;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\Office;
@@ -430,6 +431,15 @@ final readonly class Twinfield
     public function hierarchies(): HierarchyResource
     {
         return new HierarchyResource($this);
+    }
+
+    /**
+     * Matching (afletteren): match existing transaction lines with each other, e.g. a sales
+     * invoice and its payment (XML web services), and undo a match (matching.asmx).
+     */
+    public function matching(): MatchingResource
+    {
+        return new MatchingResource($this);
     }
 
     /**

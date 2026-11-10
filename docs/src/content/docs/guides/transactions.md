@@ -328,6 +328,8 @@ $input = BankTransactionInput::create('BNK', '1010', new DateTimeImmutable('2026
 
 The match value of the set is the sum of its lines. `withMatches()` replaces the sets of a line. `edit()` leaves the match sets of a transaction out, because those lines are already matched.
 
+To match lines of transactions that already exist, e.g. an invoice with a payment, fully, partly or with a discount, and to undo a match, see the [matching guide](/guides/matching/).
+
 ## Reading
 
 `get($dayBook, $number)` returns a `BankTransaction` or `CashTransaction` (for sales: a `SalesTransaction`, see [Sales transactions](#sales-transactions); for journal: a `JournalTransaction`, see [Journal transactions](#journal-transactions)):

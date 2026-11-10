@@ -613,3 +613,35 @@ To check:
   is in use (e.g. by a report)?
 - Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`), and run the
   write examples `save-hierarchy`, `bind-accounts` and `delete-hierarchy`.
+
+## Matching: verify live
+
+`matching()->match()` (`<match>` on the XML web services) and `undo()` (`UndoMatch` on
+`matching.asmx`) are only tested offline, with fictitious responses
+(`matching-match*.xml`, `matching-undo*.xml`). The `<match>` response is not documented, and the
+test companies have no matched customer lines yet, so no match number was seen live.
+
+```sh
+TWINFIELD_RECORD=1 composer test:write -- --company=1002_3 --filter=Matching
+```
+
+The write test creates a provisional sales invoice (`VRK`) and a provisional journal transaction
+(`MEMO`) that pays it, matches them, looks up the match number in browse data (100), undoes the
+match and deletes both transactions again.
+
+To check:
+
+- Can provisional transactions be matched? If not, the write test needs final transactions, which
+  cannot be deleted: then run it once by hand and keep the transactions.
+- The shape of the `<match>` response: does it give the match number or a status of the set? Then
+  let `match()` return it (now `void`), so undo needs no browse data.
+- Is `matchdate` required? Errors for a line that is already matched, a wrong line, a match value
+  above the open amount and a `writeoff` without `@type`. Add them to the guide.
+- Does browse 100 give the match number right after matching, and is it a plain number?
+- The `UndoMatch` response on success: an empty `<UndoMatchResult/>`, or left out? Is
+  `<Parameters/>` always there? Can a match of provisional transactions be undone?
+- Match codes `070` (suspense accounts) and `370` (projects), and `writeoff` types `currency` and
+  `writeoff`.
+- Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`), and run the
+  examples `matching/match-transactions`, `list-match-sets` and `undo-match` with real output in
+  their READMEs.

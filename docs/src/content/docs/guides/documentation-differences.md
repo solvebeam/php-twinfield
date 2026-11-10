@@ -402,6 +402,28 @@ Checked live on 10 November 2026, read-only: Load of the four reporting structur
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Access rights for a role or a company.
 
+## Matching
+
+Checked on 10 November 2026 against the documentation ([Matching](https://developers.twinfield.com/documentation/api/miscellaneous/matching/), [Undo match](https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/)) and the WSDL (`matching.asmx?wsdl`, in `wsdl/accounting/`), not yet live: matching changes data. The two test companies have no matched customer lines in browse data, so no match number was seen yet. See the [matching guide](/guides/matching/).
+
+### Requests
+
+- **`<match>` follows the documentation**: `set` with `office`, `matchcode`, `matchdate` and `lines/line` with `transcode`, `transnumber`, `transline` and optionally `matchvalue` and `writeoff` with `@type`. The unit tests compare the request with the three examples of the documentation.
+- **`matching.asmx` has only `UndoMatch`**: matching itself is not a SOAP operation, only the XML web services request.
+- **The dimension type of `UndoMatch`** is "the dimension type of the dimension", without a list. The SDK takes a `DimensionTypeCode` or a string; `MatchCode::dimensionType()` maps the match codes to `BAS`, `DEB`, `CRD` and `PRJ`.
+
+### Responses
+
+- **The `<match>` response is not documented.** The SDK expects a `<match>` root element and throws a `ProcessXmlException` on `result="0"`, as for the other XML web services; `match()` returns nothing. The fixture `matching-match.xml` is fictitious: it echoes the request with `result="1"`.
+- **`UndoMatchResult`** is a list of `MessageOfUndoSetByTypeResult` (`Type`, `Text`, `Code`, `Parameters`), as in the WSDL. The fixtures are fictitious and follow the WSDL and the hierarchies service: an empty `<UndoMatchResult/>` on success, `<Parameters/>` in every message.
+
+### Not yet verified
+
+- The shape of the `<match>` response: does it give a match number or a status? Then `match()` should return it.
+- Which errors Twinfield gives for a line that is already matched, a wrong line, a match value above the open amount, a `writeoff` without `@type`; whether `matchdate` is required; whether a provisional transaction can be matched.
+- The `UndoMatch` response on success (empty, or left out?) and its messages; whether `Parameters` is always there.
+- Match codes `070` and `370`, and `writeoff` types `currency` and `writeoff`.
+
 ## Finder
 
 The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a search of every documented type (`maxRows` 3) on a test company, `company=*` for 15 types, and the documented search fields and options with the errors they give. Documentation: [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and the WSDL (`finder.asmx?wsdl`, in `wsdl/accounting/`).

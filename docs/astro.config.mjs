@@ -47,6 +47,7 @@ export default defineConfig({
 						{ label: 'Browse data', slug: 'guides/browse-data' },
 						{ label: 'Declarations', slug: 'guides/declarations' },
 						{ label: 'Hierarchies', slug: 'guides/hierarchies' },
+						{ label: 'Matching', slug: 'guides/matching' },
 						{ label: 'Rate limits', slug: 'guides/rate-limits' },
 						{ label: 'Differences with the documentation', slug: 'guides/documentation-differences' },
 					],
@@ -112,6 +113,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Declarations', collapsed: true, items: [{ autogenerate: { directory: 'examples/declarations' } }] },
 						{ label: 'Hierarchies', collapsed: true, items: [{ autogenerate: { directory: 'examples/hierarchies' } }] },
+						{ label: 'Matching', collapsed: true, items: [{ autogenerate: { directory: 'examples/matching' } }] },
 						{ label: 'Finder', collapsed: true, items: [{ autogenerate: { directory: 'examples/finder' } }] },
 						{ label: 'Periods', collapsed: true, items: [{ autogenerate: { directory: 'examples/periods' } }] },
 					],

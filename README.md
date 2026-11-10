@@ -159,6 +159,28 @@ foreach (new RecursiveTreeIterator($hierarchy) as $line) {
 
 See [Print hierarchy tree](examples/hierarchies/print-hierarchy-tree/) and the other [hierarchy examples](examples/README.md#hierarchies).
 
+## Matching
+
+[Matching](https://developers.twinfield.com/documentation/api/miscellaneous/matching/) (afletteren) links existing transaction lines with each other, e.g. a sales invoice and its payment: fully, partly, or with a discount, write-off or exchange rate difference. [Undo match](https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/) undoes a match set by its match number, which is in browse data. See the [matching guide](https://php-twinfield.solvebeam.com/guides/matching/).
+
+```php
+use SolveBeam\Twinfield\DimensionType\DimensionTypeCode;
+use SolveBeam\Twinfield\Matching\MatchInput;
+use SolveBeam\Twinfield\Matching\WriteOff;
+
+$matching = $twinfield->company('1000')->matching();
+
+$matching->match(
+    MatchInput::customers(new DateTimeImmutable('2026-11-10'))
+        ->line('KAS', 202600015, 2)
+        ->line('VRK', 202600071, 1, writeOff: WriteOff::discount('2.00')),
+);
+
+$matching->undo(DimensionTypeCode::AccountsReceivable, '1000', 12);
+```
+
+See [Match transactions](examples/matching/match-transactions/), [List match sets](examples/matching/list-match-sets/) and [Undo match](examples/matching/undo-match/).
+
 ## Command & Query web services
 
 Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.

@@ -62,6 +62,8 @@ final class ExamplesTest extends TestCase
         'hierarchies/bind-accounts',
         'hierarchies/delete-hierarchy',
         'hierarchies/save-hierarchy',
+        'matching/match-transactions',
+        'matching/undo-match',
         'periods/rename-period',
         'projects/create-project',
         'projects/delete-project',

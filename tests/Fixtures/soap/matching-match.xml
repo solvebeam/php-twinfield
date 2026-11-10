@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;match result=&quot;1&quot;&gt;&lt;set result=&quot;1&quot;&gt;&lt;office&gt;1000&lt;/office&gt;&lt;matchcode&gt;170&lt;/matchcode&gt;&lt;matchdate&gt;20261110&lt;/matchdate&gt;&lt;lines&gt;&lt;line&gt;&lt;transcode&gt;KAS&lt;/transcode&gt;&lt;transnumber&gt;202600014&lt;/transnumber&gt;&lt;transline&gt;2&lt;/transline&gt;&lt;/line&gt;&lt;line&gt;&lt;transcode&gt;VRK&lt;/transcode&gt;&lt;transnumber&gt;202600070&lt;/transnumber&gt;&lt;transline&gt;1&lt;/transline&gt;&lt;matchvalue&gt;119.00&lt;/matchvalue&gt;&lt;/line&gt;&lt;/lines&gt;&lt;/set&gt;&lt;/match&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
