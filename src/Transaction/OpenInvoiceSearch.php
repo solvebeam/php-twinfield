@@ -46,7 +46,7 @@ final readonly class OpenInvoiceSearch
      */
     public function customer(string $code): self
     {
-        TransactionXmlWriter::dimension('customer (dim2)', $code);
+        TransactionXmlWriter::dimension('dim2', $code);
 
         return new self($this->query->option('dim2', $code));
     }
@@ -56,7 +56,7 @@ final readonly class OpenInvoiceSearch
      */
     public function supplier(string $code): self
     {
-        TransactionXmlWriter::dimension('supplier (dim2)', $code);
+        TransactionXmlWriter::dimension('dim2', $code);
 
         return new self($this->query->option('dim2', $code));
     }

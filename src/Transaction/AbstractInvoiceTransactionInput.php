@@ -46,7 +46,7 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
     ) {
         parent::__construct($dayBook, $date);
 
-        TransactionXmlWriter::dimension(sprintf('%s (dim2 of the total line)', static::dim2Name()), $dim2);
+        TransactionXmlWriter::dimension('dim2 (total line)', $dim2);
 
         if ($invoiceNumber === '') {
             throw new InvalidArgumentException(sprintf('A %s transaction needs an invoice number.', static::kind()));
@@ -205,11 +205,6 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
      * `sales` or `purchase`, for messages.
      */
     abstract protected static function kind(): string;
-
-    /**
-     * `customer` or `supplier`, for messages.
-     */
-    abstract protected static function dim2Name(): string;
 
     /**
      * Side of a detail line on an invoice: credit for sales, debit for purchase.

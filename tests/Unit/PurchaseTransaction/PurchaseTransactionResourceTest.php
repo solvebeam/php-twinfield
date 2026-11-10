@@ -417,7 +417,7 @@ final class PurchaseTransactionResourceTest extends TestCase
     public function testOpenInvoicesRefusesAnEmptySupplier(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('supplier (dim2) must not be empty');
+        $this->expectExceptionMessage('Line dim2 must not be empty');
 
         $this->twinfield(new ReplayClient())->purchaseTransactions()->openInvoices()->supplier('');
     }

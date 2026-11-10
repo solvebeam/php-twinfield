@@ -128,11 +128,6 @@ final class SalesTransactionInput extends AbstractInvoiceTransactionInput
         return 'sales';
     }
 
-    protected static function dim2Name(): string
-    {
-        return 'customer';
-    }
-
     protected static function lineSide(): DebitCredit
     {
         return DebitCredit::Credit;

@@ -238,7 +238,7 @@ final class SalesTransactionInputTest extends TestCase
     public function testRefusesAnEmptyCustomer(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('customer (dim2 of the total line) must not be empty');
+        $this->expectExceptionMessage('Line dim2 (total line) must not be empty');
 
         SalesTransactionInput::invoice('VRK', '', '2026-0042', new DateTimeImmutable('2026-11-09'));
     }

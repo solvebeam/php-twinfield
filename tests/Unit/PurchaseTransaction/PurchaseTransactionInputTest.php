@@ -185,7 +185,7 @@ final class PurchaseTransactionInputTest extends TestCase
     public function testRefusesAnEmptySupplier(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('supplier (dim2 of the total line) must not be empty');
+        $this->expectExceptionMessage('Line dim2 (total line) must not be empty');
 
         PurchaseTransactionInput::invoice('INK', '', 'F-2026-118', new DateTimeImmutable('2026-11-09'));
     }
