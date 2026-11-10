@@ -65,7 +65,7 @@ final class DetailLineInput
         private readonly Amount $value,
         bool $allowNegative = false,
     ) {
-        TransactionXmlWriter::dimension('account (dim1)', $dim1);
+        TransactionXmlWriter::dimension('dim1', $dim1);
 
         if ($value->isNegative() && !$allowNegative) {
             throw new InvalidArgumentException(sprintf(

@@ -42,7 +42,7 @@ abstract class StatementTransactionInput extends AbstractTransactionInput
         DateTimeImmutable $date,
     ) {
         parent::__construct($dayBook, $date);
-        TransactionXmlWriter::dimension('account (dim1 of the total line)', $dim1);
+        TransactionXmlWriter::dimension('dim1 (total line)', $dim1);
     }
 
     /**

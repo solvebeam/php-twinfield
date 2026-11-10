@@ -150,10 +150,10 @@ abstract class AbstractInvoiceTransactionInput extends AbstractTransactionInput
      * `dim1` of the total line: the accounts receivable or payable account. Without it, Twinfield
      * takes the account of the customer or supplier.
      */
-    protected function withDim1(string $name, ?string $dim1): static
+    protected function withDim1(?string $dim1): static
     {
         if ($dim1 !== null) {
-            TransactionXmlWriter::dimension(sprintf('%s (dim1 of the total line)', $name), $dim1);
+            TransactionXmlWriter::dimension('dim1 (total line)', $dim1);
         }
 
         $input = clone $this;

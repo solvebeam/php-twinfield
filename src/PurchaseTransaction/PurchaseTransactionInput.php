@@ -100,7 +100,7 @@ final class PurchaseTransactionInput extends AbstractInvoiceTransactionInput
      */
     public function payablesAccount(?string $dim1): self
     {
-        return $this->withDim1('payables account', $dim1);
+        return $this->withDim1($dim1);
     }
 
     /**

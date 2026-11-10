@@ -67,7 +67,7 @@ final readonly class OpenInvoiceSearch
      */
     public function dim1(string $code): self
     {
-        TransactionXmlWriter::dimension('account (dim1)', $code);
+        TransactionXmlWriter::dimension('dim1', $code);
 
         return new self($this->query->option('dim1', $code));
     }

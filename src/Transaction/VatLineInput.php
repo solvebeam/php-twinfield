@@ -98,7 +98,7 @@ final class VatLineInput
     public function dim1(?string $dim1): self
     {
         if ($dim1 !== null) {
-            TransactionXmlWriter::dimension('VAT account (dim1)', $dim1);
+            TransactionXmlWriter::dimension('dim1 (VAT line)', $dim1);
         }
 
         $line = clone $this;

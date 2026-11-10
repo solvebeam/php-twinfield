@@ -98,7 +98,7 @@ final class SalesTransactionInput extends AbstractInvoiceTransactionInput
      */
     public function receivablesAccount(?string $dim1): self
     {
-        return $this->withDim1('receivables account', $dim1);
+        return $this->withDim1($dim1);
     }
 
     /**

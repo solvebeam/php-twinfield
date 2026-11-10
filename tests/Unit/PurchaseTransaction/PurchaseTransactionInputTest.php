@@ -193,7 +193,7 @@ final class PurchaseTransactionInputTest extends TestCase
     public function testRefusesAnEmptyPayablesAccount(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('payables account (dim1 of the total line) must not be empty');
+        $this->expectExceptionMessage('Line dim1 (total line) must not be empty');
 
         PurchaseTransactionInput::invoice('INK', '2000', 'F-2026-118', new DateTimeImmutable('2026-11-09'))
             ->payablesAccount('');
