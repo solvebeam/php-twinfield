@@ -28,7 +28,6 @@
         </include>
         <exclude>
             <directory>src/DeclarationsTest</directory>
-            <directory>src/FinderTest</directory>
         </exclude>
     </source>
 </phpunit>

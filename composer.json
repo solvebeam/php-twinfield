@@ -27,7 +27,6 @@
     "php": ">=8.3",
     "ext-bcmath": "*",
     "league/oauth2-client": "^2.9",
-    "phpro/soap-client": "^4.6",
     "psr/http-client": "^1.0",
     "psr/http-factory": "^1.1",
     "psr/http-message": "^2.0",
