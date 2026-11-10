@@ -21,6 +21,7 @@ use SolveBeam\Twinfield\CashBook\CashBookResource;
 use SolveBeam\Twinfield\BankTransaction\BankTransactionResource;
 use SolveBeam\Twinfield\CashTransaction\CashTransactionResource;
 use SolveBeam\Twinfield\Budget\BudgetResource;
+use SolveBeam\Twinfield\Budget\SpreadingTemplateResource;
 use SolveBeam\Twinfield\BrowseData\BrowseCode;
 use SolveBeam\Twinfield\BrowseData\BrowseDefinitionResource;
 use SolveBeam\Twinfield\BrowseData\BrowseQuery;
@@ -424,11 +425,21 @@ final readonly class Twinfield
     }
 
     /**
-     * Budgets of the company (BudgetService): search, and budgeted versus actual amounts. Read-only.
+     * Budgets of the company: search and budgeted versus actual amounts (BudgetService), and on the
+     * REST API budgets with their lines, copying, spreading, import and export.
      */
     public function budgets(): BudgetResource
     {
         return new BudgetResource($this);
+    }
+
+    /**
+     * Spreading templates of the budgets of the company (REST API): search, read, create, update and
+     * delete.
+     */
+    public function spreadingTemplates(): SpreadingTemplateResource
+    {
+        return new SpreadingTemplateResource($this);
     }
 
     /**
