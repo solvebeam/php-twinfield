@@ -9,6 +9,7 @@
  * Usage:
  *   composer twinfield:login             # catch the redirect on localhost
  *   composer twinfield:login -- --manual # paste the redirected URL yourself
+ *   composer twinfield:login -- --rest   # also the scopes of the REST API (readVat, writeArticles, …)
  *   composer twinfield:login -- --scopes="openid twf.organisationUser offline_access"
  */
 
@@ -23,7 +24,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $arguments = $_SERVER['argv'] ?? [];
 $manual = in_array('--manual', $arguments, true);
-$scopes = LoopbackLogin::SCOPES;
+$scopes = in_array('--rest', $arguments, true) ? LoopbackLogin::REST_SCOPES : LoopbackLogin::SCOPES;
 
 foreach ($arguments as $argument) {
     if (str_starts_with($argument, '--scopes=')) {

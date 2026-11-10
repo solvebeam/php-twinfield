@@ -6,6 +6,7 @@ namespace SolveBeam\Twinfield;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use BackedEnum;
 use InvalidArgumentException;
 use LogicException;
 use Psr\Http\Client\ClientInterface;
@@ -56,6 +57,10 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlException;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlResult;
 use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Rate\RateResource;
+use SolveBeam\Twinfield\Rest\CompanyIds;
+use SolveBeam\Twinfield\Rest\JsonWriter;
+use SolveBeam\Twinfield\Rest\RestClient;
+use SolveBeam\Twinfield\Rest\RestResponse;
 use SolveBeam\Twinfield\ReversalTransaction\ReversalTransactionResource;
 use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceResource;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
@@ -81,6 +86,8 @@ final readonly class Twinfield
     private function __construct(
         private AccessTokenProvider $accessTokenProvider,
         private SoapClient $soap,
+        private RestClient $rest,
+        private CompanyIds $companyIds,
         private ?string $companyCode,
     ) {
     }
@@ -94,26 +101,36 @@ final readonly class Twinfield
         ?RequestFactoryInterface $requestFactory = null,
         ?StreamFactoryInterface $streamFactory = null,
     ): self {
-        $soap = new SoapClient(
-            $httpClient ?? Psr18ClientDiscovery::find(),
-            new Psr17SoapRequestFactory(
-                $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory(),
-                $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory(),
-            ),
-        );
+        $httpClient ??= Psr18ClientDiscovery::find();
+        $requestFactory ??= Psr17FactoryDiscovery::findRequestFactory();
+        $streamFactory ??= Psr17FactoryDiscovery::findStreamFactory();
 
-        return new self($accessTokenProvider, $soap, null);
+        $soap = new SoapClient($httpClient, new Psr17SoapRequestFactory($requestFactory, $streamFactory));
+        $rest = new RestClient($httpClient, $requestFactory, $streamFactory);
+
+        return new self($accessTokenProvider, $soap, $rest, new CompanyIds(), null);
     }
 
     /**
      * Client for another office (company), e.g. `company('1000')`, an office from
      * `offices()->list()` or `offices()->get()`, or the `company` of a model.
      *
+     * The REST API needs the GUID of the company. An office from `offices()->list()` brings it along;
+     * otherwise the SDK looks it up once with the Finder, unless you pass it, e.g. from a shadow
+     * database: `company('1000', 'ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9')`.
+     *
+     * @param ?string $companyId GUID of the company, see companyId().
+     *
      * @throws InvalidArgumentException When an office or company reference belongs to another
-     *                                  organisation than the access token.
+     *                                  organisation than the access token, or the company ID is
+     *                                  not a GUID.
      */
-    public function company(string|CompanyReference|Office|OfficeSummary $company): self
+    public function company(string|CompanyReference|Office|OfficeSummary $company, ?string $companyId = null): self
     {
+        if ($company instanceof OfficeSummary) {
+            $companyId ??= $company->companyId;
+        }
+
         if (is_string($company)) {
             $code = $company;
         } else {
@@ -136,7 +153,11 @@ final readonly class Twinfield
             throw new InvalidArgumentException('Company code must not be empty.');
         }
 
-        return new self($this->accessTokenProvider, $this->soap, $code);
+        if ($companyId !== null) {
+            $this->companyIds->set($code, $companyId);
+        }
+
+        return new self($this->accessTokenProvider, $this->soap, $this->rest, $this->companyIds, $code);
     }
 
     /**
@@ -144,7 +165,7 @@ final readonly class Twinfield
      */
     public function withoutCompany(): self
     {
-        return new self($this->accessTokenProvider, $this->soap, null);
+        return new self($this->accessTokenProvider, $this->soap, $this->rest, $this->companyIds, null);
     }
 
     public function companyCode(): ?string
@@ -164,6 +185,36 @@ final readonly class Twinfield
         }
 
         return new CompanyReference($this->organisation(), $this->companyCode);
+    }
+
+    /**
+     * GUID of the company, e.g. `ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9`: the REST API identifies a
+     * company by this GUID, not by its code. Twinfield only returns it with the Finder (`OFF` with
+     * option `includeid`), so without a GUID from company() the SDK lists the offices once
+     * (`offices()->list()`) and remembers the GUIDs of all companies.
+     *
+     * @throws LogicException When the client has no company, or the user has no access to it.
+     */
+    public function companyId(): string
+    {
+        if ($this->companyCode === null) {
+            throw new LogicException('The client has no company: use company() first.');
+        }
+
+        $id = $this->companyIds->get($this->companyCode);
+
+        if ($id !== null) {
+            return $id;
+        }
+
+        foreach ($this->offices()->list() as $office) {
+            $this->companyIds->set($office->code, $office->companyId);
+        }
+
+        return $this->companyIds->get($this->companyCode) ?? throw new LogicException(sprintf(
+            'Company %s is not in the offices of the user, so its GUID is unknown.',
+            $this->companyCode,
+        ));
     }
 
     /**
@@ -515,6 +566,85 @@ final readonly class Twinfield
         $clusterUrl = rtrim($this->accessTokenProvider->clusterUrl(), '/');
 
         return sprintf('%s/webservices/%s.%s', $clusterUrl, $service, $extension);
+    }
+
+    /**
+     * Low-level request on the REST API with authentication; prefer the resource methods.
+     *
+     *   $vatCodes = $twinfield->company('1000')
+     *       ->rest('GET', '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes', ['limit' => 10])
+     *       ->json()
+     *       ->list('items');
+     *
+     * Copy the path from the Swagger definition: `{organisationId}` and `{companyId}` are replaced by
+     * the GUIDs of the organisation and company. The REST API needs a scope per operation, e.g.
+     * `readVat`; the Swagger description of each operation lists them.
+     *
+     * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $query Null values are left
+     *        out; a list repeats the parameter (`vats=a&vats=b`); booleans become `true`/`false`.
+     * @param array<array-key, mixed>|object|null $body Encoded with JsonWriter (amounts as exact numbers).
+     * @param array<string, string> $headers E.g. `['If-Match' => '3']`.
+     *
+     * @see https://api.accounting.twinfield.com/Api/swagger/ui/index
+     * @see RestClient::send() for the exceptions.
+     */
+    public function rest(
+        string $method,
+        string $path,
+        array $query = [],
+        array|object|null $body = null,
+        array $headers = [],
+    ): RestResponse {
+        $replacements = ['{organisationId}' => $this->organisation()->id];
+
+        if (str_contains($path, '{companyId}')) {
+            $replacements['{companyId}'] = $this->companyId();
+        }
+
+        $resolved = strtr($path, $replacements);
+
+        if (preg_match('~\{[^}]*\}~', $resolved, $matches) === 1) {
+            throw new InvalidArgumentException(sprintf('Path %s has an unknown placeholder %s.', $path, $matches[0]));
+        }
+
+        $url = rtrim($this->accessTokenProvider->clusterUrl(), '/') . '/Api' . $resolved;
+        $queryString = self::queryString($query);
+
+        if ($queryString !== '') {
+            $url .= (str_contains($url, '?') ? '&' : '?') . $queryString;
+        }
+
+        return $this->rest->send(
+            $method,
+            $url,
+            $this->accessTokenProvider->accessToken(),
+            $headers,
+            $body === null ? null : JsonWriter::encode($body),
+            preg_replace('~^/organisations/\{organisationId\}/companies/\{companyId\}~', '', $path) ?? $path,
+        );
+    }
+
+    /**
+     * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $query
+     */
+    private static function queryString(array $query): string
+    {
+        $pairs = [];
+
+        foreach ($query as $name => $value) {
+            foreach (is_array($value) ? $value : [$value] as $item) {
+                if ($item === null) {
+                    continue;
+                }
+
+                $item = $item instanceof BackedEnum ? $item->value : $item;
+                $item = is_bool($item) ? ($item ? 'true' : 'false') : (string) $item;
+
+                $pairs[] = rawurlencode($name) . '=' . rawurlencode($item);
+            }
+        }
+
+        return implode('&', $pairs);
     }
 
     /**

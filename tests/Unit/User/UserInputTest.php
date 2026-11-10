@@ -40,7 +40,7 @@ final class UserInputTest extends TestCase
             ->passwordExpires(new DateTimeImmutable('2027-12-31'))
             ->singleSignOn(SingleSignOn::Disabled)
             ->templateCompanyAccess(TemplateCompanyAccess::CompanyCreationOnly)
-            ->companies('1000', new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', 'id', 'NL', 1, 21), '1000')
+            ->companies('1000', new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 1, 21), '1000')
             ->defaultCompany('1000')
             ->smsLogin('+31612345678')
             ->invite()

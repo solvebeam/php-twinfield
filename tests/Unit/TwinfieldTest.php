@@ -47,7 +47,7 @@ final class TwinfieldTest extends TestCase
     public function testTakesTheCompanyOfAModel(): void
     {
         $twinfield = $this->twinfield();
-        $office = new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', 'id', 'NL', 1, 21);
+        $office = new OfficeSummary(TestTokens::organisation(), '1001', 'Example Trading B.V.', '7c9e6679-7425-40de-944b-e07fc1f90ae7', 'NL', 1, 21);
 
         self::assertSame('1002', $twinfield->company(TestTokens::company('1002'))->companyCode());
         self::assertSame('1001', $twinfield->company($office)->companyCode());

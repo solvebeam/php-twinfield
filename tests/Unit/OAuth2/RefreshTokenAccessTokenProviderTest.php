@@ -106,6 +106,7 @@ final class RefreshTokenAccessTokenProviderTest extends TestCase
                 'twf.organisationCode' => 'EXAMPLE',
                 'twf.organisationId' => '0b6a5f6e-1111-2222-3333-444455556666',
                 'twf.organisationUserCode' => 'JDOE',
+                'scope' => ['openid', 'twf.organisationUser', 'offline_access'],
             ])),
         ]);
     }

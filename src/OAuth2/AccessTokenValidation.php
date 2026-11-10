@@ -26,6 +26,12 @@ final readonly class AccessTokenValidation
         public string $organisationUserCode,
         /** Base URL of the cluster, e.g. `https://api.accounting.twinfield.com`. */
         public string $clusterUrl,
+        /**
+         * The scopes the token has, e.g. `['openid', 'twf.organisationUser', 'readVat']`.
+         *
+         * @var list<string>
+         */
+        public array $scopes,
     ) {
         $required = [
             'organisation user code' => $organisationUserCode,
@@ -62,7 +68,16 @@ final readonly class AccessTokenValidation
             ),
             organisationUserCode: self::claim($data, 'twf.organisationUserCode'),
             clusterUrl: self::claim($data, 'twf.clusterUrl'),
+            scopes: self::scopes($data),
         );
+    }
+
+    /**
+     * True when the token has the scope, e.g. `hasScope(Scope::ReadVat)` before calling the REST API.
+     */
+    public function hasScope(Scope|string $scope): bool
+    {
+        return in_array($scope instanceof Scope ? $scope->value : $scope, $this->scopes, true);
     }
 
     /**
@@ -76,7 +91,29 @@ final readonly class AccessTokenValidation
             'twf.organisationId' => $this->organisation->id,
             'twf.organisationUserCode' => $this->organisationUserCode,
             'twf.clusterUrl' => $this->clusterUrl,
+            'scope' => $this->scopes,
         ];
+    }
+
+    /**
+     * `scope` is a JSON array, or a string for a single scope.
+     *
+     * @param array<mixed> $data
+     *
+     * @return list<string>
+     */
+    private static function scopes(array $data): array
+    {
+        $scope = $data['scope'] ?? null;
+        $scopes = is_string($scope) ? explode(' ', $scope) : $scope;
+
+        if (!is_array($scopes) || $scopes === [] || array_filter($scopes, 'is_string') !== $scopes) {
+            throw new UnexpectedResponseException(
+                'Access token validation has no "scope" with the scopes of the token.',
+            );
+        }
+
+        return array_values(array_filter($scopes, static fn (string $scope): bool => $scope !== ''));
     }
 
     /**

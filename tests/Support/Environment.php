@@ -63,6 +63,24 @@ final readonly class Environment
             );
         }
 
-        return new WriteGuardClient($client, $this->config->writeCompanies(), $this->config->allowWrites());
+        // REST writes name the company by GUID; the Finder (a read) gives its code.
+        $companyCodeOf = function (string $companyId) use ($client): ?string {
+            $psr17 = new Psr17Factory();
+
+            foreach (Twinfield::create($this->session, $client, $psr17, $psr17)->offices()->list() as $office) {
+                if ($office->companyId === strtolower($companyId)) {
+                    return $office->code;
+                }
+            }
+
+            return null;
+        };
+
+        return new WriteGuardClient(
+            $client,
+            $this->config->writeCompanies(),
+            $this->config->allowWrites(),
+            $companyCodeOf,
+        );
     }
 }

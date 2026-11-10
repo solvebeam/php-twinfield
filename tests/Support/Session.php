@@ -102,6 +102,26 @@ final class Session implements AccessTokenProvider
     }
 
     /**
+     * Scopes of the access token, e.g. to skip REST API tests without `readVat`.
+     *
+     * @return list<string>
+     */
+    public function scopes(): array
+    {
+        $this->accessToken();
+        $data = $this->load();
+
+        // Token files of older versions have no scopes: refresh once to get them.
+        if (!is_array($data['scopes'] ?? null)) {
+            $data = $this->refresh();
+        }
+
+        $scopes = $data['scopes'] ?? [];
+
+        return is_array($scopes) ? array_values(array_filter($scopes, 'is_string')) : [];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function refresh(): array
@@ -135,6 +155,7 @@ final class Session implements AccessTokenProvider
             'organisation_id' => $validation->organisation->id,
             'organisation_code' => $validation->organisation->code,
             'organisation_user_code' => $validation->organisationUserCode,
+            'scopes' => $validation->scopes,
             'updated_at' => date(DATE_ATOM),
         ];
 

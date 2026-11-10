@@ -17,6 +17,14 @@ final readonly class LoopbackLogin
 {
     public const SCOPES = ['openid', 'twf.user', 'twf.organisation', 'twf.organisationUser', 'offline_access'];
 
+    /** The identity scopes plus all REST API scopes (`--rest`). */
+    public const REST_SCOPES = [
+        ...self::SCOPES,
+        'readArticles', 'writeArticles', 'readBankAccounts', 'readBookkeeping', 'readBookkeepingMatches',
+        'readBudgets', 'writeBudgets', 'readBudgetScenarios', 'writeBudgetScenarios', 'readCustomers',
+        'readFixedAssets', 'readSuppliers', 'readVat', 'readVatGroup',
+    ];
+
     private const TIMEOUT = 300;
 
     public function __construct(

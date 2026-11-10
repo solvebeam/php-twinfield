@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use SolveBeam\Twinfield\OAuth2\Scope;
 use SolveBeam\Twinfield\Twinfield;
 
 /**
@@ -37,6 +38,23 @@ abstract class IntegrationTestCase extends TestCase
         }
 
         $this->twinfield = $this->environment->client();
+    }
+
+    /**
+     * Skips the test when the access token lacks a scope the REST API needs for it, e.g.
+     * `requireScopes(Scope::ReadVat)`.
+     */
+    protected function requireScopes(Scope ...$scopes): void
+    {
+        $missing = array_diff(Scope::values(...$scopes), $this->environment->session->scopes());
+
+        if ($missing !== []) {
+            self::markTestSkipped(sprintf(
+                'The access token has no scope %s. Log in with the REST API scopes:'
+                . ' `composer twinfield:login -- --rest`.',
+                implode(', ', $missing),
+            ));
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Support\Http;
 
+use Closure;
 use DOMDocument;
 use DOMElement;
 use Psr\Http\Client\ClientInterface;
@@ -16,6 +17,10 @@ use Psr\Http\Message\ResponseInterface;
  *
  * Read-only is decided strictly: anything not recognised as a read is
  * treated as a write.
+ *
+ * REST API requests (`…/Api/…`) are reads for GET, HEAD and OPTIONS. Writes name the company by GUID
+ * in the path; the guard turns it into a company code with `$companyCodeOf`, and blocks the write when
+ * that is not possible.
  */
 final readonly class WriteGuardClient implements ClientInterface
 {
@@ -52,18 +57,38 @@ final readonly class WriteGuardClient implements ClientInterface
      */
     private const READ_ACTION_ROOTS = ['reverse' => 'getreversetransactioninfo'];
 
+    /** HTTP methods of REST API requests that only read. */
+    private const REST_READ_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+
     /**
-     * @param list<string> $writeCompanies
+     * REST API POST requests that only read: queueing a fixed asset report (scope `readFixedAssets`).
+     */
+    private const REST_READ_POSTS = ['~/fixedassets/backgroundreports/reconciliation$~'];
+
+    /**
+     * @param list<string>                     $writeCompanies
+     * @param ?Closure(string): ?string $companyCodeOf Company code of a company GUID, for REST writes.
      */
     public function __construct(
         private ClientInterface $inner,
         private array $writeCompanies,
         private ?string $allowWrites,
+        private ?Closure $companyCodeOf = null,
     ) {
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
+        $path = $request->getUri()->getPath();
+
+        if (self::isRest($path)) {
+            if (!self::isRestReadOnly($request->getMethod(), $path)) {
+                $this->assertRestWriteAllowed($request->getMethod(), $path);
+            }
+
+            return $this->inner->sendRequest($request);
+        }
+
         $body = (string) $request->getBody();
         $action = self::actionName($request->getHeaderLine('SOAPAction'));
 
@@ -100,6 +125,54 @@ final readonly class WriteGuardClient implements ClientInterface
         return false;
     }
 
+    public static function isRest(string $path): bool
+    {
+        return str_starts_with($path, '/Api/');
+    }
+
+    public static function isRestReadOnly(string $method, string $path): bool
+    {
+        if (in_array(strtoupper($method), self::REST_READ_METHODS, true)) {
+            return true;
+        }
+
+        if (strtoupper($method) !== 'POST') {
+            return false;
+        }
+
+        foreach (self::REST_READ_POSTS as $pattern) {
+            if (preg_match($pattern, $path) === 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function assertRestWriteAllowed(string $method, string $path): void
+    {
+        $action = $method . ' ' . $path;
+
+        if (preg_match('~/companies/([0-9a-fA-F-]{36})(/|$)~', $path, $matches) !== 1) {
+            throw new WriteBlockedException(sprintf(
+                'Blocked REST write "%s": no company GUID found in the path.',
+                $action,
+            ));
+        }
+
+        $company = $this->companyCodeOf === null ? null : ($this->companyCodeOf)($matches[1]);
+
+        if ($company === null) {
+            throw new WriteBlockedException(sprintf(
+                'Blocked REST write "%s": company %s is not an office of the user.',
+                $action,
+                $matches[1],
+            ));
+        }
+
+        $this->assertCompanyAllowed('REST', $action, $company);
+    }
+
     private function assertWriteAllowed(string $action, string $body): void
     {
         $companies = self::companyCodes($body);
@@ -112,22 +185,29 @@ final readonly class WriteGuardClient implements ClientInterface
         }
 
         foreach ($companies as $company) {
-            if (!in_array($company, $this->writeCompanies, true)) {
-                throw new WriteBlockedException(sprintf(
-                    'Blocked SOAP write "%s" on company "%s": not in TWINFIELD_WRITE_COMPANIES (%s).',
-                    $action,
-                    $company,
-                    implode(', ', $this->writeCompanies) ?: 'empty',
-                ));
-            }
+            $this->assertCompanyAllowed('SOAP', $action, $company);
+        }
+    }
 
-            if ($company !== $this->allowWrites) {
-                throw new WriteBlockedException(sprintf(
-                    'Blocked SOAP write "%s" on company "%s": writes not confirmed. Run `composer test:write`.',
-                    $action,
-                    $company,
-                ));
-            }
+    private function assertCompanyAllowed(string $kind, string $action, string $company): void
+    {
+        if (!in_array($company, $this->writeCompanies, true)) {
+            throw new WriteBlockedException(sprintf(
+                'Blocked %s write "%s" on company "%s": not in TWINFIELD_WRITE_COMPANIES (%s).',
+                $kind,
+                $action,
+                $company,
+                implode(', ', $this->writeCompanies) ?: 'empty',
+            ));
+        }
+
+        if ($company !== $this->allowWrites) {
+            throw new WriteBlockedException(sprintf(
+                'Blocked %s write "%s" on company "%s": writes not confirmed. Run `composer test:write`.',
+                $kind,
+                $action,
+                $company,
+            ));
         }
     }
 

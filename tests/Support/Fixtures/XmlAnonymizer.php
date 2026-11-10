@@ -143,6 +143,23 @@ final class XmlAnonymizer
     }
 
     /**
+     * One value with the same rules as in XML, e.g. for JsonAnonymizer: harmless values are kept,
+     * the rest is replaced by a fake value with the same format.
+     */
+    public function anonymizeValue(string $value, bool $force = false): string
+    {
+        return $this->value($value, $force);
+    }
+
+    /**
+     * Records a value that is kept as is, for keptValues().
+     */
+    public function keepValue(string $value): void
+    {
+        $this->keep($value);
+    }
+
+    /**
      * @param list<string> $ancestors Local names of the parent elements, outermost first.
      */
     private function walk(DOMNode $node, array $ancestors): void

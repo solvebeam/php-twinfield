@@ -22,6 +22,10 @@ use SolveBeam\Twinfield\Tests\Support\Http\WriteGuardClient;
  */
 final class WriteGuardClientTest extends TestCase
 {
+    private const ORGANISATION = '0b6a5f6e-1111-2222-3333-444455556666';
+    private const COMPANY_1000 = '0f8fad5b-d9cb-469f-a165-70867728950e';
+    private const COMPANY_1002 = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+
     /**
      * @return iterable<string, array{string, string, bool}>
      */
@@ -121,9 +125,105 @@ final class WriteGuardClientTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
+    /**
+     * @return iterable<string, array{string, string, bool}>
+     */
+    public static function restRequests(): iterable
+    {
+        $company = '/Api/organisations/' . self::ORGANISATION . '/companies/' . self::COMPANY_1002;
+
+        yield 'get' => ['GET', $company . '/sales/articles', true];
+        yield 'options' => ['OPTIONS', $company . '/sales/articles', true];
+        yield 'head' => ['HEAD', $company . '/sales/articles', true];
+        yield 'post' => ['POST', $company . '/sales/articles', false];
+        yield 'put' => ['PUT', $company . '/sales/articles/x', false];
+        yield 'patch' => ['PATCH', $company . '/sales/articles/x', false];
+        yield 'delete' => ['DELETE', $company . '/sales/articles/x', false];
+        yield 'queue fixed asset report' => ['POST', $company . '/fixedassets/backgroundreports/reconciliation', true];
+        yield 'import' => ['POST', $company . '/budgeting/budgets/import', false];
+    }
+
+    #[DataProvider('restRequests')]
+    public function testClassifiesRestRequests(string $method, string $path, bool $readOnly): void
+    {
+        self::assertTrue(WriteGuardClient::isRest($path));
+        self::assertSame($readOnly, WriteGuardClient::isRestReadOnly($method, $path));
+    }
+
+    public function testLetsRestReadsThrough(): void
+    {
+        $response = $this->guard(allowWrites: null)->sendRequest($this->restRequest('GET', self::COMPANY_1002));
+
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    public function testBlocksUnconfirmedRestWrites(): void
+    {
+        $this->expectException(WriteBlockedException::class);
+        $this->expectExceptionMessage('Blocked REST write "POST /Api/organisations/');
+        $this->expectExceptionMessage('on company "1002": writes not confirmed.');
+
+        $this->guard(allowWrites: null)->sendRequest($this->restRequest('POST', self::COMPANY_1002));
+    }
+
+    public function testBlocksRestWritesOnAnotherCompany(): void
+    {
+        $this->expectException(WriteBlockedException::class);
+        $this->expectExceptionMessage('on company "1000": not in TWINFIELD_WRITE_COMPANIES');
+
+        $this->guard(allowWrites: '1002')->sendRequest($this->restRequest('DELETE', self::COMPANY_1000));
+    }
+
+    public function testBlocksRestWritesOnAnUnknownCompany(): void
+    {
+        $this->expectException(WriteBlockedException::class);
+        $this->expectExceptionMessage('is not an office of the user');
+
+        $this->guard(allowWrites: '1002')->sendRequest($this->restRequest('PUT', '7c9e6679-7425-40de-944b-e07fc1f90ae7'));
+    }
+
+    public function testBlocksRestWritesWithoutCompany(): void
+    {
+        $this->expectException(WriteBlockedException::class);
+        $this->expectExceptionMessage('no company GUID found in the path');
+
+        $this->guard(allowWrites: '1002')->sendRequest(new Request('POST', 'https://example.test/Api/organisations/' . self::ORGANISATION . '/x'));
+    }
+
+    public function testBlocksRestWritesWithoutResolver(): void
+    {
+        $guard = new WriteGuardClient(new ReplayClient(new Response(200)), ['1002'], '1002');
+
+        $this->expectException(WriteBlockedException::class);
+
+        $guard->sendRequest($this->restRequest('POST', self::COMPANY_1002));
+    }
+
+    public function testAllowsConfirmedRestWrites(): void
+    {
+        $response = $this->guard(allowWrites: '1002')->sendRequest($this->restRequest('PATCH', strtoupper(self::COMPANY_1002)));
+
+        self::assertSame(200, $response->getStatusCode());
+    }
+
     private function guard(?string $allowWrites): WriteGuardClient
     {
-        return new WriteGuardClient(new ReplayClient(new Response(200)), ['1002', '1002_3'], $allowWrites);
+        $codes = [self::COMPANY_1000 => '1000', self::COMPANY_1002 => '1002'];
+
+        return new WriteGuardClient(
+            new ReplayClient(new Response(200)),
+            ['1002', '1002_3'],
+            $allowWrites,
+            static fn (string $companyId): ?string => $codes[strtolower($companyId)] ?? null,
+        );
+    }
+
+    private function restRequest(string $method, string $companyId): Request
+    {
+        return new Request(
+            $method,
+            'https://example.test/Api/organisations/' . self::ORGANISATION . '/companies/' . $companyId . '/sales/articles',
+        );
     }
 
     private function request(string $action, string $body): Request

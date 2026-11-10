@@ -14,7 +14,8 @@ use RuntimeException;
  * `TWINFIELD_RECORD=1`, then run `composer twinfield:anonymize` to turn
  * them into committable fixtures in `tests/Fixtures/soap/`.
  *
- * Files are named `{label}.xml`, `{label}-2.xml`, … per request.
+ * Files are named `{label}.xml`, `{label}-2.xml`, … per request; responses of the REST API (JSON)
+ * get `.json`.
  */
 final class RecordingClient implements ClientInterface
 {
@@ -38,7 +39,8 @@ final class RecordingClient implements ClientInterface
         }
 
         $suffix = $this->count === 1 ? '' : '-' . $this->count;
-        $file = sprintf('%s/%s%s.xml', $this->directory, $this->label, $suffix);
+        $extension = str_contains($response->getHeaderLine('Content-Type'), 'json') ? 'json' : 'xml';
+        $file = sprintf('%s/%s%s.%s', $this->directory, $this->label, $suffix, $extension);
 
         file_put_contents($file, (string) $response->getBody());
 

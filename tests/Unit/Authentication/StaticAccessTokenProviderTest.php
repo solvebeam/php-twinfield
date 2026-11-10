@@ -38,6 +38,7 @@ final class StaticAccessTokenProviderTest extends TestCase
             'twf.organisationId' => '0b6a5f6e-1111-2222-3333-444455556666',
             'twf.organisationCode' => 'EXAMPLE',
             'twf.clusterUrl' => 'https://api.accounting.twinfield.com/',
+            'scope' => ['openid', 'twf.organisationUser'],
         ]);
 
         $tokens = StaticAccessTokenProvider::fromValidation('token', $validation);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Office;
 
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Guid;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\UnexpectedResponseException;
@@ -21,14 +22,20 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class OfficeSummary
 {
+    /**
+     * GUID of the company, e.g. `ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9`, in lower case: unique over
+     * all organisations, and how the REST API identifies the company (`{companyId}`).
+     */
+    public string $companyId;
+
     public function __construct(
         /** Organisation the office belongs to. */
         public Organisation $organisation,
         /** Office code, e.g. `1000`; pass it (or this object) to `$twinfield->company()`. */
         public string $code,
         public string $name,
-        /** Unique ID of the company, e.g. `ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9`. */
-        public string $companyId,
+        /** GUID of the company, see `$companyId`. */
+        string $companyId,
         /** ISO 3166-1 alpha-2 country code, e.g. `NL`. */
         public string $country,
         /** VAT declaration period (`vatmanagement/decltimeframe` of the office), e.g. `1`. */
@@ -43,6 +50,12 @@ final readonly class OfficeSummary
                 throw new InvalidArgumentException(sprintf('Office %s must not be empty.', $field));
             }
         }
+
+        if (!Guid::isValid($companyId)) {
+            throw new InvalidArgumentException(sprintf('Office company ID "%s" is not a GUID.', $companyId));
+        }
+
+        $this->companyId = strtolower($companyId);
     }
 
     /**
@@ -61,6 +74,10 @@ final readonly class OfficeSummary
 
         if ($code === '' || $name === '' || $companyId === '' || $country === '') {
             throw self::invalidRow($index, $row, 'has no code, name, company ID or country');
+        }
+
+        if (!Guid::isValid($companyId)) {
+            throw self::invalidRow($index, $row, 'has a company ID that is not a GUID');
         }
 
         if (!ctype_digit($vatPeriod) || !ctype_digit($startingQuarter)) {

@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\Tests\Unit\OAuth2;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
+use SolveBeam\Twinfield\OAuth2\Scope;
 use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class AccessTokenValidationTest extends TestCase
@@ -34,7 +35,29 @@ final class AccessTokenValidationTest extends TestCase
         self::assertSame('EXAMPLE', $validation->organisation->code);
         self::assertSame('0b6a5f6e-1111-2222-3333-444455556666', $validation->organisation->id);
         self::assertSame('https://api.accounting.twinfield.com', $validation->clusterUrl);
+        self::assertSame(['openid', 'twf.user', 'twf.organisationUser', 'twf.organisation'], $validation->scopes);
+        self::assertTrue($validation->hasScope(Scope::OrganisationUser));
+        self::assertFalse($validation->hasScope(Scope::ReadVat));
         self::assertEquals($validation, AccessTokenValidation::fromArray($validation->toArray()));
+    }
+
+    public function testReadsASingleScopeAsString(): void
+    {
+        $validation = AccessTokenValidation::fromArray(['scope' => 'openid readVat'] + self::RESPONSE);
+
+        self::assertSame(['openid', 'readVat'], $validation->scopes);
+        self::assertTrue($validation->hasScope('readVat'));
+    }
+
+    public function testListsTheScopes(): void
+    {
+        self::assertSame(
+            ['openid', 'twf.user', 'twf.organisation', 'twf.organisationUser', 'offline_access'],
+            Scope::values(...Scope::identity()),
+        );
+        self::assertContains(Scope::ReadFixedAssets, Scope::rest());
+        self::assertNotContains(Scope::OpenId, Scope::rest());
+        self::assertCount(14, Scope::rest());
     }
 
     /**
@@ -47,6 +70,7 @@ final class AccessTokenValidationTest extends TestCase
         yield 'organisation code' => ['twf.organisationCode', 'no "twf.organisationCode"'];
         yield 'organisation ID' => ['twf.organisationId', 'no "twf.organisationId"'];
         yield 'cluster URL' => ['twf.clusterUrl', 'no "twf.clusterUrl"'];
+        yield 'scope' => ['scope', 'no "scope"'];
     }
 
     #[DataProvider('claims')]
