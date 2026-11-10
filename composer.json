@@ -26,6 +26,10 @@
   "require": {
     "php": ">=8.3",
     "ext-bcmath": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-mbstring": "*",
+    "ext-simplexml": "*",
     "league/oauth2-client": "^2.9",
     "psr/http-client": "^1.0",
     "psr/http-factory": "^1.1",
