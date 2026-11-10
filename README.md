@@ -14,6 +14,47 @@
 	<a href="examples/">Examples</a>
 </p>
 
+## Contents
+
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Organisations and companies](#organisations-and-companies)
+- [Master data](#master-data)
+- [Transactions](#transactions)
+- [Browse data](#browse-data)
+- [Declarations](#declarations)
+- [Hierarchies](#hierarchies)
+- [Matching](#matching)
+- [Pay & Collect](#pay--collect)
+- [Command & Query web services](#command--query-web-services)
+- [XML web services (ProcessXml)](#xml-web-services-processxml)
+- [REST API](#rest-api)
+- [Errors](#errors)
+- [PSR Compliance](#psr-compliance)
+- [OAuth2 Usage](#oauth2-usage)
+- [OpenID Connect Authentication](#openid-connect-authentication)
+  - [Scopes](#scopes)
+  - [REST API scopes](#rest-api-scopes)
+- [Development and testing](#development-and-testing)
+- [About](#about)
+- [Links](#links)
+
+## Installation
+
+The SDK needs PHP 8.3 or newer and a [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP client with [PSR-17](https://www.php-fig.org/psr/psr-17/) factories.
+
+```sh
+composer require solvebeam/twinfield
+```
+
+The SDK does not ship an HTTP client. Install one you like, for example Symfony's client with Nyholm's PSR-7 implementation:
+
+```sh
+composer require symfony/http-client nyholm/psr7
+```
+
+`Twinfield::create()` finds an installed client and factories automatically through [php-http/discovery](https://docs.php-http.org/en/latest/discovery.html). See [Installation](https://php.twinfield.solvebeam.com/getting-started/installation/) for other clients and optional packages.
+
 ## Quick start
 
 ```php
@@ -509,7 +550,6 @@ Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and l
 
 ## Links
 
-- https://chatgpt.com/c/6983bca8-83d0-8327-aafb-c4cb3a774cb6
 - https://oauth2-client.thephpleague.com/providers/league/
 - https://oauth2-client.thephpleague.com/providers/thirdparty/
 - https://github.com/php-fig/cache
