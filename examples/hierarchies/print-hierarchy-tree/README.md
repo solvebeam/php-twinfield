@@ -1,4 +1,4 @@
-# Print reporting structure tree
+# Print hierarchy tree
 
 Reads a reporting structure and draws it as an ASCII tree with PHP's [`RecursiveTreeIterator`](https://www.php.net/manual/en/class.recursivetreeiterator.php).
 
@@ -6,7 +6,7 @@ Reads a reporting structure and draws it as an ASCII tree with PHP's [`Recursive
 - Iterating a `Hierarchy` gives the root node and, recursively, the accounts and child nodes of every node (a `HierarchyNodeAccountIterator`). `nodes()` gives the nodes only (a `HierarchyNodeIterator`).
 - `RecursiveTreeIterator` turns every node and account into a line: the prefix (`|-`, `\-`, `| `) plus the object as string, `1 Activa` for a node and `1100 (BAS, Balance)` for an account.
 
-`TWFRGS32` is the Twinfield reporting structure for RGS 3.2 (Referentie Grootboekschema); pass the code of another one, for instance from [List reporting structures](../list-hierarchies/).
+`TWFRGS32` is the Twinfield reporting structure for RGS 3.2 (Referentie Grootboekschema); pass the code of another one, for instance from [List hierarchies](../list-hierarchies/).
 
 ## Code
 

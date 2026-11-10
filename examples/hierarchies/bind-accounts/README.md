@@ -1,6 +1,6 @@
 # Bind accounts
 
-Binds a general ledger account to a node of a reporting structure, and unbinds it again. This example changes data: run it on a test company, after [Save reporting structure](../save-hierarchy/).
+Binds a general ledger account to a node of a reporting structure, and unbinds it again. This example changes data: run it on a test company, after [Save hierarchy](../save-hierarchy/).
 
 - `hierarchies()->bind($node, ...$accounts)` adds accounts to a node; `unbind()` removes them. Pass a `HierarchyNode` or its ID (`$node->id`).
 - Only the accounts of the company of the client change; other companies keep theirs.

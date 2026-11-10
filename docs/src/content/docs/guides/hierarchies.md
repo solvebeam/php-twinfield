@@ -1,9 +1,9 @@
 ---
-title: Reporting structures
-description: Read reporting structures (hierarchies) with their nodes and general ledger accounts, draw them as a tree, and save, bind, unbind, hide and delete them.
+title: Hierarchies
+description: Read hierarchies (reporting structures) with their nodes and general ledger accounts, draw them as a tree, and save, bind, unbind, hide and delete them.
 ---
 
-A reporting structure (rapportagestructuur) groups the general ledger accounts of a company in a tree of nodes, for reports such as a balance sheet, a profit and loss account or RGS (Referentie Grootboekschema). Twinfield calls them hierarchies: the [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/) reads, saves and hides them, and binds accounts to their nodes.
+Hierarchies are what Twinfield calls reporting structures (rapportagestructuren) in its interface. A hierarchy groups the general ledger accounts of a company in a tree of nodes, for reports such as a balance sheet, a profit and loss account or RGS (Referentie Grootboekschema). The [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/) reads, saves and hides them, and binds accounts to their nodes.
 
 | Twinfield documentation | Resource | Status |
 |---|---|---|
@@ -45,7 +45,7 @@ $nodes = $twinfield->company('1000')->hierarchies()->get('MGMT');      // accoun
 $other = $twinfield->company('1001')->hierarchies()->get('MGMT');      // same nodes, accounts of 1001
 ```
 
-## Reading a reporting structure
+## Reading a hierarchy
 
 `get($code)` returns a `Hierarchy`:
 
@@ -92,7 +92,7 @@ foreach ($nodes as $node) {                                             // every
 }
 ```
 
-`RecursiveCallbackFilterIterator` leaves out parts of the tree, for example the nodes without accounts. See [Print reporting structure tree](/examples/hierarchies/print-hierarchy-tree/).
+`RecursiveCallbackFilterIterator` leaves out parts of the tree, for example the nodes without accounts. See [Print hierarchy tree](/examples/hierarchies/print-hierarchy-tree/).
 
 ## Searching
 
@@ -169,13 +169,13 @@ try {
 }
 ```
 
-The differences between the documentation, the WSDL and the live responses are in [Documentation differences](/guides/documentation-differences/#reporting-structures).
+The differences between the documentation, the WSDL and the live responses are in [Documentation differences](/guides/documentation-differences/#hierarchies).
 
 ## Examples
 
-- [List reporting structures](/examples/hierarchies/list-hierarchies/)
-- [Print reporting structure tree](/examples/hierarchies/print-hierarchy-tree/)
+- [List hierarchies](/examples/hierarchies/list-hierarchies/)
+- [Print hierarchy tree](/examples/hierarchies/print-hierarchy-tree/)
 - [Accounts of a node](/examples/hierarchies/node-accounts/)
-- [Save reporting structure](/examples/hierarchies/save-hierarchy/)
+- [Save hierarchy](/examples/hierarchies/save-hierarchy/)
 - [Bind accounts](/examples/hierarchies/bind-accounts/)
-- [Delete reporting structure](/examples/hierarchies/delete-hierarchy/)
+- [Delete hierarchy](/examples/hierarchies/delete-hierarchy/)

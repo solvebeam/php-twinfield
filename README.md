@@ -145,9 +145,9 @@ foreach ($declarations->list(year: 2026) as $return) {
 
 See [List declarations](examples/declarations/list-declarations/) and [Download VAT return](examples/declarations/download-vat-return/).
 
-## Reporting structures
+## Hierarchies
 
-Reporting structures (rapportagestructuren, such as RGS) come from the [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/): read them with their nodes and the general ledger accounts of a company, draw them with `RecursiveTreeIterator`, save them, bind and unbind accounts, hide and delete them. See the [reporting structures guide](https://php-twinfield.solvebeam.com/guides/hierarchies/).
+Hierarchies, reporting structures (rapportagestructuren) such as RGS, come from the [hierarchies service](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/): read them with their nodes and the general ledger accounts of a company, draw them with `RecursiveTreeIterator`, save them, bind and unbind accounts, hide and delete them. See the [hierarchies guide](https://php-twinfield.solvebeam.com/guides/hierarchies/).
 
 ```php
 $hierarchy = $twinfield->company('1000')->hierarchies()->get('TWFRGS32');
@@ -157,7 +157,7 @@ foreach (new RecursiveTreeIterator($hierarchy) as $line) {
 }
 ```
 
-See [Print reporting structure tree](examples/hierarchies/print-hierarchy-tree/) and the other [reporting structure examples](examples/README.md#reporting-structures).
+See [Print hierarchy tree](examples/hierarchies/print-hierarchy-tree/) and the other [hierarchy examples](examples/README.md#hierarchies).
 
 ## Command & Query web services
 

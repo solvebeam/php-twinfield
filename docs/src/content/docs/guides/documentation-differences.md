@@ -363,9 +363,9 @@ Checked live (November 2026), read-only, on an organisation with 5,828 returns o
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Statuses other than `Created` and `Approved`, and filled `ExtraInformation` (e.g. for `Error while sending`).
 
-## Reporting structures
+## Hierarchies
 
-Checked live on 10 November 2026, read-only: Load of the four reporting structures of an organisation (up to 3,858 nodes and 2,949 accounts) for three companies, an unknown and an empty code, and the Finder types `HIE` and `HND`. Documentation: [Hierarchy](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/) and the WSDL (`hierarchies.asmx?wsdl`, the same as in `wsdl/accounting/`). The SDK follows the WSDL and the live responses. See the [reporting structures guide](/guides/hierarchies/).
+Checked live on 10 November 2026, read-only: Load of the four reporting structures of an organisation (up to 3,858 nodes and 2,949 accounts) for three companies, an unknown and an empty code, and the Finder types `HIE` and `HND`. Documentation: [Hierarchy](https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/) and the WSDL (`hierarchies.asmx?wsdl`, the same as in `wsdl/accounting/`). The SDK follows the WSDL and the live responses. See the [hierarchies guide](/guides/hierarchies/).
 
 ### Mistakes in the documentation
 
@@ -432,7 +432,7 @@ The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a sear
 
 ### Not yet verified
 
-- Types without rows in the test companies: `BSN`, `DVT`, `GRP`, `GWY`, `ICTCOUNTRY`, `OIC`, `PIS`, `SPM`. `HND` is verified with the [reporting structures](#reporting-structures). Twinfield accepts the search and gives the columns, but the values were not seen.
+- Types without rows in the test companies: `BSN`, `DVT`, `GRP`, `GWY`, `ICTCOUNTRY`, `OIC`, `PIS`, `SPM`. `HND` is verified with the [hierarchies](#hierarchies). Twinfield accepts the search and gives the columns, but the values were not seen.
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Search field 3 on projects that have a customer: the test company has three projects, none of them found on field 3.
 

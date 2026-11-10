@@ -1,6 +1,6 @@
-# Delete reporting structure
+# Delete hierarchy
 
-Deletes or hides a reporting structure. This example changes data: run it on a test company, after [Save reporting structure](../save-hierarchy/).
+Deletes or hides a reporting structure. This example changes data: run it on a test company, after [Save hierarchy](../save-hierarchy/).
 
 - `hierarchies()->delete($code)` deletes it. Delete is in the WSDL of the hierarchies service, not in its documentation.
 - `hierarchies()->hide($code)` hides it (`--hide`).

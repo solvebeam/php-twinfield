@@ -579,7 +579,7 @@ To check:
   `ExtraInformation` get a value, e.g. the rejection reason?
 - Replace the fictitious fixtures with recordings (`composer twinfield:anonymize`).
 
-## Reporting structures: verify writing live
+## Hierarchies: verify writing live
 
 Reading reporting structures (`get()`, `search()`, `searchNodes()`) is verified live (read-only,
 see the reporting structures section of the documentation differences). `save()`, `bind()`,

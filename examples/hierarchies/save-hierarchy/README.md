@@ -1,4 +1,4 @@
-# Save reporting structure
+# Save hierarchy
 
 Creates a reporting structure with nodes, accounts and access rights, or changes the description of an existing one. This example changes data: run it on a test company.
 

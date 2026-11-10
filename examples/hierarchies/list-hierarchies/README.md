@@ -1,8 +1,8 @@
-# List reporting structures
+# List hierarchies
 
 Shows the code and name of all reporting structures (rapportagestructuren), or of the ones that match a pattern.
 
-Reporting structures come from the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) with type `HIE`. They belong to the organisation: every company gives the same list. `hierarchies()->search()` returns a `CodeNameSearch` with `HierarchySummary` objects (`organisation`, `code`, `name`). For the nodes and accounts, use [Print reporting structure tree](../print-hierarchy-tree/).
+Reporting structures come from the [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) with type `HIE`. They belong to the organisation: every company gives the same list. `hierarchies()->search()` returns a `CodeNameSearch` with `HierarchySummary` objects (`organisation`, `code`, `name`). For the nodes and accounts, use [Print hierarchy tree](../print-hierarchy-tree/).
 
 ## Code
 
