@@ -525,16 +525,7 @@ All live calls go through a write guard. Requests that may change data (anything
 
 ## About
 
-<p align="center">
-	<a href="https://www.solvebeam.com/">
-		<img src="images/solvebeam/solvebeam-icon.svg" alt="SolveBeam" width="48" height="48">
-	</a>
-</p>
-
-<p align="center">
-	Made by <a href="https://www.solvebeam.com/">SolveBeam</a>.<br>
-	Twinfield is a product of <a href="https://www.twinfield.com/">Wolters Kluwer</a>.
-</p>
+This library is made by [SolveBeam](https://www.solvebeam.com/). It is not an official Wolters Kluwer product. Twinfield is a product of [Wolters Kluwer](https://www.twinfield.com/).
 
 Twinfield and Wolters Kluwer are trademarks of Wolters Kluwer. Their names and logos are used only to refer to their products. See [images/](images/) for the sources of the logo files.
 
