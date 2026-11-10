@@ -250,6 +250,33 @@ Comments and whitespace between elements are removed before sending. A response 
 
 Not supported, because Twinfield deprecated them or they are only for .NET: `ProcessXmlCompressed`, `ProcessXmlDocument` and the `<general>` root element for bulk requests. See the [ProcessXml guide](https://php-twinfield.solvebeam.com/guides/process-xml/) and the examples [List companies](examples/process-xml/list-companies/) and [Read dimension](examples/process-xml/read-dimension/).
 
+## REST API
+
+Twinfield also has a [REST API](https://api.accounting.twinfield.com/Api/swagger/ui/index) with JSON. The SDK supports all endpoints of its public definition; the definitions are in [`openapi/`](openapi/), updated daily like the WSDL files. Every REST operation needs its own scope (`readFixedAssets`, `readVat`, `writeArticles`, …, see the `Scope` enum), and the REST API identifies the company by GUID: `$twinfield->companyId()` looks it up once. See the [REST API guide](https://php-twinfield.solvebeam.com/guides/rest-api/).
+
+| Swagger tag | Resource | Status |
+|---|---|---|
+| Fixed Assets | `$twinfield->fixedAssets()` | The new fixed assets module: search, read with depreciation per regime, history, classes, groups, reconciliation report. Read-only. The classic module is `classicFixedAssets()`. See [Fixed assets](https://php-twinfield.solvebeam.com/guides/fixed-assets/), [List fixed assets](examples/fixed-assets/list-fixed-assets/) and [Read fixed asset](examples/fixed-assets/read-fixed-asset/). |
+| Sales Articles | `$twinfield->salesArticles()` | Search, read, create, update, delete, cultures, import and export (CSV, XLSX). See [List sales articles](examples/sales-articles/list-sales-articles/) and [Create sales article](examples/sales-articles/create-sales-article/). |
+| Budgets | `$twinfield->budgets()` | Next to search and totals: budgets with GUIDs, create, update, delete, annual balances, periods, lines, copy, spread, import and export. See [List budget lines](examples/budgets/list-budget-lines/) and [Create budget](examples/budgets/create-budget/). |
+| Budgeting Spreading Templates | `$twinfield->spreadingTemplates()` | Search, read, create, update, delete and the default distribution. |
+| Bookkeeping Ledger Accounts | `$twinfield->ledgerAccounts()` | Search and read all accounts and dimensions with their GUID (the `uid` of the dimension). See [List ledger accounts](examples/ledger-accounts/list-ledger-accounts/). |
+| Bookkeeping Audit Trails | `$twinfield->matching()->auditTrail()` | The matches and undone matches since a moment. See [Matching audit trail](examples/matching/matching-audit-trail/). |
+| Customers, Suppliers | `customers()->changes()`, `suppliers()->changes()` | Relations changed since a moment, also deleted and archived ones. See [List changed customers](examples/customers/list-changed-customers/). |
+| Posting Rules | `$twinfield->postingRules()` | Posting rules of customers and suppliers changed since a moment. See [List posting rules](examples/posting-rules/list-posting-rules/). |
+| VAT Codes | `vatCodes()->searchDetails()`, `getDetails()` | VAT codes with GUIDs, rates over time and allocation rules. See [List VAT code rates](examples/vat-codes/list-vat-code-rates/). |
+| Feeds | `$twinfield->bankFeeds()->psd2()` | PSD2 feeds and when their consent expires. See [List PSD2 feeds](examples/bank-feeds/list-psd2-feeds/). |
+
+Other endpoints can be called directly; `{organisationId}` and `{companyId}` are filled in:
+
+```php
+$json = $twinfield->rest('GET', '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes', ['limit' => 10])->json();
+
+foreach ($json->list('items') as $vatCode) {
+    echo $vatCode->string('code'), PHP_EOL;
+}
+```
+
 ## Errors
 
 Twinfield reports errors as SOAP faults; the SDK throws them as `SoapFaultException`. Besides the message, the exception has the fault detail, so you can act on an error without depending on the (language dependent) message:
@@ -346,9 +373,9 @@ Twinfield supports the following OAuth 2.0 scopes:
 | `twf.user` | Contains Twinfield-specific information about the user (identity token).<br><br>**Note:** When adding this scope, add `openid` as well. | • `twf.id` - GUID of Twinfield ID<br>• `twf.organisationUserCode` - User code inside organisation<br>• `twf.organisationId` - GUID of organisation |
 | `twf.organisation` | Contains organisation information. | • `twf.organisationCode` - Code of organisation<br>• `twf.organisationId` - GUID of organisation<br>• `twf.clusterUrl` - URL of cluster on which organisation is located |
 | `twf.organisationUser` | Contains information about organisation user.<br><br>**⚠️ Important:** This scope is **mandatory** in order to login. | • `twf.organisationUserCode` - Code of the organisation user (used for login)<br>• `twf.organisationCode` - Code of the organisation<br>• `twf.organisationId` - GUID of organisation |
-| `readFixedAssets` | Grants read access to Fixed Assets API endpoints. | - |
-| `readVat` | Grants read access to VAT Codes API endpoints. | - |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
+
+The REST API needs a scope per operation on top of these, e.g. `readFixedAssets`, `readVat` or `writeArticles`: see the `Scope` enum and the [REST API guide](https://php-twinfield.solvebeam.com/guides/rest-api/#scopes).
 
 ### Example with Scopes
 
@@ -411,7 +438,7 @@ An optional `.env` in the project root (gitignored) overrides values, and real e
 | `composer test:write` | Write tests (`tests/Write`). Asks you to type the company code first; only companies in `TWINFIELD_WRITE_COMPANIES`. |
 | `composer twinfield -- finder DIM "*" 10` | Try a live call and see the SOAP request and response. Also `periods [year]`, `whoami`, `refresh`, `--company=CODE`, `--quiet`. |
 | `composer twinfield:setup` | Guided setup: credentials, login and default company. Run again to change them. |
-| `composer twinfield:login` | Log in (again), e.g. when the refresh token has expired. Use `-- --manual` to paste the redirected URL. |
+| `composer twinfield:login` | Log in (again), e.g. when the refresh token has expired. Use `-- --manual` to paste the redirected URL, and `-- --rest` to also request the scopes of the REST API (tests of the REST API are skipped without them). |
 | `composer twinfield:anonymize` | Turn recorded responses into anonymized fixtures. |
 
 ### Environment switches

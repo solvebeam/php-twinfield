@@ -40,8 +40,10 @@ export default defineConfig({
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
 						{ label: 'Organisations and companies', slug: 'guides/organisations' },
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
+						{ label: 'REST API', slug: 'guides/rest-api' },
 						{ label: 'Dimensions', slug: 'guides/dimensions' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
+						{ label: 'Fixed assets', slug: 'guides/fixed-assets' },
 						{ label: 'Finder', slug: 'guides/finder' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Browse data', slug: 'guides/browse-data' },
@@ -86,6 +88,17 @@ export default defineConfig({
 						{ label: 'Suppliers', collapsed: true, items: [{ autogenerate: { directory: 'examples/suppliers' } }] },
 						{ label: 'Users', collapsed: true, items: [{ autogenerate: { directory: 'examples/users' } }] },
 						{ label: 'VAT', collapsed: true, items: [{ autogenerate: { directory: 'examples/vat-codes' } }] },
+					],
+				},
+				{
+					// Named after the tags of the Swagger definition of the REST API.
+					label: 'REST API',
+					items: [
+						{ label: 'Feeds', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-feeds' } }] },
+						{ label: 'Fixed assets', collapsed: true, items: [{ autogenerate: { directory: 'examples/fixed-assets' } }] },
+						{ label: 'Ledger accounts', collapsed: true, items: [{ autogenerate: { directory: 'examples/ledger-accounts' } }] },
+						{ label: 'Posting rules', collapsed: true, items: [{ autogenerate: { directory: 'examples/posting-rules' } }] },
+						{ label: 'Sales articles', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-articles' } }] },
 					],
 				},
 				{

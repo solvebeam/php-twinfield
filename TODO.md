@@ -714,3 +714,38 @@ code (seen with the REST API, `postingRules()`). The XML web services then send 
 is empty`. Make `Dimension\PostingRuleLine::$generalLedger` nullable, like
 `PostingRule\PostingRuleLine::$generalLedgerAccountId`, and record a fixture.
 
+## REST API: run the write tests
+
+Writing on the REST API is only tested offline, with requests after the Swagger definition. Run the
+write tests and the write examples with a login that has the REST API scopes
+(`composer twinfield:login -- --rest`):
+
+```sh
+composer test:write -- --company=1002_3 --filter='SalesArticle|BudgetRest'
+```
+
+To check:
+
+- Sales articles: does `POST` return the article (201 with body), or only `Location` and `Id`? Does
+  `PUT` return the article or 204? Is `If-Match` the version number (the `ETag` is
+  `W/"…==v2"`)? Does a code in use give 422, an outdated version 412? The shape of the import result.
+- Budgets: the `Location` of a created budget; creating a line that exists (409?) and updating one that
+  doesn't (404?); `spread()` without template (`spreadTemplate: null`); the result of `import()`.
+- Budget lines with a project: the path needs a cost center before the project. What does Twinfield
+  expect for a line with a project but no cost center?
+- Spreading templates: create, update and delete (no templates in the test companies).
+- Then replace the illustrative output in the READMEs of `examples/sales-articles/create-sales-article`
+  and `examples/budgets/create-budget` with the real output.
+
+## REST API: not verified live
+
+- `fixedAssets()->queueReconciliationReport()`: HTTP 403 for the test user, although the token has the
+  scope `readFixedAssets` and the claim `fcReadFixedAssetsReports`. Find out which role or setting it
+  needs, then verify the status (200 / 303 and whether the PSR-18 client follows the redirect) and the
+  JSON of the report, and model the report instead of returning a `RestFile`.
+- `fixedAssets()->getGroup()` and the stop values: no groups in the test companies.
+- `bankFeeds()->psd2()`: no PSD2 feeds in the test companies.
+- `customers()->changes()`: HTTP 500 in companies `1002` and `1002_3` with any parameters (works in
+  `1000`). Report it to Twinfield with the error reference.
+- `PATCH /sales/articles/{id}` (JSON Patch) is not wrapped; `update()` covers it.
+

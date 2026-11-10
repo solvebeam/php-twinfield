@@ -28,7 +28,8 @@ final class BudgetRestTest extends WriteTestCase
 
         $budgets = $this->twinfield->budgets();
         $account = $this->twinfield->ledgerAccounts()->search()->types(LedgerAccountType::ProfitAndLoss)->limit(1)->get()->items[0];
-        $year = max($this->twinfield->periods()->years());
+        $years = $this->twinfield->periods()->years();
+        $year = $years === [] ? (int) date('Y') : max($years);
         $code = 'SDK' . random_int(100, 999);
         $budget = $budgets->create(BudgetInput::create($code, 'SDK test budget'));
 
@@ -56,7 +57,7 @@ final class BudgetRestTest extends WriteTestCase
                 $budgets->line($budget->id, $key);
                 self::fail('Expected a NotFoundException for a deleted line.');
             } catch (NotFoundException) {
-                self::assertTrue(true);
+                $this->addToAssertionCount(1);
             }
 
             $budgets->deleteLines($budget->id, $year);

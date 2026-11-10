@@ -31,6 +31,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Authentication](getting-started/authentication/): create a client in your own application.
 - [Token info](getting-started/token-info/): organisation, user and cluster of an access token.
 - [Error handling](getting-started/error-handling/): catch errors and act on their code.
+- [REST API request](getting-started/rest-request/): call an endpoint of the REST API directly, with the company GUID.
 
 ## Offices
 
@@ -156,6 +157,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Create customer](customers/create-customer/): create a customer with an address and a bank account (changes data).
 - [Update customer](customers/update-customer/): change settings, an address, and add an address and a bank account (changes data).
 - [Delete customer](customers/delete-customer/): delete or hide a customer, and activate it again (changes data).
+- [List changed customers](customers/list-changed-customers/): customers changed since a date, also deleted and archived ones (REST API).
 
 ## Dimension groups
 
@@ -170,6 +172,13 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [List dimension types](dimension-types/list-dimension-types/): code, name, mask and levels of all dimension types, or those of one financial level.
 - [Read dimension type](dimension-types/read-dimension-type/): mask, levels and address labels of one type, and whether a code matches the mask.
 - [Update dimension type](dimension-types/update-dimension-type/): change an address label (changes data).
+
+## Fixed assets
+
+The new fixed assets module, on the REST API. For the classic module see [Fixed assets (classic)](#fixed-assets-classic).
+
+- [List fixed assets](fixed-assets/list-fixed-assets/): status, book value and last depreciated period of all assets.
+- [Read fixed asset](fixed-assets/read-fixed-asset/): depreciation per regime, class and history of one asset.
 
 ## Fixed assets (classic)
 
@@ -186,6 +195,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Create general ledger account](general-ledger-accounts/create-general-ledger-account/): create a profit and loss account that needs a cost center (changes data).
 - [Update general ledger account](general-ledger-accounts/update-general-ledger-account/): make an account matchable and change its child validations (changes data).
 - [Delete general ledger account](general-ledger-accounts/delete-general-ledger-account/): delete or hide an account, and activate it again (changes data).
+
+## Ledger accounts
+
+- [List ledger accounts](ledger-accounts/list-ledger-accounts/): balance sheet and profit and loss accounts with their GUID (REST API).
+
+## Posting rules
+
+- [List posting rules](posting-rules/list-posting-rules/): how invoices of customers and suppliers are divided over accounts (REST API).
 
 ## Projects
 
@@ -231,6 +248,12 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Create VAT code](vat-codes/create-vat-code/): create a sales VAT code of 21% (changes data).
 - [Update VAT percentage](vat-codes/update-vat-percentage/): a new rate from a date with `newPercentageFrom()` (changes data).
 - [Delete VAT code](vat-codes/delete-vat-code/): delete or hide a VAT code (changes data).
+- [List VAT code rates](vat-codes/list-vat-code-rates/): the rate on a date and the accounts of each VAT code (REST API).
+
+## Sales articles
+
+- [List sales articles](sales-articles/list-sales-articles/): prices, VAT code and translations of the articles (REST API).
+- [Create sales article](sales-articles/create-sales-article/): create, update and delete an article (REST API, changes data).
 
 ## Budgets
 
@@ -238,6 +261,12 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Budget vs. actual](budgets/budget-vs-actual/): budget and actual amounts per general ledger account, with the difference.
 - [Budget by cost center](budgets/budget-by-cost-center/): amounts per account, cost center and period.
 - [Budget by project](budgets/budget-by-project/): amounts per period, account, cost center and project.
+- [List budget lines](budgets/list-budget-lines/): the budgets per year and their lines (REST API).
+- [Create budget](budgets/create-budget/): create a budget, spread an amount over the periods and delete it again (REST API, changes data).
+
+## Bank feeds
+
+- [List PSD2 feeds](bank-feeds/list-psd2-feeds/): the PSD2 feeds of all companies and when their consent expires (REST API).
 
 ## Browse data
 
@@ -275,6 +304,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Match transactions](matching/match-transactions/): match an invoice with its payment, partly or with a discount (write).
 - [List match sets](matching/list-match-sets/): the matched lines of a customer with their match number (browse data).
 - [Undo match](matching/undo-match/): undo a match set by its match number (write).
+- [Matching audit trail](matching/matching-audit-trail/): the matches and undone matches since a date (REST API).
 
 ## Pay & Collect
 

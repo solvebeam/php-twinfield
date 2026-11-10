@@ -40,9 +40,9 @@ Twinfield supports the following OAuth 2.0 scopes:
 | `twf.user` | Contains Twinfield-specific information about the user (identity token).<br><br>**Note:** When adding this scope, add `openid` as well. | • `twf.id` - GUID of Twinfield ID<br>• `twf.organisationUserCode` - User code inside organisation<br>• `twf.organisationId` - GUID of organisation |
 | `twf.organisation` | Contains organisation information. | • `twf.organisationCode` - Code of organisation<br>• `twf.organisationId` - GUID of organisation<br>• `twf.clusterUrl` - URL of cluster on which organisation is located |
 | `twf.organisationUser` | Contains information about organisation user.<br><br>**⚠️ Important:** This scope is **mandatory** in order to login. | • `twf.organisationUserCode` - Code of the organisation user (used for login)<br>• `twf.organisationCode` - Code of the organisation<br>• `twf.organisationId` - GUID of organisation |
-| `readFixedAssets` | Grants read access to Fixed Assets API endpoints. | - |
-| `readVat` | Grants read access to VAT Codes API endpoints. | - |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
+
+The [REST API](/guides/rest-api/#scopes) needs a scope per operation on top of these, e.g. `readFixedAssets`, `readVat` or `writeArticles`; the `Scope` enum has them all, and `Scope::rest()` lists the REST API scopes. Without the scope Twinfield answers HTTP 403. `AccessTokenValidation::$scopes` has the scopes of a token.
 
 The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
 

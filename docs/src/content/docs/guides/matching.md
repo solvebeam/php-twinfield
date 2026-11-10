@@ -10,6 +10,7 @@ Matching is what Twinfield calls afletteren in its interface: linking transactio
 | [Matching](https://developers.twinfield.com/documentation/api/miscellaneous/matching/) (XML web services, `<match>`) | `$twinfield->matching()->match()` | Only tested offline, with the requests of the documentation |
 | [Undo match](https://developers.twinfield.com/documentation/api/miscellaneous/undo-match/) (`matching.asmx`) | `$twinfield->matching()->undo()` | Only tested offline, with responses after the WSDL |
 | [Browse data](https://developers.twinfield.com/documentation/api/request-data/browse-data/) 100 and 200 | `fin.trs.line.matchnumber`, `matchstatus`, `matchdate` | The query runs live |
+| [REST API](https://api.accounting.twinfield.com/Api/swagger/ui/index#!/Bookkeeping32Audit32Trails) audit trail | `$twinfield->matching()->auditTrail()`, `auditTrailSince()` | Verified live |
 
 Both need a company: `$twinfield->company('1000')->matching()`.
 
@@ -107,8 +108,27 @@ Use browse code 200 (`BrowseCode::SupplierTransactions`) for suppliers.
 
 `MatchNotFoundException` extends `MatchingException`; `$exception->messages` has the `UndoMatchMessage`s with `code` (`UndoMatchMessageCode`) and `text`.
 
+## Audit trail
+
+The REST API keeps an audit trail of the matches: every match and undone match, with the match number, the dimension, the user and the matched lines and amounts. It needs the scope `readBookkeepingMatches`.
+
+```php
+foreach ($twinfield->matching()->auditTrailSince(new DateTimeImmutable('-1 day')) as $event) {
+    echo $event->eventType->value, ' ', $event->matchNumber, ' on ', $event->dimensionCode, PHP_EOL;
+
+    foreach ($event->lines as $line) {
+        echo '  ', $line->dayBook, ' ', $line->number, '/', $line->lineId, ' ', $line->matchedAmount, PHP_EOL;
+    }
+}
+```
+
+`auditTrail($since, $limit)` reads one page of at most 200 events, oldest first. The trail has no offset: the next page starts at the `logTimestamp` of the last event. `since` is inclusive, so that page repeats the events with that timestamp; `auditTrailSince()` pages for you and gives each event once (by `eventId`).
+
+`Unmatched` events (`MatchingEventType::Unmatched`) have no match date. The Swagger definition describes the page as `{events, nextTimestamp}`; live it is `{items}`, without a next timestamp.
+
 ## Examples
 
+- [Matching audit trail](/examples/matching/matching-audit-trail/): the matches and undone matches since a date (REST API).
 - [Match transactions](/examples/matching/match-transactions/): match an invoice with its payment (write).
 - [List match sets](/examples/matching/list-match-sets/): the matched lines of a customer with their match number.
 - [Undo match](/examples/matching/undo-match/): undo a match set (write).

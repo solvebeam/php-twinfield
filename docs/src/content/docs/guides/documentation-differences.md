@@ -538,3 +538,28 @@ The differences for the other resources are in the [master data guide](/guides/m
 | [Offices](/guides/master-data/#offices) | The responses are not documented; booleans `True`/`False`; undocumented timeframe values | 247 live offices |
 | [Users](/guides/master-data/#users) | Needs a company; `restricted` is in use; lower case `templatecompanyaccess`; `acceptExtraCost` in camel case; undocumented `wkemailaddress` | All 18 users of a live organisation |
 | [VAT codes](/guides/master-data/#vat-codes) | No `office` in the read response; undocumented `discountaccount` and `writeoffaccount`; rates with nine decimals and negative shares; delete documented with `dimensiongroup` | 491 VAT codes of 12 live companies |
+
+## REST API
+
+Checked live (November 2026) with the scopes of the REST API on four test companies, against the Swagger definition `open-v1` (in [`openapi/`](https://github.com/solvebeam/php-twinfield/tree/main/openapi)). The models of the definition match the live responses field for field; the differences are in the envelopes, the parameters and the documentation around them.
+
+| Swagger definition | Live | SDK |
+|---|---|---|
+| No `securityDefinitions`; the scopes are only in the description of each operation | HTTP 403 without the scope of the operation, also with all identity scopes | `Scope` enum, and a hint about the scope in the `AccessDeniedException` |
+| `{companyId}` without explanation; Twinfield support first said it is the company code | The GUID of the company, only available with the Finder `OFF` and option `includeid` | `companyId()` looks it up once; `company($code, $guid)` takes it |
+| `host: accounting.twinfield.com` | The cluster URL of the token plus `/Api`, e.g. `https://api.accounting.twinfield.com/Api` | `clusterUrl()` of the token |
+| Lists as plain arrays (articles), `PagedList` with `pageIndex` and `page` (accounts, spreading templates) or the model itself (fixed assets, VAT codes) | Always `{"items": […], "total": …, "filteredTotal": …}`; only the article cultures are a plain array | `RestPage` |
+| Matching audit trail `{events, nextTimestamp}` | `{items}`, no `nextTimestamp`; `since` is inclusive | Pages by the last `logTimestamp` and skips repeated events |
+| `limit` without maximum | 250 for VAT codes, 200 for the audit trail, 1000 for posting rules, changes and classes, 10000 for budgets and fixed assets | `all()` pages with 250 |
+| Errors without body schema | A JSON string, or an object with a message per parameter | In the message of `RestException` |
+| `matchDate` on every audit trail event | Not on `Unmatched` events | Nullable for `Unmatched` only |
+| `createdAt` and `lastModifiedAt` as `date-time` | With `Z` for one VAT code, without `Z` in the list of VAT codes (same values) | Read as UTC |
+| Posting rule lines with a general ledger account | 2 of 258 lines in a test company have none, only a VAT code | Nullable `generalLedgerAccountId` |
+| `GET /sales/customers/changes` | HTTP 500 "An error occurred on the server" in 2 of 3 test companies, with any parameters; suppliers work | Thrown as `RestException` |
+| `changes()` returns relations modified since a moment | Also returns relations whose `modified` is older than the moment | Check `modified` yourself when it matters |
+| Fixed asset fields | Without `fields=*` only `id`, `code`, `description` and `version` (the "default fields" of the Swagger UI); the class list has no `code`, even with `fields=*` | Asks for all fields; `FixedAssetClassSummary` without code |
+| Budget line paths with `{costCenterId}/{projectId}` | Leave them out for a line without cost center or project; the empty GUID gives 404 | `BudgetLineKey::toPath()` |
+| `POST /fixedassets/backgroundreports/reconciliation` with `readFixedAssets` | HTTP 403 for the test user, which has the claim `fcReadFixedAssetsReports` | Not verified; see TODO.md |
+
+The GUIDs of the REST API are the `uid` of the dimensions in the XML web services: checked for general ledger accounts and suppliers.
+
