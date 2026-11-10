@@ -37,6 +37,7 @@ An optional `.env` in the project root (gitignored) overrides values, and real e
 | `composer twinfield:setup` | Guided setup: credentials, login and default company. Run again to change them. |
 | `composer twinfield:login` | Log in (again), e.g. when the refresh token has expired. Use `-- --manual` to paste the redirected URL. |
 | `composer twinfield:anonymize` | Turn recorded responses into anonymized fixtures. |
+| `composer docs:xml` | Write the request and response XML of the transaction examples into their README, from the calls in `tests/Support/Docs/ExampleXmlDefinitions.php` and the fixtures. `composer test` fails when a README is out of date. |
 
 ## Environment switches
 
