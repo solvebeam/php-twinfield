@@ -47,7 +47,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class VatCodeResource
 {
-    private const REST_PATH = '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes';
+    private const string REST_PATH = '/organisations/{organisationId}/companies/{companyId}/vat/vatcodes';
 
     public function __construct(
         private Twinfield $twinfield,

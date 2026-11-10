@@ -42,7 +42,7 @@ final readonly class UserInput
      * Elements in the order of the documentation; `a/b` is element `b` in `a`. The company list
      * (`office/offices`) follows `office/templatecompanyaccess`.
      */
-    private const ELEMENTS = [
+    private const array ELEMENTS = [
         'name',
         'shortname',
         'type',
@@ -452,9 +452,7 @@ final readonly class UserInput
     {
         $path = $path === '.' ? '' : $path;
 
-        if (!isset($parents[$path])) {
-            $parents[$path] = $xml->add(self::parent($xml, $parents, dirname($path)), basename($path));
-        }
+        $parents[$path] ??= $xml->add(self::parent($xml, $parents, dirname($path)), basename($path));
 
         return $parents[$path];
     }

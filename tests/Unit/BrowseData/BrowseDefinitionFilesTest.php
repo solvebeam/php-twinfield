@@ -20,7 +20,7 @@ use SolveBeam\Twinfield\Tests\Support\TestTokens;
  */
 final class BrowseDefinitionFilesTest extends TestCase
 {
-    private const DIR = __DIR__ . '/../../../browse-definitions';
+    private const string DIR = __DIR__ . '/../../../browse-definitions';
 
     /**
      * @return array<string, array{BrowseCode}>
@@ -52,7 +52,7 @@ final class BrowseDefinitionFilesTest extends TestCase
 
     public function testHasNoOtherDefinitions(): void
     {
-        $files = array_map('basename', glob(self::DIR . '/*.xml') ?: []);
+        $files = array_map(basename(...), glob(self::DIR . '/*.xml') ?: []);
         $expected = array_map(static fn (BrowseCode $code): string => $code->value . '.xml', BrowseCode::cases());
 
         self::assertEqualsCanonicalizing([...$expected, 'browsefields.xml'], $files);

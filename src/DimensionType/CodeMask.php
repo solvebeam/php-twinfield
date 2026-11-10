@@ -23,7 +23,7 @@ use Stringable;
 final readonly class CodeMask implements Stringable
 {
     /** Maximum length of a mask (`string(80)`). */
-    private const MAX_LENGTH = 80;
+    private const int MAX_LENGTH = 80;
 
     public function __construct(
         public string $pattern,

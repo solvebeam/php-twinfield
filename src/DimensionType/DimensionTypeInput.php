@@ -27,9 +27,9 @@ use SolveBeam\Twinfield\ProcessXml\XmlValue;
  */
 final readonly class DimensionTypeInput
 {
-    private const NAME_MAX_LENGTH = 40;
+    private const int NAME_MAX_LENGTH = 40;
 
-    private const LABEL_MAX_LENGTH = 20;
+    private const int LABEL_MAX_LENGTH = 20;
 
     private function __construct(
         public string $code,

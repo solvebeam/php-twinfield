@@ -15,7 +15,7 @@ use InvalidArgumentException;
 final class Guid
 {
     /** The REST API uses the empty GUID for "none", e.g. a VAT code without discount account. */
-    public const EMPTY = '00000000-0000-0000-0000-000000000000';
+    public const string EMPTY = '00000000-0000-0000-0000-000000000000';
 
     public static function isValid(string $guid): bool
     {

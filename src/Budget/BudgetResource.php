@@ -50,7 +50,7 @@ use SolveBeam\Twinfield\Twinfield;
  */
 final readonly class BudgetResource
 {
-    private const PATH = '/organisations/{organisationId}/companies/{companyId}/budgeting';
+    private const string PATH = '/organisations/{organisationId}/companies/{companyId}/budgeting';
 
     public function __construct(
         private Twinfield $twinfield,

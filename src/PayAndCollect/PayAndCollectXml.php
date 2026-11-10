@@ -16,7 +16,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final class PayAndCollectXml
 {
-    private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
+    private const string XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
 
     /**
      * Text of a child element that must not be empty.

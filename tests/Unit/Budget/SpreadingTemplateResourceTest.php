@@ -11,7 +11,7 @@ use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class SpreadingTemplateResourceTest extends TestCase
 {
-    private const TEMPLATE_ID = '16fd2706-8baf-433b-82eb-8c7fada847da';
+    private const string TEMPLATE_ID = '16fd2706-8baf-433b-82eb-8c7fada847da';
 
     public function testReadsTheDefaultDistribution(): void
     {

@@ -57,12 +57,12 @@ final readonly class CustomerInput
     use RelationInput;
 
     /** For messages. */
-    private const RELATION = 'customer';
+    private const string RELATION = 'customer';
 
     /**
      * Elements in the order of the documentation; `a/b` is element `b` in `a`.
      */
-    private const ELEMENTS = [
+    private const array ELEMENTS = [
         'shortname',
         'beginperiod',
         'beginyear',

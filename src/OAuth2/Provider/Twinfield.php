@@ -18,10 +18,10 @@ final class Twinfield extends AbstractProvider
 {
     use BearerAuthorizationTrait;
 
-    private const AUTHORIZATION_URL = 'https://login.twinfield.com/auth/authentication/connect/authorize';
-    private const ACCESS_TOKEN_URL = 'https://login.twinfield.com/auth/authentication/connect/token';
-    private const RESOURCE_OWNER_URL = 'https://login.twinfield.com/auth/authentication/connect/userinfo';
-    private const ACCESS_TOKEN_VALIDATION_URL =
+    private const string AUTHORIZATION_URL = 'https://login.twinfield.com/auth/authentication/connect/authorize';
+    private const string ACCESS_TOKEN_URL = 'https://login.twinfield.com/auth/authentication/connect/token';
+    private const string RESOURCE_OWNER_URL = 'https://login.twinfield.com/auth/authentication/connect/userinfo';
+    private const string ACCESS_TOKEN_VALIDATION_URL =
         'https://login.twinfield.com/auth/authentication/connect/accesstokenvalidation';
 
     public function getBaseAuthorizationUrl(): string

@@ -44,11 +44,11 @@ foreach ($result as $index => $row) {
         $row->string('fin.trs.line.dim2'),
         $row->nullableString('fin.trs.line.dim2name') ?? '',
         $row->nullableString('fin.trs.line.invnumber') ?? '-',
-        $due === null ? '-' : $due->format('Y-m-d'),
+        $due?->format('Y-m-d') ?? '-',
         $row->amount('fin.trs.line.openbasevaluesigned'),
         $row->nullableString('fin.trs.line.actioncode') ?? '-',
         $row->nullableString('fin.trs.line.actionname') ?? '',
-        $date === null ? '-' : $date->format('Y-m-d'),
+        $date?->format('Y-m-d') ?? '-',
         $row->amount('fin.trs.line.actionvalue'),
         $row->nullableString('fin.trs.line.actionusername') ?? '-',
     ), PHP_EOL;

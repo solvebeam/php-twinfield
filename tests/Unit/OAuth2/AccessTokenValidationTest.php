@@ -17,7 +17,7 @@ final class AccessTokenValidationTest extends TestCase
      *
      * @var array<string, mixed>
      */
-    private const RESPONSE = [
+    private const array RESPONSE = [
         'exp' => 1794165191,
         'scope' => ['openid', 'twf.user', 'twf.organisationUser', 'twf.organisation'],
         'twf.organisationUserCode' => 'JDOE',

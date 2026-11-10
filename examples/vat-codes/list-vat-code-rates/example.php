@@ -20,7 +20,7 @@ foreach ($twinfield->vatCodes()->searchDetails()->orderByCode()->all() as $vatCo
         : $rate->percentage . '% since ' . $rate->startDate->format('Y-m-d');
     echo PHP_EOL;
 
-    foreach ($rate === null ? [] : $rate->allocationRules as $rule) {
+    foreach ($rate->allocationRules ?? [] as $rule) {
         if ($rule->generalLedgerAccountId === null) {
             continue;
         }

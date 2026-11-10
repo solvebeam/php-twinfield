@@ -20,7 +20,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class FixedAssetResourceTest extends TestCase
 {
-    private const ASSET_ID = 'e14c0b05-3f46-de68-d605-f12a857fd49d';
+    private const string ASSET_ID = 'e14c0b05-3f46-de68-d605-f12a857fd49d';
 
     public function testSearchesFixedAssetsWithAllFields(): void
     {

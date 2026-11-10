@@ -43,7 +43,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class SalesArticleResource
 {
-    private const PATH = '/organisations/{organisationId}/companies/{companyId}/sales/articles';
+    private const string PATH = '/organisations/{organisationId}/companies/{companyId}/sales/articles';
 
     public function __construct(
         private Twinfield $twinfield,

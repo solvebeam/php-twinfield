@@ -25,7 +25,7 @@ use Psr\Http\Message\ResponseInterface;
 final readonly class WriteGuardClient implements ClientInterface
 {
     /** SOAP actions that only read data (matched on the local name prefix). */
-    private const READ_ACTION_PREFIXES = ['Search', 'Get', 'Query', 'Read', 'List'];
+    private const array READ_ACTION_PREFIXES = ['Search', 'Get', 'Query', 'Read', 'List'];
 
     /**
      * SOAP actions that only read data, matched exactly: `Load` of hierarchies.asmx (a prefix would
@@ -33,13 +33,13 @@ final readonly class WriteGuardClient implements ClientInterface
      *
      * @see https://developers.twinfield.com/documentation/api/miscellaneous/hierarchy/#load
      */
-    private const READ_ACTIONS = ['Load'];
+    private const array READ_ACTIONS = ['Load'];
 
     /** ProcessXml actions; the embedded XML request decides read or write. */
-    private const PROCESS_XML_ACTIONS = ['ProcessXmlString', 'ProcessXmlDocument'];
+    private const array PROCESS_XML_ACTIONS = ['ProcessXmlString', 'ProcessXmlDocument'];
 
     /** Root elements of read-only ProcessXml requests: read, list and browse (`columns`). */
-    private const READ_XML_ROOTS = ['read', 'list', 'columns'];
+    private const array READ_XML_ROOTS = ['read', 'list', 'columns'];
 
     /**
      * Root elements that read when they contain only `<office>` and `<code>`, and save otherwise.
@@ -48,7 +48,7 @@ final readonly class WriteGuardClient implements ClientInterface
      * @see https://developers.twinfield.com/documentation/api/master-data/asset-methods/#read
      * @see https://developers.twinfield.com/documentation/api/master-data/dimension-types/#read
      */
-    private const READ_BY_CODE_ROOTS = ['assetmethod', 'dimensiontype'];
+    private const array READ_BY_CODE_ROOTS = ['assetmethod', 'dimensiontype'];
 
     /**
      * Root elements that read only with this `action`; every other action (or none) changes data.
@@ -56,18 +56,18 @@ final readonly class WriteGuardClient implements ClientInterface
      * @see https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/#get
      * @see https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/#get
      */
-    private const READ_ACTION_ROOTS = [
+    private const array READ_ACTION_ROOTS = [
         'reverse' => 'getreversetransactioninfo',
         'spread' => 'getspreadtransactioninfo',
     ];
 
     /** HTTP methods of REST API requests that only read. */
-    private const REST_READ_METHODS = ['GET', 'HEAD', 'OPTIONS'];
+    private const array REST_READ_METHODS = ['GET', 'HEAD', 'OPTIONS'];
 
     /**
      * REST API POST requests that only read: queueing a fixed asset report (scope `readFixedAssets`).
      */
-    private const REST_READ_POSTS = ['~/fixedassets/backgroundreports/reconciliation$~'];
+    private const array REST_READ_POSTS = ['~/fixedassets/backgroundreports/reconciliation$~'];
 
     /**
      * @param list<string>                     $writeCompanies

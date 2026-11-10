@@ -23,12 +23,13 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class SpreadTransactionResourceTest extends TestCase
 {
-    private const ORIGINAL = '<original><office>1000</office><code>INK</code><number>202600001</number></original>';
+    private const string ORIGINAL = '<original><office>1000</office><code>INK</code>'
+        . '<number>202600001</number></original>';
 
-    private const SETTINGS = '<settings><dim1>2500</dim1><startperiod>2026/01</startperiod>'
+    private const string SETTINGS = '<settings><dim1>2500</dim1><startperiod>2026/01</startperiod>'
         . '<endperiod>2026/02</endperiod></settings>';
 
-    private const SETTINGS_BY_LINES = '<settings><dim1>2500</dim1><linessettings>'
+    private const string SETTINGS_BY_LINES = '<settings><dim1>2500</dim1><linessettings>'
         . '<linesettings><lineid>2</lineid><startperiod>2026/01</startperiod><endperiod>2026/02</endperiod>'
         . '</linesettings>'
         . '<linesettings><lineid>4</lineid><startperiod>2026/03</startperiod><endperiod>2026/05</endperiod>'

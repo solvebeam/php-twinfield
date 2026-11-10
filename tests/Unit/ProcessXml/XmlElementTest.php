@@ -14,7 +14,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class XmlElementTest extends TestCase
 {
-    private const XML = <<<'XML'
+    private const string XML = <<<'XML'
         <dimension status="active" result="1">
             <code>A001</code>
             <shortname/>

@@ -7,11 +7,11 @@ namespace SolveBeam\Twinfield\OAuth2\Provider;
 use InvalidArgumentException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
-final class TwinfieldResourceOwner implements ResourceOwnerInterface
+final readonly class TwinfieldResourceOwner implements ResourceOwnerInterface
 {
-    public readonly string $sub;
-    public readonly string $organisationUserCode;
-    public readonly string $organisationId;
+    public string $sub;
+    public string $organisationUserCode;
+    public string $organisationId;
 
     /** @var array<string, mixed> */
     private array $response;

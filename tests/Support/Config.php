@@ -99,7 +99,7 @@ final readonly class Config
      */
     public function writeCompanies(): array
     {
-        $companies = array_map('trim', explode(',', $this->get('TWINFIELD_WRITE_COMPANIES') ?? ''));
+        $companies = array_map(trim(...), explode(',', $this->get('TWINFIELD_WRITE_COMPANIES') ?? ''));
 
         return array_values(array_filter($companies, static fn (string $code): bool => $code !== ''));
     }
@@ -126,7 +126,7 @@ final readonly class Config
             return [];
         }
 
-        return array_filter(Dotenv::parse((string) file_get_contents($file)), 'is_string');
+        return array_filter(Dotenv::parse((string) file_get_contents($file)), is_string(...));
     }
 
     private static function env(string $key): ?string

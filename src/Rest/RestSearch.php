@@ -30,7 +30,7 @@ abstract readonly class RestSearch
      * Page size of all(). The maximum differs per endpoint: 250 for VAT codes, 1000 for posting rules,
      * changes and fixed asset classes, 10000 for budgets and fixed assets.
      */
-    private const PAGE_SIZE = 250;
+    private const int PAGE_SIZE = 250;
 
     /**
      * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $parameters

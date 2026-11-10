@@ -10,7 +10,7 @@ namespace SolveBeam\Twinfield\Tests\Support\Docs;
  */
 final class ExampleXmlDefinitions
 {
-    private const DOCS = 'https://developers.twinfield.com/documentation/api/';
+    private const string DOCS = 'https://developers.twinfield.com/documentation/api/';
 
     /**
      * Twinfield documentation page per example directory.

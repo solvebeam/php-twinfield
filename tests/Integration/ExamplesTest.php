@@ -47,7 +47,7 @@ final class ExamplesTest extends IntegrationTestCase
      */
     private function environmentFor(string $name): array
     {
-        $environment = array_filter(getenv(), 'is_string');
+        $environment = array_filter(getenv(), is_string(...));
 
         if ($name !== 'getting-started/authentication') {
             return $environment;

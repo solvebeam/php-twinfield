@@ -21,10 +21,10 @@ use SolveBeam\Twinfield\Tests\Support\Session;
  */
 final readonly class Setup
 {
-    private const DEFAULT_REDIRECT_URI = 'http://localhost:8765/callback';
+    private const string DEFAULT_REDIRECT_URI = 'http://localhost:8765/callback';
 
     /** Offices shown when choosing the default company. */
-    private const OFFICES_SHOWN = 15;
+    private const int OFFICES_SHOWN = 15;
 
     public function __construct(
         private Prompt $prompt,

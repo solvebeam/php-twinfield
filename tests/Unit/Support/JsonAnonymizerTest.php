@@ -10,7 +10,7 @@ use SolveBeam\Twinfield\Tests\Support\Fixtures\XmlAnonymizer;
 
 final class JsonAnonymizerTest extends TestCase
 {
-    private const GUID = 'ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9';
+    private const string GUID = 'ffe2c8b3-e7f0-4793-a059-ffbfe3c154a9';
 
     public function testKeepsTheStructureAndFormatsButNotTheValues(): void
     {

@@ -38,6 +38,6 @@ foreach ($result as $index => $row) {
         $row->string('fin.bnk.accountintegrationtype'),
         $row->string('fin.bnk.payments'),
         $row->string('fin.bnk.directdebits'),
-        $consent === null ? '-' : $consent->format('Y-m-d'),
+        $consent?->format('Y-m-d') ?? '-',
     ), PHP_EOL;
 }

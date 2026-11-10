@@ -37,11 +37,11 @@ use SolveBeam\Twinfield\Soap\SoapRequestFactory;
  */
 final readonly class CommandQueryEnvelope implements SoapMessage
 {
-    private const SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
-    private const TWINFIELD_NS = 'http://www.twinfield.com/';
-    private const SHARED_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.Shared';
-    private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
-    private const XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
+    private const string SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
+    private const string TWINFIELD_NS = 'http://www.twinfield.com/';
+    private const string SHARED_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.Shared';
+    private const string XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
+    private const string XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
 
     /**
      * @param 'Query'|'Command' $element

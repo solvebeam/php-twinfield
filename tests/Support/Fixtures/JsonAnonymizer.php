@@ -21,7 +21,7 @@ use stdClass;
 final readonly class JsonAnonymizer
 {
     /** Properties whose (string) value is kept as is: enums and fixed values. */
-    private const KEEP_KEYS = [
+    private const array KEEP_KEYS = [
         'status', 'type', 'regime', 'culture', 'cultureCode', 'unitOfMeasure', 'rel', 'method', 'balanceType',
         'searchScope', 'action', 'actionType', 'scope', 'state', 'reportStatus', 'lifetimeType',
         'depreciationMethod', 'subanalysis', 'activationStatus', 'currency', 'language', 'fixedAssetAction',
@@ -29,7 +29,7 @@ final readonly class JsonAnonymizer
     ];
 
     /** Properties whose number is kept as is: counts, versions and periods, not data. */
-    private const KEEP_NUMBER_KEYS = [
+    private const array KEEP_NUMBER_KEYS = [
         'total', 'filteredTotal', 'version', 'year', 'period', 'periodNumber', 'periodFrom', 'month', 'day',
         'weight', 'startYear', 'targetYear', 'matchLevel', 'yearFrom', 'percent', 'ratio', 'lifetime',
     ];

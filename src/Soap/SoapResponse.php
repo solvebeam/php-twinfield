@@ -14,12 +14,12 @@ use RuntimeException;
  *
  * @internal
  */
-final class SoapResponse
+final readonly class SoapResponse
 {
     public function __construct(
-        private readonly ResponseInterface $httpResponse,
-        private readonly DOMDocument $xml,
-        private readonly DOMElement $body,
+        private ResponseInterface $httpResponse,
+        private DOMDocument $xml,
+        private DOMElement $body,
     ) {
     }
 

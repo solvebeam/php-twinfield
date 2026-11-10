@@ -107,7 +107,7 @@ final readonly class AccessTokenValidation
         $scope = $data['scope'] ?? null;
         $scopes = is_string($scope) ? explode(' ', $scope) : $scope;
 
-        if (!is_array($scopes) || $scopes === [] || array_filter($scopes, 'is_string') !== $scopes) {
+        if (!is_array($scopes) || $scopes === [] || array_filter($scopes, is_string(...)) !== $scopes) {
             throw new UnexpectedResponseException(
                 'Access token validation has no "scope" with the scopes of the token.',
             );

@@ -11,10 +11,10 @@ namespace SolveBeam\Twinfield\Soap;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class SoapAction
+final readonly class SoapAction
 {
     public function __construct(
-        public readonly string $action,
+        public string $action,
     ) {
     }
 }

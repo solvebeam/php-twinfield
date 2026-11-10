@@ -17,8 +17,8 @@ use SolveBeam\Twinfield\Tests\Support\TestTokens;
 
 final class SalesArticleResourceTest extends TestCase
 {
-    private const ARTICLE_ID = 'c8399ffa-1ace-d26b-0e98-d06f96dc3691';
-    private const VAT_CODE_ID = '439518ff-cec0-3268-535d-dc208afe8f62';
+    private const string ARTICLE_ID = 'c8399ffa-1ace-d26b-0e98-d06f96dc3691';
+    private const string VAT_CODE_ID = '439518ff-cec0-3268-535d-dc208afe8f62';
 
     public function testSearchesArticles(): void
     {

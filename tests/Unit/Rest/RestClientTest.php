@@ -21,7 +21,7 @@ use SolveBeam\Twinfield\Twinfield;
 
 final class RestClientTest extends TestCase
 {
-    private const COMPANY_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+    private const string COMPANY_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
     public function testSendsAnAuthenticatedRequestWithTheGuidsInThePath(): void
     {

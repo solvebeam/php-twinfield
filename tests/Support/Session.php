@@ -21,7 +21,7 @@ use SolveBeam\Twinfield\Organisation\Organisation;
 final class Session implements AccessTokenProvider
 {
     /** Refresh this many seconds before the access token expires. */
-    private const EXPIRY_MARGIN = 120;
+    private const int EXPIRY_MARGIN = 120;
 
     /** @var array<string, mixed>|null */
     private ?array $data = null;
@@ -118,7 +118,7 @@ final class Session implements AccessTokenProvider
 
         $scopes = $data['scopes'] ?? [];
 
-        return is_array($scopes) ? array_values(array_filter($scopes, 'is_string')) : [];
+        return is_array($scopes) ? array_values(array_filter($scopes, is_string(...))) : [];
     }
 
     /**

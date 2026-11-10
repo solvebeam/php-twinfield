@@ -25,7 +25,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class SpreadingTemplateResource
 {
-    private const PATH = '/organisations/{organisationId}/companies/{companyId}/budgeting/spreadingtemplates';
+    private const string PATH = '/organisations/{organisationId}/companies/{companyId}/budgeting/spreadingtemplates';
 
     public function __construct(
         private Twinfield $twinfield,

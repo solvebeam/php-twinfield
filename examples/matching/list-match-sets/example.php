@@ -45,7 +45,7 @@ foreach ($result as $index => $row) {
         $index + 1,
         count($result),
         $row->nullableString('fin.trs.line.matchnumber') ?? '-',
-        $matchDate === null ? '-' : $matchDate->format('Y-m-d'),
+        $matchDate?->format('Y-m-d') ?? '-',
         $row->string('fin.trs.head.code'),
         $row->int('fin.trs.head.number'),
         $row->transactionLine->line ?? 0,

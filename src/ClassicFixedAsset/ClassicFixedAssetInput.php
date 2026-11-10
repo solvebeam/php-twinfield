@@ -47,7 +47,7 @@ final readonly class ClassicFixedAssetInput
     /**
      * Elements in the order of the documentation; `a/b` is element `b` in `a`.
      */
-    private const ELEMENTS = [
+    private const array ELEMENTS = [
         'financials/substitutionlevel',
         'financials/substitutewith',
         'financials/vatcode',

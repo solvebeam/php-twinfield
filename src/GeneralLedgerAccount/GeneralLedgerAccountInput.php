@@ -39,7 +39,7 @@ final readonly class GeneralLedgerAccountInput
     /**
      * Elements in the order of the documentation; `a/b` is element `b` in `a`.
      */
-    private const ELEMENTS = [
+    private const array ELEMENTS = [
         'shortname',
         'beginperiod',
         'beginyear',

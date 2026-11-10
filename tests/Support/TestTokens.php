@@ -16,14 +16,14 @@ use SolveBeam\Twinfield\Twinfield;
  */
 final class TestTokens
 {
-    public const ORGANISATION_ID = '0b6a5f6e-1111-2222-3333-444455556666';
-    public const ORGANISATION_CODE = 'EXAMPLE';
+    public const string ORGANISATION_ID = '0b6a5f6e-1111-2222-3333-444455556666';
+    public const string ORGANISATION_CODE = 'EXAMPLE';
 
     /** GUID of company `1000` in REST API tests. */
-    public const COMPANY_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+    public const string COMPANY_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
     /** Start of the REST API paths of company `1000`. */
-    public const REST_COMPANY_URL = 'https://example.test/Api/organisations/' . self::ORGANISATION_ID
+    public const string REST_COMPANY_URL = 'https://example.test/Api/organisations/' . self::ORGANISATION_ID
         . '/companies/' . self::COMPANY_ID;
 
     public static function provider(

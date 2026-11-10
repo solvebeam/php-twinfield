@@ -48,7 +48,7 @@ final readonly class ProcessXmlResult
     {
         $payload = $response->payloadElement();
 
-        foreach ($payload === null ? [] : $payload->childNodes as $child) {
+        foreach ($payload->childNodes ?? [] as $child) {
             if ($child instanceof DOMElement && $child->localName === 'ProcessXmlStringResult') {
                 return $child->textContent;
             }

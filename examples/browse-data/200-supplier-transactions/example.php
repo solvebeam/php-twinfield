@@ -54,7 +54,7 @@ foreach ($result as $index => $row) {
         $row->int('fin.trs.head.number'),
         $row->nullableString('fin.trs.line.invnumber') ?? '-',
         $row->date('fin.trs.head.date')->format('Y-m-d'),
-        $due === null ? '-' : $due->format('Y-m-d'),
+        $due?->format('Y-m-d') ?? '-',
         $row->amount('fin.trs.line.basevaluesigned'),
         $row->amount('fin.trs.line.openbasevaluesigned'),
     ), PHP_EOL;

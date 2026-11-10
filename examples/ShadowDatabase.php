@@ -24,12 +24,12 @@ use UnexpectedValueException;
  * guide). In your own application you use your own database; the queries to Twinfield stay the
  * same.
  */
-final class ShadowDatabase
+final readonly class ShadowDatabase
 {
     private function __construct(
-        private readonly PDO $pdo,
-        private readonly CompanyReference $company,
-        public readonly string $file,
+        private PDO $pdo,
+        private CompanyReference $company,
+        public string $file,
     ) {
     }
 

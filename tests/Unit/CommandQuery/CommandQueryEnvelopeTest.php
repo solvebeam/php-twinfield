@@ -28,29 +28,29 @@ final class CommandQueryEnvelopeTest extends TestCase
             $this->authentication(),
         );
 
-        self::assertXmlStringEqualsXmlString(<<<'XML'
-            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-              <s:Header>
-                <Authentication
-                  xmlns="http://www.twinfield.com/"
-                  xmlns:h="http://schemas.datacontract.org/2004/07/Twinfield.WebServices.Shared"
-                >
-                  <h:AccessToken>token-123</h:AccessToken>
-                  <h:CompanyCode>1000</h:CompanyCode>
-                </Authentication>
-              </s:Header>
-              <s:Body>
-                <Query
-                  xmlns="http://www.twinfield.com/"
-                  xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns:a="http://schemas.datacontract.org/2004/07/Twinfield.WebServices.PeriodService"
-                  i:type="a:GetPeriods"
-                >
-                  <a:Year>2021</a:Year>
-                </Query>
-              </s:Body>
-            </s:Envelope>
-            XML, $envelope->toXml());
+        self::assertXmlStringEqualsXmlString(<<<'XML_WRAP'
+        <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+          <s:Header>
+            <Authentication
+              xmlns="http://www.twinfield.com/"
+              xmlns:h="http://schemas.datacontract.org/2004/07/Twinfield.WebServices.Shared"
+            >
+              <h:AccessToken>token-123</h:AccessToken>
+              <h:CompanyCode>1000</h:CompanyCode>
+            </Authentication>
+          </s:Header>
+          <s:Body>
+            <Query
+              xmlns="http://www.twinfield.com/"
+              xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:a="http://schemas.datacontract.org/2004/07/Twinfield.WebServices.PeriodService"
+              i:type="a:GetPeriods"
+            >
+              <a:Year>2021</a:Year>
+            </Query>
+          </s:Body>
+        </s:Envelope>
+        XML_WRAP, $envelope->toXml());
     }
 
     public function testBuildsCommandEnvelopeWithFieldsInGivenOrder(): void

@@ -29,7 +29,7 @@ use SolveBeam\Twinfield\Twinfield;
  */
 final readonly class LedgerAccountResource
 {
-    private const PATH = '/organisations/{organisationId}/companies/{companyId}/bookkeeping/accounts';
+    private const string PATH = '/organisations/{organisationId}/companies/{companyId}/bookkeeping/accounts';
 
     public function __construct(
         private Twinfield $twinfield,

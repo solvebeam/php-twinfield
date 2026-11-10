@@ -27,7 +27,7 @@ use RuntimeException;
 final class XmlAnonymizer
 {
     /** Values kept as is, compared case-insensitively. */
-    private const KEEP_VALUES = [
+    private const array KEEP_VALUES = [
         'true', 'false', 'yes', 'no', 'normal', 'active', 'deleted', 'hide', 'error', 'warning', 'info',
         'DIM', 'DEB', 'CRD', 'KPL', 'PNL', 'BAS', 'ACT', 'PRJ', 'AST', 'OFF', 'EUR',
         'Error', 'Warning', 'Informational',
@@ -47,7 +47,7 @@ final class XmlAnonymizer
     ];
 
     /** Elements whose text is kept as is. */
-    private const KEEP_ELEMENTS = [
+    private const array KEEP_ELEMENTS = [
         'TotalRows', 'MessageType', 'Type', 'type', 'result', 'currency',
         // Enums of the BankStatementService
         'Sense', 'Recognition', 'AmountOperator', 'AllocationRuleStorageLevel',
@@ -58,18 +58,18 @@ final class XmlAnonymizer
     ];
 
     /** Text within these elements is kept (column headers, not data). */
-    private const KEEP_WITHIN = ['Columns'];
+    private const array KEEP_WITHIN = ['Columns'];
 
     /** Attributes whose value is kept as is. */
-    private const KEEP_ATTRIBUTES = [
+    private const array KEEP_ATTRIBUTES = [
         'result', 'msgtype', 'type', 'status', 'inuse', 'behaviour', 'field', 'label', 'hideforuser',
         'iscurrentuser', 'level', 'locked', 'CurrentInvitationStatus',
     ];
 
     /** Elements whose text is always replaced, overriding all keep rules. */
-    private const ALWAYS_REPLACE = ['AccessToken', 'CompanyCode', 'office', 'clusterUrl'];
+    private const array ALWAYS_REPLACE = ['AccessToken', 'CompanyCode', 'office', 'clusterUrl'];
 
-    private int $dayOffset;
+    private readonly int $dayOffset;
 
     /** @var array<string, int> */
     private array $kept = [];

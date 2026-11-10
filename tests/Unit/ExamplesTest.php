@@ -13,14 +13,14 @@ use PHPUnit\Framework\TestCase;
 final class ExamplesTest extends TestCase
 {
     /** Examples that show their own setup instead of Example::twinfield(). */
-    private const OWN_SETUP = [
+    private const array OWN_SETUP = [
         'getting-started/authentication',
         'getting-started/login',
         'getting-started/token-info',
     ];
 
     /** Examples that change data: skipped by `composer test:live`, run by `composer test:write`. */
-    public const WRITES = [
+    public const array WRITES = [
         'activities/create-activity',
         'activities/delete-activity',
         'activities/update-activity',

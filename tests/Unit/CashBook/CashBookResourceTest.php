@@ -23,7 +23,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class CashBookResourceTest extends TestCase
 {
-    private const DATA_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.CashBookService';
+    private const string DATA_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.CashBookService';
 
     public function testSearchesOnlyCashBooks(): void
     {

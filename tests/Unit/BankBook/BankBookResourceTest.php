@@ -26,7 +26,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class BankBookResourceTest extends TestCase
 {
-    private const DATA_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.BankBookService';
+    private const string DATA_NS = 'http://schemas.datacontract.org/2004/07/Twinfield.WebServices.BankBookService';
 
     public function testSearchesBankBooksWithoutCashBooks(): void
     {

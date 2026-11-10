@@ -12,12 +12,12 @@ use RuntimeException;
  *
  * @internal Use `Twinfield::processXml()`, `Twinfield::query()` and `Twinfield::process()`.
  */
-final class SoapClient
+final readonly class SoapClient
 {
     public function __construct(
-        private readonly ClientInterface $httpClient,
-        private readonly SoapRequestFactory $requestFactory,
-        private readonly LastRateLimit $lastRateLimit = new LastRateLimit(),
+        private ClientInterface $httpClient,
+        private SoapRequestFactory $requestFactory,
+        private LastRateLimit $lastRateLimit = new LastRateLimit(),
     ) {
     }
 

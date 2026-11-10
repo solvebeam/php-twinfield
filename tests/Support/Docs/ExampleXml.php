@@ -24,34 +24,34 @@ use SolveBeam\Twinfield\Twinfield;
  */
 final class ExampleXml
 {
-    private const SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
-    private const TWINFIELD_NS = 'http://www.twinfield.com/';
+    private const string SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
+    private const string TWINFIELD_NS = 'http://www.twinfield.com/';
 
-    private const LINK_START = '<!-- twinfield-documentation:start -->';
-    private const LINK_END = '<!-- twinfield-documentation:end -->';
-    private const XML_START = '<!-- xml:start -->';
-    private const XML_END = '<!-- xml:end -->';
-    private const FIELDS_START = '<!-- browse-fields:start -->';
-    private const FIELDS_END = '<!-- browse-fields:end -->';
+    private const string LINK_START = '<!-- twinfield-documentation:start -->';
+    private const string LINK_END = '<!-- twinfield-documentation:end -->';
+    private const string XML_START = '<!-- xml:start -->';
+    private const string XML_END = '<!-- xml:end -->';
+    private const string FIELDS_START = '<!-- browse-fields:start -->';
+    private const string FIELDS_END = '<!-- browse-fields:end -->';
 
     /** Classes the code of the definitions can use without namespace. */
-    private const IMPORTS = [
-        'SolveBeam\Twinfield\Article\ArticleInput',
-        'SolveBeam\Twinfield\Article\SubArticleInput',
-        'SolveBeam\Twinfield\BankTransaction\BankTransactionInput',
-        'SolveBeam\Twinfield\BrowseData\BrowseCode',
-        'SolveBeam\Twinfield\BrowseData\SortOrder',
-        'SolveBeam\Twinfield\Budget\Regime',
-        'SolveBeam\Twinfield\CashTransaction\CashTransactionInput',
-        'SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementInput',
-        'SolveBeam\Twinfield\JournalTransaction\JournalTransactionInput',
-        'SolveBeam\Twinfield\Period\Period',
-        'SolveBeam\Twinfield\PurchaseTransaction\PurchaseTransactionInput',
-        'SolveBeam\Twinfield\SalesInvoice\PaymentMethod',
-        'SolveBeam\Twinfield\SalesInvoice\SalesInvoiceInput',
-        'SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput',
-        'SolveBeam\Twinfield\SpreadTransaction\SpreadLine',
-        'SolveBeam\Twinfield\TimeEntry\TimeEntryInput',
+    private const array IMPORTS = [
+        \SolveBeam\Twinfield\Article\ArticleInput::class,
+        \SolveBeam\Twinfield\Article\SubArticleInput::class,
+        \SolveBeam\Twinfield\BankTransaction\BankTransactionInput::class,
+        \SolveBeam\Twinfield\BrowseData\BrowseCode::class,
+        \SolveBeam\Twinfield\BrowseData\SortOrder::class,
+        \SolveBeam\Twinfield\Budget\Regime::class,
+        \SolveBeam\Twinfield\CashTransaction\CashTransactionInput::class,
+        \SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementInput::class,
+        \SolveBeam\Twinfield\JournalTransaction\JournalTransactionInput::class,
+        \SolveBeam\Twinfield\Period\Period::class,
+        \SolveBeam\Twinfield\PurchaseTransaction\PurchaseTransactionInput::class,
+        \SolveBeam\Twinfield\SalesInvoice\PaymentMethod::class,
+        \SolveBeam\Twinfield\SalesInvoice\SalesInvoiceInput::class,
+        \SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput::class,
+        \SolveBeam\Twinfield\SpreadTransaction\SpreadLine::class,
+        \SolveBeam\Twinfield\TimeEntry\TimeEntryInput::class,
     ];
 
     public static function examplesDir(): string

@@ -18,15 +18,15 @@ use SolveBeam\Twinfield\Soap\SoapName;
  *
  * @internal
  */
-final class SoapEnvelope implements SoapMessage
+final readonly class SoapEnvelope implements SoapMessage
 {
-    private const SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
-    private const DEFAULT_NAMESPACE = 'http://www.twinfield.com/';
+    private const string SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/';
+    private const string DEFAULT_NAMESPACE = 'http://www.twinfield.com/';
 
     public function __construct(
-        private readonly object $body,
-        private readonly object|null $header = null,
-        private readonly string $namespace = self::DEFAULT_NAMESPACE,
+        private object $body,
+        private object|null $header = null,
+        private string $namespace = self::DEFAULT_NAMESPACE,
     ) {
     }
 

@@ -30,10 +30,10 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class FixedAssetResource
 {
-    private const PATH = '/organisations/{organisationId}/companies/{companyId}/fixedassets';
+    private const string PATH = '/organisations/{organisationId}/companies/{companyId}/fixedassets';
 
     /** Without `fields`, the REST API returns only the default fields (id, code, …). */
-    private const ALL_FIELDS = ['fields' => '*'];
+    private const array ALL_FIELDS = ['fields' => '*'];
 
     public function __construct(
         private Twinfield $twinfield,

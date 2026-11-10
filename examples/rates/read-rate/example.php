@@ -35,4 +35,4 @@ foreach ($rate->prices as $price) {
 
 $today = $rate->priceOn(new DateTimeImmutable('today'));
 
-echo 'Today:     ', $today === null ? 'no price' : $today->external, PHP_EOL;
+echo 'Today:     ', $today->external ?? 'no price', PHP_EOL;

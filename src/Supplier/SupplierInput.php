@@ -50,12 +50,12 @@ final readonly class SupplierInput
     use RelationInput;
 
     /** For messages. */
-    private const RELATION = 'supplier';
+    private const string RELATION = 'supplier';
 
     /**
      * Elements in the order of the documentation; `a/b` is element `b` in `a`.
      */
-    private const ELEMENTS = [
+    private const array ELEMENTS = [
         'shortname',
         'beginperiod',
         'beginyear',

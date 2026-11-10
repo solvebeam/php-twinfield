@@ -30,7 +30,7 @@ final class ExamplesTest extends WriteTestCase
         usleep(500_000);
 
         // TWINFIELD_COMPANY and TWINFIELD_ALLOW_WRITES are set by `composer test:write`.
-        [$exitCode, $stdout, $stderr] = ExampleRunner::run($name, array_filter(getenv(), 'is_string'));
+        [$exitCode, $stdout, $stderr] = ExampleRunner::run($name, array_filter(getenv(), is_string(...)));
 
         self::assertSame(0, $exitCode, "Example {$name} failed:\n{$stderr}");
         self::assertNotSame('', trim($stdout), "Example {$name} printed nothing.");

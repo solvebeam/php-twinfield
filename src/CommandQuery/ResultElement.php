@@ -23,7 +23,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
  */
 final readonly class ResultElement
 {
-    private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
+    private const string XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
 
     public function __construct(
         public DOMElement $element,

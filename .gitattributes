@@ -16,6 +16,7 @@
 /manuals            export-ignore
 /openapi            export-ignore
 /phpcs.xml.dist     export-ignore
+/phpstan.neon.dist  export-ignore
 /phpunit.xml.dist   export-ignore
 /rector.php         export-ignore
 /tests              export-ignore

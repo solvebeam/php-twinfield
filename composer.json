@@ -75,6 +75,8 @@
   "scripts": {
     "phpcs": "phpcs",
     "phpstan": "phpstan analyse --no-progress --memory-limit=1G",
+    "rector": "rector process --dry-run",
+    "rector:fix": "rector process",
     "test": "phpunit --testsuite=unit",
     "test:live": [
       "Composer\\Config::disableProcessTimeout",
@@ -115,6 +117,8 @@
   "scripts-descriptions": {
     "test": "Run offline unit tests",
     "phpstan": "Run PHPStan static analysis",
+    "rector": "Show the changes Rector suggests, without changing files",
+    "rector:fix": "Apply the changes Rector suggests",
     "test:live": "Run read-only tests against the live Twinfield API",
     "test:write": "Run write tests on a test administration, after confirmation",
     "twinfield": "Try live Twinfield calls (whoami, refresh, finder)",

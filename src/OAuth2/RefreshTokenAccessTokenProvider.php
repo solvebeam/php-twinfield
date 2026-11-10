@@ -29,7 +29,7 @@ use SolveBeam\Twinfield\Organisation\Organisation;
 final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
 {
     /** Refresh this many seconds before the access token expires. */
-    private const EXPIRY_MARGIN = 60;
+    private const int EXPIRY_MARGIN = 60;
 
     /** @var array{token: string, expires: int, clusterUrl: string, userCode: string, organisationId: string, organisationCode: string}|null */
     private ?array $current = null;

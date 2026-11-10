@@ -19,9 +19,9 @@ use SolveBeam\Twinfield\Transaction\Amount;
 
 final class BudgetRestTest extends TestCase
 {
-    private const BUDGET_ID = '0b729034-5138-6060-bd10-ad455c6d995c';
-    private const ACCOUNT_ID = 'db528b85-21be-2de8-d376-f0a376a626ec';
-    private const COST_CENTER_ID = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
+    private const string BUDGET_ID = '0b729034-5138-6060-bd10-ad455c6d995c';
+    private const string ACCOUNT_ID = 'db528b85-21be-2de8-d376-f0a376a626ec';
+    private const string COST_CENTER_ID = '7c9e6679-7425-40de-944b-e07fc1f90ae7';
 
     public function testListsAndGetsBudgets(): void
     {

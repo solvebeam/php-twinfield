@@ -28,7 +28,7 @@ use SolveBeam\Twinfield\UnexpectedResponseException;
 
 final class BrowseQueryTest extends TestCase
 {
-    private const COLUMNS = [
+    private const array COLUMNS = [
         'fin.trs.head.code',
         'fin.trs.head.number',
         'fin.trs.head.date',

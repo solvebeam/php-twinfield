@@ -14,11 +14,11 @@ namespace SolveBeam\Twinfield\Soap;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class SoapArray
+final readonly class SoapArray
 {
     public function __construct(
-        public readonly string $elementName,
-        public readonly string $type = 'string',
+        public string $elementName,
+        public string $type = 'string',
     ) {
     }
 }

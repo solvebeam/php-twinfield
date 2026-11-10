@@ -15,17 +15,17 @@ use SolveBeam\Twinfield\Tests\Support\Session;
  */
 final readonly class LoopbackLogin
 {
-    public const SCOPES = ['openid', 'twf.user', 'twf.organisation', 'twf.organisationUser', 'offline_access'];
+    public const array SCOPES = ['openid', 'twf.user', 'twf.organisation', 'twf.organisationUser', 'offline_access'];
 
     /** The identity scopes plus all REST API scopes (`--rest`). */
-    public const REST_SCOPES = [
+    public const array REST_SCOPES = [
         ...self::SCOPES,
         'readArticles', 'writeArticles', 'readBankAccounts', 'readBookkeeping', 'readBookkeepingMatches',
         'readBudgets', 'writeBudgets', 'readBudgetScenarios', 'writeBudgetScenarios', 'readCustomers',
         'readFixedAssets', 'readSuppliers', 'readVat', 'readVatGroup',
     ];
 
-    private const TIMEOUT = 300;
+    private const int TIMEOUT = 300;
 
     public function __construct(
         private Config $config,
@@ -208,7 +208,7 @@ final readonly class LoopbackLogin
             ));
             fclose($connection);
 
-            return array_map('strval', array_filter($query, 'is_string'));
+            return array_map(strval(...), array_filter($query, is_string(...)));
         }
 
         throw new SetupException('Timed out waiting for the redirect. ' . $this->hint());
@@ -226,6 +226,6 @@ final readonly class LoopbackLogin
         $url = $this->prompt->ask('Paste the full URL from the address bar');
         parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
 
-        return array_map('strval', array_filter($query, 'is_string'));
+        return array_map(strval(...), array_filter($query, is_string(...)));
     }
 }

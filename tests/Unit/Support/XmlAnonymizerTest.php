@@ -13,7 +13,7 @@ use SolveBeam\Twinfield\Tests\Support\Fixtures\XmlAnonymizer;
  */
 final class XmlAnonymizerTest extends TestCase
 {
-    private const KEY = 'test-key-0123456789abcdef';
+    private const string KEY = 'test-key-0123456789abcdef';
 
     public function testReplacesDataButKeepsStructure(): void
     {

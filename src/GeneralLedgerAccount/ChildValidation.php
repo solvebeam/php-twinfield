@@ -23,7 +23,7 @@ final readonly class ChildValidation
     /**
      * Financial level of the dimension types Twinfield has, for dimensionType().
      */
-    private const TYPE_LEVELS = [
+    private const array TYPE_LEVELS = [
         'BAS' => 1,
         'PNL' => 1,
         'DEB' => 2,

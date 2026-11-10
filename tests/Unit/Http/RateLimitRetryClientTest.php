@@ -34,7 +34,7 @@ final class RateLimitRetryClientTest extends TestCase
             /** @var list<string> */
             public array $bodies = [];
 
-            public function __construct(private ReplayClient $http)
+            public function __construct(private readonly ReplayClient $http)
             {
             }
 

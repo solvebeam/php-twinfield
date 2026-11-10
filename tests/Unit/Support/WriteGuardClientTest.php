@@ -22,9 +22,9 @@ use SolveBeam\Twinfield\Tests\Support\Http\WriteGuardClient;
  */
 final class WriteGuardClientTest extends TestCase
 {
-    private const ORGANISATION = '0b6a5f6e-1111-2222-3333-444455556666';
-    private const COMPANY_1000 = '0f8fad5b-d9cb-469f-a165-70867728950e';
-    private const COMPANY_1002 = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+    private const string ORGANISATION = '0b6a5f6e-1111-2222-3333-444455556666';
+    private const string COMPANY_1000 = '0f8fad5b-d9cb-469f-a165-70867728950e';
+    private const string COMPANY_1002 = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 
     /**
      * @return iterable<string, array{string, string, bool}>
