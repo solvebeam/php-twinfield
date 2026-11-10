@@ -147,6 +147,8 @@ $transaction = $twinfield->bankTransactions()->create(
 | Purchase | `$twinfield->purchaseTransactions()` | Read, create, update, save many, post, delete, change pay status, open invoices (Finder `IVT`). See [Create purchase transaction](examples/purchase-transactions/create-purchase-transaction/) and [Credit note](examples/purchase-transactions/credit-note/). |
 | Electronic bank statements | `$twinfield->electronicBankStatements()` | Import bank statements and let Twinfield allocate the lines: create, create many. Read statements with their allocations and matchings (BankStatementService): list by statement date or creation date. See [Import electronic bank statement](examples/electronic-bank-statements/import-electronic-bank-statement/) and [List electronic bank statements](examples/electronic-bank-statements/list-electronic-bank-statements/). |
 | Reversal | `$twinfield->reversalTransactions()` | Reversals of journal transactions: read, post final, post provisional, undo. See [Read reversal](examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](examples/reversal-transactions/reverse-journal-transaction/). |
+| Spread | `$twinfield->spreadTransactions()` | Spreads of sales and purchase transactions over a number of periods: read, post final, post provisional (both also per detail line), undo. See [Read spread](examples/spread-transactions/read-spread/) and [Spread purchase transaction](examples/spread-transactions/spread-purchase-transaction/). |
+| Time entry | `$twinfield->timeEntries()` | Time and quantities of a user on a project and an activity: save, save many. See [Create time entry](examples/time-entries/create-time-entry/). |
 
 ## Browse data
 

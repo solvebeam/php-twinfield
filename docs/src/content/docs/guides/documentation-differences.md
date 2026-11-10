@@ -212,6 +212,64 @@ These need a live write on a test company (`composer test:write -- --company=…
 - What `postfinal` does on a provisional transaction, on a transaction that is already reversed, and `postprovisional` on a final one.
 - Whether a provisional transaction with reversal settings gets its reversed transaction when it is posted.
 
+## Spread transactions
+
+[Spread transactions](/guides/transactions/#spread-transactions) (`spread`) are not checked live yet: the SDK and its fixtures follow the documentation, with fictitious values. Documentation: [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/).
+
+### Documentation
+
+| Documentation | SDK |
+|---|---|
+| `settings/dim1`: "Dimension with level 1" | `SpreadSettings::$intermediateAccount`: the introduction calls it the intermediate account the amounts are spread from |
+| Get: `<settings>` has either `startperiod` and `endperiod`, or `linessettings` | `SpreadSettings` has either both periods or `lines`; `isByLines()` tells which |
+| Get: the element of one line is under the heading "Linessettings" twice | Read as `linessettings/linesettings`, as in the examples and the other actions |
+| The response examples have a spread transaction with number `20210003`, between `202100002` and `202100004` | Taken as a typing error; any number from 1 is accepted |
+| "If all periods of line spread settings are equal to transaction period then undo action will be triggered", without a response example | `postFinalByLines()` and `postProvisionalByLines()` accept a response without `<settings>` and `<spreadtransactions>`: `Spread::$settings` is null and `isSpread()` false |
+| Delete (`undo`): the response has only `<original>` | `undo()` returns nothing |
+| `office` in the request | Always the company of the client (SDK choice); the response must be about the same transaction, or `UnexpectedResponseException` |
+| Get has an `action`, `getspreadtransactioninfo`; every other action changes data | The write guard of the tests and examples only counts `<spread action="getspreadtransactioninfo">` as a read |
+
+### Not yet verified
+
+`get()` needs a live read (`composer test:live -- --filter=SpreadTransaction`); the rest a live write on a test company (`composer test:write -- --company=… --filter=SpreadTransaction`, and the [Spread purchase transaction](/examples/spread-transactions/spread-purchase-transaction/) example for `postfinal`):
+
+- What `getspreadtransactioninfo` answers for a transaction that is not spread: without `<settings>` and `<spreadtransactions>` (as the SDK assumes), or with empty elements.
+- The errors for a journal transaction, a number that does not exist and a deleted transaction.
+- Whether `postprovisional` already returns spread transactions, or only saves the settings until the transaction is posted.
+- The response of a spread by lines that removes the spread.
+- Whether `undo` is refused for a final transaction: the documentation only names a provisional one.
+- The day book of the spread transactions (`KOSTENVERDELING` in the examples) and whether `journalTransactions()` reads them.
+- Whether the intermediate account must be a balance sheet account, and which periods Twinfield refuses (closed, before the transaction).
+
+## Time entry
+
+[Time entry](/guides/transactions/#time-entry) (`teqs`) is not checked live yet: the SDK and its fixtures follow the documentation, with fictitious values. Documentation: [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/).
+
+### Documentation
+
+| Documentation | SDK |
+|---|---|
+| `duration`: "The duration entered in hours. No fractions are allowed." The example sends `240` and gets `internal="240.00"` with a rate of `15.00` per `15.00` units, which fits minutes | `TimeLineInput::$duration` is a whole number from 1, sent as is; the unit is not named |
+| "If the journal transaction is not found it will be automatically created, otherwise it is updated", but a time entry has no number | `save()` only; there is no separate create and update |
+| "Multiple transactions can be created at once by enclosing them by the transactions element"; the root in the structure and the example is `<teqs>` | `saveMany()` sends `<teqs>` with a `<teq>` per entry |
+| `@internal`, `@external`, `@units`, `@name` and `@shortname` have type "integer"; the example has `240.00`, `15.00` and names | The values of a line are an `Amount`, the prices of a rate a `UnitPrice`, `units` a numeric string and the names strings |
+| `value1`: "double" | `QuantityLineInput::$quantity` and `QuantityLine::$quantity` are numeric strings, never floats |
+| `prj1` and `prj2` are in every example; nothing says whether they are required | Required for `TimeEntryInput::direct()`, optional for `indirect()` and `personal()`; `TimeEntry::$project`, `$activity`, `$customer` and `$authoriser` are null when the response leaves them out |
+| `header/code` is `DIRECT`, `INDIRECT` or `PERSONAL` | `TimeEntryType` |
+| `prj1`, `prj2`, `accountsreceivable` | `project`, `activity` and `customer` |
+| No read and no delete | Not in the SDK; read time entries with browse data |
+
+### Not yet verified
+
+These need a live write on a test company with time and expenses (`composer test:write -- --company=… --filter=TimeEntry`, and the [Create time entry](/examples/time-entries/create-time-entry/) example with `--save`). A saved time entry stays: there is no delete.
+
+- The unit of `duration`.
+- What makes Twinfield update an entry instead of creating one, and whether a second save replaces the lines or adds them.
+- Which header fields are required per type, and what the response has for an entry without project.
+- Whether `billable`, `ratecode` and `currency` are in every line of the response, as the SDK requires.
+- The `result` per `<teq>` when one of several fails, and where the error is.
+- Whether an undocumented read (`<read><type>teq</type>`) or delete exists.
+
 ## Sales invoices
 
 [Sales invoices](/guides/transactions/#sales-invoices) (`salesinvoice`, Classic invoicing module) were checked on 9 November 2026, read-only: 40 invoices of type `FACTUUR` of one test company (2010–2011; 8 concept, 32 final), each read with the SDK and turned into an input with `edit()`, the not found response, Finder `INV`, and for a final invoice the sales transaction it refers to. A second test company and the invoice type `UREN` had no invoices. Documentation: [Sales invoices](https://developers.twinfield.com/documentation/api/transaction-data/sales-invoices/).

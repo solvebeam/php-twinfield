@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;spread result="1" action="getspreadtransactioninfo"&gt;&lt;original&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;INK&lt;/code&gt;&lt;number&gt;202600001&lt;/number&gt;&lt;/original&gt;&lt;settings&gt;&lt;dim1&gt;2500&lt;/dim1&gt;&lt;linessettings&gt;&lt;linesettings&gt;&lt;lineid&gt;2&lt;/lineid&gt;&lt;startperiod&gt;2026/01&lt;/startperiod&gt;&lt;endperiod&gt;2026/02&lt;/endperiod&gt;&lt;/linesettings&gt;&lt;linesettings&gt;&lt;lineid&gt;4&lt;/lineid&gt;&lt;startperiod&gt;2026/03&lt;/startperiod&gt;&lt;endperiod&gt;2026/05&lt;/endperiod&gt;&lt;/linesettings&gt;&lt;/linessettings&gt;&lt;/settings&gt;&lt;spreadtransactions&gt;&lt;spreadtransaction&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;KOSTENVERDELING&lt;/code&gt;&lt;number&gt;202600002&lt;/number&gt;&lt;/spreadtransaction&gt;&lt;spreadtransaction&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;KOSTENVERDELING&lt;/code&gt;&lt;number&gt;202600003&lt;/number&gt;&lt;/spreadtransaction&gt;&lt;spreadtransaction&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;KOSTENVERDELING&lt;/code&gt;&lt;number&gt;202600004&lt;/number&gt;&lt;/spreadtransaction&gt;&lt;/spreadtransactions&gt;&lt;/spread&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

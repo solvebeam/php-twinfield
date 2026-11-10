@@ -37,8 +37,10 @@ final class ExampleXmlDefinitions
                 'Reversal transactions',
                 self::DOCS . 'transaction-data/reversal-transactions/',
             ],
+            'spread-transactions' => ['Spread transactions', self::DOCS . 'transaction-data/spread-transactions/'],
             'sales-invoices' => ['Sales invoices', self::DOCS . 'transaction-data/sales-invoices/'],
             'sales-transactions' => ['Sales transactions', self::DOCS . 'transaction-data/sales-transactions/'],
+            'time-entries' => ['Time entry', self::DOCS . 'transaction-data/time/'],
             'transaction-blocked-values' => [
                 'Transaction blocked value',
                 self::DOCS . 'transaction-data/transaction-blocked-value/',
@@ -61,6 +63,7 @@ final class ExampleXmlDefinitions
         $reversal = self::DOCS . 'transaction-data/reversal-transactions/';
         $invoices = self::DOCS . 'transaction-data/sales-invoices/';
         $sales = self::DOCS . 'transaction-data/sales-transactions/';
+        $spread = self::DOCS . 'transaction-data/spread-transactions/';
         $statements = self::DOCS . 'transaction-data/electronic-bank-statements/';
         $blocked = self::DOCS . 'transaction-data/transaction-blocked-value/';
 
@@ -1270,6 +1273,62 @@ final class ExampleXmlDefinitions
                     $reversal . '#post-final',
                     "\$twinfield->reversalTransactions()->postFinal('MEMO', 202600003);",
                     ['reversal-transaction-post-final'],
+                ),
+            ],
+
+            // Spread transactions.
+            'spread-transactions/read-spread' => [
+                new XmlExample(
+                    'Get',
+                    $spread . '#get',
+                    "\$twinfield->spreadTransactions()->get('INK', 202600001);",
+                    ['spread-transaction-get'],
+                ),
+            ],
+            'spread-transactions/spread-purchase-transaction' => [
+                new XmlExample(
+                    'Post final',
+                    $spread . '#post-final',
+                    <<<'PHP'
+                        $twinfield->spreadTransactions()->postFinal('INK', 202600001, '2500', Period::of(2026, 1), Period::of(2026, 2));
+                        PHP,
+                    ['spread-transaction-post-final'],
+                ),
+                new XmlExample(
+                    'Post provisional by lines',
+                    $spread . '#post-provisional-by-lines',
+                    <<<'PHP'
+                        $twinfield->spreadTransactions()->postProvisionalByLines(
+                            'INK',
+                            202600001,
+                            '2500',
+                            new SpreadLine(2, Period::of(2026, 1), Period::of(2026, 2)),
+                            new SpreadLine(4, Period::of(2026, 3), Period::of(2026, 5)),
+                        );
+                        PHP,
+                    ['spread-transaction-post-provisional-by-lines'],
+                ),
+                new XmlExample(
+                    'Delete',
+                    $spread . '#delete',
+                    "\$twinfield->spreadTransactions()->undo('INK', 202600001);",
+                    ['spread-transaction-undo'],
+                ),
+            ],
+
+            // Time entry.
+            'time-entries/create-time-entry' => [
+                new XmlExample(
+                    'Create/Update',
+                    self::DOCS . 'transaction-data/time/#createupdate',
+                    <<<'PHP'
+                        $twinfield->timeEntries()->save(
+                            TimeEntryInput::direct('JDOE', new DateTimeImmutable('2026-11-10'), 'P0099', 'A010')
+                                ->time(240, description: 'Deploy')
+                                ->quantity('1.5'),
+                        );
+                        PHP,
+                    ['time-entry-save'],
                 ),
             ],
 

@@ -80,6 +80,8 @@ final class ExamplesTest extends TestCase
         'suppliers/create-supplier',
         'suppliers/delete-supplier',
         'reversal-transactions/reverse-journal-transaction',
+        'spread-transactions/spread-purchase-transaction',
+        'time-entries/create-time-entry',
         'suppliers/update-supplier',
         'transaction-blocked-values/register-blocked-value',
         'transaction-blocked-values/unregister-blocked-value',

@@ -93,6 +93,40 @@ final class WriteGuardClientTest extends TestCase
             false,
         ];
 
+        $purchase = '<original><office>1002</office><code>INK</code><number>202100001</number></original>';
+
+        yield 'process xml spread info' => [
+            'ProcessXmlString',
+            self::processXml('<spread action="getspreadtransactioninfo">' . $purchase . '</spread>'),
+            true,
+        ];
+        yield 'process xml spread without action' => [
+            'ProcessXmlString',
+            self::processXml('<spread>' . $purchase . '</spread>'),
+            false,
+        ];
+        yield 'process xml spread post provisional' => [
+            'ProcessXmlString',
+            self::processXml('<spread action="postprovisional">' . $purchase . '</spread>'),
+            false,
+        ];
+        yield 'process xml spread post final by lines' => [
+            'ProcessXmlString',
+            self::processXml('<spread action="postfinalbylines">' . $purchase . '</spread>'),
+            false,
+        ];
+        yield 'process xml spread undo' => [
+            'ProcessXmlString',
+            self::processXml('<spread action="undo">' . $purchase . '</spread>'),
+            false,
+        ];
+
+        yield 'process xml time entry' => [
+            'ProcessXmlString',
+            self::processXml('<teqs><teq><header><office>1002</office><code>DIRECT</code></header></teq></teqs>'),
+            false,
+        ];
+
         yield 'process xml dimension type read' => [
             'ProcessXmlString',
             self::processXml('<dimensiontype><office>1002</office><code>DEB</code></dimensiontype>'),

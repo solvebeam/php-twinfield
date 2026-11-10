@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;teqs result="0"&gt;&lt;teq result="0"&gt;&lt;header&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;DIRECT&lt;/code&gt;&lt;user msgtype="error" msg="De gebruiker NOBODY bestaat niet." result="0"&gt;NOBODY&lt;/user&gt;&lt;date&gt;20261111&lt;/date&gt;&lt;prj1&gt;P0099&lt;/prj1&gt;&lt;prj2&gt;A010&lt;/prj2&gt;&lt;/header&gt;&lt;lines&gt;&lt;line type="TIME"&gt;&lt;duration&gt;60&lt;/duration&gt;&lt;/line&gt;&lt;/lines&gt;&lt;/teq&gt;&lt;/teqs&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

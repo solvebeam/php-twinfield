@@ -56,6 +56,16 @@ final readonly class Period implements Stringable
     }
 
     /**
+     * True when this period comes before the other one: an earlier year, or an earlier period in
+     * the same year.
+     */
+    public function isBefore(self $other): bool
+    {
+        return $this->year < $other->year
+            || ($this->year === $other->year && $this->number < $other->number);
+    }
+
+    /**
      * `yyyy/pp`, e.g. `2026/03`, as Twinfield writes it.
      */
     public function __toString(): string

@@ -48,6 +48,8 @@ final class ExampleXml
         'SolveBeam\Twinfield\SalesInvoice\PaymentMethod',
         'SolveBeam\Twinfield\SalesInvoice\SalesInvoiceInput',
         'SolveBeam\Twinfield\SalesTransaction\SalesTransactionInput',
+        'SolveBeam\Twinfield\SpreadTransaction\SpreadLine',
+        'SolveBeam\Twinfield\TimeEntry\TimeEntryInput',
     ];
 
     public static function examplesDir(): string

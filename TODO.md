@@ -529,6 +529,83 @@ To check:
 - Does posting a provisional transaction with reversal settings create the reversed transaction?
 - `<reverse>` without `action`: is it really a read, as the documentation example suggests?
 
+## Spread transactions: verify live
+
+`spreadTransactions()` (`<spread>`) is only tested offline, with fixtures that follow the
+documentation (`spread-transaction-*.xml`, fictitious values). Nothing is tested live yet.
+
+```sh
+composer test:live -- --filter=SpreadTransaction
+composer test:write -- --company=1002_3 --filter=SpreadTransaction
+```
+
+The live test only reads (`getspreadtransactioninfo`); set `TWINFIELD_PURCHASE_TRANSACTION` to also
+read the spread of an existing purchase transaction. The write test only uses a provisional
+purchase transaction (`postProvisional()`, `get()`, `undo()`, `postProvisionalByLines()`, then
+deletes it) and prints what Twinfield answers. `postFinal()` and `postFinalByLines()` make final
+transactions that cannot be deleted: run
+`examples/spread-transactions/spread-purchase-transaction` once on a test company by hand.
+
+To check:
+
+- `get()` on a transaction without spread: are `<settings>` and `<spreadtransactions>` left out (as
+  `spread-transaction-get-not-spread.xml` assumes), or empty? Then `Spread::$settings` stays
+  nullable or not.
+- `get()` on a journal transaction, a number that does not exist and a deleted transaction: which
+  errors? `spread-transaction-get-not-found.xml` copies the message of the reversal service.
+- The real responses of all actions; record them (`TWINFIELD_RECORD=1`, then
+  `composer twinfield:anonymize`) to replace the fixtures, and replace the illustrative output in the
+  READMEs of the examples.
+- Does `postprovisional` already make spread transactions, or only after posting?
+- A spread by lines with all periods equal to the period of the transaction: the response of the
+  implicit undo.
+- `undo()` on a final transaction: refused?
+- The day book of the spread transactions and whether `journalTransactions()->get()` reads them.
+- Must the intermediate account be a balance sheet account? Which periods are refused?
+
+Then move what was found to the
+[Spread transactions](docs/src/content/docs/guides/documentation-differences.md#spread-transactions)
+section and the [guide](docs/src/content/docs/guides/transactions.md#spread-transactions).
+
+## Time entry: verify live
+
+`timeEntries()` (`<teqs>`) is only tested offline, with fixtures based on the response example of
+the documentation (`time-entry-*.xml`, fictitious values). Nothing is tested live yet.
+
+```sh
+composer test:write -- --company=1002_3 --filter=TimeEntry
+```
+
+The write test leaves a time entry (15 and 30 units of the current user, today) in the company: a
+time entry can't be deleted through the API. It needs a company with time and expenses, a project
+and an activity, and prints what Twinfield answers.
+
+To check, because the documentation contradicts itself:
+
+- The unit of `duration`: the table says "hours, no fractions", the example sends `240` and gets
+  `internal="240.00"` with a rate of 15.00 per 15 units, which fits minutes. Then name the unit in
+  `TimeLineInput::$duration`, `TimeEntryInput::time()` and the guide.
+- What makes Twinfield update an entry instead of creating one ("if not found it will be created,
+  otherwise updated", but there is no number): company, type, user, date, project and activity?
+  Does a second save replace the lines or add them? Can `@id` of a line be sent?
+- Is there an undocumented read (`<read><type>teq</type>…`) or delete? Then add `get()`/`delete()`
+  and clean up in the write test.
+- Which fields are required per type (`DIRECT`, `INDIRECT`, `PERSONAL`)? `indirect()` and
+  `personal()` now make project and activity optional, and `TimeEntry::$project`, `$activity`,
+  `$customer` and `$authoriser` are nullable for that; `time-entry-save-indirect.xml` is a guess.
+- Are `billable`, `ratecode` and `currency` in every line of the response (required in `TimeLine`
+  and `QuantityLine`), also without a default rate? Is a `QUANTITY` line without `TIME` line accepted?
+- The `result` per `<teq>` when one of several fails, and where the error is
+  (`time-entry-save-many.xml` puts it on `header/user`, with an invented message).
+- `internal`, `external` and `units`: the SDK reads the values as `Amount` (2 decimals) and the
+  rate prices as `UnitPrice`. The documentation calls them "integer", the example has `240.00`.
+- What `authoriser/@result` means; the SDK ignores it.
+
+Record the responses (`TWINFIELD_RECORD=1`, then `composer twinfield:anonymize`) to replace the
+fixtures, run `examples/time-entries/create-time-entry` with `--save` once and replace the
+illustrative output in its README. Then move what was found to the
+[Time entry](docs/src/content/docs/guides/documentation-differences.md#time-entry) section.
+
 ## Electronic bank statements: verify live
 
 `electronicBankStatements()` (`<statements>` with `<statement target="electronicstatements">`) is only

@@ -76,7 +76,9 @@ use SolveBeam\Twinfield\Soap\LastRateLimit;
 use SolveBeam\Twinfield\Soap\RateLimit;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
+use SolveBeam\Twinfield\SpreadTransaction\SpreadTransactionResource;
 use SolveBeam\Twinfield\Supplier\SupplierResource;
+use SolveBeam\Twinfield\TimeEntry\TimeEntryResource;
 use SolveBeam\Twinfield\TransactionBlockedValue\TransactionBlockedValueResource;
 use SolveBeam\Twinfield\User\UserResource;
 use SolveBeam\Twinfield\VatCode\VatCodeResource;
@@ -545,6 +547,24 @@ final readonly class Twinfield
     public function reversalTransactions(): ReversalTransactionResource
     {
         return new ReversalTransactionResource($this);
+    }
+
+    /**
+     * Spreads of sales and purchase transactions of the company: read, spread a final or a
+     * provisional transaction over a number of periods, and undo that.
+     */
+    public function spreadTransactions(): SpreadTransactionResource
+    {
+        return new SpreadTransactionResource($this);
+    }
+
+    /**
+     * Time entries of the company: create or update the time and quantities of a user on a
+     * project and an activity, one or several in one request.
+     */
+    public function timeEntries(): TimeEntryResource
+    {
+        return new TimeEntryResource($this);
     }
 
     /**

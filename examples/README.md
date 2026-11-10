@@ -114,6 +114,15 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Read reversal](reversal-transactions/read-reversal/): the reversed transaction and reversal settings of a journal transaction.
 - [Reverse journal transaction](reversal-transactions/reverse-journal-transaction/): reverse a final journal transaction (changes data).
 
+## Spread transactions
+
+- [Read spread](spread-transactions/read-spread/): the intermediate account, periods and spread transactions of a sales or purchase transaction.
+- [Spread purchase transaction](spread-transactions/spread-purchase-transaction/): spread the costs of a purchase transaction over a number of periods (changes data).
+
+## Time entry
+
+- [Create time entry](time-entries/create-time-entry/): save the time and kilometres of a user on a project and an activity (changes data with `--save`).
+
 ## Sales invoices
 
 - [List invoice types](sales-invoices/list-invoice-types/): the invoice types of the company, with Finder `INV`.

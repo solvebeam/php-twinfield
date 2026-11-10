@@ -54,8 +54,12 @@ final readonly class WriteGuardClient implements ClientInterface
      * Root elements that read only with this `action`; every other action (or none) changes data.
      *
      * @see https://developers.twinfield.com/documentation/api/transaction-data/reversal-transactions/#get
+     * @see https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/#get
      */
-    private const READ_ACTION_ROOTS = ['reverse' => 'getreversetransactioninfo'];
+    private const READ_ACTION_ROOTS = [
+        'reverse' => 'getreversetransactioninfo',
+        'spread' => 'getspreadtransactioninfo',
+    ];
 
     /** HTTP methods of REST API requests that only read. */
     private const REST_READ_METHODS = ['GET', 'HEAD', 'OPTIONS'];

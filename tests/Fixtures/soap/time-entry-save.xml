@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;teqs result="1"&gt;&lt;teq result="1"&gt;&lt;header&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;DIRECT&lt;/code&gt;&lt;user name="John Doe" shortname="John"&gt;JDOE&lt;/user&gt;&lt;date&gt;20261110&lt;/date&gt;&lt;prj1 name="API documentation" shortname="API documentation"&gt;P0099&lt;/prj1&gt;&lt;prj2 name="Deploy API documentation" shortname="API documentation"&gt;A010&lt;/prj2&gt;&lt;accountsreceivable&gt;1010&lt;/accountsreceivable&gt;&lt;authoriser name="Site supervisor" result="1" shortname="Site supervisor"&gt;SUPER&lt;/authoriser&gt;&lt;/header&gt;&lt;lines&gt;&lt;line type="TIME" id="1"&gt;&lt;duration internal="240.00" external="400.00"&gt;240&lt;/duration&gt;&lt;description&gt;Deploy&lt;/description&gt;&lt;billable&gt;1&lt;/billable&gt;&lt;ratecode internal="15.00" external="25.00" units="15.00" name="Normal rate" shortname="Normal rate"&gt;T001&lt;/ratecode&gt;&lt;currency&gt;EUR&lt;/currency&gt;&lt;/line&gt;&lt;line type="QUANTITY" id="2"&gt;&lt;value1 internal="15.00" external="30.00"&gt;1.5&lt;/value1&gt;&lt;ratecode1 internal="10.00" external="20.00" units="1" name="KM" shortname="KM"&gt;KM&lt;/ratecode1&gt;&lt;currency1&gt;EUR&lt;/currency1&gt;&lt;billable1&gt;0&lt;/billable1&gt;&lt;/line&gt;&lt;/lines&gt;&lt;/teq&gt;&lt;/teqs&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

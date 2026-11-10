@@ -114,6 +114,8 @@ export default defineConfig({
 						{ label: 'Reversal transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/reversal-transactions' } }] },
 						{ label: 'Sales invoices', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-invoices' } }] },
 						{ label: 'Sales transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/sales-transactions' } }] },
+						{ label: 'Spread transactions', collapsed: true, items: [{ autogenerate: { directory: 'examples/spread-transactions' } }] },
+						{ label: 'Time entry', collapsed: true, items: [{ autogenerate: { directory: 'examples/time-entries' } }] },
 						{ label: 'Transaction blocked value', collapsed: true, items: [{ autogenerate: { directory: 'examples/transaction-blocked-values' } }] },
 					],
 				},

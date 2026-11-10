@@ -18,8 +18,8 @@ Transactions are the bookings in Twinfield: bank and cash statements, sales and 
 | Transaction blocked value | [Transaction blocked value](https://developers.twinfield.com/documentation/api/transaction-data/transaction-blocked-value/) | `$twinfield->transactionBlockedValues()` | Register, unregister; see [Blocked values](#blocked-values) |
 | Electronic bank statements | [Electronic bank statements](https://developers.twinfield.com/documentation/api/transaction-data/electronic-bank-statements/) | `$twinfield->electronicBankStatements()` | Create, create many; see [Electronic bank statements](#electronic-bank-statements) |
 | Electronic bank statements (read) | [Electronic bank statements](https://developers.twinfield.com/documentation/api/request-data/electronic-bank-statements/) (Request Data, BankStatementService) | `$twinfield->electronicBankStatements()` | List by statement date or by creation date; see [Reading bank statements](#reading-bank-statements) |
-| Spread transactions | [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/) |  | Not supported yet |
-| Time entry | [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/) |  | Not supported yet |
+| Spread transactions | [Spread transactions](https://developers.twinfield.com/documentation/api/transaction-data/spread-transactions/) | `$twinfield->spreadTransactions()` | Read, post final, post provisional, both also by lines, undo; see [Spread transactions](#spread-transactions) |
+| Time entry | [Time entry](https://developers.twinfield.com/documentation/api/transaction-data/time/) | `$twinfield->timeEntries()` | Save, save many; see [Time entry](#time-entry) |
 
 The Twinfield documentation lists all fields of each transaction type. Where the SDK deviates from it, see [Differences with the documentation](/guides/documentation-differences/).
 
@@ -231,6 +231,78 @@ if ($reversal->reversed === null) {
 - The documentation has no way to set `reverseInNextPeriod`: the requests only have the original transaction.
 
 Examples: [Read reversal](/examples/reversal-transactions/read-reversal/) and [Reverse journal transaction](/examples/reversal-transactions/reverse-journal-transaction/). How the live responses differ from the documentation: [Differences with the documentation](/guides/documentation-differences/#reversal-transactions).
+
+## Spread transactions
+
+A spread divides the costs or revenue of one sales or purchase transaction over a number of periods, e.g. a yearly subscription over twelve months (kosten- of opbrengstenverdeling). Twinfield makes the transactions for it itself: one that moves the amounts of the detail lines to an intermediate account in the period of the original transaction, and one or more that spread them from there over the periods.
+
+```php
+use SolveBeam\Twinfield\Period\Period;
+use SolveBeam\Twinfield\SpreadTransaction\SpreadLine;
+
+$spreads = $twinfield->spreadTransactions();
+
+// The whole transaction over the same periods, through intermediate account 2500
+$spread = $spreads->postFinal('INK', 202600021, '2500', Period::of(2026, 1), Period::of(2026, 12));
+
+foreach ($spread->spreadTransactions as $reference) {
+    $transaction = $twinfield->journalTransactions()->get($reference->dayBook, $reference->number);
+}
+
+// Periods per detail line
+$purchase = $twinfield->purchaseTransactions()->get('INK', 202600022);
+
+$spreads->postProvisionalByLines(
+    'INK',
+    202600022,
+    '2500',
+    new SpreadLine($purchase->details[0]->id, Period::of(2026, 1), Period::of(2026, 6)),
+    new SpreadLine($purchase->details[1]->id, Period::of(2026, 7), Period::of(2026, 12)),
+);
+```
+
+- `get($dayBook, $number)` returns a `Spread`: the `original` transaction, the `settings` (or `null` when the transaction is not spread) and the `spreadTransactions`. The transactions are a `TransactionReference` (company, day book and number).
+- `postFinal()` spreads a **final** transaction, `postProvisional()` a **provisional** one. Both take the intermediate account (`dim1` in the Twinfield documentation, a balance sheet account) and the first and last period.
+- `postFinalByLines()` and `postProvisionalByLines()` take the periods per detail line, as `SpreadLine` objects with the id of the line (`DetailLine::$id`). When the periods of all lines are the period of the transaction itself, Twinfield removes the spread instead.
+- `undo()` removes the spread of a provisional transaction: the spread transactions, the settings and the link.
+- `SpreadSettings` has either `startPeriod` and `endPeriod`, or `lines`; `isByLines()` tells which.
+- An end period before the start period, a spread by lines without lines and the same line twice are refused before anything is sent (`InvalidArgumentException`). What Twinfield refuses is thrown as `ProcessXmlException`.
+
+Examples: [Read spread](/examples/spread-transactions/read-spread/) and [Spread purchase transaction](/examples/spread-transactions/spread-purchase-transaction/). What is not verified live yet: [Differences with the documentation](/guides/documentation-differences/#spread-transactions).
+
+## Time entry
+
+A time entry is the time a user writes on a project and an activity on one day, with optional quantities such as kilometres (uren en onkosten). It is not a booking in a day book: it has no day book and no number.
+
+```php
+use SolveBeam\Twinfield\TimeEntry\TimeEntryInput;
+
+$entries = $twinfield->timeEntries();
+
+$entry = $entries->save(
+    TimeEntryInput::direct('JDOE', new DateTimeImmutable('2026-11-10'), 'P0099', 'A010')
+        ->time(240, description: 'Deploy')
+        ->quantity('12.5', rate: 'KM'),
+);
+
+echo $entry->timeLines[0]->externalValue, ' ', $entry->timeLines[0]->currency, PHP_EOL;
+
+// A whole week in one request
+$result = $entries->saveMany($monday, $tuesday, $wednesday);
+
+foreach ($result->failed() as $failed) {
+    echo 'Failed #', $failed->index, ': ', $failed->message(), PHP_EOL;
+}
+```
+
+- `TimeEntryInput::direct($user, $date, $project, $activity)` is time on a project. `indirect()` and `personal()` are for time that is not for a customer, such as a meeting or leave; there the project and the activity are optional.
+- `time($duration, …)` adds a time line, with an optional `description`, `billable` and `rate`. `quantity($quantity, …)` adds a quantity line with an optional `rate` and `billable`; the quantity is a numeric string. What you leave out, Twinfield takes from the project and the activity. An entry needs at least one line.
+- The unit of `duration` is not clear in the Twinfield documentation: the field is described as hours, but the example fits minutes. Check it on a test company before you rely on it.
+- `save()` creates the entry when it does not exist yet and updates it otherwise. It returns a `TimeEntry`: the `user`, `project`, `activity` and `authoriser` with their names, the `customer` of the project, and the `timeLines` and `quantityLines` with their `rate` (code, name, internal and external price, units) and their internal and external value (`Amount`).
+- `saveMany()` does not throw when Twinfield refuses some entries: it returns a `SavedTimeEntry` or `FailedTimeEntry` per input, in the same order.
+- The Twinfield documentation has no read and no delete for time entries. Read them with [browse data](/guides/browse-data/), e.g. browse code [`650_1`](/examples/browse-data/650_1-time-and-expenses-details/).
+
+Example: [Create time entry](/examples/time-entries/create-time-entry/). What is not verified live yet: [Differences with the documentation](/guides/documentation-differences/#time-entry).
 
 ## Sales invoices
 
@@ -506,3 +578,5 @@ By default Twinfield returns warnings, e.g. when the date is outside the period.
 - [Open invoices](/examples/purchase-transactions/open-invoices/): unpaid invoices of a supplier.
 - [Read journal transaction](/examples/journal-transactions/read-journal-transaction/), [create](/examples/journal-transactions/create-journal-transaction/) and [opening balance](/examples/journal-transactions/opening-balance/).
 - [Read reversal](/examples/reversal-transactions/read-reversal/) and [reverse journal transaction](/examples/reversal-transactions/reverse-journal-transaction/).
+- [Read spread](/examples/spread-transactions/read-spread/) and [spread purchase transaction](/examples/spread-transactions/spread-purchase-transaction/).
+- [Create time entry](/examples/time-entries/create-time-entry/): time and kilometres on a project.

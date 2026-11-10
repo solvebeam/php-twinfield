@@ -32,6 +32,14 @@ final class PeriodTest extends TestCase
         self::assertFalse(Period::of(2026, 1)->equals(Period::of(2026, 2)));
     }
 
+    public function testIsBefore(): void
+    {
+        self::assertTrue(Period::of(2026, 3)->isBefore(Period::of(2026, 4)));
+        self::assertTrue(Period::of(2025, 12)->isBefore(Period::of(2026, 1)));
+        self::assertFalse(Period::of(2026, 3)->isBefore(Period::of(2026, 3)));
+        self::assertFalse(Period::of(2026, 1)->isBefore(Period::of(2025, 12)));
+    }
+
     public function testRefusesANegativeNumber(): void
     {
         $this->expectException(InvalidArgumentException::class);

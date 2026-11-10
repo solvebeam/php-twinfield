@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;teqs result="1"&gt;&lt;teq result="1"&gt;&lt;header&gt;&lt;office&gt;1000&lt;/office&gt;&lt;code&gt;INDIRECT&lt;/code&gt;&lt;user name="John Doe" shortname="John"&gt;JDOE&lt;/user&gt;&lt;date&gt;20261110&lt;/date&gt;&lt;/header&gt;&lt;lines&gt;&lt;line type="TIME" id="1"&gt;&lt;duration internal="60.00" external="0.00"&gt;60&lt;/duration&gt;&lt;billable&gt;0&lt;/billable&gt;&lt;ratecode internal="15.00" external="0.00" units="15.00" name="Internal" shortname="Internal"&gt;T000&lt;/ratecode&gt;&lt;currency&gt;EUR&lt;/currency&gt;&lt;/line&gt;&lt;/lines&gt;&lt;/teq&gt;&lt;/teqs&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>
