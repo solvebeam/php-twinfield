@@ -12,7 +12,17 @@ final class SoapClient
     public function __construct(
         private readonly ClientInterface $httpClient,
         private readonly SoapRequestFactory $requestFactory,
+        private readonly LastRateLimit $lastRateLimit = new LastRateLimit(),
     ) {
+    }
+
+    /**
+     * The rate limit headers of the most recent response that had them, also when that response was
+     * a SOAP fault or an HTTP error; null before the first one.
+     */
+    public function lastRateLimit(): ?RateLimit
+    {
+        return $this->lastRateLimit->get();
     }
 
     public function send(
@@ -33,6 +43,9 @@ final class SoapClient
     ): SoapResponse {
         $request = $envelope->toRequest($url, $this->requestFactory, $method);
         $response = $this->httpClient->sendRequest($request);
+
+        // Before anything is thrown: a fault or an HTTP error costs API credits too.
+        $this->lastRateLimit->record($response);
 
         if ($response->getStatusCode() === 429) {
             throw RateLimitExceededException::fromHttpResponse($response);

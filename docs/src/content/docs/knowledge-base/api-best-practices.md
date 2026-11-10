@@ -80,7 +80,7 @@ Where to find each topic of the series in this SDK:
 
 ### Rate limits
 
-When Twinfield answers HTTP 429 Too Many Requests, the SDK throws a `RateLimitExceededException`. It does not retry by itself: your integration decides when to try again. `retryAfterSeconds` has the value of the `Retry-After` header, or `null` when Twinfield did not send one. `concurrencyLimitExceeded` says whether the concurrency limit was exceeded instead of the rate limit. See [Rate limits](/guides/rate-limits/#with-this-sdk) for the other properties and exponential backoff.
+When Twinfield answers HTTP 429 Too Many Requests, the SDK throws a `RateLimitExceededException`. It does not retry by itself: your integration decides when to try again, or you wrap the HTTP client in a `RateLimitRetryClient` that waits and retries for you (see [Retrying automatically](/guides/rate-limits/#retrying-automatically)). `retryAfterSeconds` has the value of the `Retry-After` header, or `null` when Twinfield did not send one. `concurrencyLimitExceeded` says whether the concurrency limit was exceeded instead of the rate limit. See [Rate limits](/guides/rate-limits/#with-this-sdk) for the other properties and exponential backoff.
 
 ```php
 use SolveBeam\Twinfield\Soap\RateLimitExceededException;

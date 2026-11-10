@@ -12,11 +12,18 @@ use RuntimeException;
  *
  * The header values are `null` when Twinfield did not send the header. `Retry-After` is only sent
  * when the rate limit is exceeded, and Twinfield sends no headers for the concurrency limit.
+ * The `rateLimit…` properties are the values of `$rateLimit`, the same object that
+ * `Twinfield::lastRateLimit()` returns after any request.
  *
  * @see https://developers.twinfield.com/documentation/getting-started/fair-use-policy#rate-limits
  */
 final class RateLimitExceededException extends RuntimeException
 {
+    /**
+     * The `X-RateLimit-…` headers of the 429 response.
+     */
+    public readonly RateLimit $rateLimit;
+
     /**
      * `Limit` and `Remaining` are API credits per minute; without `ClientId` the lowest of all buckets.
      *
@@ -39,11 +46,22 @@ final class RateLimitExceededException extends RuntimeException
         public readonly bool $concurrencyLimitExceeded = false,
     ) {
         parent::__construct($message, 429);
+
+        $this->rateLimit = new RateLimit(
+            $rateLimitLimit,
+            $rateLimitRemaining,
+            $rateLimitClientIdLimit,
+            $rateLimitClientIdRemaining,
+            $rateLimitCredited,
+        );
     }
 
     public static function fromHttpResponse(ResponseInterface $response): self
     {
-        $seconds = self::intHeader($response, 'Retry-After');
+        // Retry-After may also be an HTTP date (RFC 9110); Twinfield documents seconds, anything else is null.
+        $retryAfter = $response->getHeaderLine('Retry-After');
+        $seconds = ctype_digit($retryAfter) ? (int) $retryAfter : null;
+        $rateLimit = RateLimit::fromResponse($response);
         $concurrency = stripos((string) $response->getBody(), 'Concurrency limit exceeded') !== false;
 
         $message = match (true) {
@@ -55,19 +73,12 @@ final class RateLimitExceededException extends RuntimeException
         return new self(
             $message,
             retryAfterSeconds: $seconds,
-            rateLimitLimit: self::intHeader($response, 'X-RateLimit-Limit'),
-            rateLimitRemaining: self::intHeader($response, 'X-RateLimit-Remaining'),
-            rateLimitClientIdLimit: self::intHeader($response, 'X-RateLimit-ClientId-Limit'),
-            rateLimitClientIdRemaining: self::intHeader($response, 'X-RateLimit-ClientId-Remaining'),
-            rateLimitCredited: self::intHeader($response, 'X-RateLimit-Credited'),
+            rateLimitLimit: $rateLimit->limit,
+            rateLimitRemaining: $rateLimit->remaining,
+            rateLimitClientIdLimit: $rateLimit->clientIdLimit,
+            rateLimitClientIdRemaining: $rateLimit->clientIdRemaining,
+            rateLimitCredited: $rateLimit->credited,
             concurrencyLimitExceeded: $concurrency,
         );
-    }
-
-    private static function intHeader(ResponseInterface $response, string $name): ?int
-    {
-        $value = $response->getHeaderLine($name);
-
-        return ctype_digit($value) ? (int) $value : null;
     }
 }

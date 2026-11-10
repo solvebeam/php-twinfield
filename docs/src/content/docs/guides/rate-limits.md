@@ -1,6 +1,6 @@
 ---
 title: Rate limits
-description: How many API credits per minute and how many concurrent requests Twinfield allows, which requests count as queries, and how to handle a 429 response with this SDK.
+description: How many API credits per minute and how many concurrent requests Twinfield allows, which requests count as queries, and how to read the rate limit headers and handle a 429 response with this SDK.
 ---
 
 Twinfield limits how many requests an integration may send per minute (the rate limit) and how many it may send at the same time (the concurrency limit). Over a limit, Twinfield answers HTTP 429 Too Many Requests and does not process the request. This page follows [Fair Use Policy and Limitations](https://developers.twinfield.com/documentation/getting-started/fair-use-policy#rate-limits) on the Twinfield developer portal, read on 9 November 2026. The developer portal is leading: the limits can change.
@@ -28,7 +28,7 @@ Twinfield counts these requests as query requests (1 credit):
 | `/webservices/*.asmx` with a SOAP action that starts with `Get`, `Query`, `Search` or `Load` | the Finder (`Search`): searching master data, offices, users, … |
 | `/webservices/*.svc` with a SOAP action that starts with `Get`, `Query`, `Search` or `Load` | the queries of the Command & Query services, e.g. periods (`Query`) |
 | `/webservices/DeletedTransactionsService.svc` | [Deleted transactions](/guides/transactions/#deleted-transactions) |
-| ProcessXML with the root element `list`, `read`, `columns`, `accountcode` or `accountcodes` | every `get()` and `list()` on the [XML web services](/guides/process-xml/) |
+| ProcessXML with the root element `list`, `read`, `columns`, `accountcode` or `accountcodes` | most `get()` and `list()` calls on the [XML web services](/guides/process-xml/); a read that is sent with the root element of the entity itself, such as a dimension type (`<dimensiontype>`), costs 3 credits |
 
 Creating, updating, posting and deleting are other requests (3 credits). So a read costs a third of a write: 1000 reads per minute fit in a bucket, but only 333 writes.
 
@@ -57,7 +57,7 @@ A 429 for the rate limit also has `Retry-After`: the recommended wait in seconds
 
 ## With this SDK
 
-On HTTP 429 the SDK throws a `RateLimitExceededException`. It does not retry by itself, so your integration decides how long to wait.
+On HTTP 429 the SDK throws a `RateLimitExceededException`. It does not retry by itself, so your integration decides how long to wait, unless you wrap the HTTP client in a `RateLimitRetryClient`: see [Retrying automatically](#retrying-automatically).
 
 | Property | Value |
 |---|---|
@@ -69,9 +69,49 @@ On HTTP 429 the SDK throws a `RateLimitExceededException`. It does not retry by 
 | `rateLimitClientIdRemaining` | `X-RateLimit-ClientId-Remaining` |
 | `rateLimitCredited` | `X-RateLimit-Credited` |
 
-The header properties are integers, or `null` when Twinfield did not send the header. The SDK only reads the headers of a 429; it does not return them for a successful request.
+The header properties are integers, or `null` when Twinfield did not send the header. The five `rateLimit…` properties are also together in `rateLimit`, the same `RateLimit` object as below.
 
-Twinfield recommends exponential backoff that starts at the `Retry-After` value:
+Twinfield recommends exponential backoff that starts at the `Retry-After` value.
+
+### Retrying automatically
+
+`RateLimitRetryClient` is a PSR-18 client that does this backoff for every request of the SDK, for the SOAP web services and the [REST API](/guides/rest-api/) alike. Wrap your own HTTP client in it and pass it to `Twinfield::create()`:
+
+```php
+use Http\Discovery\Psr18ClientDiscovery;
+use SolveBeam\Twinfield\Http\RateLimitRetryClient;
+use SolveBeam\Twinfield\Twinfield;
+
+$twinfield = Twinfield::create(
+    $accessTokenProvider,
+    new RateLimitRetryClient(Psr18ClientDiscovery::find()),
+);
+
+// Waits and sends the request again when Twinfield answers 429.
+$customer = $twinfield->customers()->get('1000');
+```
+
+On a 429 it waits for `Retry-After` and sends the same request again; every next wait is doubled. A 429 for the concurrency limit has no `Retry-After`: there the first wait is 1 second.
+
+| Option | Default | Meaning |
+|---|---|---|
+| `maxAttempts` | 5 | How often a request is sent at most, the first time included |
+| `maxWaitSeconds` | 120 | How long one request waits at most, all its waits together. A wait that no longer fits is not started. |
+
+```php
+// For a web request: give up quickly.
+new RateLimitRetryClient($httpClient, maxAttempts: 2, maxWaitSeconds: 5);
+```
+
+- When the attempts or the waiting time run out, you get the `RateLimitExceededException` of the last 429, as without the client.
+- Sending again is safe, also for a request that creates or updates something: Twinfield does not process a request it answers with 429.
+- Only a 429 is retried. A network error or an HTTP 5xx is not: there it is not certain that Twinfield did not process the request.
+- The waiting blocks the PHP process (`sleep()`). The API credits are per minute, so `Retry-After` can be most of a minute: fine for a background job, long for a web request.
+- `lastRateLimit()` shows the response the SDK got in the end, not the 429 responses in between.
+
+### Retrying yourself
+
+To decide per request what happens, e.g. to put a job back in the queue instead of waiting, catch the exception. The same backoff as a function:
 
 ```php
 use SolveBeam\Twinfield\Soap\RateLimitExceededException;
@@ -100,6 +140,48 @@ function withBackoff(callable $request, int $attempts = 5): mixed
 
 $customer = withBackoff(fn () => $twinfield->customers()->get('1000'));
 ```
+
+### Monitoring your usage
+
+Twinfield advises to monitor the usage of your integration. After every request, `$twinfield->lastRateLimit()` returns the `X-RateLimit-…` headers of the most recent API response as a `RateLimit`, or `null` before the first request:
+
+| Property | Value |
+|---|---|
+| `limit` | `X-RateLimit-Limit` |
+| `remaining` | `X-RateLimit-Remaining` |
+| `clientIdLimit` | `X-RateLimit-ClientId-Limit` |
+| `clientIdRemaining` | `X-RateLimit-ClientId-Remaining` |
+| `credited` | `X-RateLimit-Credited` |
+
+Each property is an integer, or `null` when Twinfield did not send the header.
+
+- It covers the XML web services, the Finder, the Command & Query services and the [REST API](/guides/rest-api/).
+- It is shared by all clients that come from one `Twinfield::create()`: a request through `$twinfield->company('1000')` shows up in `$twinfield->lastRateLimit()` too.
+- A response that ends in an exception counts as well, because it costs API credits too: a SOAP fault, a `ProcessXmlException`, an HTTP error of the REST API or a 429.
+- A response without any of these headers, such as a 429 for the concurrency limit, leaves the last known value in place.
+- Logging in and refreshing the access token go to `login.twinfield.com`, not through the API: they never change it.
+
+With it, an integration can slow down before the limit is reached instead of after a 429. The credits are per minute, so waiting for the next minute is enough:
+
+```php
+$company = $twinfield->company('1000');
+
+foreach ($codes as $code) {
+    $customer = $company->customers()->get($code);
+
+    // …
+
+    $rateLimit = $twinfield->lastRateLimit();
+
+    // A write costs 3 credits: keep a margin, also because other processes with the
+    // same client ID or organisation use the same buckets.
+    if ($rateLimit?->remaining !== null && $rateLimit->remaining < 10) {
+        sleep(60);
+    }
+}
+```
+
+`credited` shows what the last request cost, so you can check whether Twinfield counted it as a query request. Keep the [backoff](#retrying-automatically) as well: the numbers may not be completely accurate, and another process can use the last credits first. Example: [Rate limit](/examples/getting-started/rate-limit/).
 
 To stay under the limits:
 

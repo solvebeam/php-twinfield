@@ -16,6 +16,7 @@ use SolveBeam\Twinfield\Soap\ClassicServiceFaultException;
 use SolveBeam\Twinfield\Soap\ErrorCode;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
 use SolveBeam\Twinfield\Soap\SoapClient;
+use SolveBeam\Twinfield\Soap\RateLimit;
 use SolveBeam\Twinfield\Soap\RateLimitExceededException;
 use SolveBeam\Twinfield\Soap\SoapFaultException;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
@@ -171,6 +172,7 @@ final class SoapClientTest extends TestCase
             self::assertSame(1, $exception->rateLimitCredited);
             self::assertFalse($exception->concurrencyLimitExceeded);
             self::assertStringContainsString('Retry after 30 seconds', $exception->getMessage());
+            self::assertEquals(new RateLimit(1000, 0, 1000, 400, 1), $exception->rateLimit);
         }
     }
 
@@ -194,6 +196,7 @@ final class SoapClientTest extends TestCase
             self::assertNull($exception->rateLimitCredited);
             self::assertFalse($exception->concurrencyLimitExceeded);
             self::assertStringContainsString('Wait a moment and try again', $exception->getMessage());
+            self::assertFalse($exception->rateLimit->isKnown());
         }
     }
 
@@ -212,6 +215,98 @@ final class SoapClientTest extends TestCase
             self::assertTrue($exception->concurrencyLimitExceeded);
             self::assertNull($exception->retryAfterSeconds);
             self::assertStringContainsString('concurrency limit exceeded', $exception->getMessage());
+        }
+    }
+
+    public function testHasNoRateLimitBeforeTheFirstRequest(): void
+    {
+        self::assertNull($this->client(new ReplayClient())->lastRateLimit());
+    }
+
+    public function testKeepsTheRateLimitOfASuccessfulResponse(): void
+    {
+        $client = $this->client(new ReplayClient(
+            ReplayClient::response('finder-search-dim')
+                ->withHeader('X-RateLimit-Limit', '500')
+                ->withHeader('X-RateLimit-Remaining', '499')
+                ->withHeader('X-RateLimit-ClientId-Limit', '1000')
+                ->withHeader('X-RateLimit-ClientId-Remaining', '999')
+                ->withHeader('X-RateLimit-Credited', '1'),
+        ));
+
+        $client->send(
+            'https://example.test/webservices/finder.asmx',
+            new Search('DIM', '*', 0, 1, 10),
+            $this->header(),
+        );
+
+        self::assertEquals(new RateLimit(500, 499, 1000, 999, 1), $client->lastRateLimit());
+    }
+
+    public function testKeepsTheRateLimitOfASoapFault(): void
+    {
+        $client = $this->client(new ReplayClient(
+            ReplayClient::response('fault-soap11', 500)
+                ->withHeader('X-RateLimit-Remaining', '496')
+                ->withHeader('X-RateLimit-Credited', '3'),
+        ));
+
+        try {
+            $client->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
+            self::fail('Expected a SoapFaultException.');
+        } catch (SoapFaultException) {
+            self::assertEquals(new RateLimit(remaining: 496, credited: 3), $client->lastRateLimit());
+        }
+    }
+
+    public function testKeepsTheRateLimitOfARateLimitResponse(): void
+    {
+        $client = $this->client(new ReplayClient(new Response(429, [
+            'Retry-After' => '30',
+            'X-RateLimit-Limit' => '1000',
+            'X-RateLimit-Remaining' => '0',
+        ], 'Too Many Requests')));
+
+        try {
+            $client->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
+            self::fail('Expected a RateLimitExceededException.');
+        } catch (RateLimitExceededException $exception) {
+            self::assertEquals($exception->rateLimit, $client->lastRateLimit());
+            self::assertSame(0, $client->lastRateLimit()?->remaining);
+        }
+    }
+
+    public function testAResponseWithoutRateLimitHeadersKeepsTheLastRateLimit(): void
+    {
+        $client = $this->client(new ReplayClient(
+            ReplayClient::response('finder-search-dim')->withHeader('X-RateLimit-Remaining', '499'),
+            new Response(429, [], 'Concurrency limit exceeded.'),
+        ));
+
+        $client->send(
+            'https://example.test/webservices/finder.asmx',
+            new Search('DIM', '*', 0, 1, 10),
+            $this->header(),
+        );
+
+        try {
+            $client->send(
+                'https://example.test/webservices/finder.asmx',
+                new Search('DIM', '*', 0, 1, 10),
+                $this->header(),
+            );
+            self::fail('Expected a RateLimitExceededException.');
+        } catch (RateLimitExceededException $exception) {
+            self::assertFalse($exception->rateLimit->isKnown());
+            self::assertEquals(new RateLimit(remaining: 499), $client->lastRateLimit());
         }
     }
 

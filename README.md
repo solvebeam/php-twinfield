@@ -297,7 +297,7 @@ try {
 
 Match `detailCode` with `ErrorCode` for the general codes of the classic services (see [Guidelines](https://developers.twinfield.com/documentation/api/types/guidelines)), e.g. `ErrorCode::TokenInvalid`, or with the codes of a Command & Query service such as `PeriodServiceFaultCode`.
 
-Authorization errors come as HTTP 401 or 403; without a SOAP fault in the response the SDK throws an `AccessDeniedException`. Too many requests give a `RateLimitExceededException`.
+Authorization errors come as HTTP 401 or 403; without a SOAP fault in the response the SDK throws an `AccessDeniedException`. Too many requests give a `RateLimitExceededException`; `$twinfield->lastRateLimit()` returns the rate limit headers of the most recent response, to slow down before that. Wrap the HTTP client in a `RateLimitRetryClient` to wait for `Retry-After` and retry automatically. See the [rate limits guide](https://php.twinfield.solvebeam.com/guides/rate-limits/).
 
 See the [error handling example](examples/getting-started/error-handling/) for all error codes.
 

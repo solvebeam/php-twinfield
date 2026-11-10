@@ -72,6 +72,8 @@ use SolveBeam\Twinfield\SalesArticle\SalesArticleResource;
 use SolveBeam\Twinfield\SalesInvoice\SalesInvoiceResource;
 use SolveBeam\Twinfield\SalesTransaction\SalesTransactionResource;
 use SolveBeam\Twinfield\Soap\Psr17SoapRequestFactory;
+use SolveBeam\Twinfield\Soap\LastRateLimit;
+use SolveBeam\Twinfield\Soap\RateLimit;
 use SolveBeam\Twinfield\Soap\SoapClient;
 use SolveBeam\Twinfield\Soap\SoapResponse;
 use SolveBeam\Twinfield\Supplier\SupplierResource;
@@ -96,6 +98,7 @@ final readonly class Twinfield
         private RestClient $rest,
         private CompanyIds $companyIds,
         private ?string $companyCode,
+        private LastRateLimit $lastRateLimit,
     ) {
     }
 
@@ -112,10 +115,39 @@ final readonly class Twinfield
         $requestFactory ??= Psr17FactoryDiscovery::findRequestFactory();
         $streamFactory ??= Psr17FactoryDiscovery::findStreamFactory();
 
-        $soap = new SoapClient($httpClient, new Psr17SoapRequestFactory($requestFactory, $streamFactory));
-        $rest = new RestClient($httpClient, $requestFactory, $streamFactory);
+        // One holder for both clients, handed on to the clients of company().
+        $lastRateLimit = new LastRateLimit();
 
-        return new self($accessTokenProvider, $soap, $rest, new CompanyIds(), null);
+        $soap = new SoapClient(
+            $httpClient,
+            new Psr17SoapRequestFactory($requestFactory, $streamFactory),
+            $lastRateLimit,
+        );
+        $rest = new RestClient($httpClient, $requestFactory, $streamFactory, $lastRateLimit);
+
+        return new self($accessTokenProvider, $soap, $rest, new CompanyIds(), null, $lastRateLimit);
+    }
+
+    /**
+     * The rate limit headers (`X-RateLimit-…`) of the most recent API response: how many API credits
+     * per minute you have and how many are left. Null before the first request.
+     *
+     *   $twinfield->company('1000')->customers()->get('1000');
+     *
+     *   $remaining = $twinfield->lastRateLimit()?->remaining;
+     *
+     * It is shared by all clients that come from one `Twinfield::create()`, so a request through
+     * `company('1000')` shows up here too, and it covers the SOAP web services and the REST API. A
+     * response that ends in an exception (a SOAP fault, an HTTP error, a 429) counts as well: it
+     * costs API credits too. A response without any of these headers, such as a 429 for the
+     * concurrency limit, leaves the last known value in place. Logging in and refreshing the access
+     * token (login.twinfield.com) do not go through the API and never change it.
+     *
+     * @see https://developers.twinfield.com/documentation/getting-started/fair-use-policy#rate-limits
+     */
+    public function lastRateLimit(): ?RateLimit
+    {
+        return $this->lastRateLimit->get();
     }
 
     /**
@@ -164,7 +196,14 @@ final readonly class Twinfield
             $this->companyIds->set($code, $companyId);
         }
 
-        return new self($this->accessTokenProvider, $this->soap, $this->rest, $this->companyIds, $code);
+        return new self(
+            $this->accessTokenProvider,
+            $this->soap,
+            $this->rest,
+            $this->companyIds,
+            $code,
+            $this->lastRateLimit,
+        );
     }
 
     /**
@@ -172,7 +211,14 @@ final readonly class Twinfield
      */
     public function withoutCompany(): self
     {
-        return new self($this->accessTokenProvider, $this->soap, $this->rest, $this->companyIds, null);
+        return new self(
+            $this->accessTokenProvider,
+            $this->soap,
+            $this->rest,
+            $this->companyIds,
+            null,
+            $this->lastRateLimit,
+        );
     }
 
     public function companyCode(): ?string

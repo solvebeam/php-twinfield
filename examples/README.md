@@ -32,6 +32,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [Token info](getting-started/token-info/): organisation, user and cluster of an access token.
 - [Error handling](getting-started/error-handling/): catch errors and act on their code.
 - [REST API request](getting-started/rest-request/): call an endpoint of the REST API directly, with the company GUID.
+- [Rate limit](getting-started/rate-limit/): read what a request cost and how many API credits are left.
 
 ## Offices
 

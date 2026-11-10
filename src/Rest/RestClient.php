@@ -9,6 +9,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use SolveBeam\Twinfield\Soap\AccessDeniedException;
+use SolveBeam\Twinfield\Soap\LastRateLimit;
+use SolveBeam\Twinfield\Soap\RateLimit;
 use SolveBeam\Twinfield\Soap\RateLimitExceededException;
 
 /**
@@ -23,7 +25,17 @@ final readonly class RestClient
         private ClientInterface $httpClient,
         private RequestFactoryInterface $requestFactory,
         private StreamFactoryInterface $streamFactory,
+        private LastRateLimit $lastRateLimit = new LastRateLimit(),
     ) {
+    }
+
+    /**
+     * The rate limit headers of the most recent response that had them, also when that response was
+     * an HTTP error; null before the first one.
+     */
+    public function lastRateLimit(): ?RateLimit
+    {
+        return $this->lastRateLimit->get();
     }
 
     /**
@@ -64,6 +76,9 @@ final readonly class RestClient
         }
 
         $response = $this->httpClient->sendRequest($request);
+
+        // Before anything is thrown: a refused request costs API credits too.
+        $this->lastRateLimit->record($response);
 
         $this->throwIfRefused($response, $method, $path === '' ? $request->getUri()->getPath() : $path);
 
