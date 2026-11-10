@@ -72,7 +72,7 @@ $details->open;                                     // true
 
 Special periods have no end date: `endDate` is `null`. The end date of a regular period is its last day; a financial year does not have to follow the calendar year.
 
-Period names are in the language of the company. Twinfield returns an empty name (`<Name/>`) for all periods of some years, in one test company for 49 of its 61 years (mostly before 2013): `name` is `null` then.
+Period names are in the language of the company. Twinfield returns an empty name (`<Name/>`) for all periods of some years, often older ones: `name` is `null` then.
 
 ## Open and closed periods
 

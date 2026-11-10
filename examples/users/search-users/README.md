@@ -9,7 +9,7 @@ Searches users by code with a pattern (`*` matches anything, `?` one character),
 | `withMutualCompanies()` | Finder option `mutualoffices=1`: users with access to at least one of your companies. |
 | `withoutAccessRules()` | Finder option `accessrules=0`: also users the access rules hide. Only for users with access to user management. |
 
-Live, the default search gave fewer users than `withMutualCompanies()` (18 against 31), and those extra users can be read with `get()`. So the default search does not give all users of the organisation.
+The default search can give fewer users than `withMutualCompanies()`, and those extra users can be read with `get()`. So the default search does not always give all users of the organisation.
 
 ## Code
 

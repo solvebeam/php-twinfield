@@ -118,9 +118,9 @@ foreach ($twinfield->customers()->search()->inAllCompanies()->modifiedSince($sin
 }
 ```
 
-Live, this gave the 557 customers changed since 1 October 2026 in all companies of an organisation in one request. The same works for suppliers, general ledger accounts, cost centers, projects, activities and fixed assets (all dimensions), VAT codes, bank books, cash books and currencies.
+One request gives the changed customers of all companies of the organisation. The same works for suppliers, general ledger accounts, cost centers, projects, activities and fixed assets (all dimensions), VAT codes, bank books, cash books and currencies.
 
-`company=*` was not always there. Before, a shadow database of an organisation with 200 companies needed a search per company and per kind of master data to find what changed since the last sync: 200 requests to find the changed customers, 200 more for suppliers, and so on, mostly with nothing changed. Twinfield added `*` on request of the author of this SDK. Since the [rate limits](/guides/rate-limits/) of 1 December 2024 this matters even more: a Finder search costs 1 API credit, so 200 searches are a fifth of the credits per minute of an organisation, and one search is one credit.
+`company=*` was not always there. Before, a shadow database of an organisation with 200 companies needed a search per company and per kind of master data to find what changed since the last sync: 200 requests to find the changed customers, 200 more for suppliers, and so on, mostly with nothing changed. Since the [rate limits](/guides/rate-limits/) of 1 December 2024 this matters even more: a Finder search costs 1 API credit, so 200 searches are a fifth of the credits per minute of an organisation, and one search is one credit.
 
 ## Errors
 

@@ -32,7 +32,7 @@ TWINFIELD_COMPANY=1002_3 php examples/pay-and-collect/list-pay-runs/example.php
 
 Add `TWINFIELD_DEBUG=1` to see the SOAP request and response.
 
-Output of a company without runs, run live on 10 November 2026:
+Output of a company without runs:
 
 ```text
 No pay runs in company 1002_3.

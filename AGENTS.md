@@ -30,6 +30,10 @@ Twinfield has SOAP/XML web services now and is moving towards a REST/JSON API (h
 - Mapping from and to a wire format stays at the edge. Many existing models have a static `fromXml()` / `fromResponse()`; that is accepted, but keep it a thin mapping onto the constructor. For new code, prefer mapping in the resource or a separate reader/writer class (like `TransactionXmlWriter`) over adding XML code to a model.
 - Don't refactor existing models just for this; apply it to new code and to code you touch anyway.
 
+## Documentation
+
+- Write guides and example READMEs for developers who connect to their own organisation. Don't mention the numbers, dates or results of our own live tests (`557 customers changed since 1 October`, `491 VAT codes of 12 companies`, `18 against 31 users`): describe the behaviour instead. Such details belong in `TODO.md` and on the "Differences with the documentation" page, which record how something was verified.
+
 ## Twinfield knowledge base
 
 - Articles from the Twinfield community go in `docs/src/content/docs/knowledge-base/`: the article text quoted unchanged in a blockquote, with the source link and dates, followed by a "With this SDK" section with code and links to examples. See the `index.md` there.

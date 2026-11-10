@@ -315,7 +315,7 @@ The read model `Supplier` has the same properties and shortcuts as `Customer` (`
 - The VAT code `#` (no VAT) is accepted wherever a VAT code is, in `vatCode()` and in posting rule lines.
 - `SupplierInput` works like `CustomerInput`: immutable, only what you set is sent, null clears a value, and lists are sent as a whole once set.
 
-Differences with the [documentation](https://developers.twinfield.com/documentation/api/master-data/suppliers/) that the SDK handles, seen in 184 live suppliers. See [Differences with the documentation](/guides/documentation-differences/#suppliers) for how they were found, the mistakes in the documentation examples, and what is not yet verified:
+Differences with the [documentation](https://developers.twinfield.com/documentation/api/master-data/suppliers/) that the SDK handles, seen in live responses. See [Differences with the documentation](/guides/documentation-differences/#suppliers) for how they were found, the mistakes in the documentation examples, and what is not yet verified:
 
 | Documentation | Twinfield |
 |---|---|
@@ -483,7 +483,7 @@ ChildValidation::group('MARKETING');         // level 0: groups only, any level
 
 ### Differences with the documentation
 
-Live responses (read on two test companies, about 230 accounts) differ from the documented ones, and the SDK follows the live responses:
+Live responses differ from the documented ones, and the SDK follows the live responses:
 
 - `<childvalidations>` and `<groups>` are left out when they are empty.
 - An account without VAT code has `<vatcode fixed="false" />`, without the `name`, `shortname` and `type` attributes.
@@ -908,7 +908,7 @@ $vatCodes->delete('VH');
 
 ### Differences with the documentation
 
-The [documentation](https://developers.twinfield.com/documentation/api/master-data/vat/) is short. The read model is based on the live responses of 491 VAT codes of 12 companies (9 November 2026):
+The [documentation](https://developers.twinfield.com/documentation/api/master-data/vat/) is short. The read model is based on live responses:
 
 - The read response has no `<office>`; the SDK takes the company of the request.
 - The read response has `@status` (always `active`) and `uid`, `created`, `modified`, `touched` and `user` on `<vat>`. The documented response example has `status="default"` and no `created` and `modified`.
@@ -980,7 +980,7 @@ Optional settings are null when Twinfield returns an empty element. Twinfield wr
 
 ### Differences with the documentation
 
-The [documentation](https://developers.twinfield.com/documentation/api/master-data/offices) shows the requests, not the responses. The read model is based on the responses of 247 live offices:
+The [documentation](https://developers.twinfield.com/documentation/api/master-data/offices) shows the requests, not the responses. The read model is based on live responses:
 
 - A read without company in the header is refused with SOAP fault 359 (company missing). With an unknown office as company, Twinfield refuses the same way; with another company in the header, an unknown office is `<office msgtype="error" msg="…" result="0">` with only its code.
 - With `includeid=1` the Finder inserts the company ID as third column: code, name, ID, country, VAT period, starting quarter.
@@ -1056,7 +1056,7 @@ Your own `AccessTokenProvider` implementation needs `userCode()` and `organisati
 
 ### Differences with the documentation
 
-The read model is based on the responses of all 18 users of a live organisation (9 November 2026). Documentation: [Users](https://developers.twinfield.com/documentation/api/master-data/users/).
+The read model is based on live responses. Documentation: [Users](https://developers.twinfield.com/documentation/api/master-data/users/).
 
 - Reads and Finder searches without company are refused with SOAP fault 359, although users are not part of a company.
 - `restricted` in `<office>` is documented as "not in use". Live it is `false` with an empty `<offices>` for users with access to all companies, and `true` with the list for the others.
@@ -1065,7 +1065,7 @@ The read model is based on the responses of all 18 users of a live organisation 
 - Not in the documentation: `wkemailaddress` (the email address of the Wolters Kluwer account, read as `accountEmail`), `account/expireperiod` (always `0`), `invitationstatus/@CurrentInvitationStatus` (same as the text), and `touched`, `created` and `modified` a second time at the end.
 - `support` ("not in use") is `none` or `primary`, and `@level` on `<user>` is `Supervisor` for every user. Their meaning is unknown, so the SDK does not read them.
 - `<password>` and `<federation>` are never returned: federation is only enabled on request.
-- The Finder returns two columns, code and name. With `mutualoffices=1` it returned 31 users instead of 18; the extra users can be read, so the default search leaves out users of the organisation.
+- The Finder returns two columns, code and name. With `mutualoffices=1` it can return more users than without; the extra users can be read, so the default search can leave out users of the organisation.
 - Not found is `<user status="default" msgtype="error" msg="…" result="0">` with only the code.
 
 Creating, updating and deleting are not yet verified live, see [`TODO.md`](https://github.com/solvebeam/php-twinfield/blob/main/TODO.md).
