@@ -47,6 +47,7 @@ export default defineConfig({
 						{ label: 'Finder', slug: 'guides/finder' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Browse data', slug: 'guides/browse-data' },
+						{ label: 'Browse codes', slug: 'guides/browse-codes' },
 						{ label: 'Declarations', slug: 'guides/declarations' },
 						{ label: 'Hierarchies', slug: 'guides/hierarchies' },
 						{ label: 'Matching', slug: 'guides/matching' },

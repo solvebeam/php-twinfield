@@ -91,16 +91,15 @@ Collect section of the documentation differences.
 
 ## Browse data: the other browse codes
 
-Browse data (`browse()`, `browseDefinitions()`) is verified live with 030_3, 040_1 and 130_3 (see
-the browse data section of the documentation differences). The definitions of all 38 browse codes
-are read with the SDK (`browse-definitions/`), but queries only on these three.
+Every browse code has an example (`examples/browse-data/`) with request and response XML and a
+generated "Fields" section from `browse-definitions/`. The examples were run live on 10 November
+2026; the test company has no data for 031, 031_2, 690 and the Time & Expenses codes (610_1, 650_1,
+651_1, 652_1, 660_1, 661_1, 662_1), so their fixtures are made from the definitions.
 
-- Add an example per browse code (`examples/browse-data/`), in batches: 000, 010, 100, 200; then
-  020, 050_1, 060, 130_3, 230_2, 164, 400, 410, 680_2; then the rest. Run each one live: a value
-  type other than `String`, `Number`, `Decimal`, `Value`, `Date` and `Datetime` throws, and must be
-  added to `BrowseValueType`.
-- Generate a reference page per browse code in the docs from `browse-definitions/` (fields,
-  criteria, data types and values from `browsefields.xml`).
+- Run 031, 031_2, 690 and the Time & Expenses examples on a company with data: check the value
+  types and whether the rows have a transaction key (the fixtures assume only `<office>`).
+- 161 ("Credit management" in BrowseCodeDetails, not in the documented list) answers live. Add a
+  `BrowseCode` case and a definition file, or leave it out as undocumented?
 - Which browse codes sort? 000 does, 030_3 ignores the sort fields.
 
 ## Cash transactions: add live tests and verify live

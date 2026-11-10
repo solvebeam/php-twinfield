@@ -10,6 +10,7 @@ They can be outdated. The [Twinfield API documentation](https://developers.twinf
 | Manual | Pages | Subject |
 | --- | ---: | --- |
 | [Twinfield-Webservices-Manual.pdf](https://github.com/solvebeam/php-twinfield/blob/main/manuals/Twinfield-Webservices-Manual.pdf) | 42 | General introduction to the web services |
+| [BrowseCodeDetails.pdf](https://github.com/solvebeam/php-twinfield/blob/main/manuals/BrowseCodeDetails.pdf) | 4 | Most used fields per browse code, and which of them can be a search criterion (see [Browse codes](/guides/browse-codes/)) |
 | [Webservices-Manual-Browse.pdf](https://github.com/solvebeam/php-twinfield/blob/main/manuals/Webservices-Manual-Browse.pdf) | 18 | Browse data (browse codes, columns and filters) |
 | [Webservices-Manual-Dimensions.pdf](https://github.com/solvebeam/php-twinfield/blob/main/manuals/Webservices-Manual-Dimensions.pdf) | 32 | Dimensions (master data) |
 | [Webservices-Manual-Financial-Transactions.pdf](https://github.com/solvebeam/php-twinfield/blob/main/manuals/Webservices-Manual-Financial-Transactions.pdf) | 11 | Financial transactions |

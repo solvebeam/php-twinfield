@@ -49,3 +49,80 @@
 [data-has-hero] .hero > img {
 	width: min(16rem, 60vw);
 }
+
+/* Browse codes: the matrix of fields per browse code, wider than the page */
+.browse-matrix {
+	overflow-x: auto;
+	max-height: 80vh;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 0.5rem;
+}
+
+.sl-markdown-content .browse-matrix table {
+	display: table;
+	margin: 0;
+	border-collapse: separate;
+	border-spacing: 0;
+	font-size: var(--sl-text-xs);
+	white-space: nowrap;
+}
+
+.sl-markdown-content .browse-matrix :is(th, td) {
+	padding: 0.2rem 0.45rem;
+	text-align: center;
+	border-bottom: 1px solid var(--sl-color-gray-6);
+}
+
+.sl-markdown-content .browse-matrix thead th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: var(--sl-color-gray-6);
+}
+
+.sl-markdown-content .browse-matrix tbody th[scope='row'],
+.sl-markdown-content .browse-matrix thead th:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	text-align: start;
+	background: var(--sl-color-bg);
+}
+
+.sl-markdown-content .browse-matrix thead th:first-child {
+	z-index: 3;
+	background: var(--sl-color-gray-6);
+}
+
+.sl-markdown-content .browse-matrix .browse-matrix-group th {
+	text-align: start;
+	background: var(--sl-color-gray-6);
+}
+
+.browse-matrix-criterion {
+	background: var(--sl-color-green-low);
+	color: var(--sl-color-green-high);
+	font-weight: 600;
+}
+
+.browse-matrix-legend span {
+	display: inline-block;
+	min-width: 1.6rem;
+	margin-inline-start: 0.75rem;
+	padding: 0 0.3rem;
+	text-align: center;
+	border: 1px solid var(--sl-color-gray-5);
+}
+
+.browse-matrix-legend span:first-child {
+	margin-inline-start: 0;
+}
+
+.browse-matrix .sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}

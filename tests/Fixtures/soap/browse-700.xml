@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;browse result="1" first="1" last="2" total="2"&gt;&lt;th&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.hierarchy&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.hierarchyname&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.hierarchyhidden&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.role&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.user&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;hie.xss.type&lt;/td&gt;&lt;/th&gt;&lt;tr&gt;&lt;td&gt;RS01&lt;/td&gt;&lt;td&gt;Example reporting structure&lt;/td&gt;&lt;td name="Nee"&gt;false&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;EXAMPLE&lt;/td&gt;&lt;td name="Bewerken"&gt;edit&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;RS01&lt;/td&gt;&lt;td&gt;Example reporting structure&lt;/td&gt;&lt;td name="Nee"&gt;false&lt;/td&gt;&lt;td&gt;LVL1&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td name="Bewerken"&gt;edit&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;/browse&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;browse result="1" first="1" last="2" total="2"&gt;&lt;th&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.transactiontype&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.iban&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.currency&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.accountintegrationtype&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.payments&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.bnk.directdebits&lt;/td&gt;&lt;td label="" hideforuser="false" type="Date"&gt;fin.bnk.consentexpirydate&lt;/td&gt;&lt;/th&gt;&lt;tr&gt;&lt;td&gt;BNK&lt;/td&gt;&lt;td&gt;NL91ABNA0417164300&lt;/td&gt;&lt;td&gt;EUR&lt;/td&gt;&lt;td name="Bankkoppeling"&gt;Bank feed&lt;/td&gt;&lt;td name="Geen"&gt;none&lt;/td&gt;&lt;td name="Geen"&gt;none&lt;/td&gt;&lt;td name="15/01/2027"&gt;20270115&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;BNK2&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;EUR&lt;/td&gt;&lt;td name="Geen"&gt;none&lt;/td&gt;&lt;td name="Geen"&gt;none&lt;/td&gt;&lt;td name="Geen"&gt;none&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;/browse&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

@@ -31,10 +31,15 @@ final class ExampleXml
     private const LINK_END = '<!-- twinfield-documentation:end -->';
     private const XML_START = '<!-- xml:start -->';
     private const XML_END = '<!-- xml:end -->';
+    private const FIELDS_START = '<!-- browse-fields:start -->';
+    private const FIELDS_END = '<!-- browse-fields:end -->';
 
     /** Classes the code of the definitions can use without namespace. */
     private const IMPORTS = [
         'SolveBeam\Twinfield\BankTransaction\BankTransactionInput',
+        'SolveBeam\Twinfield\BrowseData\BrowseCode',
+        'SolveBeam\Twinfield\BrowseData\SortOrder',
+        'SolveBeam\Twinfield\Budget\Regime',
         'SolveBeam\Twinfield\CashTransaction\CashTransactionInput',
         'SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementInput',
         'SolveBeam\Twinfield\JournalTransaction\JournalTransactionInput',
@@ -66,6 +71,17 @@ final class ExampleXml
         $link = sprintf('Twinfield documentation: [%s](%s).', $title, $url);
 
         $readme = self::replaceBlock($readme, self::LINK_START, self::LINK_END, $link, self::afterFirstParagraph(...));
+
+        // A browse code example (e.g. `browse-data/030_3-general-ledger-details`) lists the fields of its code.
+        if ($directory === 'browse-data' && preg_match('~/(\d{3}(?:_\d)?)-~', $example, $match) === 1) {
+            $readme = self::replaceBlock(
+                $readme,
+                self::FIELDS_START,
+                self::FIELDS_END,
+                BrowseDefinitionTable::section($match[1]),
+                self::beforeCode(...),
+            );
+        }
 
         return self::replaceBlock(
             $readme,
@@ -318,6 +334,20 @@ final class ExampleXml
         }
 
         return $insert($readme, $block);
+    }
+
+    /**
+     * Before the "## Code" section.
+     */
+    private static function beforeCode(string $readme, string $block): string
+    {
+        $position = strpos($readme, "\n## Code\n");
+
+        if ($position === false) {
+            throw new RuntimeException('The README has no "## Code" section.');
+        }
+
+        return substr($readme, 0, $position + 1) . $block . "\n\n" . substr($readme, $position + 1);
     }
 
     /**

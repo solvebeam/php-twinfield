@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <ProcessXmlStringResponse xmlns="http://www.twinfield.com/">
+      <ProcessXmlStringResult>&lt;browse result="1" first="1" last="2" total="2"&gt;&lt;th&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.vat.decltype&lt;/td&gt;&lt;td label="" hideforuser="false" type="Number"&gt;fin.vat.declyear&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.vat.timeframe&lt;/td&gt;&lt;td label="" hideforuser="false" type="String"&gt;fin.vat.statusname&lt;/td&gt;&lt;td label="" hideforuser="false" type="Datetime"&gt;fin.vat.sent&lt;/td&gt;&lt;/th&gt;&lt;tr&gt;&lt;td name="Btw"&gt;vat&lt;/td&gt;&lt;td&gt;2026&lt;/td&gt;&lt;td name="Per kwartaal jan tot en met mrt"&gt;quarter1&lt;/td&gt;&lt;td name="Goedgekeurd"&gt;approved&lt;/td&gt;&lt;td name="21/04/2026 09:30:00"&gt;20260421093000&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td name="Btw"&gt;vat&lt;/td&gt;&lt;td&gt;2026&lt;/td&gt;&lt;td name="Per kwartaal apr tot en met jun"&gt;quarter4&lt;/td&gt;&lt;td name="Aangemaakt"&gt;created&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;key&gt;&lt;office&gt;1000&lt;/office&gt;&lt;/key&gt;&lt;/tr&gt;&lt;/browse&gt;</ProcessXmlStringResult>
+    </ProcessXmlStringResponse>
+  </soap:Body>
+</soap:Envelope>

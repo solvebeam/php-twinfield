@@ -22,7 +22,7 @@ The files are read from one company on 9 November 2026 with `<read><type>browse<
 - A column with `<visible>false</visible>` is meant as criterion only. Asking for it as column can give a server error (e.g. `fin.trs.head.yearperiod` in 030_3).
 - The definitions use the operators `none`, `equal`, `between` and `like` (not documented, in 130 and 230). `notbetween` also works.
 
-The [Twinfield documentation](https://developers.twinfield.com/documentation/api/request-data/browse-data/) is leading. The [BrowseCodeDetails](https://developers.twinfield.com/documentation/assets/files/BrowseCodeDetails-c5a8066a60f8c2e2c0cb3cf6716641ce.pdf) overview of Twinfield shows the most used fields per browse code.
+The [Twinfield documentation](https://developers.twinfield.com/documentation/api/request-data/browse-data/) is leading. The [BrowseCodeDetails](https://developers.twinfield.com/documentation/assets/files/BrowseCodeDetails-c5a8066a60f8c2e2c0cb3cf6716641ce.pdf) overview of Twinfield (also in [`manuals/`](../manuals/BrowseCodeDetails.pdf), and as a table on the [Browse codes](https://php-twinfield.solvebeam.com/guides/browse-codes/) page) shows the most used fields per browse code.
 
 ## Browse codes
 

@@ -262,6 +262,8 @@ These need a live write on a test company (`composer test:write -- --company=…
 | Up to three sort fields | A fourth gives a server error. 000 sorts, 030_3 ignores the sort fields | `sortBy()` refuses a fourth field; the limitation is documented |
 | The data is that of the company the user is logged in to | It comes from the company in the SOAP header, but a criterion `fin.trs.head.office` with another company returns the data of that company | `BrowseQuery` refuses a `fin.trs.head.office` criterion for another company; `BrowseRow` checks the company of every row |
 | The definition proposes criteria, e.g. status `normal` | They are not applied: without a status criterion the result has all statuses, also drafts | Documented; examples always send a status criterion |
+| 400 and 410 have the cash or bank book (`fin.trs.head.bankcode`) as criterion | Without it Twinfield answers with a SOAP server error | Documented in the examples, which always send it |
+| The list of browse codes has no 161; the BrowseCodeDetails overview has "161 Credit management" | Twinfield has a definition for 161 ("Kredietbeheer", 15 fields: open items of customers) and answers queries on it | No `BrowseCode` case; `browse('161')` works. Mentioned on [Browse codes](/guides/browse-codes/) |
 
 ### Responses
 
@@ -282,7 +284,7 @@ Responses over 10 MB lost data: libxml drops text over 10 MB without `LIBXML_PAR
 
 ### Not yet verified
 
-- The value types and formats of the other browse codes than 030_3, 040_1 and 130_3: an unknown type throws an `UnexpectedResponseException`.
+- The value types and formats of 031, 031_2, 690 and the Time & Expenses codes (610_1, 650_1, 651_1, 652_1, 660_1, 661_1, 662_1): the test company has no data for them, so their examples and fixtures follow the definitions. An unknown type throws an `UnexpectedResponseException`. The other browse codes were queried live on 10 November 2026 with their example.
 - How Twinfield behaves with very large queries (timeouts, limits): 216,710 lines took 34 seconds.
 
 ## Electronic bank statements (reading)

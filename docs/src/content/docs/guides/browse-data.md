@@ -36,7 +36,7 @@ foreach ($result as $row) {
 
 The steps, as in the [Twinfield documentation](https://developers.twinfield.com/documentation/api/request-data/browse-data/#steps-to-be-taken):
 
-1. **Choose a browse code**, e.g. `030_3` for general ledger transaction lines or `040_1` for balances per account. `BrowseCode` has all codes of the documentation.
+1. **Choose a browse code**, e.g. `030_3` for general ledger transaction lines or `040_1` for balances per account. See [Browse codes](/guides/browse-codes/) for all codes.
 2. **Read the browse definition** to see the fields and which of them can be a criterion. The definitions of all browse codes are in [`browse-definitions/`](https://github.com/solvebeam/php-twinfield/tree/main/browse-definitions) in the repository, so you don't have to ask Twinfield.
 3. **Fill in the criteria** and choose the columns.
 4. **Send the query** with `get()`.
@@ -45,34 +45,9 @@ Steps 1 to 3 are done once, while you write the code.
 
 ## Browse codes
 
-| Code | `BrowseCode` | Description |
-|---|---|---|
-| `000` | `GeneralLedgerTransactions` | General ledger transactions |
-| `010` | `TransactionsToBeMatched` | Transactions still to be matched |
-| `020` | `TransactionList` | Transaction list |
-| `100` | `CustomerTransactions` | Customer transactions |
-| `200` | `SupplierTransactions` | Supplier transactions |
-| `300` | `ProjectTransactions` | Project transactions |
-| `301` | `AssetTransactions` | Asset transactions |
-| `400` | `CashTransactions` | Cash transactions |
-| `410` | `BankTransactions` | Bank transactions |
-| `900` | `CostCenters` | Cost centers |
-| `030_1`, `030_2`, `030_3` | `GeneralLedgerDetails`, `…V2`, `…V3` | General Ledger (details) |
-| `031`, `031_2` | `GeneralLedgerIntercompany`, `…V2` | General Ledger (intercompany) |
-| `040_1` | `AnnualReportTotals` | Annual Report (totals) |
-| `050_1` | `AnnualReportYearToDate` | Annual Report (YTD) |
-| `060` | `AnnualReportTotalsMulticurrency` | Annual Report (totals multicurrency) |
-| `130_1`, `130_2`, `130_3` | `Customers`, `…V2`, `…V3` | Customers |
-| `164` | `CreditManagement` | Credit Management |
-| `230_1`, `230_2` | `Suppliers`, `…V2` | Suppliers |
-| `302_1` | `FixedAssets` | Fixed Assets |
-| `610_1` … `662_1`, `620` | `TimeAndExpenses…` | Time & Expenses (totals, details, billing; per week or period) |
-| `670` | `TransactionSummary` | Transaction summary |
-| `680`, `680_2` | `BankLinkDetails`, `…V2` | Bank link details |
-| `690` | `VatReturnStatus` | Vat Return status |
-| `700` | `HierarchyAccess` | Hierarchy access |
+`BrowseCode` has all codes of the documentation, e.g. `BrowseCode::GeneralLedgerDetailsV3` for `030_3`. See [Browse codes](/guides/browse-codes/) for the list with an example of each code, including the request and response XML, and the most used fields per browse code from Twinfield's BrowseCodeDetails overview.
 
-`browse()` also takes a string, e.g. `browse('030_3')`, so a code Twinfield adds later works without an SDK update. Twinfield's [BrowseCodeDetails](https://developers.twinfield.com/documentation/assets/files/BrowseCodeDetails-c5a8066a60f8c2e2c0cb3cf6716641ce.pdf) shows the most used fields per browse code.
+`browse()` also takes a string, e.g. `browse('030_3')`, so a code Twinfield adds later works without an SDK update.
 
 ## Browse definitions and fields
 

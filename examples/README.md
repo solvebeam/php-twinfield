@@ -270,14 +270,48 @@ The new fixed assets module, on the REST API. For the classic module see [Fixed 
 
 ## Browse data
 
+One example per browse code; see [Browse codes](https://php-twinfield.solvebeam.com/guides/browse-codes/) for all codes and their fields.
+
 - [Read browse definition](browse-data/read-browse-definition/): the fields of a browse code and which can be a criterion.
 - [List browse fields](browse-data/list-browse-fields/): data types and the values of fields with a fixed list.
 - [General ledger transactions (000)](browse-data/000-general-ledger-transactions/): the lines of a general ledger account.
 - [Transactions still to be matched (010)](browse-data/010-transactions-to-be-matched/): open lines on accounts with matching.
+- [Transaction list (020)](browse-data/020-transaction-list/): the lines as entered, per day book, with input date and user.
+- [General ledger details (030_1)](browse-data/030_1-general-ledger-details-v1/): every transaction line, first version.
+- [General ledger details (030_2)](browse-data/030_2-general-ledger-details-v2/): every transaction line with the relation and regime.
 - [General ledger details (030_3)](browse-data/030_3-general-ledger-details/): every transaction line with all details.
+- [General ledger intercompany (031)](browse-data/031-general-ledger-intercompany/): intercompany lines with the company on the other side.
+- [General ledger intercompany (031_2)](browse-data/031_2-general-ledger-intercompany-v2/): intercompany lines, with a reporting structure as criterion.
 - [Annual report totals (040_1)](browse-data/040_1-annual-report-totals/): the balance per general ledger account.
+- [Annual report year to date (050_1)](browse-data/050_1-annual-report-ytd/): the balance per account up to a period.
+- [Annual report multicurrency (060)](browse-data/060-annual-report-multicurrency/): totals per account and currency.
 - [Customer transactions (100)](browse-data/100-customer-transactions/): open items of customers.
+- [Customers (130_1)](browse-data/130_1-customers/): customer lines with payment status and credit limit.
+- [Customers (130_2)](browse-data/130_2-customers-v2/): customer lines changed since a moment.
+- [Customers (130_3)](browse-data/130_3-customers-v3/): open items per credit manager.
+- [Credit management (164)](browse-data/164-credit-management/): credit management actions on open invoices.
 - [Supplier transactions (200)](browse-data/200-supplier-transactions/): open items of suppliers.
+- [Suppliers (230_1)](browse-data/230_1-suppliers/): supplier lines with payment status.
+- [Suppliers (230_2)](browse-data/230_2-suppliers-v2/): open items with their payment run.
+- [Project transactions (300)](browse-data/300-project-transactions/): the lines of a project.
+- [Asset transactions (301)](browse-data/301-asset-transactions/): the lines of a fixed asset.
+- [Fixed assets (302_1)](browse-data/302_1-fixed-assets/): asset lines with the depreciation settings.
+- [Cash transactions (400)](browse-data/400-cash-transactions/): the lines of a cash book per statement.
+- [Bank transactions (410)](browse-data/410-bank-transactions/): the lines of a bank book per statement.
+- [Time & Expenses totals (610_1)](browse-data/610_1-time-and-expenses-totals/): totals per project, activity, rate and user.
+- [Time & Expenses multicurrency (620)](browse-data/620-time-and-expenses-multicurrency/): general ledger totals per project and currency.
+- [Time & Expenses details (650_1)](browse-data/650_1-time-and-expenses-details/): every Time & Expenses entry.
+- [Time & Expenses totals per week (651_1)](browse-data/651_1-time-and-expenses-totals-per-week/): hours and expenses per week.
+- [Time & Expenses totals per period (652_1)](browse-data/652_1-time-and-expenses-totals-per-period/): hours and expenses per period.
+- [Time & Expenses billing details (660_1)](browse-data/660_1-time-and-expenses-billing-details/): entries with invoice proposal and invoice.
+- [Time & Expenses billing per week (661_1)](browse-data/661_1-time-and-expenses-billing-per-week/): value and proposed amount per week.
+- [Time & Expenses billing per period (662_1)](browse-data/662_1-time-and-expenses-billing-per-period/): value and proposed amount per period.
+- [Transaction summary (670)](browse-data/670-transaction-summary/): the number of transactions and lines per day book and period.
+- [Bank link details (680)](browse-data/680-bank-link-details/): the bank books with IBAN and bank link status.
+- [Bank link details (680_2)](browse-data/680_2-bank-link-details-v2/): the bank books with the kind of link and consent.
+- [VAT return status (690)](browse-data/690-vat-return-status/): the VAT and ICT returns of a year with their status.
+- [Hierarchy access (700)](browse-data/700-hierarchy-access/): who has access to which reporting structure.
+- [Cost centers (900)](browse-data/900-cost-centers/): the lines per cost centre.
 
 ## Shadow database
 

@@ -21,6 +21,7 @@ final class ExampleXmlDefinitions
     {
         return [
             'bank-transactions' => ['Bank transactions', self::DOCS . 'transaction-data/bank-transactions/'],
+            'browse-data' => ['Browse data', self::DOCS . 'request-data/browse-data/'],
             'cash-transactions' => ['Cash transactions', self::DOCS . 'transaction-data/cash-transactions/'],
             'deleted-transactions' => ['Deleted transactions', self::DOCS . 'transaction-data/deleted-transactions/'],
             'electronic-bank-statements' => [
@@ -45,6 +46,7 @@ final class ExampleXmlDefinitions
     public static function examples(): array
     {
         $bank = self::DOCS . 'transaction-data/bank-transactions/';
+        $browse = self::DOCS . 'request-data/browse-data/';
         $cash = self::DOCS . 'transaction-data/cash-transactions/';
         $journal = self::DOCS . 'transaction-data/journal-transactions/';
         $purchase = self::DOCS . 'transaction-data/purchase-transactions/';
@@ -181,6 +183,893 @@ final class ExampleXmlDefinitions
                     showResponse: false,
                     responseNote: '`update()` reads the transaction first, to check that it exists, and then saves the whole '
                         . 'transaction again. ' . $savedLikeRead('bank-transactions/read-bank-transaction'),
+                ),
+            ],
+
+            // Browse data.
+            'browse-data/000-general-ledger-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerTransactions)
+                            ->columns(
+                                'fin.trs.head.yearperiod',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.status',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.description',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->sortBy('fin.trs.line.dim1')
+                            ->sortBy('fin.trs.head.yearperiod')
+                            ->sortBy('fin.trs.head.number', SortOrder::Descending)
+                            ->get();
+                        PHP,
+                    ['browse-000'],
+                ),
+            ],
+            'browse-data/010-transactions-to-be-matched' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TransactionsToBeMatched)
+                            ->columns(
+                                'fin.trs.line.dim1',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.openbasevaluesigned',
+                                'fin.trs.line.matchstatus',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-010'],
+                ),
+            ],
+            'browse-data/020-transaction-list' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TransactionList)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.status',
+                                'fin.trs.head.date',
+                                'fin.trs.head.inpdate',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.description',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.head.code', 'VRK')
+                            ->get();
+                        PHP,
+                    ['browse-020'],
+                ),
+            ],
+            'browse-data/030_1-general-ledger-details-v1' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerDetails)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.date',
+                                'fin.trs.head.origin',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1type',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2type',
+                                'fin.trs.line.debitcredit',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.vatcode',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-030_1'],
+                ),
+            ],
+            'browse-data/030_2-general-ledger-details-v2' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerDetailsV2)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.relation',
+                                'fin.trs.head.relationname',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.head.regime',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.head.regime', Regime::Fiscal)
+                            ->get();
+                        PHP,
+                    ['browse-030_2'],
+                ),
+            ],
+            'browse-data/030_3-general-ledger-details' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerDetailsV3)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.date',
+                                'fin.trs.head.status',
+                                'fin.trs.head.relation',
+                                'fin.trs.head.username',
+                                'fin.trs.head.modified',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.debitcredit',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.vatcode',
+                                'fin.trs.line.description',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-030_3'],
+                ),
+            ],
+            'browse-data/031-general-ledger-intercompany' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerIntercompany)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.date',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.destination.officename',
+                                'fin.trs.line.destination.dim1',
+                                'fin.trs.line.destination.dim1name',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-031'],
+                ),
+            ],
+            'browse-data/031_2-general-ledger-intercompany-v2' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::GeneralLedgerIntercompanyV2)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.date',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.destination.officename',
+                                'fin.trs.line.destination.dim1',
+                                'fin.trs.line.destination.dim1name',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-031_2'],
+                ),
+            ],
+            'browse-data/040_1-annual-report-totals' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::AnnualReportTotals)
+                            ->columns(
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.line.dim1type',
+                                'fin.trs.line.dim1group1',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'final')
+                            ->equal('fin.trs.head.balanceregimeprompt', Regime::Generic)
+                            ->get();
+                        PHP,
+                    ['browse-040_1'],
+                ),
+            ],
+            'browse-data/050_1-annual-report-ytd' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::AnnualReportYearToDate)
+                            ->columns(
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.line.dim1type',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/06')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.head.balanceregimeprompt', Regime::Generic)
+                            ->get();
+                        PHP,
+                    ['browse-050_1'],
+                ),
+            ],
+            'browse-data/060-annual-report-multicurrency' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::AnnualReportTotalsMulticurrency)
+                            ->columns(
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.head.curcode',
+                                'fin.trs.line.debitcredit',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'final')
+                            ->equal('fin.trs.head.balanceregimeprompt', Regime::Generic)
+                            ->get();
+                        PHP,
+                    ['browse-060'],
+                ),
+            ],
+            'browse-data/100-customer-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CustomerTransactions)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.head.date',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.openbasevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-100'],
+                ),
+            ],
+            'browse-data/130_1-customers' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::Customers)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.customer.creditlimit',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.openbasevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-130_1'],
+                ),
+            ],
+            'browse-data/130_2-customers-v2' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CustomersV2)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.openvaluesigned',
+                                'fin.trs.line.matchstatus',
+                                'fin.trs.line.matchdate',
+                                'fin.trs.line.modified',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->betweenDateTimes('fin.trs.line.modified', new DateTimeImmutable('2026-03-01 00:00 UTC'), new DateTimeImmutable('2026-03-31 00:00 UTC'))
+                            ->get();
+                        PHP,
+                    ['browse-130_2'],
+                ),
+            ],
+            'browse-data/130_3-customers-v3' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CustomersV3)
+                            ->columns(
+                                'fin.trs.head.customer.respuser',
+                                'fin.trs.head.customer.respusername',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.openbasevaluesigned',
+                                'fin.trs.line.payrun',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-130_3'],
+                ),
+            ],
+            'browse-data/164-credit-management' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CreditManagement)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.openbasevaluesigned',
+                                'fin.trs.line.actioncode',
+                                'fin.trs.line.actionname',
+                                'fin.trs.line.actiondate',
+                                'fin.trs.line.actionvalue',
+                                'fin.trs.line.actionusername',
+                            )
+                            ->between('fin.trs.line.dim2', '1000', '1000')
+                            ->get();
+                        PHP,
+                    ['browse-164'],
+                ),
+            ],
+            'browse-data/200-supplier-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::SupplierTransactions)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.head.date',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.openbasevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-200'],
+                ),
+            ],
+            'browse-data/230_1-suppliers' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::Suppliers)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.basevaluesigned',
+                                'fin.trs.line.openbasevaluesigned',
+                                'fin.trs.line.matchstatus',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-230_1'],
+                ),
+            ],
+            'browse-data/230_2-suppliers-v2' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::SuppliersV2)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.invnumber',
+                                'fin.trs.line.datedue',
+                                'fin.trs.line.openvaluesigned',
+                                'fin.trs.line.matchstatus',
+                                'fin.trs.line.payrun',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2000/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->equal('fin.trs.line.matchstatus', 'available')
+                            ->get();
+                        PHP,
+                    ['browse-230_2'],
+                ),
+            ],
+            'browse-data/300-project-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::ProjectTransactions)
+                            ->columns(
+                                'fin.trs.line.dim3',
+                                'fin.trs.line.dim3name',
+                                'fin.trs.head.yearperiod',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.head.status',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->between('fin.trs.line.dim3', 'P0001', 'P0001')
+                            ->get();
+                        PHP,
+                    ['browse-300'],
+                ),
+            ],
+            'browse-data/301-asset-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::AssetTransactions)
+                            ->columns(
+                                'fin.trs.line.dim3',
+                                'fin.trs.line.dim3name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->get();
+                        PHP,
+                    ['browse-301'],
+                ),
+            ],
+            'browse-data/302_1-fixed-assets' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::FixedAssets)
+                            ->columns(
+                                'fin.trs.line.dim3',
+                                'fin.trs.line.dim3name',
+                                'fin.trs.line.asset.beginyear',
+                                'fin.trs.line.asset.beginperiod',
+                                'fin.trs.line.asset.depreciationterm',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-302_1'],
+                ),
+            ],
+            'browse-data/400-cash-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CashTransactions)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.stmnumber',
+                                'fin.trs.head.startvalue',
+                                'fin.trs.head.closevalue',
+                                'fin.trs.head.number',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.bankcode', 'KAS')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-400'],
+                ),
+            ],
+            'browse-data/410-bank-transactions' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::BankTransactions)
+                            ->columns(
+                                'fin.trs.head.code',
+                                'fin.trs.head.stmnumber',
+                                'fin.trs.head.startvalue',
+                                'fin.trs.head.closevalue',
+                                'fin.trs.head.number',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.bankcode', 'BNK')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-410'],
+                ),
+            ],
+            'browse-data/610_1-time-and-expenses-totals' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesTotals)
+                            ->columns(
+                                'teq.trs.head.project1',
+                                'teq.trs.head.project2',
+                                'teq.trs.head.user',
+                                'teq.trs.line.type',
+                                'teq.trs.line.rate.code',
+                                'teq.trs.line.billable',
+                                'teq.trs.line.quantity',
+                                'teq.trs.line.valueint',
+                                'teq.trs.line.valueext',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-610_1'],
+                ),
+            ],
+            'browse-data/620-time-and-expenses-multicurrency' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesMulticurrency)
+                            ->columns(
+                                'fin.trs.line.dim3',
+                                'fin.trs.line.dim3name',
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim1',
+                                'fin.trs.head.curcode',
+                                'fin.trs.line.valuesigned',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->equal('fin.trs.head.status', 'normal')
+                            ->get();
+                        PHP,
+                    ['browse-620'],
+                ),
+            ],
+            'browse-data/650_1-time-and-expenses-details' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesDetails)
+                            ->columns(
+                                'teq.trs.head.date',
+                                'teq.trs.head.user',
+                                'teq.trs.head.customer',
+                                'teq.trs.head.project1',
+                                'teq.trs.head.project2',
+                                'teq.trs.head.status',
+                                'teq.trs.line.time',
+                                'teq.trs.line.time_nb',
+                                'teq.trs.line.expense',
+                                'teq.trs.line.description',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-650_1'],
+                ),
+            ],
+            'browse-data/651_1-time-and-expenses-totals-per-week' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesTotalsPerWeek)
+                            ->columns(
+                                'teq.trs.head.year',
+                                'teq.trs.head.week',
+                                'teq.trs.head.user',
+                                'teq.trs.head.project1',
+                                'teq.trs.line.time',
+                                'teq.trs.line.timevalueext',
+                                'teq.trs.line.expense',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-651_1'],
+                ),
+            ],
+            'browse-data/652_1-time-and-expenses-totals-per-period' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesTotalsPerPeriod)
+                            ->columns(
+                                'teq.trs.head.year',
+                                'teq.trs.head.period',
+                                'teq.trs.head.user',
+                                'teq.trs.head.project1',
+                                'teq.trs.line.time',
+                                'teq.trs.line.timevalueext',
+                                'teq.trs.line.expense',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-652_1'],
+                ),
+            ],
+            'browse-data/660_1-time-and-expenses-billing-details' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesBillingDetails)
+                            ->columns(
+                                'teq.trs.head.date',
+                                'teq.trs.head.customer',
+                                'teq.trs.head.project1',
+                                'ivb.trs.head.number',
+                                'ivb.trs.line.source',
+                                'inv.trs.head.number',
+                                'teq.trs.line.valueext',
+                                'ivb.trs.line.value',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-660_1'],
+                ),
+            ],
+            'browse-data/661_1-time-and-expenses-billing-per-week' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesBillingPerWeek)
+                            ->columns(
+                                'teq.trs.head.year',
+                                'teq.trs.head.week',
+                                'teq.trs.head.customer',
+                                'teq.trs.head.project1',
+                                'teq.trs.line.quantity',
+                                'teq.trs.line.valueext',
+                                'ivb.trs.line.value',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-661_1'],
+                ),
+            ],
+            'browse-data/662_1-time-and-expenses-billing-per-period' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TimeAndExpensesBillingPerPeriod)
+                            ->columns(
+                                'teq.trs.head.year',
+                                'teq.trs.head.period',
+                                'teq.trs.head.customer',
+                                'teq.trs.head.project1',
+                                'teq.trs.line.quantity',
+                                'teq.trs.line.valueext',
+                                'ivb.trs.line.value',
+                            )
+                            ->betweenDates('teq.trs.head.date', new DateTimeImmutable('2026-01-01'), new DateTimeImmutable('2026-03-31'))
+                            ->get();
+                        PHP,
+                    ['browse-662_1'],
+                ),
+            ],
+            'browse-data/670-transaction-summary' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::TransactionSummary)
+                            ->columns(
+                                'fin.trs.head.yearperiod',
+                                'fin.trs.head.code',
+                                'fin.trs.head.count',
+                                'fin.trs.line.count',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->get();
+                        PHP,
+                    ['browse-670'],
+                ),
+            ],
+            'browse-data/680-bank-link-details' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::BankLinkDetails)
+                            ->columns(
+                                'fin.bnk.transactiontype',
+                                'fin.bnk.iban',
+                                'fin.bnk.dim1',
+                                'fin.bnk.dim1name',
+                                'fin.bnk.banklinkstatus',
+                            )
+                            ->get();
+                        PHP,
+                    ['browse-680'],
+                ),
+            ],
+            'browse-data/680_2-bank-link-details-v2' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::BankLinkDetailsV2)
+                            ->columns(
+                                'fin.bnk.transactiontype',
+                                'fin.bnk.iban',
+                                'fin.bnk.currency',
+                                'fin.bnk.accountintegrationtype',
+                                'fin.bnk.payments',
+                                'fin.bnk.directdebits',
+                                'fin.bnk.consentexpirydate',
+                            )
+                            ->equal('fin.bnk.accountstatus', 'active')
+                            ->get();
+                        PHP,
+                    ['browse-680_2'],
+                ),
+            ],
+            'browse-data/690-vat-return-status' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::VatReturnStatus)
+                            ->columns(
+                                'fin.vat.decltype',
+                                'fin.vat.declyear',
+                                'fin.vat.timeframe',
+                                'fin.vat.statusname',
+                                'fin.vat.sent',
+                            )
+                            ->equal('fin.vat.declyear', 2026)
+                            ->get();
+                        PHP,
+                    ['browse-690'],
+                ),
+            ],
+            'browse-data/700-hierarchy-access' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::HierarchyAccess)
+                            ->columns(
+                                'hie.xss.hierarchy',
+                                'hie.xss.hierarchyname',
+                                'hie.xss.hierarchyhidden',
+                                'hie.xss.role',
+                                'hie.xss.user',
+                                'hie.xss.type',
+                            )
+                            ->equal('hie.xss.type', 'edit')
+                            ->get();
+                        PHP,
+                    ['browse-700'],
+                ),
+            ],
+            'browse-data/900-cost-centers' => [
+                new XmlExample(
+                    'Compose the browse request and send it',
+                    $browse . '#compose-the-browse-request-and-send-it',
+                    <<<'PHP'
+                        $twinfield->browse(BrowseCode::CostCenters)
+                            ->columns(
+                                'fin.trs.line.dim2',
+                                'fin.trs.line.dim2name',
+                                'fin.trs.line.dim1',
+                                'fin.trs.line.dim1name',
+                                'fin.trs.head.code',
+                                'fin.trs.head.number',
+                                'fin.trs.line.basevaluesigned',
+                            )
+                            ->between('fin.trs.head.yearperiod', '2026/00', '2026/55')
+                            ->get();
+                        PHP,
+                    ['browse-900'],
+                ),
+            ],
+            'browse-data/list-browse-fields' => [
+                new XmlExample(
+                    'Browse fields',
+                    $browse . '#browse-fields',
+                    '$twinfield->browseDefinitions()->fields();',
+                    ['browse-fields'],
+                    limit: 3,
+                ),
+            ],
+            'browse-data/read-browse-definition' => [
+                new XmlExample(
+                    'Read the browse definition',
+                    $browse . '#read-the-browse-definition',
+                    "\$twinfield->browseDefinitions()->get('030_3');",
+                    ['browse-definition-030_3'],
+                    limit: 3,
                 ),
             ],
 

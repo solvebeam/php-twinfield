@@ -7,6 +7,7 @@ They can be outdated. The [Twinfield API documentation](https://developers.twinf
 | Manual | Pages | Subject |
 | --- | ---: | --- |
 | [Twinfield-Webservices-Manual.pdf](Twinfield-Webservices-Manual.pdf) | 42 | General introduction to the web services |
+| [BrowseCodeDetails.pdf](BrowseCodeDetails.pdf) | 4 | Most used fields per browse code, and which of them can be a search criterion |
 | [Webservices-Manual-Browse.pdf](Webservices-Manual-Browse.pdf) | 18 | Browse data (browse codes, columns and filters) |
 | [Webservices-Manual-Dimensions.pdf](Webservices-Manual-Dimensions.pdf) | 32 | Dimensions (master data) |
 | [Webservices-Manual-Financial-Transactions.pdf](Webservices-Manual-Financial-Transactions.pdf) | 11 | Financial transactions |
