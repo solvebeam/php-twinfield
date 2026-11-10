@@ -1,0 +1,65 @@
+name: Sync Twinfield OpenAPI
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-openapi:
+    name: Sync Twinfield OpenAPI files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download and format all Twinfield OpenAPI specs
+        run: |
+          set -e
+
+          hosts=(
+            "accounting"
+            "accounting2"
+          )
+
+          # The specs the Swagger UI loads (`discoveryPaths` in https://api.accounting.twinfield.com/Api/swagger/ui/index).
+          specs=(
+            "open-v1"
+            "private"
+          )
+
+          for host in "${hosts[@]}"; do
+            dir="openapi/${host}"
+            mkdir -p "${dir}"
+
+            for spec in "${specs[@]}"; do
+              file="${dir}/${spec}.json"
+              url="https://api.${host}.twinfield.com/Api/swagger/docs/${spec}"
+
+              echo "Downloading: ${url}"
+              curl --fail --silent --show-error "${url}" --output "${file}.tmp"
+
+              echo "Formatting: ${file}"
+              jq . "${file}.tmp" > "${file}"
+              rm "${file}.tmp"
+            done
+          done
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push if files changed
+        run: |
+          git add openapi/
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Twinfield OpenAPI files"
+            git push
+          else
+            echo "No changes to commit"
+          fi

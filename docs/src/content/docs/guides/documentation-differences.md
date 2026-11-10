@@ -5,7 +5,7 @@ description: Where live Twinfield responses differ from the API documentation, h
 
 The [Twinfield API documentation](https://developers.twinfield.com/documentation/api/) shows how requests and responses should look. Live responses don't always match it: elements are missing or extra, values are empty where the documentation shows a value, and some examples have mistakes. The SDK follows the live responses. This page records what was found, how it was checked, and how the SDK handles it, so you know why the code does what it does and what is still unverified.
 
-Besides the online documentation, the repository has the service definitions in [`wsdl/`](https://github.com/solvebeam/php-twinfield/tree/main/wsdl) and [old Twinfield web services manuals](/reference/manuals/) (PDF) in `manuals/`. The manuals can be outdated, but sometimes explain an element that the online documentation leaves out.
+Besides the online documentation, the repository has the SOAP service definitions in [`wsdl/`](https://github.com/solvebeam/php-twinfield/tree/main/wsdl), the REST API definitions (Swagger) in [`openapi/`](https://github.com/solvebeam/php-twinfield/tree/main/openapi) and [old Twinfield web services manuals](/reference/manuals/) (PDF) in `manuals/`. The manuals can be outdated, but sometimes explain an element that the online documentation leaves out.
 
 The SDK never hides an unexpected response behind a default value. When a response doesn't match what is known, it throws an `UnexpectedResponseException` with the path of the element, e.g. `dimension/financials/meansofpayment is "creditcard", expected one of none, paymentfile, cheques.` Only behaviour that was seen in live responses is accepted.
 
