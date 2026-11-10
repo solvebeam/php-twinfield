@@ -64,6 +64,10 @@ final class ExamplesTest extends TestCase
         'hierarchies/save-hierarchy',
         'matching/match-transactions',
         'matching/undo-match',
+        'pay-and-collect/create-pay-run',
+        'pay-and-collect/finish-pay-run',
+        // Posts to the in-transfer ledger: can't be undone.
+        'pay-and-collect/pay-run-lifecycle',
         'periods/rename-period',
         'projects/create-project',
         'projects/delete-project',

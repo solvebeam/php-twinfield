@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><PostResponse xmlns="http://www.twinfield.com/"><PostResult><MessageOfPostResult><Type>Warning</Type><Text>Betaling 2 is geboekt met een afwijkend bedrag.</Text><Code>UnknownTextualMessage</Code><Parameters/></MessageOfPostResult></PostResult><touched>3</touched><modified>2026-11-10T09:20:00.5</modified></PostResponse></soap:Body></soap:Envelope>

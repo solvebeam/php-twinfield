@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><PostAsyncResponse xmlns="http://www.twinfield.com/"><PostAsyncResult/><touched>3</touched><modified>2026-11-10T09:20:00.5</modified></PostAsyncResponse></soap:Body></soap:Envelope>

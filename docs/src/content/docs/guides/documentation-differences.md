@@ -424,6 +424,48 @@ Checked on 10 November 2026 against the documentation ([Matching](https://develo
 - The `UndoMatch` response on success (empty, or left out?) and its messages; whether `Parameters` is always there.
 - Match codes `070` and `370`, and `writeoff` types `currency` and `writeoff`.
 
+## Pay & Collect
+
+Checked on 10 November 2026 against the documentation ([Pay & Collect](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/)), the WSDL (`payandcollect.asmx?wsdl`, in `wsdl/accounting/`) and the manual (`Webservices-Manual-Pay_Collect.pdf`, version 5.4, 2010). Live, read-only: `GetRuns` on two test companies returns an empty `<GetRunsResult/>`, and the Finder (`PAY`) gives pay types `SEPANLCT` and `SEPANLDD`. The other operations change data and are not checked live yet. See the [Pay & Collect guide](/guides/pay-and-collect/).
+
+### Mistakes in the documentation
+
+- **`RunType` is not documented.** It is used in `PayOverview` and `PayRun`; the WSDL and the manual have `Payment` and `DirectDebit`.
+- **`SummaryInfo.Details`** is documented as one `DetailInfo`; the WSDL has a list (`ArrayOfDetailInfo`). **`RelationBank`** is documented as `String Bank`; the WSDL has the complex type `Bank`.
+- **`DetailInfo.DiscountAmount`** is in the WSDL (and in `DetailSettings` of Modify), not in the documentation of `DetailInfo` or in the manual.
+- **`touched` and `modified` of a response** are documented in the message (`MessageOfModifyResult`, …); in the WSDL they are elements of the response itself (`ModifyResponse/touched`). **`FinishResponse`** has no `touched` and `modified`, though the documentation shows them.
+- **The CreateRun responses** contain the new run (`payRun`), which the documentation leaves out; the manual has it as `out PayRun payRun`.
+- **CreateRunAsync** takes `createRunAsyncRequest`; the documentation calls it `createRunRequest`.
+- **Finish** takes the pay type as `payRunCode`, the other operations as `payType`.
+- **The conditions** use values that are not in the enums: Modify `Status <> Busy`, Finish `Phase < Posting` and `Status = Error`. The enums have phase `Post` and status `Started`, `Done` and `DoneWithErrors`.
+- **The CreateRun parameters** `DimensionFrom` and `DimensionTo` are `relationFrom` and `relationTo` in the manual.
+
+### Requests
+
+- **CreateRun2 instead of CreateRun.** CreateRun2 has the same fields plus `DiscountDaysTolerance` (`minOccurs="1"`: the SDK sends 0 by default). `Method`, `DirectRemove` and `MaxDuedate` are nillable: the SDK leaves them out when they are not set, so the pay type decides.
+- **The period** is a string in the create request (`2026/11`, as in the manual); the run has `Year` and `Period` as numbers. The SDK uses `FinancialPeriod` for both.
+- **Custom and export settings** are an array of string arrays. The manual shows `[name, value]` pairs (`["PayCostNational", "0"]`, `["FileType", "production"]`); the SDK takes `[name => value]`. The only documented setting is `SEPANLDDcollectionschema` (0 Core, 1 B2B).
+- **Modify sends every summary and detail.** `SummarySettings` has `Relation`, `Currency` and `Id` as key; `DetailSettings` requires `Value` and `Included`. The SDK sends the whole run with the current values for what did not change.
+- **`modified`** is sent back exactly as Twinfield returned it.
+- **CreateFiles instead of CreateFile.** CreateFile gives one file; CreateFiles all, when a bank limits the number of transactions per file.
+
+### Responses
+
+The fixtures are fictitious and follow the WSDL, except the empty `GetRuns` response, which is live.
+
+- **The message code** is always `UnknownTextualMessage` (`CreateRunResult`, `ModifyResult`, …), so the SDK keeps it as a string and does not have an enum per operation.
+- **Dates** are `xs:dateTime`. Pay date, invoice date and due date are read as dates.
+- **`payFile`/`payFiles`** are `base64Binary`; the SDK decodes them.
+
+### Not yet verified
+
+- Every response except an empty `GetRuns`: the shape of `PayOverview`, `PayRun` and the messages, which fields Twinfield leaves out or sends empty (`User`, `Bank`, `Reference`, `RelationBank`, `InvoiceNumber`), and how many decimals the amounts have.
+- Whether the CreateRunAsync response contains the run; `createAsync()` returns only the messages now.
+- Whether Modify needs every summary, or only the changed ones; whether a value above the original value or a negative discount gives an error message.
+- The error for an outdated version, and for a step in the wrong phase.
+- What `GetRunInfo` gives for an unknown run.
+- Post, CreateFiles and Finish after posting: the write test never posts, because it can't be undone.
+
 ## Finder
 
 The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a search of every documented type (`maxRows` 3) on a test company, `company=*` for 15 types, and the documented search fields and options with the errors they give. Documentation: [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and the WSDL (`finder.asmx?wsdl`, in `wsdl/accounting/`).

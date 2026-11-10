@@ -82,6 +82,23 @@ final readonly class ResultElement
         throw new UnexpectedResponseException(sprintf('%s/%s is missing.', $this->path, $name));
     }
 
+    /**
+     * A child element that may be left out or nil (null), e.g. an element with `minOccurs="0"`.
+     * Only use this where that is valid Twinfield behaviour.
+     */
+    public function nullableChild(string $name): ?self
+    {
+        foreach ($this->element->childNodes as $child) {
+            if ($child instanceof DOMElement && $child->localName === $name) {
+                return $child->getAttributeNS(self::XSI_NS, 'nil') === 'true'
+                    ? null
+                    : new self($child, $this->path . '/' . $name);
+            }
+        }
+
+        return null;
+    }
+
     public function string(string $name): string
     {
         return $this->child($name)->text();

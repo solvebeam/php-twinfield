@@ -41,6 +41,7 @@ use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Hierarchy\HierarchyResource;
 use SolveBeam\Twinfield\Matching\MatchingResource;
+use SolveBeam\Twinfield\PayAndCollect\PayAndCollectResource;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Office\Office;
@@ -440,6 +441,15 @@ final readonly class Twinfield
     public function matching(): MatchingResource
     {
         return new MatchingResource($this);
+    }
+
+    /**
+     * Pay & Collect (payandcollect.asmx): payment runs and direct debit runs, from selecting the
+     * open invoices to the SEPA file.
+     */
+    public function payAndCollect(): PayAndCollectResource
+    {
+        return new PayAndCollectResource($this);
     }
 
     /**

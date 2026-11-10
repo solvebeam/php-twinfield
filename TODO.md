@@ -50,6 +50,45 @@ Then add matching to the write test (it needs an open sales invoice) and run the
 - Total line fields `invoicenumber`, `freechar`, `comment`, `repvalue`, `reprate` and detail line
   fields `vatbasevalue`, `vatrepvalue` can't be sent yet. Probably rarely needed.
 
+## Pay & Collect: verify live
+
+Pay & Collect (`payandcollect.asmx`) is only tested offline, with fixtures that follow the WSDL
+(`pay-and-collect-*.xml`, fictitious). Live, only `GetRuns` is tested: the test companies have no
+runs, so it returns an empty `<GetRunsResult/>`.
+
+1. Run the write test with recording. It creates a `SEPANLCT` run for one open purchase invoice,
+   reads it, lowers the amount, authorises it (first with an outdated version, which must fail) and
+   deletes it with `finish()`. It never posts.
+
+   ```sh
+   TWINFIELD_RECORD=1 composer test:write -- --company=1002_3 --filter=PayAndCollect
+   composer twinfield:anonymize
+   ```
+
+   Replace the fictitious fixtures with the recorded ones and check:
+
+   - Which fields of `PayOverview`, `PayRun`, `SummaryInfo` and `DetailInfo` Twinfield leaves out or
+     sends empty (`User`, `Bank`, `Reference`, `RelationBank`, `InvoiceNumber`, `CustomSettings`).
+     The read models are strict now: make a field nullable only where a live response shows it.
+   - The `modified` format (fractions of seconds, time zone) and whether it round-trips.
+   - Whether Modify needs every summary (as the SDK sends now) or only the changed ones.
+   - The messages: the error for an outdated version, for a step in the wrong phase, for a value
+     above the original value; informational messages of CreateRun2 (selected and skipped).
+   - What `GetRunInfo` gives for an unknown or finished run (fault, empty result, error message?).
+     Maybe a `PayRunNotFoundException`.
+   - Does the CreateRunAsync response contain `payRun`? Then `createAsync()` can return it.
+
+2. Once, by hand, after confirmation: post and create files for one test invoice in 1002_3 with the
+   `pay-run-lifecycle` example (`TWINFIELD_RECORD=1`), then check the run is gone. This books on the
+   in-transfer ledger and matches the invoice: it can't be undone. Record the Post, CreateFiles and
+   Finish responses, and replace the illustrative output in the example READMEs.
+
+3. A direct debit run (`SEPANLDD`) with `collectionSchema()`: does Twinfield accept the setting, and
+   how does it show in `CustomSettings`?
+
+Then update the status table in `docs/src/content/docs/guides/pay-and-collect.md` and the Pay &
+Collect section of the documentation differences.
+
 ## Browse data: the other browse codes
 
 Browse data (`browse()`, `browseDefinitions()`) is verified live with 030_3, 040_1 and 130_3 (see

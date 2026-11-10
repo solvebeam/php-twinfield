@@ -181,6 +181,30 @@ $matching->undo(DimensionTypeCode::AccountsReceivable, '1000', 12);
 
 See [Match transactions](examples/matching/match-transactions/), [List match sets](examples/matching/list-match-sets/) and [Undo match](examples/matching/undo-match/).
 
+## Pay & Collect
+
+[Pay & Collect](https://developers.twinfield.com/documentation/api/miscellaneous/pay-and-collect/) creates payment runs (paying suppliers) and direct debit runs (collecting from customers): select the open invoices, change the run, authorise it, post it to the in-transfer ledger and create the SEPA file(s). Every step checks the version of the run. See the [Pay & Collect guide](https://php-twinfield.solvebeam.com/guides/pay-and-collect/).
+
+```php
+use SolveBeam\Twinfield\PayAndCollect\PayRunInput;
+use SolveBeam\Twinfield\PayAndCollect\PayRunModification;
+
+$payAndCollect = $twinfield->company('1000')->payAndCollect();
+
+$run = $payAndCollect->create(
+    PayRunInput::create('SEPANLCT', new DateTimeImmutable('2026-11-12'), '2026/11')
+        ->maxDueDate(new DateTimeImmutable('2026-11-30')),
+)->run;
+
+$version = $payAndCollect->modify(PayRunModification::of($run)->excludeSummary(2));
+$version = $payAndCollect->authorise($run, $version);
+$version = $payAndCollect->post($run, $version);
+$files = $payAndCollect->createFiles($run, $version);
+$payAndCollect->finish($run, $files->version);
+```
+
+See [List pay runs](examples/pay-and-collect/list-pay-runs/), [Create pay run](examples/pay-and-collect/create-pay-run/) and [Pay run lifecycle](examples/pay-and-collect/pay-run-lifecycle/).
+
 ## Command & Query web services
 
 Twinfield has three kinds of web services: classic SOAP services such as the Finder, XML web services (ProcessXml) and [Command & Query web services](https://developers.twinfield.com/documentation/api/types/command-and-query-webservices). The last kind uses queries to read data and commands to change it. These services always work on one company, so call `company()` first.

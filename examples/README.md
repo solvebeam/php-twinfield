@@ -276,6 +276,14 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 - [List match sets](matching/list-match-sets/): the matched lines of a customer with their match number (browse data).
 - [Undo match](matching/undo-match/): undo a match set by its match number (write).
 
+## Pay & Collect
+
+- [List pay runs](pay-and-collect/list-pay-runs/): the payment and direct debit runs of a company.
+- [Get pay run](pay-and-collect/get-pay-run/): a run with its summaries, bank accounts and invoices.
+- [Create pay run](pay-and-collect/create-pay-run/): select the open invoices for a payment or direct debit run (write).
+- [Finish pay run](pay-and-collect/finish-pay-run/): delete a run that is not posted yet, or end it after the files (write).
+- [Pay run lifecycle](pay-and-collect/pay-run-lifecycle/): modify, authorise, post, create the SEPA files and finish (write, can't be undone).
+
 ## Finder
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.
