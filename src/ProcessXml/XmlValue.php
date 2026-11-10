@@ -7,6 +7,7 @@ namespace SolveBeam\Twinfield\ProcessXml;
 use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use SolveBeam\Twinfield\Period\Period;
 
 /**
  * Value types of the XML web services.
@@ -55,29 +56,23 @@ final class XmlValue
     }
 
     /**
-     * `yyyy/pp`, e.g. `2025/01`.
+     * `yyyy/pp`, e.g. `2025/01`. The rules are those of `Period`.
      */
     public static function period(int $year, int $number): string
     {
-        if ($year < 1000 || $year > 9999 || $number < 0 || $number > 99) {
-            throw new InvalidArgumentException(sprintf('%d/%d is not a period yyyy/pp.', $year, $number));
-        }
-
-        return sprintf('%04d/%02d', $year, $number);
+        return (string) Period::of($year, $number);
     }
 
     /**
-     * `yyyy/p` or `yyyy/pp`.
+     * `yyyy/p` or `yyyy/pp`. The rules are those of `Period`; use `Period::fromString()` for a `Period`.
      *
      * @return array{year: int, number: int}
      */
     public static function toPeriod(string $value): array
     {
-        if (preg_match('~^(\d{4})/(\d{1,2})$~', $value, $matches) !== 1) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a period yyyy/p or yyyy/pp.', $value));
-        }
+        $period = Period::fromString($value);
 
-        return ['year' => (int) $matches[1], 'number' => (int) $matches[2]];
+        return ['year' => $period->year, 'number' => $period->number];
     }
 
     public static function boolean(bool $value): string

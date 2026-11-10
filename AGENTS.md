@@ -21,6 +21,15 @@
 - Money is always a numeric string (`'121.00'`), never a float and never integer cents. Wrap it in a value object with bcmath that keeps the number of decimals Twinfield uses: `Amount` (2 decimals) for transaction amounts, `UnitPrice` (4 decimals) for rate prices. Accept `Amount|string` (or `UnitPrice|string`) with `@param numeric-string`.
 - Keep read models (what Twinfield returns) separate from objects for creating or updating data. Fields that are optional when creating something must not make the read model nullable.
 
+## Models and wire formats
+
+Twinfield has SOAP/XML web services now and is moving towards a REST/JSON API (https://api.accounting.twinfield.com/Api/swagger/ui/index). Keep the models usable for both: the XML (or JSON) is how data travels, not what it is.
+
+- Value objects (`Amount`, `UnitPrice`, `Period`, …) know their own rules: validation, parsing and their canonical string form (`2026/03`, `121.00`). They never depend on `ProcessXml`, `Soap` or `CommandQuery` classes. The XML layer uses the value object, not the other way round: `XmlValue::period()` calls `Period::of()`.
+- Constructors and properties of models are format-neutral: plain PHP types, enums and value objects, no `XmlElement`, `DOMElement` or XML strings, and no names that only exist in the XML (`dim1`, `@location`) when a clear name exists.
+- Mapping from and to a wire format stays at the edge. Many existing models have a static `fromXml()` / `fromResponse()`; that is accepted, but keep it a thin mapping onto the constructor. For new code, prefer mapping in the resource or a separate reader/writer class (like `TransactionXmlWriter`) over adding XML code to a model.
+- Don't refactor existing models just for this; apply it to new code and to code you touch anyway.
+
 ## Twinfield knowledge base
 
 - Articles from the Twinfield community go in `docs/src/content/docs/knowledge-base/`: the article text quoted unchanged in a blockquote, with the source link and dates, followed by a "With this SDK" section with code and links to examples. See the `index.md` there.

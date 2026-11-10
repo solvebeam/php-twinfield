@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SolveBeam\Twinfield\Period;
 
 use InvalidArgumentException;
-use SolveBeam\Twinfield\ProcessXml\XmlValue;
 use Stringable;
 
 /**
@@ -27,10 +26,14 @@ final readonly class Period implements Stringable
     ) {
     }
 
+    /**
+     * @throws InvalidArgumentException When the year is not 1000–9999 or the number not 0–99.
+     */
     public static function of(int $year, int $number): self
     {
-        // Validates the range.
-        XmlValue::period($year, $number);
+        if ($year < 1000 || $year > 9999 || $number < 0 || $number > 99) {
+            throw new InvalidArgumentException(sprintf('%d/%d is not a period yyyy/pp.', $year, $number));
+        }
 
         return new self($year, $number);
     }
@@ -40,9 +43,11 @@ final readonly class Period implements Stringable
      */
     public static function fromString(string $period): self
     {
-        $parsed = XmlValue::toPeriod($period);
+        if (preg_match('~^(\d{4})/(\d{1,2})$~', $period, $matches) !== 1) {
+            throw new InvalidArgumentException(sprintf('"%s" is not a period yyyy/p or yyyy/pp.', $period));
+        }
 
-        return self::of($parsed['year'], $parsed['number']);
+        return self::of((int) $matches[1], (int) $matches[2]);
     }
 
     public function equals(self $other): bool
@@ -51,10 +56,10 @@ final readonly class Period implements Stringable
     }
 
     /**
-     * `yyyy/pp`, as Twinfield expects it.
+     * `yyyy/pp`, e.g. `2026/03`, as Twinfield writes it.
      */
     public function __toString(): string
     {
-        return XmlValue::period($this->year, $this->number);
+        return sprintf('%04d/%02d', $this->year, $this->number);
     }
 }
