@@ -47,6 +47,7 @@ use SolveBeam\Twinfield\Matching\MatchingResource;
 use SolveBeam\Twinfield\PayAndCollect\PayAndCollectResource;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
 use SolveBeam\Twinfield\Finder\FinderType;
+use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
 use SolveBeam\Twinfield\Office\Office;
 use SolveBeam\Twinfield\Office\OfficeResource;
 use SolveBeam\Twinfield\Office\OfficeSummary;
@@ -341,6 +342,15 @@ final readonly class Twinfield
     public function dimensionTypes(): DimensionTypeResource
     {
         return new DimensionTypeResource($this);
+    }
+
+    /**
+     * Fixed assets of the new fixed assets module (REST API): assets, classes, groups and the
+     * reconciliation report. Read-only. For the classic module use `classicFixedAssets()`.
+     */
+    public function fixedAssets(): FixedAssetResource
+    {
+        return new FixedAssetResource($this);
     }
 
     /**

@@ -1,0 +1,179 @@
+{
+    "actions": [
+        {
+            "action": "imported",
+            "transactions": [],
+            "timestamp": "2022-05-22T12:47:24Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "historicalValuesAdded",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "973103482"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "975583309"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "334834641"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "739576385"
+                }
+            ],
+            "timestamp": "2022-05-22T12:48:29Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "depreciated",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "883334415"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "170682323"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "581291876"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "899684914"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "689172368"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "509303216"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "200879522"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "811439471"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "959793170"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "589268838"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "671716684"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "501715167"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "211968850"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "098280555"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "843839978"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "131286546"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "694780682"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "712781280"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "178134438"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "875395125"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "433534001"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "605198366"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "853465396"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "326901794"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "108166114"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "077739764"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "345163785"
+                }
+            ],
+            "timestamp": "2022-07-24T07:25:03Z",
+            "user": "AVTZ"
+        },
+        {
+            "action": "disposed",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "491636194"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "491636194"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "568792794"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "568792794"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "945151765"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "945151765"
+                }
+            ],
+            "timestamp": "2022-07-24T07:25:03Z",
+            "user": "AVTZ"
+        }
+    ]
+}

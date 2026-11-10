@@ -158,16 +158,16 @@
     "lastMimicPeriod": {
         "year": 2021,
         "periodNumber": 12,
-        "startDate": "8497-68-30D39:86:09",
-        "endDate": "8497-68-30D39:86:09"
+        "startDate": "0001-01-01T00:00:00",
+        "endDate": "0001-01-01T00:00:00"
     },
     "parentFixedAssets": [],
     "childFixedAssets": [],
     "lastRevaluationPeriod": {
         "year": 2021,
         "periodNumber": 12,
-        "startDate": "8497-68-30D39:86:09",
-        "endDate": "8497-68-30D39:86:09"
+        "startDate": "0001-01-01T00:00:00",
+        "endDate": "0001-01-01T00:00:00"
     },
     "targetCompany": null,
     "sourceCompany": null,

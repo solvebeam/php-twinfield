@@ -1,0 +1,166 @@
+{
+    "id": "cb7bf956-0854-46d3-aa20-7dd6bd38aad8",
+    "code": "19357",
+    "description": "Tycthxh kltrruwrtoof, OF -jkxgtegrela",
+    "supplierId": null,
+    "currency": "EUR",
+    "status": "disposed",
+    "transactions": [],
+    "projectId": null,
+    "nextPeriodToDepreciate": {
+        "year": 2023,
+        "periodNumber": 10
+    },
+    "depreciationSettings": [
+        {
+            "regime": "fiscal",
+            "startYearPeriod": {
+                "year": 2017,
+                "periodNumber": 2
+            },
+            "startDate": "2016-01-28T00:00:00",
+            "remainderValue": 0.0,
+            "isRemainderValueImplicit": null,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 130.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2017,
+                        "periodNumber": 2
+                    }
+                }
+            ]
+        },
+        {
+            "regime": "commercial",
+            "startYearPeriod": {
+                "year": 2017,
+                "periodNumber": 2
+            },
+            "startDate": "2016-01-28T00:00:00",
+            "remainderValue": 0.0,
+            "isRemainderValueImplicit": null,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 130.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2017,
+                        "periodNumber": 2
+                    }
+                }
+            ]
+        },
+        {
+            "regime": "economic",
+            "startYearPeriod": {
+                "year": 2017,
+                "periodNumber": 2
+            },
+            "startDate": "2016-01-28T00:00:00",
+            "remainderValue": 0.0,
+            "isRemainderValueImplicit": null,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 130.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2017,
+                        "periodNumber": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "labels": {
+        "firstUseDate": "2016-01-28T00:00:00",
+        "free1": "",
+        "free2": "",
+        "free3": "",
+        "free4": "",
+        "free5": "",
+        "investmentDate": "2016-01-28T00:00:00",
+        "taxReasonAmount": null,
+        "taxReasonId": null,
+        "licensePlate": "",
+        "serialNumber": "",
+        "locations": null,
+        "partners": null,
+        "assetTypes": [
+            {
+                "assetType1Id": "9b028e5a-7510-0350-39a8-b6ec35222dfe",
+                "assetType2IsRequired": false,
+                "assetType2Id": null,
+                "assetType3IsRequired": false,
+                "assetType3Id": null,
+                "year": 2017
+            }
+        ]
+    },
+    "attachmentIds": [],
+    "currentPeriodNumbers": [
+        {
+            "regime": "fiscal",
+            "periodNumber": 87
+        },
+        {
+            "regime": "commercial",
+            "periodNumber": 87
+        },
+        {
+            "regime": "economic",
+            "periodNumber": 87
+        }
+    ],
+    "purchaseValues": [
+        {
+            "amount": 21230.0,
+            "periodFrom": 1,
+            "origin": "Uselex",
+            "regime": "generic"
+        }
+    ],
+    "version": 15,
+    "classes": [
+        {
+            "id": "3ae5b0e3-37bd-36d1-9569-dded79aabfa2",
+            "year": 2017
+        }
+    ],
+    "costCenters": [
+        {
+            "id": "508c07e3-1867-d711-26c0-d50de66b25b0",
+            "year": 2017,
+            "periodNumber": 2
+        }
+    ],
+    "groups": [],
+    "isImportedWithMimicHistory": true,
+    "lastMimicPeriod": {
+        "year": 2022,
+        "periodNumber": 13,
+        "startDate": "0001-01-01T00:00:00",
+        "endDate": "0001-01-01T00:00:00"
+    },
+    "parentFixedAssets": [],
+    "childFixedAssets": [],
+    "lastRevaluationPeriod": null,
+    "targetCompany": null,
+    "sourceCompany": null,
+    "purchaseValueAccount": {
+        "id": "3c6946cd-e50b-8265-d8a0-4e8b3c0a09e3",
+        "code": "58362",
+        "name": "Zvnmdtbezaa kqltmpdmqhxhzwhy fk -nhngzhfua"
+    },
+    "youngestBalances": {
+        "netBookValue": 1017.20,
+        "purchaseValue": 21230.0
+    }
+}

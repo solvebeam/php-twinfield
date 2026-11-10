@@ -1,0 +1,23 @@
+{
+    "id": "16fd2706-8baf-433b-82eb-8c7fada847da",
+    "name": "Vehicles",
+    "startYear": 2025,
+    "stopValues": [
+        {
+            "valuesPerRegime": {
+                "values": [
+                    {
+                        "regime": "fiscal",
+                        "value": 1000.0
+                    },
+                    {
+                        "regime": "commercial",
+                        "value": 500.0
+                    }
+                ]
+            },
+            "year": 2026
+        }
+    ],
+    "version": 2
+}

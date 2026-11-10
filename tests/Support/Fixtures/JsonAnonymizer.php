@@ -150,8 +150,10 @@ final readonly class JsonAnonymizer
 
         // Culture codes such as `nl-NL` are not data.
         $isCultureCode = preg_match('~^[a-z]{2}-[A-Z]{2}$~', $value) === 1;
+        // .NET's DateTime.MinValue stands for "no date".
+        $isMinimumDate = str_starts_with($value, '0001-01-01T00:00:00');
 
-        if (($key !== null && in_array($key, self::KEEP_KEYS, true)) || $isCultureCode) {
+        if (($key !== null && in_array($key, self::KEEP_KEYS, true)) || $isCultureCode || $isMinimumDate) {
             $this->values->keepValue($value);
 
             return $value;
