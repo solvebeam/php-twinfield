@@ -1,7 +1,7 @@
 {
   "name": "solvebeam/twinfield",
   "description": "Modern PHP SDK for the Twinfield API",
-  "homepage": "https://github.com/solvebeam/twinfield-php",
+  "homepage": "https://php.twinfield.solvebeam.com",
   "license": "MIT",
   "authors": [
     {
@@ -9,6 +9,11 @@
       "email": "remcotolsma@gmail.com"
     }
   ],
+  "support": {
+    "issues": "https://github.com/solvebeam/twinfield-php/issues",
+    "docs": "https://php.twinfield.solvebeam.com",
+    "source": "https://github.com/solvebeam/twinfield-php"
+  },
   "funding": [
     {
       "type": "github",
@@ -23,7 +28,9 @@
     "oauth2",
     "client",
     "authorization",
-    "authentication"
+    "authentication",
+    "accounting",
+    "sdk"
   ],
   "autoload": {
     "psr-4": {
