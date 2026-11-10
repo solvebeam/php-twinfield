@@ -42,6 +42,7 @@ export default defineConfig({
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
 						{ label: 'Dimensions', slug: 'guides/dimensions' },
 						{ label: 'Master data (dimensions)', slug: 'guides/master-data' },
+						{ label: 'Finder', slug: 'guides/finder' },
 						{ label: 'Transactions', slug: 'guides/transactions' },
 						{ label: 'Browse data', slug: 'guides/browse-data' },
 						{ label: 'Declarations', slug: 'guides/declarations' },

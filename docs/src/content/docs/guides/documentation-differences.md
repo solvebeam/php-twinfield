@@ -363,6 +363,40 @@ Checked live (November 2026), read-only, on an organisation with 5,828 returns o
 - Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
 - Statuses other than `Created` and `Approved`, and filled `ExtraInformation` (e.g. for `Error while sending`).
 
+## Finder
+
+The [Finder](/guides/finder/) was checked on 10 November 2026, read-only: a search of every documented type (`maxRows` 3) on a test company, `company=*` for 15 types, and the documented search fields and options with the errors they give. Documentation: [Finder](https://developers.twinfield.com/documentation/api/miscellaneous/finder/) and the WSDL (`finder.asmx?wsdl`, in `wsdl/accounting/`).
+
+### Requests
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| "It is not possible to add the company code to the finder": use SelectCompany or the `office` option | The `CompanyCode` in the SOAP header works, as in the request example on the same page. Without header, the option `company` works too | The company of the client goes in the header; `company()` sends the option |
+| `company` and `office` should not be provided together | Refused with `OptionCompanyAndOptionOfficeCannotBeBothProvided` | `FinderQuery::option()` throws an `InvalidArgumentException` before sending |
+| `company=*` for `BNK`, `CUR`, `DIM`, `PAY`, `TRS`, `VAT`, `VATN`, `VGM`; the columns are not documented | Every row gets two extra columns at the end: company code and company ID (a GUID), also after the extra columns of `includehidden` and `modifiedsince`. `DMT` supports it too. `ASM`, `BDS`, `CTR`, `GRP`, `INV`, `TRT` ignore it: only code and name, no company per row | `inAllCompanies()` for the types that support it, the company per row from the extra columns; `companyReference()` throws for `*` |
+| Search field 3 on `DIM`: bank account, or customer code for projects and activities | For projects and activities the third column is also `Bankrekening` (bank account) and pattern `*` gives no rows; searching on the customer code was not seen. Field 3 with `company=*` gives a server error | No method for the customer code; `inAllCompanies()` with `inBankAccount()` throws |
+| Search fields 0 to 3 | Field 4 (address) works on `DIM`; a higher value gives `ParameterOutOfRange` with parameters `field`, `0`, `4` | `inAddress()` |
+| `CQT` (cheques) with options `dim1`–`dim6`, `value`, `openvalue` | Without options a server error; `dim1` is refused with `OptionNotAllowed` | Not in `FinderType` |
+| `SAR`: option `article` is mandatory | Without it: `OptionMandatory` with parameter `article` | `FinderType::SubItems`; the error is a `FinderException` |
+
+### Responses
+
+| Documentation | Live responses | SDK |
+|---|---|---|
+| `Search` returns `Message[]`; the response example has an empty `<SearchResult />` | Errors are in `<SearchResult>` as `<MessageOfErrorCodes>` with `Type`, `Text` (language of the user), `Code` and `Parameters`; there is then no `<data>` | `FinderException` with `FinderMessage`s; the codes are the `ErrorCodes` of the WSDL (`FinderErrorCode`). Before, this gave "Finder response has no &lt;data&gt; element." |
+| Return fields "code, name" for most types | Column names in the language of the user (`Code`, `Naam`); `ICTCOUNTRY` has `Code`, `Name` | Values are read by position |
+| `OFF`: code, name | Also country, VAT period and first quarter; `includeid` adds the ID after the name | `OfficeSummary` reads by position |
+| `PRD`: title, name | Column names `title` and `name`; the name is often empty | – |
+| `VGM`: code, name | Country, code, name | – |
+| `VATN`: code, name, country, VAT number, relation company, city | As documented | – |
+| `BSN`: number, description | Column names `Code`, `Naam` (no rows in the test companies) | – |
+
+### Not yet verified
+
+- Types without rows in the test companies: `BSN`, `DVT`, `GRP`, `GWY`, `HND`, `ICTCOUNTRY`, `OIC`, `PIS`, `SPM`. Twinfield accepts the search and gives the columns, but the values were not seen.
+- Messages of type `Warning` or `Informational`: never seen. The SDK only throws on `Error`.
+- Search field 3 on projects that have a customer: the test company has three projects, none of them found on field 3.
+
 ## Other resources
 
 The differences for the other resources are in the [master data guide](/guides/master-data/), each in the section of the resource:

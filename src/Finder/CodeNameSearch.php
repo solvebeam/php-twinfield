@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use SolveBeam\Twinfield\Organisation\CompanyReference;
 use SolveBeam\Twinfield\Organisation\Organisation;
 use SolveBeam\Twinfield\Rate\RateType;
+use SolveBeam\Twinfield\UnexpectedResponseException;
 use SolveBeam\Twinfield\VatCode\VatCodeType;
 
 /**
@@ -61,9 +62,16 @@ final readonly class CodeNameSearch
     public static function forCompany(FinderQuery $query, Closure $mapRow): self
     {
         return new self($query, static function (FinderQuery $query) use ($mapRow): Closure {
-            $company = $query->companyReference();
+            if (!$query->isAllCompanies()) {
+                $company = $query->companyReference();
 
-            return static fn (array $row, int $index): object => $mapRow($row, $index, $company);
+                return static fn (array $row, int $index): object => $mapRow($row, $index, $company);
+            }
+
+            $organisation = $query->organisation();
+
+            return static fn (array $row, int $index): object
+                => self::mapInCompany($row, $index, $organisation, $mapRow);
         });
     }
 
@@ -146,6 +154,54 @@ final readonly class CodeNameSearch
     public function inAddress(): self
     {
         return new self($this->query->field(4), $this->mapper);
+    }
+
+    /**
+     * Search in this company instead of the company of the client (Finder option `company`).
+     *
+     * @return self<T>
+     */
+    public function company(string $code): self
+    {
+        return new self($this->query->company($code), $this->mapper);
+    }
+
+    /**
+     * Search in all companies the user has access to (Finder option `company=*`); every result
+     * gets its own company. For dimensions, VAT codes, bank books, cash books, currencies and
+     * dimension types. Not together with `inBankAccount()`: Twinfield then fails with a server
+     * error.
+     *
+     *   foreach ($twinfield->vatCodes()->search()->inAllCompanies()->all() as $summary) {
+     *       echo $summary->company->code, ' ', $summary->code, PHP_EOL;
+     *   }
+     *
+     * @return self<T>
+     *
+     * @throws InvalidArgumentException For a Finder type without search in all companies.
+     */
+    public function inAllCompanies(): self
+    {
+        $supported = [
+            FinderType::CashbooksAndBanks,
+            FinderType::Currencies,
+            FinderType::DimensionTypes,
+            FinderType::Dimensions,
+            FinderType::PaymentTypes,
+            FinderType::TransactionTypes,
+            FinderType::VatCodes,
+            FinderType::VatGroupCountries,
+            FinderType::VatNumbers,
+        ];
+
+        if (!in_array($this->query->type(), $supported, true)) {
+            throw new InvalidArgumentException(sprintf(
+                'Finder type %s cannot search in all companies.',
+                $this->query->type()->value,
+            ));
+        }
+
+        return new self($this->query->allCompanies(), $this->mapper);
     }
 
     /**
@@ -311,7 +367,7 @@ final readonly class CodeNameSearch
     public function get(): CodeNameSearchResult
     {
         // The context first: a search without company fails before the request.
-        $mapRow = ($this->mapper)($this->query);
+        $mapRow = $this->rowMapper();
         $page = $this->query->get();
 
         return new CodeNameSearchResult(
@@ -327,7 +383,7 @@ final readonly class CodeNameSearch
      */
     public function all(): Generator
     {
-        $mapRow = ($this->mapper)($this->query);
+        $mapRow = $this->rowMapper();
 
         foreach ($this->query->all() as $index => $row) {
             yield $index => $mapRow($row, $index);
@@ -348,5 +404,45 @@ final readonly class CodeNameSearch
     public function finderQuery(): FinderQuery
     {
         return $this->query;
+    }
+
+    /**
+     * Maps a row of a search in all companies (company=*): every row ends with the company code
+     * and the company ID.
+     *
+     * @template TSummary of object
+     *
+     * @param list<string> $row
+     * @param Closure(list<string>, int, CompanyReference): TSummary $mapRow
+     *
+     * @return TSummary
+     */
+    private static function mapInCompany(array $row, int $index, Organisation $organisation, Closure $mapRow): object
+    {
+        if (count($row) < 4 || $row[count($row) - 2] === '') {
+            throw new UnexpectedResponseException(sprintf(
+                'Finder row %d of a search in all companies has no company code: %s.',
+                $index,
+                json_encode($row, JSON_THROW_ON_ERROR),
+            ));
+        }
+
+        $company = new CompanyReference($organisation, $row[count($row) - 2]);
+
+        return $mapRow(array_slice($row, 0, -2), $index, $company);
+    }
+
+    /**
+     * @return Closure(list<string>, int): T
+     */
+    private function rowMapper(): Closure
+    {
+        if ($this->query->isAllCompanies() && $this->query->toSearch()->field === 3) {
+            throw new InvalidArgumentException(
+                'Search in all companies cannot be combined with inBankAccount(): Twinfield fails with a server error.',
+            );
+        }
+
+        return ($this->mapper)($this->query);
     }
 }

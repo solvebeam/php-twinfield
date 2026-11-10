@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult>
+        <MessageOfErrorCodes>
+          <Type>Error</Type>
+          <Text>Optie 'company' kan niet worden gebruikt in combinatie met optie 'office'.</Text>
+          <Code>OptionCompanyAndOptionOfficeCannotBeBothProvided</Code>
+          <Parameters/>
+        </MessageOfErrorCodes>
+        <MessageOfErrorCodes>
+          <Type>Error</Type>
+          <Text>Parameter field moet liggen tussen 0 en 4.</Text>
+          <Code>ParameterOutOfRange</Code>
+          <Parameters>
+            <string>field</string>
+            <string>0</string>
+            <string>4</string>
+          </Parameters>
+        </MessageOfErrorCodes>
+      </SearchResult>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

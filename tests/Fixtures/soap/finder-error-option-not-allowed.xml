@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <SearchResponse xmlns="http://www.twinfield.com/">
+      <SearchResult>
+        <MessageOfErrorCodes>
+          <Type>Error</Type>
+          <Text>Optie foo is niet toegestaan.</Text>
+          <Code>OptionNotAllowed</Code>
+          <Parameters>
+            <string>foo</string>
+          </Parameters>
+        </MessageOfErrorCodes>
+      </SearchResult>
+    </SearchResponse>
+  </soap:Body>
+</soap:Envelope>

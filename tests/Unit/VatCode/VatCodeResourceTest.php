@@ -74,6 +74,41 @@ final class VatCodeResourceTest extends TestCase
         );
     }
 
+    public function testSearchesVatCodesInAllCompanies(): void
+    {
+        $http = ReplayClient::fixture('finder-vat-codes-all-companies');
+
+        $page = $this->twinfield($http)->vatCodes()->search()->inAllCompanies()->get();
+
+        self::assertEquals([
+            new VatCodeSummary(TestTokens::company('1000'), 'VH', 'BTW Hoog'),
+            new VatCodeSummary(TestTokens::company('1001'), 'VH', 'BTW Hoog'),
+        ], iterator_to_array($page), 'The company comes from the last two columns: company code and company ID.');
+
+        $xpath = $this->soapXpath($http->lastRequest());
+
+        self::assertSame('company', $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString/tw:string[1])'));
+        self::assertSame('*', $xpath->evaluate('string(//tw:Search/tw:options/tw:ArrayOfString/tw:string[2])'));
+    }
+
+    public function testSearchInAllCompaniesRefusesBankAccountField(): void
+    {
+        $search = $this->twinfield(new ReplayClient())->customers()->search()->inAllCompanies()->inBankAccount();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('inBankAccount()');
+
+        $search->get();
+    }
+
+    public function testSearchInAllCompaniesNeedsASupportedType(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Finder type ASM cannot search in all companies.');
+
+        $this->twinfield(new ReplayClient())->assetMethods()->search()->inAllCompanies();
+    }
+
     public function testReadsAVatCode(): void
     {
         $http = ReplayClient::fixture('vat-read');

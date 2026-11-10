@@ -265,6 +265,7 @@ Add `TWINFIELD_DEBUG=1` to any example to see the SOAP requests and responses.
 
 - [Search dimensions](finder/search-dimensions/): search with pattern, options and limit.
 - [Paginate](finder/paginate/): go through all results page by page.
+- [Search in all companies](finder/all-companies/): one search over all companies, with Finder option `company=*`.
 
 ## Periods
 

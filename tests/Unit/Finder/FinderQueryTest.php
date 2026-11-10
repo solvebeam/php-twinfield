@@ -11,6 +11,9 @@ use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
+use SolveBeam\Twinfield\Finder\FinderErrorCode;
+use SolveBeam\Twinfield\Finder\FinderException;
+use SolveBeam\Twinfield\Finder\FinderMessageType;
 use SolveBeam\Twinfield\Finder\FinderType;
 use SolveBeam\Twinfield\Tests\Support\Http\ReplayClient;
 use SolveBeam\Twinfield\Tests\Support\TestTokens;
@@ -147,6 +150,89 @@ final class FinderQueryTest extends TestCase
         $this->expectExceptionMessage('Finder search DIM needs a company');
 
         $this->twinfield(new ReplayClient())->finder(FinderType::Dimensions)->companyReference();
+    }
+
+    public function testCompanyOption(): void
+    {
+        $http = ReplayClient::fixture('finder-search-dim');
+        $query = $this->twinfield($http)->company('1002')->finder(FinderType::Dimensions)->company('1003');
+
+        $query->get();
+
+        $xpath = $this->xpath($http->lastRequest());
+
+        self::assertSame('company', $xpath->evaluate('string(//tw:options/tw:ArrayOfString/tw:string[1])'));
+        self::assertSame('1003', $xpath->evaluate('string(//tw:options/tw:ArrayOfString/tw:string[2])'));
+        self::assertEquals(TestTokens::company('1003'), $query->companyReference());
+        self::assertFalse($query->isAllCompanies());
+    }
+
+    public function testRefusesCompanyAndOfficeTogether(): void
+    {
+        $query = $this->twinfield(new ReplayClient())->finder(FinderType::Dimensions)->option('office', '1002');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('company and office cannot be used together');
+
+        $query->company('1003');
+    }
+
+    public function testRefusesOfficeAfterCompany(): void
+    {
+        $query = $this->twinfield(new ReplayClient())->finder(FinderType::Dimensions)->company('1002');
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $query->option('office', '1003');
+    }
+
+    public function testAllCompaniesHasNoCompanyReference(): void
+    {
+        $query = $this->twinfield(new ReplayClient())->company('1002')->finder(FinderType::VatCodes)->allCompanies();
+
+        self::assertTrue($query->isAllCompanies());
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('each row has its own company');
+
+        $query->companyReference();
+    }
+
+    public function testThrowsTheMessagesOfARefusedSearch(): void
+    {
+        $query = $this->twinfield(ReplayClient::fixture('finder-error-option-not-allowed'))
+            ->finder(FinderType::Dimensions)
+            ->option('foo', 'bar');
+
+        try {
+            $query->get();
+            self::fail('Expected a FinderException.');
+        } catch (FinderException $exception) {
+            self::assertSame(FinderType::Dimensions, $exception->type);
+            self::assertCount(1, $exception->messages);
+            self::assertSame(FinderMessageType::Error, $exception->messages[0]->type);
+            self::assertSame(FinderErrorCode::OptionNotAllowed, $exception->messages[0]->code);
+            self::assertSame('Optie foo is niet toegestaan.', $exception->messages[0]->text);
+            self::assertSame(['foo'], $exception->messages[0]->parameters);
+            self::assertSame('Finder DIM: Optie foo is niet toegestaan. (OptionNotAllowed)', $exception->getMessage());
+        }
+    }
+
+    public function testThrowsAllErrorMessages(): void
+    {
+        $query = $this->twinfield(ReplayClient::fixture('finder-error-company-and-office'))->finder(FinderType::Dimensions);
+
+        try {
+            $query->get();
+            self::fail('Expected a FinderException.');
+        } catch (FinderException $exception) {
+            self::assertCount(2, $exception->messages);
+            self::assertSame(FinderErrorCode::OptionCompanyAndOptionOfficeCannotBeBothProvided, $exception->messages[0]->code);
+            self::assertSame([], $exception->messages[0]->parameters);
+            self::assertSame(FinderErrorCode::ParameterOutOfRange, $exception->messages[1]->code);
+            self::assertSame(['field', '0', '4'], $exception->messages[1]->parameters);
+            self::assertStringEndsWith('(and 1 more errors)', $exception->getMessage());
+        }
     }
 
     public function testRejectsInvalidPaging(): void
