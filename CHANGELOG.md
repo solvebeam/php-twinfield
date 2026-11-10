@@ -9,13 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- MIT license: `LICENSE` and `"license": "MIT"` in `composer.json`.
-- The PHP extensions the SDK uses are required in `composer.json`: `ext-bcmath`, `ext-dom`, `ext-libxml`, `ext-mbstring` and `ext-simplexml`.
 - Backward compatibility: the transport layer is marked `@internal` and is not part of the public API: `SoapClient`, `RestClient`, the SOAP envelope and request classes, `XmlBuilder`, `XmlElement`, `XmlValue`, `JsonWriter`, `Twinfield::call()` and the mapping methods on models (`fromXml()`, `toXml()`, `fromResult()`, `fromFinderRow()`, …). Use the resources, or `Twinfield::processXml()`, `query()`, `process()` and `rest()`.
 
 #### Client and authentication
 
-- `Twinfield` client for the Twinfield web services, built on PSR-7, PSR-17 and PSR-18.
+- `Twinfield` client for the Twinfield web services, built on PSR-7, PSR-17 and PSR-18. Requires PHP 8.3 or higher with the `bcmath`, `dom`, `libxml`, `mbstring` and `simplexml` extensions.
 - OAuth2 and OpenID Connect login, with access token providers that refresh the access token.
 - Organisations and companies: every model knows its organisation and company, select a company with `Twinfield::company()`.
 - Scopes for OpenID Connect and the REST API.
