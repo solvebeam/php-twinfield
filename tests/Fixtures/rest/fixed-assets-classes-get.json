@@ -1,0 +1,37 @@
+{
+    "id": "40872dec-7eec-9c33-3fc0-66bf17f5e736",
+    "code": "SLINVFWP",
+    "name": "Oqrrhxky",
+    "depreciationSettings": [
+        {
+            "regime": "fiscal",
+            "depreciationMethod": "straightLine",
+            "lifetime": 417.0,
+            "lifetimeType": "linear"
+        },
+        {
+            "regime": "commercial",
+            "depreciationMethod": "straightLine",
+            "lifetime": 417.0,
+            "lifetimeType": "linear"
+        },
+        {
+            "regime": "economic",
+            "depreciationMethod": "straightLine",
+            "lifetime": 417.0,
+            "lifetimeType": "linear"
+        }
+    ],
+    "activationStatus": "active",
+    "used": true,
+    "version": 3,
+    "purchaseValueAccountId": "0c45b9d2-7336-ea7f-0d85-59d93c7d4ecd",
+    "depreciationBalanceAccountId": "436fa384-1319-2b86-ac3a-8d210f969218",
+    "depreciationProfitAndLossAccountId": "0bd22c05-94df-9e64-c768-cfe1439930bd",
+    "disposalBalanceAccountId": "01dadc2b-075d-16fe-fd39-31854f232653",
+    "disposalResultAccountId": "9644405f-cf18-1c0c-d429-ed2d66e34581",
+    "revaluationBalanceAccountId": "564acd48-5bc5-70fb-3b53-ddf407985a1f",
+    "revaluationProfitAndLossAccountId": "6c39aa72-eee0-6773-1b3f-5f7398a96149",
+    "revaluationDepreciationBalanceAccountId": "436fa384-1319-2b86-ac3a-8d210f969218",
+    "revaluationDepreciationProfitAndLossAccountId": "0bd22c05-94df-9e64-c768-cfe1439930bd"
+}

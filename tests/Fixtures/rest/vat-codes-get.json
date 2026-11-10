@@ -1,0 +1,39 @@
+{
+    "id": "b88886c7-de77-51c8-021c-d60e2ff53953",
+    "version": 1,
+    "createdAt": "2010-01-22T21:50:21.52Z",
+    "lastModifiedAt": "2010-01-22T21:50:21.52Z",
+    "modifiedBy": "HXPEQ",
+    "code": "KST_QST",
+    "type": "sales",
+    "name": "Powwgh Jctufg PF",
+    "shortName": "Euc OQX",
+    "invoiceText": null,
+    "translations": [],
+    "rates": [
+        {
+            "id": "cb5d87ac-6fb9-d683-e96e-000dc430d79e",
+            "version": 1,
+            "createdAt": "2013-11-17T07:16:01.377",
+            "lastModifiedAt": "2013-11-17T07:16:01.377",
+            "modifiedBy": "HXPEQ",
+            "name": "Powwgh Jctufg PF",
+            "shortName": "Euc OQX",
+            "startDate": "2008-11-30T00:00:00",
+            "percent": 0.000000000,
+            "discountAccountId": null,
+            "writeOffAccountId": null,
+            "translations": [],
+            "allocationRules": [
+                {
+                    "ruleId": "bc173135-6fbb-cb40-35b8-7fe8ed9dfda8",
+                    "isVatLine": true,
+                    "percent": 846.0,
+                    "generalLedgerAccountId": "d68597e8-0cba-c83a-ae07-cbb60c6e3ec7",
+                    "costCenterAccountId": null,
+                    "vatGroupId": "f8a32f9e-8cea-4aa0-a215-15a0971f807a"
+                }
+            ]
+        }
+    ]
+}

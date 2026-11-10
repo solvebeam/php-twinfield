@@ -46,12 +46,21 @@ class RestException extends RuntimeException
     }
 
     /**
-     * The message of a JSON error body, e.g. `{"message": "Article code is already in use"}`, with the
-     * messages of its errors; null when the body has none.
+     * The reason of an error body. The REST API sends a JSON string (`"Requested resource was not
+     * found"`), or an object with a message per parameter (`{"orderBy": "The value 'x' is not valid
+     * for OrderBy."}`); other bodies are shortened. Null for an empty body.
      */
     private static function reason(string $body): ?string
     {
+        if (trim($body) === '') {
+            return null;
+        }
+
         $data = json_decode($body, true);
+
+        if (is_string($data)) {
+            return $data === '' ? null : $data;
+        }
 
         if (!is_array($data)) {
             $text = trim(strip_tags($body));
@@ -60,17 +69,21 @@ class RestException extends RuntimeException
         }
 
         $messages = [];
+        $messageKeys = ['message', 'error', 'title', 'detail'];
 
-        $keys = ['message', 'title', 'detail', 'error', 'error_description', 'errormessage', 'description'];
-
-        array_walk_recursive($data, static function (mixed $value, int|string $key) use (&$messages, $keys): void {
-            if (is_string($value) && $value !== '' && in_array(strtolower((string) $key), $keys, true)) {
-                $messages[] = $value;
+        $collect = static function (mixed $value, int|string $key) use (&$messages, $messageKeys): void {
+            if (is_string($value) && $value !== '') {
+                $isParameter = is_string($key) && !in_array(strtolower($key), $messageKeys, true);
+                $messages[] = $isParameter ? $key . ': ' . $value : $value;
             }
-        });
+        };
 
-        $messages = array_values(array_unique($messages));
+        array_walk_recursive($data, $collect);
 
-        return $messages === [] ? mb_strimwidth($body, 0, 300, '…') : implode(' ', $messages);
+        if ($messages === []) {
+            return mb_strimwidth($body, 0, 300, '…');
+        }
+
+        return implode(' ', array_values(array_unique($messages)));
     }
 }

@@ -1,0 +1,96 @@
+{
+    "items": [
+        {
+            "accountId": "9644c1bd-948e-9bd6-f491-0d72d007d028",
+            "currencyId": null,
+            "amount": null,
+            "description": "",
+            "lines": [],
+            "type": "sales",
+            "id": "c235f878-a9f4-4a4c-f451-dc87b858eaa2",
+            "version": 1,
+            "created": "2011-12-28T19:02:29.49Z",
+            "modified": "2011-12-28T19:02:29.49Z",
+            "modifiedBy": "HXPEQ"
+        },
+        {
+            "accountId": "8292e809-2d32-ff21-7699-95fdc3f0277f",
+            "currencyId": "bf5d11f6-5aac-8b3f-8f8e-e80d1b09671e",
+            "amount": 926.00,
+            "description": "91469",
+            "lines": [
+                {
+                    "destinationCompany": null,
+                    "generalLedgerAccount": "87fd15e7-c15e-4ce4-d2a5-ea5f324187db",
+                    "costCenter": null,
+                    "project": null,
+                    "vatCodeId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+                    "ratio": 50.700000000,
+                    "description": "Rdtlxmzqbxjd tszilev dnecalqj 57554"
+                },
+                {
+                    "destinationCompany": null,
+                    "generalLedgerAccount": "e96c06ce-8a77-5c61-39b1-957c888aca70",
+                    "costCenter": null,
+                    "project": null,
+                    "vatCodeId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+                    "ratio": 12.000000000,
+                    "description": "Rdtlxmzqbxjd tszilev dnecalqj 57554"
+                },
+                {
+                    "destinationCompany": null,
+                    "generalLedgerAccount": "80cebb1f-1ede-82fc-3ed0-0fc9814696cb",
+                    "costCenter": null,
+                    "project": null,
+                    "vatCodeId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+                    "ratio": 0.200000000,
+                    "description": "Rdtlxmzqbxjd tszilev dnecalqj 57554"
+                }
+            ],
+            "type": "sales",
+            "id": "7fdff049-7d43-8634-4455-cad193cc1b93",
+            "version": 1,
+            "created": "2012-08-20T10:11:58.607Z",
+            "modified": "2012-08-20T10:11:58.607Z",
+            "modifiedBy": "HXPEQ"
+        },
+        {
+            "accountId": "32d65349-3311-4f51-40fe-993ee5d39ca5",
+            "currencyId": null,
+            "amount": null,
+            "description": "",
+            "lines": [],
+            "type": "purchase",
+            "id": "4816b132-82be-9828-d2bb-f22adfee862d",
+            "version": 1,
+            "created": "2014-01-26T10:51:23.26Z",
+            "modified": "2014-01-26T10:51:23.26Z",
+            "modifiedBy": "YSGJKSUSU"
+        },
+        {
+            "accountId": "3a1fa2d4-0bd3-5625-1f6f-b0aa65e4937e",
+            "currencyId": "bf5d11f6-5aac-8b3f-8f8e-e80d1b09671e",
+            "amount": null,
+            "description": "Cmhjokz [Sapkdnmpoldtq]",
+            "lines": [
+                {
+                    "destinationCompany": "8fb7b3b5-d238-771d-5953-778fc395b014",
+                    "generalLedgerAccount": "a441f340-a115-63e2-5129-2d8f601c7fda",
+                    "costCenter": null,
+                    "project": null,
+                    "vatCodeId": "0647b7bd-731a-4ca8-ee00-4b0bf43b891c",
+                    "ratio": null,
+                    "description": "Cmhjokz [Sapkdnmpoldtq]"
+                }
+            ],
+            "type": "purchase",
+            "id": "6bd69014-5c3c-2565-54d5-9d925285c057",
+            "version": 1,
+            "created": "2016-06-17T08:20:39.1783755Z",
+            "modified": "2016-06-17T08:20:39.1783755Z",
+            "modifiedBy": "RIDYKEUV"
+        }
+    ],
+    "total": 4,
+    "filteredTotal": 4
+}

@@ -116,7 +116,7 @@ final class RestClientTest extends TestCase
 
     public function testThrowsNotFound(): void
     {
-        $http = new ReplayClient(ReplayClient::raw(404, '{"message": "Article with specified ID does not exist"}'));
+        $http = new ReplayClient(ReplayClient::raw(404, '"Article with specified ID does not exist"'));
 
         try {
             $this->twinfield($http)->rest('GET', '/organisations/{organisationId}/companies/{companyId}/sales/articles/x');
@@ -139,10 +139,10 @@ final class RestClientTest extends TestCase
 
     public function testThrowsAValidationErrorWithTheMessages(): void
     {
-        $body = '{"message": "Validation failed", "errors": [{"field": "code", "message": "Article code is already in use"}]}';
+        $body = '{"code": "Article code is already in use", "netPrice": "Must be 0 or more"}';
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('(HTTP 422 Unprocessable Entity): Validation failed Article code is already in use');
+        $this->expectExceptionMessage('(HTTP 422 Unprocessable Entity): code: Article code is already in use netPrice: Must be 0 or more');
 
         $this->twinfield(new ReplayClient(ReplayClient::raw(422, $body)))->rest('POST', '/organisations/{organisationId}/companies/{companyId}/sales/articles', body: []);
     }

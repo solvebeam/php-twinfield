@@ -23,7 +23,15 @@ final readonly class JsonAnonymizer
     /** Properties whose (string) value is kept as is: enums and fixed values. */
     private const KEEP_KEYS = [
         'status', 'type', 'regime', 'culture', 'cultureCode', 'unitOfMeasure', 'rel', 'method', 'balanceType',
-        'searchScope', 'action', 'actionType', 'scope', 'state', 'reportStatus',
+        'searchScope', 'action', 'actionType', 'scope', 'state', 'reportStatus', 'lifetimeType',
+        'depreciationMethod', 'subanalysis', 'activationStatus', 'currency', 'language', 'fixedAssetAction',
+        'spreadFor',
+    ];
+
+    /** Properties whose number is kept as is: counts, versions and periods, not data. */
+    private const KEEP_NUMBER_KEYS = [
+        'total', 'filteredTotal', 'version', 'year', 'period', 'periodNumber', 'periodFrom', 'month', 'day',
+        'weight', 'startYear', 'targetYear', 'matchLevel', 'yearFrom',
     ];
 
     public function __construct(
@@ -125,10 +133,20 @@ final readonly class JsonAnonymizer
         if (preg_match('~^@n(\d+)@$~', $value, $matches) === 1) {
             $number = $numbers[(int) $matches[1]];
 
-            return '@number:' . $this->values->anonymizeValue($number) . '@';
+            if ($key !== null && in_array($key, self::KEEP_NUMBER_KEYS, true)) {
+                $this->values->keepValue($number);
+
+                return '@number:' . $number . '@';
+            }
+
+            // A JSON number can't start with 0 followed by a digit (`04.41`).
+            $fake = (string) preg_replace('~^(-?)0(?=\d)~', '${1}1', $this->values->anonymizeValue($number));
+
+            return '@number:' . $fake . '@';
         }
 
-        if ($key !== null && in_array($key, self::KEEP_KEYS, true)) {
+        // Culture codes such as `nl-NL` are not data.
+        if (($key !== null && in_array($key, self::KEEP_KEYS, true)) || preg_match('~^[a-z]{2}-[A-Z]{2}$~', $value) === 1) {
             $this->values->keepValue($value);
 
             return $value;

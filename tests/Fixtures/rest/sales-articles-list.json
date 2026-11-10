@@ -1,0 +1,102 @@
+{
+    "items": [
+        {
+            "id": "c8399ffa-1ace-d26b-0e98-d06f96dc3691",
+            "name": "1 ecnjlqtoi ocpia ardp",
+            "code": "",
+            "netPrice": 12.0000,
+            "grossPrice": 14.4100,
+            "vatId": "439518ff-cec0-3268-535d-dc208afe8f62",
+            "revenueTypeId": "8b0dd650-9456-377b-9a27-1b2749e8de54",
+            "costCenterId": null,
+            "translations": {},
+            "version": 2
+        },
+        {
+            "id": "d8718731-9793-9d0b-9a9c-c07a8a8fa001",
+            "name": "Zpcmzn",
+            "code": "",
+            "netPrice": 81.4800,
+            "grossPrice": 88.3000,
+            "vatId": "439518ff-cec0-3268-535d-dc208afe8f62",
+            "revenueTypeId": "8b0dd650-9456-377b-9a27-1b2749e8de54",
+            "costCenterId": null,
+            "translations": {},
+            "version": 2
+        },
+        {
+            "id": "40ba5dfc-ee8b-f89a-dbe2-50645da2ae1e",
+            "name": "Taurt 89 58uip",
+            "code": "",
+            "netPrice": 6.7900,
+            "grossPrice": 0.3100,
+            "vatId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+            "revenueTypeId": "ee0d9d63-5983-faf2-fe2d-5af2393272a5",
+            "costCenterId": "e9bb54e1-1ee9-580e-6bea-e5705c37fd3e",
+            "translations": {},
+            "version": 3
+        },
+        {
+            "id": "86e156e5-4f27-1ed2-e20d-aece42147cb8",
+            "name": "Kgpq 28sav",
+            "code": "",
+            "netPrice": 0.3000,
+            "grossPrice": 0.4900,
+            "vatId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+            "revenueTypeId": "ee0d9d63-5983-faf2-fe2d-5af2393272a5",
+            "costCenterId": null,
+            "translations": {},
+            "version": 2
+        },
+        {
+            "id": "bd750c3f-375f-326f-fa2d-1ec2287da3b9",
+            "name": "Qswww hqer",
+            "code": "",
+            "netPrice": 10.0000,
+            "grossPrice": 32.5000,
+            "vatId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+            "revenueTypeId": "ee0d9d63-5983-faf2-fe2d-5af2393272a5",
+            "costCenterId": "e9bb54e1-1ee9-580e-6bea-e5705c37fd3e",
+            "translations": {},
+            "version": 1
+        },
+        {
+            "id": "81ea9256-7a2a-2729-21fe-4719b737cb02",
+            "name": "Psrxdudkc jhpb",
+            "code": "",
+            "netPrice": 656.0000,
+            "grossPrice": 310.0000,
+            "vatId": "439518ff-cec0-3268-535d-dc208afe8f62",
+            "revenueTypeId": "8b0dd650-9456-377b-9a27-1b2749e8de54",
+            "costCenterId": null,
+            "translations": {},
+            "version": 2
+        },
+        {
+            "id": "7815eec8-17f6-8cfb-cdb4-2c3c763bb0dc",
+            "name": "Tcnaf 77avh",
+            "code": "",
+            "netPrice": 35.4800,
+            "grossPrice": 76.1400,
+            "vatId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+            "revenueTypeId": "ee0d9d63-5983-faf2-fe2d-5af2393272a5",
+            "costCenterId": null,
+            "translations": {},
+            "version": 2
+        },
+        {
+            "id": "60629104-c6c3-0d6b-59aa-57e57825ba92",
+            "name": "Tltb Vtaa",
+            "code": "",
+            "netPrice": 926.0000,
+            "grossPrice": 785.9600,
+            "vatId": "7ca47291-e8e3-84cf-d54a-54227feeea88",
+            "revenueTypeId": "ee0d9d63-5983-faf2-fe2d-5af2393272a5",
+            "costCenterId": "d4bb159d-9df9-7372-221c-22c337464c29",
+            "translations": {},
+            "version": 1
+        }
+    ],
+    "total": 8,
+    "filteredTotal": 8
+}

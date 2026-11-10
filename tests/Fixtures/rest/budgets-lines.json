@@ -1,0 +1,45 @@
+{
+    "items": [
+        {
+            "budget": "0b729034-5138-6060-bd10-ad455c6d995c",
+            "year": 2020,
+            "period": 1,
+            "unitOfMeasure": "monetary",
+            "generalLedgerAccount": "db528b85-21be-2de8-d376-f0a376a626ec",
+            "costCenter": null,
+            "project": null,
+            "debit": 0.000000,
+            "credit": 0.000000,
+            "lastModifiedAt": "2023-03-16T22:09:13.1903182Z",
+            "createdAt": "2023-03-16T22:09:13.1903182Z"
+        },
+        {
+            "budget": "0b729034-5138-6060-bd10-ad455c6d995c",
+            "year": 2020,
+            "period": 2,
+            "unitOfMeasure": "monetary",
+            "generalLedgerAccount": "db528b85-21be-2de8-d376-f0a376a626ec",
+            "costCenter": null,
+            "project": null,
+            "debit": 0.000000,
+            "credit": 0.000000,
+            "lastModifiedAt": "2023-03-16T22:09:13.1903182Z",
+            "createdAt": "2023-03-16T22:09:13.1903182Z"
+        },
+        {
+            "budget": "0b729034-5138-6060-bd10-ad455c6d995c",
+            "year": 2020,
+            "period": 3,
+            "unitOfMeasure": "monetary",
+            "generalLedgerAccount": "db528b85-21be-2de8-d376-f0a376a626ec",
+            "costCenter": null,
+            "project": null,
+            "debit": 0.000000,
+            "credit": 0.000000,
+            "lastModifiedAt": "2023-03-16T22:09:13.1903182Z",
+            "createdAt": "2023-03-16T22:09:13.1903182Z"
+        }
+    ],
+    "total": 48,
+    "filteredTotal": 48
+}

@@ -1,0 +1,65 @@
+{
+    "actions": [
+        {
+            "action": "imported",
+            "transactions": [],
+            "timestamp": "2022-04-15T10:01:34Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "edited",
+            "transactions": [],
+            "timestamp": "2022-04-15T10:04:34Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "historicalValuesAdded",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "209806460"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "209806460"
+                }
+            ],
+            "timestamp": "2022-04-15T10:13:22Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "historicalValuesAdded",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "072985010"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "072985010"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "947342183"
+                }
+            ],
+            "timestamp": "2022-04-15T10:14:54Z",
+            "user": "NCEPA"
+        },
+        {
+            "action": "historicalValuesAdded",
+            "transactions": [
+                {
+                    "type": "ACTIVA",
+                    "number": "185630949"
+                },
+                {
+                    "type": "ACTIVA",
+                    "number": "999742739"
+                }
+            ],
+            "timestamp": "2022-04-15T10:16:55Z",
+            "user": "NCEPA"
+        }
+    ]
+}

@@ -1,0 +1,69 @@
+{
+    "items": [
+        {
+            "id": "40872dec-7eec-9c33-3fc0-66bf17f5e736",
+            "name": "Oqrrhxky",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 417.0000,
+            "version": 3,
+            "used": true
+        },
+        {
+            "id": "b89d5fa0-032e-f2a8-7d0e-edc993b4f28e",
+            "name": "Dmacqvxq",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 417.0000,
+            "version": 2,
+            "used": false
+        },
+        {
+            "id": "8e81d909-4363-f357-b61a-df6db241187f",
+            "name": "Uqqrbupl",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 65.0000,
+            "version": 2,
+            "used": false
+        },
+        {
+            "id": "0bd18494-1dc4-3c1c-8af8-674825dc2ef6",
+            "name": "Sgzrhuonnv",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 65.0000,
+            "version": 3,
+            "used": true
+        },
+        {
+            "id": "300a975e-5d6d-1db7-5782-7afe88b20dc3",
+            "name": "Nwytznep",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 65.0000,
+            "version": 2,
+            "used": false
+        },
+        {
+            "id": "4074d794-3f35-21ba-78ee-6179e2ac7b04",
+            "name": "Mhgxohms",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 65.0000,
+            "version": 2,
+            "used": false
+        },
+        {
+            "id": "257b0876-df79-cd28-bd1f-a5377b00b26d",
+            "name": "Lwseqnksvcvngxh",
+            "method": "straightLine",
+            "lifetimeType": "linear",
+            "lifetime": 65.0000,
+            "version": 5,
+            "used": true
+        }
+    ],
+    "total": 7,
+    "filteredTotal": 7
+}

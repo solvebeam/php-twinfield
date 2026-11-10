@@ -1,0 +1,183 @@
+{
+    "id": "e14c0b05-3f46-de68-d605-f12a857fd49d",
+    "code": "2",
+    "description": "Vpkcdzypqxdz Phcyywhfi 49 jv Quqdqq",
+    "supplierId": null,
+    "currency": "EUR",
+    "status": "active",
+    "transactions": [],
+    "projectId": null,
+    "nextPeriodToDepreciate": {
+        "year": 2022,
+        "periodNumber": 1
+    },
+    "depreciationSettings": [
+        {
+            "regime": "fiscal",
+            "startYearPeriod": {
+                "year": 2021,
+                "periodNumber": 4
+            },
+            "startDate": "2020-03-25T00:00:00",
+            "remainderValue": 90207.0,
+            "isRemainderValueImplicit": false,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 656.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2021,
+                        "periodNumber": 4
+                    }
+                }
+            ]
+        },
+        {
+            "regime": "commercial",
+            "startYearPeriod": {
+                "year": 2021,
+                "periodNumber": 4
+            },
+            "startDate": "2020-03-25T00:00:00",
+            "remainderValue": 90207.0,
+            "isRemainderValueImplicit": false,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 656.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2021,
+                        "periodNumber": 4
+                    }
+                }
+            ]
+        },
+        {
+            "regime": "economic",
+            "startYearPeriod": {
+                "year": 2021,
+                "periodNumber": 4
+            },
+            "startDate": "2020-03-25T00:00:00",
+            "remainderValue": 90207.0,
+            "isRemainderValueImplicit": false,
+            "stopValue": 0.0,
+            "methods": [
+                {
+                    "lifetime": 656.0,
+                    "lifetimeType": "linear",
+                    "depreciationMethod": "straightLine",
+                    "period": {
+                        "year": 2021,
+                        "periodNumber": 4
+                    }
+                }
+            ]
+        }
+    ],
+    "labels": {
+        "firstUseDate": "2020-03-25T00:00:00",
+        "free1": "",
+        "free2": "",
+        "free3": "",
+        "free4": "",
+        "free5": "",
+        "investmentDate": "2020-03-25T00:00:00",
+        "taxReasonAmount": null,
+        "taxReasonId": null,
+        "licensePlate": "",
+        "serialNumber": "",
+        "locations": [],
+        "partners": [],
+        "assetTypes": [
+            {
+                "assetType1Id": "85e47a75-03af-e8f3-899e-a501ee2dcf65",
+                "assetType2IsRequired": false,
+                "assetType2Id": null,
+                "assetType3IsRequired": false,
+                "assetType3Id": null,
+                "year": 2021
+            }
+        ]
+    },
+    "attachmentIds": [],
+    "currentPeriodNumbers": [
+        {
+            "regime": "fiscal",
+            "periodNumber": 10
+        },
+        {
+            "regime": "commercial",
+            "periodNumber": 10
+        },
+        {
+            "regime": "economic",
+            "periodNumber": 10
+        }
+    ],
+    "purchaseValues": [
+        {
+            "amount": 502977.0,
+            "periodFrom": 1,
+            "origin": "Uselex",
+            "regime": "generic"
+        },
+        {
+            "amount": 502977.0,
+            "periodFrom": 1,
+            "origin": "Uselex",
+            "regime": "generic"
+        },
+        {
+            "amount": 502977.0,
+            "periodFrom": 1,
+            "origin": "Uselex",
+            "regime": "generic"
+        }
+    ],
+    "version": 11,
+    "classes": [
+        {
+            "id": "40872dec-7eec-9c33-3fc0-66bf17f5e736",
+            "year": 2021
+        }
+    ],
+    "costCenters": [
+        {
+            "id": "e9bb54e1-1ee9-580e-6bea-e5705c37fd3e",
+            "year": 2021,
+            "periodNumber": 12
+        }
+    ],
+    "groups": [],
+    "isImportedWithMimicHistory": true,
+    "lastMimicPeriod": {
+        "year": 2021,
+        "periodNumber": 12,
+        "startDate": "8497-68-30D39:86:09",
+        "endDate": "8497-68-30D39:86:09"
+    },
+    "parentFixedAssets": [],
+    "childFixedAssets": [],
+    "lastRevaluationPeriod": {
+        "year": 2021,
+        "periodNumber": 12,
+        "startDate": "8497-68-30D39:86:09",
+        "endDate": "8497-68-30D39:86:09"
+    },
+    "targetCompany": null,
+    "sourceCompany": null,
+    "purchaseValueAccount": {
+        "id": "0c45b9d2-7336-ea7f-0d85-59d93c7d4ecd",
+        "code": "58362",
+        "name": "Zvnmdtbezaa kqltmpdmqhxhzwhy fk -nhngzhfua"
+    },
+    "youngestBalances": {
+        "netBookValue": 144101.0,
+        "purchaseValue": 955130.0
+    }
+}

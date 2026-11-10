@@ -57,6 +57,8 @@ final readonly class RestClient
                 ->withBody($this->streamFactory->createStream($body));
         }
 
+        // Headers given override the defaults, e.g. the Content-Type of a file upload.
+
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }

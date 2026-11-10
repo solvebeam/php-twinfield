@@ -1,0 +1,46 @@
+{
+    "items": [
+        {
+            "id": "eaa7d23d-3182-ebbc-32f3-b62b55b1e3ba",
+            "code": "17733",
+            "name": "Hkwpbsxsqsknwegmlib cccpib nmy dqltrkepnl qx uhzetwaz isc vbjffzwf",
+            "type": "balance",
+            "subanalysis": "mandatory",
+            "defaultParentAccountId": null
+        },
+        {
+            "id": "966c9853-1a2c-7e89-0826-6d366cc3d871",
+            "code": "69675",
+            "name": "Sey. jgosig. huq. gln qpudabbbqe vj pviawijr iav mqxpibkm",
+            "type": "balance",
+            "subanalysis": "mandatory",
+            "defaultParentAccountId": null
+        },
+        {
+            "id": "c6aac563-b3ba-7ed9-c770-9d77b2a9b200",
+            "code": "27793",
+            "name": "Uurqzvmwqrb qaf. auu pwfjcveyiq na dfsjlegx thq cjpqgpxa",
+            "type": "balance",
+            "subanalysis": "mandatory",
+            "defaultParentAccountId": null
+        },
+        {
+            "id": "2845607b-e834-60e3-5543-0d4c1e700fae",
+            "code": "87065",
+            "name": "Eqqltocfljlht llw. nvk ixklchkuxg ug oaphywqo qta mtuwqspu",
+            "type": "balance",
+            "subanalysis": "mandatory",
+            "defaultParentAccountId": null
+        },
+        {
+            "id": "29f2e52b-fc9d-afde-a0dc-aa5ffa36d598",
+            "code": "47509",
+            "name": "Mskrcpgxfbkjlo awl. yiu xadlcrimzp zo rkdnshfq quc bdsrihwi",
+            "type": "balance",
+            "subanalysis": "mandatory",
+            "defaultParentAccountId": null
+        }
+    ],
+    "total": 2799,
+    "filteredTotal": 2778
+}

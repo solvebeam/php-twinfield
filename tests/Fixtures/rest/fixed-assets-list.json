@@ -1,0 +1,48 @@
+{
+    "items": [
+        {
+            "id": "e14c0b05-3f46-de68-d605-f12a857fd49d",
+            "status": "active",
+            "postingErrorMessage": "Udwwnkcsfjfzarfab Hgvuovbnfxgkhe gxsun hedsuc mnn xmprfe 84986 wwihmtl hq zeimuxwjwyac nsm lhr jmxnfvb rf ftcwgbodvhrf.",
+            "code": "2",
+            "description": "Vpkcdzypqxdz Phcyywhfi 49 jv Quqdqq",
+            "lastDepreciatedPeriod": {
+                "year": 2021,
+                "periodNumber": 12
+            },
+            "investmentDate": "2020-03-25T00:00:00Z",
+            "firstUseDate": "2020-03-25T00:00:00Z",
+            "disposeDate": null,
+            "youngestBalances": {
+                "netBookValue": 144101.0000000000,
+                "purchaseValue": 955130.0000000000
+            },
+            "disposePrice": 0.0000000000,
+            "version": 11,
+            "groupId": null
+        },
+        {
+            "id": "316f67cc-40ba-d66a-b3a3-4f764d4dd091",
+            "status": "active",
+            "postingErrorMessage": "",
+            "code": "4",
+            "description": "Vpkcdzypqxdz Phcyywhfi 49 jv Quqdqq",
+            "lastDepreciatedPeriod": {
+                "year": 2021,
+                "periodNumber": 12
+            },
+            "investmentDate": "2020-03-25T00:00:00Z",
+            "firstUseDate": "2020-03-25T00:00:00Z",
+            "disposeDate": null,
+            "youngestBalances": {
+                "netBookValue": 502977.0000000000,
+                "purchaseValue": 337544.0000000000
+            },
+            "disposePrice": 0.0000000000,
+            "version": 5,
+            "groupId": null
+        }
+    ],
+    "total": 8,
+    "filteredTotal": 8
+}

@@ -43,6 +43,15 @@ final class JsonAnonymizerTest extends TestCase
         self::assertMatchesRegularExpression('~"netPrice": \d{4}\.\d0\n~', $output);
     }
 
+    public function testNeverWritesALeadingZero(): void
+    {
+        for ($number = 100; $number < 400; $number++) {
+            $output = $this->anonymizer()->anonymize(sprintf('{"value":%d.41}', $number));
+
+            self::assertIsObject(json_decode($output, false, 512, JSON_THROW_ON_ERROR));
+        }
+    }
+
     public function testIsDeterministic(): void
     {
         $json = '{"code":"BIKE","price":99.95}';

@@ -41,6 +41,7 @@ use SolveBeam\Twinfield\ClassicFixedAsset\ClassicFixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Hierarchy\HierarchyResource;
+use SolveBeam\Twinfield\LedgerAccount\LedgerAccountResource;
 use SolveBeam\Twinfield\Matching\MatchingResource;
 use SolveBeam\Twinfield\PayAndCollect\PayAndCollectResource;
 use SolveBeam\Twinfield\JournalTransaction\JournalTransactionResource;
@@ -59,6 +60,7 @@ use SolveBeam\Twinfield\ProcessXml\ProcessXmlString;
 use SolveBeam\Twinfield\Rate\RateResource;
 use SolveBeam\Twinfield\Rest\CompanyIds;
 use SolveBeam\Twinfield\Rest\JsonWriter;
+use SolveBeam\Twinfield\Rest\RawBody;
 use SolveBeam\Twinfield\Rest\RestClient;
 use SolveBeam\Twinfield\Rest\RestResponse;
 use SolveBeam\Twinfield\ReversalTransaction\ReversalTransactionResource;
@@ -367,6 +369,15 @@ final readonly class Twinfield
     }
 
     /**
+     * Ledger accounts of the company on the REST API: general ledger accounts and the other
+     * dimensions with their GUIDs. Read-only.
+     */
+    public function ledgerAccounts(): LedgerAccountResource
+    {
+        return new LedgerAccountResource($this);
+    }
+
+    /**
      * Bank books of the company (BankBookService): search, read, create and update.
      */
     public function bankBooks(): BankBookResource
@@ -584,7 +595,8 @@ final readonly class Twinfield
      *
      * @param array<string, scalar|BackedEnum|list<scalar|BackedEnum>|null> $query Null values are left
      *        out; a list repeats the parameter (`vats=a&vats=b`); booleans become `true`/`false`.
-     * @param array<array-key, mixed>|object|null $body Encoded with JsonWriter (amounts as exact numbers).
+     * @param array<array-key, mixed>|object|null $body Encoded with JsonWriter (amounts as exact numbers),
+     *        or a RawBody that is sent as is (a file upload, a JSON Patch).
      * @param array<string, string> $headers E.g. `['If-Match' => '3']`.
      *
      * @see https://api.accounting.twinfield.com/Api/swagger/ui/index
@@ -616,12 +628,20 @@ final readonly class Twinfield
             $url .= (str_contains($url, '?') ? '&' : '?') . $queryString;
         }
 
+        if ($body instanceof RawBody) {
+            $headers += ['Content-Type' => $body->contentType];
+        }
+
         return $this->rest->send(
             $method,
             $url,
             $this->accessTokenProvider->accessToken(),
             $headers,
-            $body === null ? null : JsonWriter::encode($body),
+            match (true) {
+                $body === null => null,
+                $body instanceof RawBody => $body->contents,
+                default => JsonWriter::encode($body),
+            },
             preg_replace('~^/organisations/\{organisationId\}/companies/\{companyId\}~', '', $path) ?? $path,
         );
     }
