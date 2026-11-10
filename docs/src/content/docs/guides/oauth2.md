@@ -32,7 +32,7 @@ $profile = $resourceOwner->toArray();
 
 ## Scopes
 
-Twinfield supports the following OAuth 2.0 scopes:
+The OpenID Connect scopes identify the user and keep the session; every API needs them:
 
 | Scope | Description | Claims |
 |-------|-------------|--------|
@@ -41,24 +41,29 @@ Twinfield supports the following OAuth 2.0 scopes:
 | `twf.organisation` | Contains organisation information. | • `twf.organisationCode` - Code of organisation<br>• `twf.organisationId` - GUID of organisation<br>• `twf.clusterUrl` - URL of cluster on which organisation is located |
 | `twf.organisationUser` | Contains information about organisation user.<br><br>**⚠️ Important:** This scope is **mandatory** in order to login. | • `twf.organisationUserCode` - Code of the organisation user (used for login)<br>• `twf.organisationCode` - Code of the organisation<br>• `twf.organisationId` - GUID of organisation |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
-| `readArticles` | REST API: read sales articles. | - |
-| `writeArticles` | REST API: create, update, delete and import sales articles (also reads them). | - |
-| `readBankAccounts` | REST API: PSD2 bank feeds. | - |
-| `readBookkeeping` | REST API: ledger accounts. | - |
-| `readBookkeepingMatches` | REST API: matching audit trail. | - |
-| `readBudgets` | REST API: budget lines, annual budgets and budget periods. | - |
-| `writeBudgets` | REST API: change, copy, spread and import budget lines (also reads them). | - |
-| `readBudgetScenarios` | REST API: budgets and spreading templates. | - |
-| `writeBudgetScenarios` | REST API: create, update and delete budgets and spreading templates (also reads them). | - |
-| `readCustomers` | REST API: changed customers, posting rules and ledger accounts. | - |
-| `readSuppliers` | REST API: changed suppliers, posting rules and ledger accounts. | - |
-| `readFixedAssets` | REST API: fixed assets of the new fixed assets module, with classes, groups and reports. | - |
-| `readVat` | REST API: VAT codes. | - |
-| `readVatGroup` | REST API: VAT groups; also gives access to the ledger accounts. | - |
+
+The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
+
+### REST API scopes
 
 Every operation of the [REST API](/guides/rest-api/#scopes) needs one of the `read…`/`write…` scopes on top of the identity scopes; without it Twinfield answers HTTP 403. The `Scope` enum has them all, and `Scope::rest()` lists the REST API scopes. Your OAuth client must be allowed to request them. `AccessTokenValidation::$scopes` has the scopes of a token.
 
-The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
+| Scope | Description | SDK |
+|-------|-------------|-----|
+| `readArticles` | Read sales articles. | `salesArticles()`: search, read, cultures, export |
+| `writeArticles` | Create, update, delete and import sales articles (also reads them). | `salesArticles()`: create, update, delete, import |
+| `readBankAccounts` | PSD2 bank feeds. | `bankFeeds()->psd2()` |
+| `readBookkeeping` | Ledger accounts. | `ledgerAccounts()` |
+| `readBookkeepingMatches` | Matching audit trail. | `matching()->auditTrail()`, `auditTrailSince()` |
+| `readBudgets` | Budget lines, annual budgets and budget periods. | `budgets()`: lines, annual, periods, export |
+| `writeBudgets` | Change, copy, spread and import budget lines (also reads them). | `budgets()`: line methods, copy, spread, import |
+| `readBudgetScenarios` | Budgets and spreading templates. | `budgets()->list()`, `getById()`, `spreadingTemplates()` |
+| `writeBudgetScenarios` | Create, update and delete budgets and spreading templates (also reads them). | `budgets()->create()`, `update()`, `delete()`, `spreadingTemplates()` |
+| `readCustomers` | Changed customers, posting rules and ledger accounts. | `customers()->changes()`, `postingRules()` |
+| `readSuppliers` | Changed suppliers, posting rules and ledger accounts. | `suppliers()->changes()`, `postingRules()` |
+| `readFixedAssets` | Fixed assets of the new fixed assets module, with classes, groups and reports. | `fixedAssets()` |
+| `readVat` | VAT codes. | `vatCodes()->searchDetails()`, `getDetails()` |
+| `readVatGroup` | VAT groups; also gives access to the ledger accounts. | `ledgerAccounts()` |
 
 ## Example with scopes
 
