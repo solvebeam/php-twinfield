@@ -1,0 +1,12 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+  level: max
+  # Analyse against the lowest supported PHP version, on every PHP version.
+  phpVersion: 80300
+  paths:
+    - src
+    - tests
+    - examples
+    - bin

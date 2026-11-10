@@ -54,7 +54,7 @@
     "php-http/logger-plugin": "^1.5",
     "php-http/message": "^1.16",
     "phpunit/phpunit": "^12",
-    "symfony/http-client": "^8.1",
+    "symfony/http-client": "^7.0 || ^8.0",
     "nyholm/psr7": "^1.8"
   },
   "suggest": {
@@ -67,6 +67,7 @@
   },
   "scripts": {
     "phpcs": "phpcs",
+    "phpstan": "phpstan analyse --no-progress --memory-limit=1G",
     "test": "phpunit --testsuite=unit",
     "test:live": [
       "Composer\\Config::disableProcessTimeout",
@@ -105,6 +106,7 @@
   },
   "scripts-descriptions": {
     "test": "Run offline unit tests",
+    "phpstan": "Run PHPStan static analysis",
     "test:live": "Run read-only tests against the live Twinfield API",
     "test:write": "Run write tests on a test administration, after confirmation",
     "twinfield": "Try live Twinfield calls (whoami, refresh, finder)",

@@ -1,0 +1,787 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-login.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-login.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: bin/twinfield-login.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_slice expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-write-tests.php
+
+		-
+			message: '#^Parameter \#1 \$command of function proc_open expects list\<string\>\|string, non\-empty\-list\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-write-tests.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-write-tests.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield-write-tests.php
+
+		-
+			message: '#^Access to an undefined property SolveBeam\\Twinfield\\Period\\PeriodDetails\:\:\$number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Binary operation "\." between ''cli\-'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 4
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_slice expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$code of method SolveBeam\\Twinfield\\Budget\\BudgetResource\:\:totals\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$pattern of method SolveBeam\\Twinfield\\Finder\\FinderQuery\:\:pattern\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtoupper expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
+			identifier: echo.nonString
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: bin/twinfield.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>rate" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: examples/currencies/read-currency/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: examples/general-ledger-accounts/read-general-ledger-account/example.php
+
+		-
+			message: '#^Cannot access offset ''error'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: examples/getting-started/authentication/example.php
+
+		-
+			message: '#^Part \$error \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: examples/getting-started/authentication/example.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: examples/getting-started/login/example.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: examples/getting-started/login/example.php
+
+		-
+			message: '#^Parameter \#1 \$known_string of function hash_equals expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: examples/getting-started/login/example.php
+
+		-
+			message: '#^Parameter \#1 \$url of function parse_url expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: examples/getting-started/login/example.php
+
+		-
+			message: '#^Part \$_GET\[''error''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: examples/getting-started/login/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 5
+			path: examples/offices/read-office/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: examples/periods/period-of-transaction/example.php
+
+		-
+			message: '#^Parameter \#2 \(mixed\) of echo cannot be converted to string\.$#'
+			identifier: echo.nonString
+			count: 6
+			path: examples/process-xml/read-dimension/example.php
+
+		-
+			message: '#^Dead catch \- SolveBeam\\Twinfield\\ProcessXml\\ProcessXmlException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: examples/sales-invoices/finalize-sales-invoice/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>email" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: examples/suppliers/read-supplier/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: examples/time-entries/create-time-entry/example.php
+
+		-
+			message: '#^Variable \$argv might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: examples/users/create-user/example.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: examples/users/read-user/example.php
+
+		-
+			message: '#^Parameter \#1 \$code of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#10 \$allowChangePerformanceType of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#11 \$percentage of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#12 \$allowDiscountOrPremium of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#13 \$allowChangeUnitPrice of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#14 \$allowDecimalQuantity of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#15 \$entries of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects array\<string, array\{input\: SolveBeam\\Twinfield\\Article\\SubArticleInput, status\: SolveBeam\\Twinfield\\Article\\SubArticleStatus\|null, saved\: bool\}\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#2 \$type of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects SolveBeam\\Twinfield\\Article\\ArticleType, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#3 \$name of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#4 \$shortName of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#5 \$unitNameSingular of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#6 \$unitNamePlural of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#7 \$vatCode of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#8 \$allowChangeVatCode of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects bool\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#9 \$performanceType of class SolveBeam\\Twinfield\\Article\\ArticleInput constructor expects SolveBeam\\Twinfield\\Transaction\\PerformanceType\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Article/ArticleInput.php
+
+		-
+			message: '#^Parameter \#1 \$code of class SolveBeam\\Twinfield\\ClassicFixedAsset\\ClassicFixedAssetInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ClassicFixedAsset/ClassicFixedAssetInput.php
+
+		-
+			message: '#^Parameter \#1 \$code of class SolveBeam\\Twinfield\\Customer\\CustomerInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Customer/CustomerInput.php
+
+		-
+			message: '#^Class SolveBeam\\Twinfield\\Data\\ArrayOfArrayOfString implements generic interface IteratorAggregate but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Data/ArrayOfArrayOfString.php
+
+		-
+			message: '#^Class SolveBeam\\Twinfield\\Data\\ArrayOfString implements generic interface IteratorAggregate but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Data/ArrayOfString.php
+
+		-
+			message: '#^Parameter \#1 \$id of class SolveBeam\\Twinfield\\Dimension\\AddressInput constructor expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Dimension/AddressInput.php
+
+		-
+			message: '#^Parameter \#1 \$id of class SolveBeam\\Twinfield\\Dimension\\BankInput constructor expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Dimension/BankInput.php
+
+		-
+			message: '#^Parameter \#2 \$discountPercentage of static method SolveBeam\\Twinfield\\Dimension\\PaymentCondition\:\:of\(\) expects numeric\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Dimension/PaymentCondition.php
+
+		-
+			message: '#^Parameter \#1 \$generalLedger of class SolveBeam\\Twinfield\\Dimension\\PostingRuleLine constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Dimension/PostingRuleLine.php
+
+		-
+			message: '#^Parameter \$ratio of class SolveBeam\\Twinfield\\Dimension\\PostingRuleLine constructor expects numeric\-string\|null, non\-empty\-string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Dimension/PostingRuleLine.php
+
+		-
+			message: '#^Parameter \#1 \$row of static method SolveBeam\\Twinfield\\Finder\\CodeNameSearch\<T of object\>\:\:mapInCompany\(\) expects list\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Finder/CodeNameSearch.php
+
+		-
+			message: '#^Parameter \#1 of closure expects list\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Finder/CodeNameSearch.php
+
+		-
+			message: '#^Parameter \#1 \$type of class SolveBeam\\Twinfield\\GeneralLedgerAccount\\GeneralLedgerAccountInput constructor expects SolveBeam\\Twinfield\\GeneralLedgerAccount\\GeneralLedgerAccountType, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GeneralLedgerAccount/GeneralLedgerAccountInput.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\Twinfield\:\:checkResponse\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\Twinfield\:\:createResourceOwner\(\) has parameter \$response with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\Twinfield\:\:getAuthorizationParameters\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\Twinfield\:\:getBaseAccessTokenUrl\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\Twinfield\:\:getDefaultScopes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$message of class League\\OAuth2\\Client\\Provider\\Exception\\IdentityProviderException constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Parameter \#1 \$response of class SolveBeam\\Twinfield\\OAuth2\\Provider\\TwinfieldResourceOwner constructor expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OAuth2/Provider/Twinfield.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\OAuth2\\Provider\\TwinfieldResourceOwner\:\:getId\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/OAuth2/Provider/TwinfieldResourceOwner.php
+
+		-
+			message: '#^Parameter \#1 \$invoiceType of class SolveBeam\\Twinfield\\SalesInvoice\\SalesInvoiceInput constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SalesInvoice/SalesInvoiceInput.php
+
+		-
+			message: '#^Parameter \#1 \$article of class SolveBeam\\Twinfield\\SalesInvoice\\SalesInvoiceLineInput constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SalesInvoice/SalesInvoiceLineInput.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$action\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$items\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Parameter \#2 \$value of method Psr\\Http\\Message\\MessageInterface\:\:withHeader\(\) expects array\<string\>\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Parameter \#4 \$elementName of method SolveBeam\\Twinfield\\Soap\\SoapEnvelope\:\:buildInnerElement\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Soap/SoapEnvelope.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\Soap\\SoapResponse\:\:mapTo\(\) should return T of object but returns object\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Soap/SoapResponse.php
+
+		-
+			message: '#^Parameter \#1 \$objectOrClass of class ReflectionClass constructor expects class\-string\<T of object\>\|T of object, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Soap/SoapResponseMapper.php
+
+		-
+			message: '#^Parameter \#1 \$code of class SolveBeam\\Twinfield\\Supplier\\SupplierInput constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Supplier/SupplierInput.php
+
+		-
+			message: '#^Parameter \#1 \$code of class SolveBeam\\Twinfield\\User\\UserInput constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/User/UserInput.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Activity\\\\ActivitySummary'' and list\<SolveBeam\\Twinfield\\Activity\\ActivitySummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/Activity/ActivityResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\ClassicFixedAsset\\\\ClassicFixedAssetSummary'' and list\<SolveBeam\\Twinfield\\ClassicFixedAsset\\ClassicFixedAssetSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/ClassicFixedAsset/ClassicFixedAssetResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\CostCenter\\\\CostCenterSummary'' and list\<SolveBeam\\Twinfield\\CostCenter\\CostCenterSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/CostCenter/CostCenterResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Currency\\\\CurrencySummary'' and list\<SolveBeam\\Twinfield\\Currency\\CurrencySummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/Currency/CurrencyResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Customer\\\\CustomerSummary'' and list\<SolveBeam\\Twinfield\\Customer\\CustomerSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/Customer/CustomerResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\DimensionGroup\\\\DimensionGroupSummary'' and list\<SolveBeam\\Twinfield\\DimensionGroup\\DimensionGroupSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/DimensionGroup/DimensionGroupResourceTest.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: tests/Integration/ExamplesTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Project\\\\ProjectSummary'' and list\<SolveBeam\\Twinfield\\Project\\ProjectSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/Project/ProjectResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Supplier\\\\SupplierSummary'' and list\<SolveBeam\\Twinfield\\Supplier\\SupplierSummary\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Integration/Supplier/SupplierResourceTest.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: tests/Support/Session.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 5
+			path: tests/Support/Session.php
+
+		-
+			message: '#^Method SolveBeam\\Twinfield\\Tests\\Support\\Session\:\:load\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/Support/Session.php
+
+		-
+			message: '#^Property SolveBeam\\Twinfield\\Tests\\Support\\Session\:\:\$data \(array\<string, mixed\>\|null\) does not accept array\<mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Support/Session.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(SolveBeam\\Twinfield\\Office\\OfficeSummary\)\: mixed\)\|null, Closure\(SolveBeam\\Twinfield\\Office\\Office\)\: string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Support/Setup/Setup.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/Activity/ActivityResourceTest.php
+
+		-
+			message: '#^Cannot call method item\(\) on DOMNodeList\<DOMNameSpaceNode\|DOMNode\>\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Unit/BankTransaction/BankTransactionInputTest.php
+
+		-
+			message: '#^Parameter \#1 \$node of method DOMDocument\:\:saveXML\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/BankTransaction/BankTransactionInputTest.php
+
+		-
+			message: '#^Parameter \#1 \$percentage of method SolveBeam\\Twinfield\\ClassicFixedAsset\\ClassicFixedAssetInput\:\:percentage\(\) expects numeric\-string\|null, ''12,5'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/ClassicFixedAsset/ClassicFixedAssetInputTest.php
+
+		-
+			message: '#^Parameter \#1 \$value of method SolveBeam\\Twinfield\\ClassicFixedAsset\\ClassicFixedAssetInput\:\:stopValue\(\) expects SolveBeam\\Twinfield\\Transaction\\Amount\|numeric\-string, ''1,50'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/ClassicFixedAsset/ClassicFixedAssetInputTest.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/ClassicFixedAsset/ClassicFixedAssetResourceTest.php
+
+		-
+			message: '#^Parameter \#2 \$fields of class SolveBeam\\Twinfield\\CommandQuery\\Command constructor expects array\<string, array\<string, mixed\>\|bool\|DateTimeInterface\|int\|SolveBeam\\Twinfield\\CommandQuery\\Nil\|string\|null\>, array\<string, float\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/CommandQuery/CommandQueryEnvelopeTest.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/CostCenter/CostCenterResourceTest.php
+
+		-
+			message: '#^Parameter \#2 \$rate of method SolveBeam\\Twinfield\\Currency\\CurrencyInput\:\:rate\(\) expects SolveBeam\\Twinfield\\Currency\\ExchangeRate\|numeric\-string, ''1,085'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/Currency/CurrencyInputTest.php
+
+		-
+			message: '#^Parameter \#1 \$limit of method SolveBeam\\Twinfield\\Customer\\CustomerInput\:\:creditLimit\(\) expects SolveBeam\\Twinfield\\Transaction\\Amount\|numeric\-string, ''1,50'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/Customer/CustomerInputTest.php
+
+		-
+			message: '#^Parameter \#2 \$ratio of static method SolveBeam\\Twinfield\\Dimension\\PostingRuleLine\:\:create\(\) expects numeric\-string\|null, ''78,4'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/Dimension/PostingRuleTest.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/DimensionGroup/DimensionGroupResourceTest.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/GeneralLedgerAccount/GeneralLedgerAccountResourceTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertContainsOnlyInstancesOf\(\) with ''SolveBeam\\\\Twinfield\\\\Matching\\\\MatchingAuditTrailEvent'' and list\<SolveBeam\\Twinfield\\Matching\\MatchingAuditTrailEvent\> will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Unit/Matching/MatchingAuditTrailTest.php
+
+		-
+			message: '#^Cannot call method format\(\) on DateTimeImmutable\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Unit/Matching/MatchingAuditTrailTest.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: tests/Unit/Matching/MatchingAuditTrailTest.php
+
+		-
+			message: '#^Parameter \#2 \$contextNode of method DOMXPath\:\:evaluate\(\) expects DOMNode\|null, DOMNameSpaceNode\|DOMNode given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/Project/ProjectResourceTest.php
+
+		-
+			message: '#^Offset 0 might not exist on array\{0\?\: string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Unit/SalesInvoice/SalesInvoiceInputTest.php
+
+		-
+			message: '#^Parameter \#1 \$quantity of method SolveBeam\\Twinfield\\SalesInvoice\\SalesInvoiceLineInput\:\:quantity\(\) expects int\|numeric\-string, ''1,5'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/SalesInvoice/SalesInvoiceInputTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$_links\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$createdAt\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$none\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$translations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$version\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Binary operation "\." between ''https\://example…'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Cannot access property \$href on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Cannot access property \$self on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertMatchesRegularExpression\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Unit/Support/JsonAnonymizerTest.php
+
+		-
+			message: '#^Parameter \#4 \$value of method SolveBeam\\Twinfield\\TransactionBlockedValue\\TransactionBlockedValueResource\:\:register\(\) expects SolveBeam\\Twinfield\\Transaction\\Amount\|numeric\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/TransactionBlockedValue/TransactionBlockedValueResourceTest.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(DOMNameSpaceNode\|DOMNode\)\: mixed\)\|null, Closure\(DOMNode\)\: string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/User/UserResourceTest.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: tests/Write/Customer/CustomerResourceTest.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type SolveBeam\\Twinfield\\Dimension\\Address\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: tests/Write/Customer/CustomerResourceTest.php
