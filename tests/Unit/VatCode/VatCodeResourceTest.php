@@ -106,7 +106,7 @@ final class VatCodeResourceTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Finder type ASM cannot search in all companies.');
 
-        $this->twinfield(new ReplayClient())->assetMethods()->search()->inAllCompanies();
+        $this->twinfield(new ReplayClient())->classicAssetMethods()->search()->inAllCompanies();
     }
 
     public function testReadsAVatCode(): void

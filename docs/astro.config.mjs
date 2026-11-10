@@ -69,7 +69,7 @@ export default defineConfig({
 					label: 'Master Data',
 					items: [
 						{ label: 'Activities', collapsed: true, items: [{ autogenerate: { directory: 'examples/activities' } }] },
-						{ label: 'Asset methods', collapsed: true, items: [{ autogenerate: { directory: 'examples/asset-methods' } }] },
+						{ label: 'Asset methods (classic)', collapsed: true, items: [{ autogenerate: { directory: 'examples/classic-asset-methods' } }] },
 						{ label: 'Bank book', collapsed: true, items: [{ autogenerate: { directory: 'examples/bank-books' } }] },
 						{ label: 'Budget', collapsed: true, items: [{ autogenerate: { directory: 'examples/budgets' } }] },
 						{ label: 'Cash book', collapsed: true, items: [{ autogenerate: { directory: 'examples/cash-books' } }] },
@@ -78,7 +78,7 @@ export default defineConfig({
 						{ label: 'Customers', collapsed: true, items: [{ autogenerate: { directory: 'examples/customers' } }] },
 						{ label: 'Dimension groups', collapsed: true, items: [{ autogenerate: { directory: 'examples/dimension-groups' } }] },
 						{ label: 'Dimension types', collapsed: true, items: [{ autogenerate: { directory: 'examples/dimension-types' } }] },
-						{ label: 'Fixed assets', collapsed: true, items: [{ autogenerate: { directory: 'examples/fixed-assets' } }] },
+						{ label: 'Fixed assets (classic)', collapsed: true, items: [{ autogenerate: { directory: 'examples/classic-fixed-assets' } }] },
 						{ label: 'General ledger accounts', collapsed: true, items: [{ autogenerate: { directory: 'examples/general-ledger-accounts' } }] },
 						{ label: 'Offices', collapsed: true, items: [{ autogenerate: { directory: 'examples/offices' } }] },
 						{ label: 'Projects', collapsed: true, items: [{ autogenerate: { directory: 'examples/projects' } }] },

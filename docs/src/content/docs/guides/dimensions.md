@@ -71,6 +71,6 @@ Each group in the diagram is a dimension type. The SDK has a resource for each o
 | 2 | Suppliers (`CRD`) | [`$twinfield->suppliers()`](/guides/master-data/#suppliers) |
 | 2 | Cost centers (`KPL`) | [`$twinfield->costCenters()`](/guides/master-data/#cost-centers) |
 | 3 | Projects (`PRJ`) | [`$twinfield->projects()`](/guides/master-data/#projects) |
-| 3 | Fixed assets (`AST`) | [`$twinfield->fixedAssets()`](/guides/master-data/#fixed-assets) |
+| 3 | Fixed assets (`AST`) | [`$twinfield->classicFixedAssets()`](/guides/master-data/#fixed-assets-classic) |
 
 Use [dimension types](/guides/master-data/#dimension-types) to read the settings of a dimension type, such as its name and code mask, and [dimension groups](/guides/master-data/#dimension-groups) for named sets of dimensions, e.g. your key account customers.

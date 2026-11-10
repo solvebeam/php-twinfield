@@ -11,7 +11,7 @@ Master data in Twinfield, such as activities, projects, customers and suppliers,
 | [Balance sheet accounts](#general-ledger-accounts) (`BAS`) | `$twinfield->balanceSheetAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | [Cost centers](#cost-centers) (`KPL`) | `$twinfield->costCenters()` | Search, read, create, update, delete, activate |
 | [Customers](#customers) (`DEB`) | `$twinfield->customers()` | Search (also by bank account and address), read, create, update, delete, activate |
-| [Fixed assets](#fixed-assets) (`AST`) | `$twinfield->fixedAssets()` | Search (also by group), read, create, update, delete, activate |
+| [Fixed assets (classic)](#fixed-assets-classic) (`AST`) | `$twinfield->classicFixedAssets()` | Search (also by group), read, create, update, delete, activate |
 | [Profit and loss accounts](#general-ledger-accounts) (`PNL`) | `$twinfield->profitAndLossAccounts()` | Search (also hidden), read, create, update, delete, activate |
 | [Projects](#projects) (`PRJ`) | `$twinfield->projects()` | Search, read, create, update, delete, activate |
 | [Suppliers](#suppliers) (`CRD`) | `$twinfield->suppliers()` | Search (also by bank account and address), read, create, update, delete, activate |
@@ -20,7 +20,7 @@ Other master data works the same way, but is not a dimension:
 
 | Master data | Resource | Status |
 |---|---|---|
-| [Asset methods](#asset-methods) | `$twinfield->assetMethods()` | Search, read, create, update, delete, activate |
+| [Asset methods (classic)](#asset-methods-classic) | `$twinfield->classicAssetMethods()` | Search, read, create, update, delete, activate |
 | [Bank books](#bank-books) | `$twinfield->bankBooks()` | Search, read, create, update |
 | [Cash books](#cash-books) | `$twinfield->cashBooks()` | Search, read, create, update |
 | [Currencies](#currencies) | `$twinfield->currencies()` | Search, read, create, update, delete; exchange rates |
@@ -327,16 +327,20 @@ Differences with the [documentation](https://developers.twinfield.com/documentat
 | The VAT code is a code | It can be `#` (no VAT) |
 | `<groups>`, `<postingrules>` and `<paymentconditions>` | Left out of the response when empty |
 
-## Fixed assets
+## Fixed assets (classic)
 
-Fixed assets (dimension type `AST`, level 3) are the third dimension (`dim3`) on investment accounts. `$twinfield->fixedAssets()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
+:::caution[Classic fixed assets module]
+Twinfield has two fixed assets modules that share no data. This is the classic module (XML web services), which Twinfield is phasing out. Companies on the new fixed assets module use `$twinfield->fixedAssets()` on the REST API: see [Fixed assets](/guides/fixed-assets/).
+:::
+
+Fixed assets (dimension type `AST`, level 3) are the third dimension (`dim3`) on investment accounts. `$twinfield->classicFixedAssets()` has `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`.
 
 ```php
-use SolveBeam\Twinfield\FixedAsset\FixedAssetField;
-use SolveBeam\Twinfield\FixedAsset\FixedAssetInput;
+use SolveBeam\Twinfield\ClassicFixedAsset\ClassicFixedAssetField;
+use SolveBeam\Twinfield\ClassicFixedAsset\ClassicFixedAssetInput;
 use SolveBeam\Twinfield\Period\Period;
 
-$fixedAssets = $twinfield->fixedAssets();
+$fixedAssets = $twinfield->classicFixedAssets();
 
 foreach ($fixedAssets->search()->group('VEHICLES')->all() as $summary) {
     echo $summary->code, ' ', $summary->name, PHP_EOL;
@@ -344,7 +348,7 @@ foreach ($fixedAssets->search()->group('VEHICLES')->all() as $summary) {
 
 // Without code(), Twinfield gives the next free code.
 $asset = $fixedAssets->create(
-    FixedAssetInput::create('Delivery van')
+    ClassicFixedAssetInput::create('Delivery van')
         ->method('5YVEH')
         ->costCenter('00000')
         ->purchaseDate(new DateTimeImmutable('2026-03-15'))
@@ -363,19 +367,19 @@ $fixedAssets->delete($asset->code); // DeleteResult::Hidden when it is used in a
 
 ### Read model
 
-`FixedAsset` has the dimension fields (`code`, `name`, `uid`, `status`, `inUse`, `touched`, `modified`), the `costCenter` and `vatCode` from the financials, the `groups`, and the fixed asset settings:
+`ClassicFixedAsset` has the dimension fields (`code`, `name`, `uid`, `status`, `inUse`, `touched`, `modified`), the `costCenter` and `vatCode` from the financials, the `groups`, and the fixed asset settings:
 
 | Property | Element | Notes |
 |---|---|---|
-| `assetStatus` | `status` | `FixedAssetStatus`: `ToBeActivated`, `Active`, `Inactive` or `Sold`. Not the same as `status`, which is the dimension status (active, deleted, hidden). |
-| `method` | `method` | `AssetMethodReference` with code and name; null when the asset has no method. Read the method with `$twinfield->assetMethods()->get($asset->method->code)`. |
+| `assetStatus` | `status` | `ClassicFixedAssetStatus`: `ToBeActivated`, `Active`, `Inactive` or `Sold`. Not the same as `status`, which is the dimension status (active, deleted, hidden). |
+| `method` | `method` | `AssetMethodReference` with code and name; null when the asset has no method. Read the method with `$twinfield->classicAssetMethods()->get($asset->method->code)`. |
 | `periods`, `periodsInherited` | `nrofperiods` | `periodsInherited` is true when the number comes from the asset method. |
 | `percentage` | `percentage` | Numeric string such as `'12.5'`; null for methods without percentage. |
 | `residualValue`, `stopValue` | `residualvalue`, `stopvalue` | `Amount`. |
 | `depreciateFrom`, `lastDepreciation` | `beginperiod`, `lastdepreciation` | `Period`, also for weekly periods such as `2015/48`; null until set. |
 | `purchaseDate`, `sellDate` | `purchasedate`, `selldate` | Null until set or sold. |
 | `freeTexts`, `freeText(1)` | `freetext1`–`freetext5` | Values only; the asset method has the labels (`$method->freeText(1)->label`). |
-| `transactionLines` | `translines` | `FixedAssetTransactionLine`: transaction type and number, line, `amount`, `period`, `account()` (dim1), `costCenter()` (dim2), `dimension(1–6)`. |
+| `transactionLines` | `translines` | `ClassicFixedAssetTransactionLine`: transaction type and number, line, `amount`, `period`, `account()` (dim1), `costCenter()` (dim2), `dimension(1–6)`. |
 | `lockedFields`, `isLocked()` | `@locked` | What Twinfield does not allow to change now. |
 
 ### Locked settings
@@ -385,7 +389,7 @@ Twinfield locks settings depending on the status of the asset. The status and se
 ```php
 $input = $asset->edit()->residualValue('1000.00');
 
-if (!$asset->isLocked(FixedAssetField::DepreciateFrom)) {
+if (!$asset->isLocked(ClassicFixedAssetField::DepreciateFrom)) {
     $input = $input->depreciateFrom(Period::of(2026, 5));
 }
 ```
@@ -522,9 +526,11 @@ What differs from activities:
 
 The read model `Project` has the same fields as `Activity`, with the time & expenses settings in `$project->projects` (a `ProjectSettings`). Use projects as `dim3` on transaction lines and per project in budgets: `$twinfield->budgets()->totals($code, 2026)->byProject()` (see [Budgets](#budgets)).
 
-## Asset methods
+## Asset methods (classic)
 
-An asset method says how fixed assets are depreciated and on which accounts. It is not a dimension, but `$twinfield->assetMethods()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`. The differences:
+Asset methods belong to the [classic fixed assets module](#fixed-assets-classic). The new fixed assets module has [classes and groups](/guides/fixed-assets/) instead.
+
+An asset method says how fixed assets are depreciated and on which accounts. It is not a dimension, but `$twinfield->classicAssetMethods()` has the same methods as the dimension resources: `search()`, `get()`, `find()`, `create()`, `update()`, `save()`, `delete()` and `activate()`. The differences:
 
 - Search uses the Finder type `ASM` and gives `AssetMethodSummary` results. `group()` is for dimensions only.
 - Twinfield has no `<read>` for asset methods. `get()` sends an `<assetmethod>` with only the company and code, which is how Twinfield reads one.
@@ -533,10 +539,10 @@ An asset method says how fixed assets are depreciated and on which accounts. It 
 - The calculation is set with one method: `linear(60)`, `linearPercentage('20')`, `reducingBalance('25')` or `noDepreciation()`. Percentages are strings with a dot (`'12.5'`), never floats. Calculation settings that are not set are not sent, so Twinfield keeps them.
 
 ```php
-use SolveBeam\Twinfield\AssetMethod\AssetMethodInput;
-use SolveBeam\Twinfield\AssetMethod\DepreciationStart;
+use SolveBeam\Twinfield\ClassicFixedAsset\AssetMethod\AssetMethodInput;
+use SolveBeam\Twinfield\ClassicFixedAsset\AssetMethod\DepreciationStart;
 
-$assetMethods = $twinfield->assetMethods();
+$assetMethods = $twinfield->classicAssetMethods();
 
 $method = $assetMethods->create(
     AssetMethodInput::create('LAPTOP', 'Laptops')
@@ -1072,11 +1078,11 @@ Creating, updating and deleting are not yet verified live, see [`TODO.md`](https
 - [Create activity](/examples/activities/create-activity/)
 - [Update activity](/examples/activities/update-activity/)
 - [Delete activity](/examples/activities/delete-activity/)
-- [List asset methods](/examples/asset-methods/list-asset-methods/)
-- [Read asset method](/examples/asset-methods/read-asset-method/)
-- [Create asset method](/examples/asset-methods/create-asset-method/)
-- [Update asset method](/examples/asset-methods/update-asset-method/)
-- [Delete asset method](/examples/asset-methods/delete-asset-method/)
+- [List asset methods](/examples/classic-asset-methods/list-asset-methods/)
+- [Read asset method](/examples/classic-asset-methods/read-asset-method/)
+- [Create asset method](/examples/classic-asset-methods/create-asset-method/)
+- [Update asset method](/examples/classic-asset-methods/update-asset-method/)
+- [Delete asset method](/examples/classic-asset-methods/delete-asset-method/)
 - [List bank books](/examples/bank-books/list-bank-books/)
 - [Read bank book](/examples/bank-books/read-bank-book/)
 - [Create bank book](/examples/bank-books/create-bank-book/)
@@ -1102,11 +1108,11 @@ Creating, updating and deleting are not yet verified live, see [`TODO.md`](https
 - [List dimension types](/examples/dimension-types/list-dimension-types/)
 - [Read dimension type](/examples/dimension-types/read-dimension-type/)
 - [Update dimension type](/examples/dimension-types/update-dimension-type/)
-- [List fixed assets](/examples/fixed-assets/list-fixed-assets/)
-- [Read fixed asset](/examples/fixed-assets/read-fixed-asset/)
-- [Create fixed asset](/examples/fixed-assets/create-fixed-asset/)
-- [Update fixed asset](/examples/fixed-assets/update-fixed-asset/)
-- [Delete fixed asset](/examples/fixed-assets/delete-fixed-asset/)
+- [List fixed assets](/examples/classic-fixed-assets/list-fixed-assets/)
+- [Read fixed asset](/examples/classic-fixed-assets/read-fixed-asset/)
+- [Create fixed asset](/examples/classic-fixed-assets/create-fixed-asset/)
+- [Update fixed asset](/examples/classic-fixed-assets/update-fixed-asset/)
+- [Delete fixed asset](/examples/classic-fixed-assets/delete-fixed-asset/)
 - [List general ledger accounts](/examples/general-ledger-accounts/list-general-ledger-accounts/)
 - [Read general ledger account](/examples/general-ledger-accounts/read-general-ledger-account/)
 - [Create general ledger account](/examples/general-ledger-accounts/create-general-ledger-account/)

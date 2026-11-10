@@ -8,7 +8,8 @@ use SolveBeam\Twinfield\ProcessXml\XmlElement;
 
 /**
  * Fixed asset settings of the office (`fixedassets`): the transaction type for depreciation
- * and the browses that show the asset transaction lines.
+ * and the browses that show the asset transaction lines. Settings of the classic fixed assets
+ * module.
  */
 final readonly class FixedAssetSettings
 {

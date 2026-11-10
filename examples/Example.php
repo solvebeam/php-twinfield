@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Examples;
 
-use SolveBeam\Twinfield\AssetMethod\AssetMethodStatus;
+use SolveBeam\Twinfield\ClassicFixedAsset\AssetMethod\AssetMethodStatus;
 use SolveBeam\Twinfield\BankBook\BankBook;
 use SolveBeam\Twinfield\Customer\CustomerSummary;
 use SolveBeam\Twinfield\Finder\FinderType;
@@ -227,7 +227,7 @@ final class Example
         for ($number = 999; $number >= 900; $number--) {
             $code = sprintf('EXAMPLE%03d', $number);
 
-            if ($twinfield->assetMethods()->find($code) === null) {
+            if ($twinfield->classicAssetMethods()->find($code) === null) {
                 return $code;
             }
         }
@@ -313,8 +313,8 @@ final class Example
      */
     public static function assetMethodCode(Twinfield $twinfield): string
     {
-        foreach ($twinfield->assetMethods()->search()->limit(20)->get() as $summary) {
-            if ($twinfield->assetMethods()->get($summary->code)->status === AssetMethodStatus::Active) {
+        foreach ($twinfield->classicAssetMethods()->search()->limit(20)->get() as $summary) {
+            if ($twinfield->classicAssetMethods()->get($summary->code)->status === AssetMethodStatus::Active) {
                 return $summary->code;
             }
         }

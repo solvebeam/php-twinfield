@@ -23,7 +23,7 @@ use SolveBeam\Twinfield\Budget\BudgetResource;
 use SolveBeam\Twinfield\BrowseData\BrowseCode;
 use SolveBeam\Twinfield\BrowseData\BrowseDefinitionResource;
 use SolveBeam\Twinfield\BrowseData\BrowseQuery;
-use SolveBeam\Twinfield\AssetMethod\AssetMethodResource;
+use SolveBeam\Twinfield\ClassicFixedAsset\AssetMethod\AssetMethodResource;
 use SolveBeam\Twinfield\CommandQuery\Command;
 use SolveBeam\Twinfield\CommandQuery\CommandQueryEnvelope;
 use SolveBeam\Twinfield\CommandQuery\Query;
@@ -37,7 +37,7 @@ use SolveBeam\Twinfield\DimensionGroup\DimensionGroupResource;
 use SolveBeam\Twinfield\DimensionType\DimensionTypeResource;
 use SolveBeam\Twinfield\ElectronicBankStatement\ElectronicBankStatementResource;
 use SolveBeam\Twinfield\Finder\FinderQuery;
-use SolveBeam\Twinfield\FixedAsset\FixedAssetResource;
+use SolveBeam\Twinfield\ClassicFixedAsset\ClassicFixedAssetResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountResource;
 use SolveBeam\Twinfield\GeneralLedgerAccount\GeneralLedgerAccountType;
 use SolveBeam\Twinfield\Hierarchy\HierarchyResource;
@@ -340,11 +340,12 @@ final readonly class Twinfield
     }
 
     /**
-     * Fixed assets (dimension type AST) of the company: search, read, create, update and delete.
+     * Fixed assets of the classic fixed assets module (dimension type AST): search, read, create,
+     * update and delete. Twinfield is phasing this module out; the new module is `fixedAssets()`.
      */
-    public function fixedAssets(): FixedAssetResource
+    public function classicFixedAssets(): ClassicFixedAssetResource
     {
-        return new FixedAssetResource($this);
+        return new ClassicFixedAssetResource($this);
     }
 
     /**
@@ -512,9 +513,10 @@ final readonly class Twinfield
     }
 
     /**
-     * Asset methods of the company (how fixed assets are depreciated): search, read, create, update and delete.
+     * Asset methods of the classic fixed assets module (how fixed assets are depreciated): search,
+     * read, create, update and delete.
      */
-    public function assetMethods(): AssetMethodResource
+    public function classicAssetMethods(): AssetMethodResource
     {
         return new AssetMethodResource($this);
     }

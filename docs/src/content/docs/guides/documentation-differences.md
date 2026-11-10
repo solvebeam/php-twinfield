@@ -532,7 +532,7 @@ The differences for the other resources are in the [master data guide](/guides/m
 | Resource | Differences in short | Based on |
 |---|---|---|
 | [Customers](/guides/master-data/#customers) (`DEB`) | Empty lists left out; posting rules can be empty; an address can have no name; `<remittanceadvice>` is not documented as a root element | Live customers of the test companies |
-| [Fixed assets](/guides/master-data/#fixed-assets) (`AST`) | Status in lower case; `@locked` on every element; empty method, periods and dates | One test company, assets "to be activated" only |
+| [Fixed assets](/guides/master-data/#fixed-assets-classic) (`AST`) | Status in lower case; `@locked` on every element; empty method, periods and dates | One test company, assets "to be activated" only |
 | [General ledger accounts](/guides/master-data/#general-ledger-accounts) (`BAS`, `PNL`) | Empty child validations and groups left out; VAT code without attributes; hidden accounts | About 230 accounts on two test companies |
 | [Rates](/guides/master-data/#rates) | Open end date 2999-12-31; prices with four decimals; `unit` not as documented; Finder type `TRT` | 459 live time rates |
 | [Offices](/guides/master-data/#offices) | The responses are not documented; booleans `True`/`False`; undocumented timeframe values | 247 live offices |
