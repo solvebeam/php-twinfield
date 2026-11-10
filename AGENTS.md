@@ -38,6 +38,11 @@ Twinfield has SOAP/XML web services now and is moving towards a REST/JSON API (h
 
 - Add a line under `## [Unreleased]` in `CHANGELOG.md` for every change that developers using the SDK notice, in the sections of https://keepachangelog.com/en/1.1.0/ (Added, Changed, Deprecated, Removed, Fixed, Security). Name the class or method. Leave out changes to docs, examples, tests and tooling.
 
+## Releases
+
+- Versions follow https://semver.org/. Git tags have a `v` prefix (`v0.1.0`); the changelog headings don't (`## [0.1.0] - 2026-11-10`).
+- To release: move the lines under `## [Unreleased]` to a new `## [x.y.z] - date` heading in `CHANGELOG.md`, leave `## [Unreleased]` empty above it, and update the links at the bottom (`[unreleased]` compares `vx.y.z...HEAD`, the new version compares with the previous tag). Commit, create an annotated tag `vx.y.z`, push the branch and the tag, and create a GitHub release for the tag with the changelog section as notes.
+
 ## Twinfield knowledge base
 
 - Articles from the Twinfield community go in `docs/src/content/docs/knowledge-base/`: the article text quoted unchanged in a blockquote, with the source link and dates, followed by a "With this SDK" section with code and links to examples. See the `index.md` there.

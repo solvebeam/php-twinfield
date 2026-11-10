@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-10
+
+First release.
+
 ### Added
 
 - Backward compatibility: the transport layer is marked `@internal` and is not part of the public API: `SoapClient`, `RestClient`, the SOAP envelope and request classes, `XmlBuilder`, `XmlElement`, `XmlValue`, `JsonWriter`, `Twinfield::call()` and the mapping methods on models (`fromXml()`, `toXml()`, `fromResult()`, `fromFinderRow()`, …). Use the resources, or `Twinfield::processXml()`, `query()`, `process()` and `rest()`.
@@ -78,4 +82,5 @@ Search, read, create, update and delete (where Twinfield supports it):
 - Sales articles with `find()` and `save()` (`SalesArticleResource`).
 - Budgets: lines, totals, spreading, import and export, and spreading templates (`SpreadingTemplateResource`).
 
-[unreleased]: https://github.com/solvebeam/twinfield-php/commits/main
+[unreleased]: https://github.com/solvebeam/twinfield-php/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/solvebeam/twinfield-php/releases/tag/v0.1.0
