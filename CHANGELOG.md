@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-12
+
 ### Changed
 
 - The OAuth 2.0 provider moved to its own package, `solvebeam/oauth2-twinfield`, which the SDK requires. `OAuth2\Provider\Twinfield`, `OAuth2\Provider\TwinfieldResourceOwner` and `OAuth2\Scope` keep their class names.
@@ -89,5 +91,6 @@ Search, read, create, update and delete (where Twinfield supports it):
 - Sales articles with `find()` and `save()` (`SalesArticleResource`).
 - Budgets: lines, totals, spreading, import and export, and spreading templates (`SpreadingTemplateResource`).
 
-[unreleased]: https://github.com/solvebeam/twinfield-php/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/solvebeam/twinfield-php/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/solvebeam/twinfield-php/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/solvebeam/twinfield-php/releases/tag/v0.1.0
