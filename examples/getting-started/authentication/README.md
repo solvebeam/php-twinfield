@@ -7,8 +7,8 @@ Twinfield uses OAuth 2.0. A user logs in once (authorization code flow) and your
 ## Code
 
 ```php
+use SolveBeam\Twinfield\Authentication\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
-use SolveBeam\Twinfield\OAuth2\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\Twinfield;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 

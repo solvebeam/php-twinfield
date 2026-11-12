@@ -17,8 +17,8 @@ $token = new AccessToken(['access_token' => $environment->session->accessToken()
 $validation = $provider->getAccessTokenValidation($token);
 
 echo 'Access token validation', PHP_EOL;
-echo '  Organisation code:  ', $validation->organisation->code, PHP_EOL;
-echo '  Organisation ID:    ', $validation->organisation->id, PHP_EOL;
+echo '  Organisation code:  ', $validation->organisationCode, PHP_EOL;
+echo '  Organisation ID:    ', $validation->organisationId, PHP_EOL;
 echo '  User code:          ', $validation->organisationUserCode, PHP_EOL;
 echo '  Cluster URL:        ', $validation->clusterUrl, PHP_EOL;
 echo '  Expires:            ', date('Y-m-d H:i:s', $validation->exp), PHP_EOL, PHP_EOL;

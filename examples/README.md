@@ -11,7 +11,7 @@ Small, self-contained examples. Each folder shows one thing, with an `example.ph
    php examples/offices/list-offices/example.php
    ```
 
-The first time, the example asks for your client ID, client secret and redirect URI, opens the Twinfield login in your browser and asks for a default company. Everything is saved in `~/.config/twinfield/`, so after that examples start right away. Run `composer twinfield:setup` to change these values.
+The first time, the example asks for your client ID, client secret and redirect URI (or registers with Twinfield Connect when you have no Twinfield client ID of your own), opens the Twinfield login in your browser and asks for a default company. Everything is saved in `~/.config/twinfield/`, so after that examples start right away. Run `composer twinfield:setup` to change these values.
 
 Every example starts the same way:
 

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace SolveBeam\Twinfield\Tests\Support\Setup;
 
+use GuzzleHttp\Exception\GuzzleException;
+use SolveBeam\Twinfield\Connect\Registration;
+use SolveBeam\Twinfield\Connect\RegistrationException;
+use SolveBeam\Twinfield\OAuth2\UnexpectedResponseException;
 use SolveBeam\Twinfield\Office\OfficeSummary;
 use SolveBeam\Twinfield\Tests\Support\Config;
 use SolveBeam\Twinfield\Tests\Support\Environment;
@@ -12,7 +16,8 @@ use SolveBeam\Twinfield\Tests\Support\Session;
 /**
  * Guided first-run setup for examples, tests and dev scripts:
  *
- * 1. Asks for client ID, client secret and redirect URI when missing.
+ * 1. Asks for client ID, client secret and redirect URI when missing, or registers with Twinfield
+ *    Connect when you have no Twinfield client of your own.
  * 2. Starts the browser login when there is no refresh token yet.
  * 3. Asks for the default company (office) when missing.
  *
@@ -67,7 +72,8 @@ final readonly class Setup
 
         $this->requireInteractive(sprintf(
             "Twinfield credentials are missing.\n"
-            . "Run `composer twinfield:setup` in a terminal, or add these to %s:\n"
+            . "Run `composer twinfield:setup` in a terminal (it can also log in without a client of your own),\n"
+            . "or add these to %s:\n"
             . "  TWINFIELD_CLIENT_ID=…\n  TWINFIELD_CLIENT_SECRET=…\n  TWINFIELD_REDIRECT_URI=%s",
             $envFile->path,
             self::DEFAULT_REDIRECT_URI,
@@ -76,11 +82,27 @@ final readonly class Setup
         $this->prompt->line();
         $this->prompt->line('Twinfield setup');
         $this->prompt->line('===============');
-        $this->prompt->line(
-            'You need an OAuth client from the Twinfield developer portal (https://developers.twinfield.com).',
-        );
+        $this->prompt->line('Log in with your own OAuth client from the Twinfield developer portal');
+        $this->prompt->line('(https://developers.twinfield.com), or without one through Twinfield Connect');
+        $this->prompt->line('(' . $config->connectUrl() . '), which uses the Twinfield client of SolveBeam.');
         $this->prompt->line('Values are saved in ' . $envFile->path . ' (only readable by you).');
         $this->prompt->line();
+
+        $default = $config->get('TWINFIELD_CLIENT_ID') !== null ? 'yes' : 'no';
+
+        while (true) {
+            $answer = strtolower($this->prompt->ask('Do you have your own Twinfield client ID? (yes/no)', $default));
+
+            if (in_array($answer, ['yes', 'y', 'no', 'n'], true)) {
+                break;
+            }
+
+            $this->prompt->line('  Answer yes or no.');
+        }
+
+        if ($answer[0] === 'n') {
+            return $this->connect($config, $envFile);
+        }
 
         $clientId = $this->prompt->ask('Client ID', $config->get('TWINFIELD_CLIENT_ID'));
         $clientSecret = $this->prompt->askSecret(
@@ -100,6 +122,61 @@ final readonly class Setup
 
         if ($clientSecret !== '') {
             $values['TWINFIELD_CLIENT_SECRET'] = $clientSecret;
+        }
+
+        $envFile->set($values);
+
+        $this->prompt->line();
+        $this->prompt->line('Saved ' . $envFile->path);
+        $this->prompt->line();
+
+        return Config::load();
+    }
+
+    /**
+     * Registers this checkout with Twinfield Connect, unless it already is registered for the
+     * redirect URI.
+     */
+    private function connect(Config $config, EnvFile $envFile): Config
+    {
+        $this->prompt->line();
+        $this->prompt->line('The login listens on this address to receive the authorization code.');
+        $redirectUri = $this->prompt->ask(
+            'Redirect URI',
+            $config->get('TWINFIELD_REDIRECT_URI') ?? self::DEFAULT_REDIRECT_URI,
+        );
+
+        // Your own client wins when both are set, so clear it.
+        $values = [
+            'TWINFIELD_CLIENT_ID' => '',
+            'TWINFIELD_CLIENT_SECRET' => '',
+            'TWINFIELD_REDIRECT_URI' => $redirectUri,
+        ];
+
+        $registered = $config->get('TWINFIELD_CONNECT_CLIENT_ID') !== null
+            && $config->get('TWINFIELD_CONNECT_CLIENT_SECRET') !== null
+            && $config->get('TWINFIELD_CONNECT_REDIRECT_URI') === $redirectUri;
+
+        if (!$registered) {
+            $this->prompt->line('Registering with Twinfield Connect…');
+
+            try {
+                $client = (new Registration(connectUrl: $config->connectUrl()))->register(
+                    'Twinfield PHP SDK on ' . (gethostname() ?: 'a development machine'),
+                    [$redirectUri],
+                );
+            } catch (RegistrationException | UnexpectedResponseException | GuzzleException $exception) {
+                throw new SetupException(
+                    'Registering with Twinfield Connect failed: ' . $exception->getMessage(),
+                    0,
+                    $exception,
+                );
+            }
+
+            $values['TWINFIELD_CONNECT_CLIENT_ID'] = $client->clientId;
+            $values['TWINFIELD_CONNECT_CLIENT_SECRET'] = $client->clientSecret;
+            // A registration is for its redirect URIs: register again when it changes.
+            $values['TWINFIELD_CONNECT_REDIRECT_URI'] = $redirectUri;
         }
 
         $envFile->set($values);

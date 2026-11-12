@@ -39,7 +39,7 @@ final readonly class StaticAccessTokenProvider implements AccessTokenProvider
     {
         return new self(
             $accessToken,
-            $validation->organisation,
+            new Organisation($validation->organisationId, $validation->organisationCode),
             $validation->organisationUserCode,
             $validation->clusterUrl,
         );

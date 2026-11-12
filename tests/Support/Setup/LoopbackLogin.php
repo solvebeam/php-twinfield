@@ -12,6 +12,9 @@ use SolveBeam\Twinfield\Tests\Support\Session;
 /**
  * Browser login for CLI tools: opens the Twinfield login, catches the
  * redirect on localhost and stores the tokens via Session.
+ *
+ * The same provider object builds the login URL and exchanges the code, so it still has the PKCE
+ * code Twinfield Connect needs.
  */
 final readonly class LoopbackLogin
 {
@@ -48,11 +51,13 @@ final readonly class LoopbackLogin
         ]);
         $state = $provider->getState();
 
-        $this->prompt->line(
-            sprintf('[1/4] Client "%s", redirect URI %s', $this->config->clientId(), $this->config->redirectUri()),
-        );
+        $this->prompt->line(sprintf('[1/4] %s, redirect URI %s', $this->client(), $this->config->redirectUri()));
         $this->prompt->line('      Scopes: ' . implode(' ', $scopes));
-        $this->prompt->line('[2/4] Opening the Twinfield login in your browser…');
+        $this->prompt->line(
+            $this->config->usesConnect()
+                ? '[2/4] Opening Twinfield Connect in your browser; continue to Twinfield there…'
+                : '[2/4] Opening the Twinfield login in your browser…',
+        );
         $this->prompt->line('      If it does not open, visit: ' . $authorizationUrl);
 
         self::openBrowser($authorizationUrl);
@@ -100,7 +105,7 @@ final readonly class LoopbackLogin
         $this->prompt->line('[4/4] Saved ' . $this->config->tokenFile());
         $this->prompt->line();
         $this->prompt->line('Logged in to Twinfield.');
-        $this->prompt->line('  Organisation:  ' . $validation->organisation->code);
+        $this->prompt->line('  Organisation:  ' . $validation->organisationCode);
         $this->prompt->line('  User:          ' . $validation->organisationUserCode);
         $this->prompt->line('  Cluster:       ' . $validation->clusterUrl);
         $this->prompt->line();
@@ -113,12 +118,27 @@ final readonly class LoopbackLogin
      */
     public function hint(): string
     {
+        if ($this->config->usesConnect()) {
+            return sprintf(
+                "Check that the redirect URI is the one registered with Twinfield Connect (%s).\n"
+                . "Register again with: composer twinfield:setup",
+                $this->config->redirectUri(),
+            );
+        }
+
         return sprintf(
             "Check that client ID \"%s\" is correct and that the redirect URI is registered exactly as %s\n"
             . "(scheme, host, port and path; no trailing slash). Change them with: composer twinfield:setup",
             $this->config->clientId(),
             $this->config->redirectUri(),
         );
+    }
+
+    private function client(): string
+    {
+        return $this->config->usesConnect()
+            ? sprintf('Twinfield Connect client "%s"', $this->config->connectClient()->clientId)
+            : sprintf('Client "%s"', $this->config->clientId());
     }
 
     private static function openBrowser(string $url): void

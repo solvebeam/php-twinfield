@@ -31,6 +31,10 @@ final class ExamplesTest extends IntegrationTestCase
             self::markTestSkipped('Changes data; runs via `composer test:write`.');
         }
 
+        if ($name === 'getting-started/authentication' && $this->environment->config->usesConnect()) {
+            self::markTestSkipped('Needs your own Twinfield client; this login goes through Twinfield Connect.');
+        }
+
         // Twinfield limits requests per minute; leave a little room between examples.
         usleep(500_000);
 

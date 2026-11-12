@@ -31,7 +31,8 @@ final class OfficeResourceTest extends IntegrationTestCase
         );
         $organisation = $this->twinfield->organisation();
 
-        self::assertEquals($validation->organisation, $organisation);
+        self::assertSame($validation->organisationId, $organisation->id);
+        self::assertSame($validation->organisationCode, $organisation->code);
 
         foreach ($this->twinfield->offices()->list() as $office) {
             self::assertTrue($office->organisation->equals($organisation));

@@ -38,6 +38,7 @@ export default defineConfig({
 						{ label: 'Installation', slug: 'getting-started/installation' },
 						{ label: 'Running the examples', slug: 'examples' },
 						{ label: 'OAuth2 and scopes', slug: 'guides/oauth2' },
+						{ label: 'Twinfield Connect', slug: 'guides/twinfield-connect' },
 						{ label: 'Organisations and companies', slug: 'guides/organisations' },
 						{ label: 'XML web services (ProcessXml)', slug: 'guides/process-xml' },
 						{ label: 'REST API', slug: 'guides/rest-api' },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16334514ce765b10a7fbe6e6fdca8229",
+    "content-hash": "398cb8d92655ad3d39b47a8ed920d90c",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -742,6 +742,77 @@
             },
             "time": "2019-03-08T08:55:37+00:00",
             "published-time": "2019-03-08T09:01:32+00:00"
+        },
+        {
+            "name": "solvebeam/oauth2-twinfield",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/solvebeam/twinfield-oauth2-php.git",
+                "reference": "2930e5731c0d2ddbd0e3ee2f24a91527e67f17d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/solvebeam/twinfield-oauth2-php/zipball/2930e5731c0d2ddbd0e3ee2f24a91527e67f17d5",
+                "reference": "2930e5731c0d2ddbd0e3ee2f24a91527e67f17d5",
+                "shasum": ""
+            },
+            "require": {
+                "league/oauth2-client": "^2.9",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.3",
+                "phpunit/phpunit": "^12",
+                "squizlabs/php_codesniffer": "^3.10 || ^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SolveBeam\\Twinfield\\OAuth2\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SolveBeam",
+                    "email": "info@solvebeam.com",
+                    "homepage": "https://www.solvebeam.com/",
+                    "role": "Company"
+                },
+                {
+                    "name": "Remco Tolsma",
+                    "email": "remco@solvebeam.com",
+                    "homepage": "https://www.remcotolsma.nl/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Twinfield OAuth 2.0 provider for the PHP League's OAuth 2.0 Client",
+            "keywords": [
+                "Authentication",
+                "OpenID Connect",
+                "authorization",
+                "client",
+                "league",
+                "oauth",
+                "oauth2",
+                "twinfield"
+            ],
+            "support": {
+                "issues": "https://github.com/solvebeam/twinfield-oauth2-php/issues",
+                "source": "https://github.com/solvebeam/twinfield-oauth2-php"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/solvebeam",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-11-12T10:46:56+00:00",
+            "published-time": "2026-11-12T10:47:00+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3451,6 +3522,78 @@
             ],
             "time": "2026-10-04T05:50:08+00:00",
             "published-time": "2026-10-04T05:50:36+00:00"
+        },
+        {
+            "name": "solvebeam/twinfield-connect",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/solvebeam/twinfield-connect-php.git",
+                "reference": "45639f137bf0bf5d11b14664f6b1ae33b9376bb3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/solvebeam/twinfield-connect-php/zipball/45639f137bf0bf5d11b14664f6b1ae33b9376bb3",
+                "reference": "45639f137bf0bf5d11b14664f6b1ae33b9376bb3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.4.5",
+                "league/oauth2-client": "^2.9",
+                "php": "^8.3",
+                "solvebeam/oauth2-twinfield": "^0.1.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.3",
+                "phpunit/phpunit": "^12",
+                "squizlabs/php_codesniffer": "^3.10 || ^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SolveBeam\\Twinfield\\Connect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SolveBeam",
+                    "email": "info@solvebeam.com",
+                    "homepage": "https://www.solvebeam.com/",
+                    "role": "Company"
+                },
+                {
+                    "name": "Remco Tolsma",
+                    "email": "remco@solvebeam.com",
+                    "homepage": "https://www.remcotolsma.nl/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Log in to Twinfield through Twinfield Connect, without a Twinfield client ID of your own",
+            "keywords": [
+                "Authentication",
+                "authorization",
+                "client",
+                "league",
+                "oauth",
+                "oauth2",
+                "twinfield"
+            ],
+            "support": {
+                "issues": "https://github.com/solvebeam/twinfield-connect-php/issues",
+                "source": "https://github.com/solvebeam/twinfield-connect-php"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/solvebeam",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-11-12T11:05:45+00:00",
+            "published-time": "2026-11-12T11:05:56+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",

@@ -6,6 +6,8 @@ namespace SolveBeam\Twinfield\Tests\Support;
 
 use Dotenv\Dotenv;
 use RuntimeException;
+use SolveBeam\Twinfield\Connect\ConnectClient;
+use SolveBeam\Twinfield\Connect\Provider\TwinfieldConnect;
 
 /**
  * Configuration for tests and dev scripts.
@@ -15,6 +17,11 @@ use RuntimeException;
  * 1. Real environment variables (e.g. `TWINFIELD_DEBUG=1 composer test:live`).
  * 2. `.env` in the project root (gitignored, optional).
  * 3. `~/.config/twinfield/.env` (or `$TWINFIELD_CONFIG_DIR/.env`).
+ *
+ * Logging in goes with your own Twinfield client (`TWINFIELD_CLIENT_ID` and `TWINFIELD_CLIENT_SECRET`),
+ * or without one through Twinfield Connect (`TWINFIELD_CONNECT_CLIENT_ID` and
+ * `TWINFIELD_CONNECT_CLIENT_SECRET`, which `composer twinfield:setup` registers). Your own client
+ * wins when both are set.
  */
 final readonly class Config
 {
@@ -71,7 +78,31 @@ final readonly class Config
 
     public function hasCredentials(): bool
     {
-        return $this->get('TWINFIELD_CLIENT_ID') !== null && $this->get('TWINFIELD_CLIENT_SECRET') !== null;
+        return $this->hasOwnClient() || $this->hasConnectClient();
+    }
+
+    /**
+     * True when logging in goes through Twinfield Connect instead of your own Twinfield client.
+     */
+    public function usesConnect(): bool
+    {
+        return !$this->hasOwnClient() && $this->hasConnectClient();
+    }
+
+    public function connectClient(): ConnectClient
+    {
+        return new ConnectClient(
+            $this->require('TWINFIELD_CONNECT_CLIENT_ID'),
+            $this->require('TWINFIELD_CONNECT_CLIENT_SECRET'),
+        );
+    }
+
+    /**
+     * Base URL of Twinfield Connect; only set `TWINFIELD_CONNECT_URL` for one you run yourself.
+     */
+    public function connectUrl(): string
+    {
+        return $this->get('TWINFIELD_CONNECT_URL') ?? TwinfieldConnect::CONNECT_URL;
     }
 
     public function clientId(): string
@@ -127,6 +158,17 @@ final readonly class Config
         }
 
         return array_filter(Dotenv::parse((string) file_get_contents($file)), is_string(...));
+    }
+
+    private function hasOwnClient(): bool
+    {
+        return $this->get('TWINFIELD_CLIENT_ID') !== null && $this->get('TWINFIELD_CLIENT_SECRET') !== null;
+    }
+
+    private function hasConnectClient(): bool
+    {
+        return $this->get('TWINFIELD_CONNECT_CLIENT_ID') !== null
+            && $this->get('TWINFIELD_CONNECT_CLIENT_SECRET') !== null;
     }
 
     private static function env(string $key): ?string

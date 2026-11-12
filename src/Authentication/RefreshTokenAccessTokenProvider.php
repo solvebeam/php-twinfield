@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\OAuth2;
+namespace SolveBeam\Twinfield\Authentication;
 
 use DateTimeImmutable;
 use Psr\Cache\CacheItemPoolInterface;
-use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
-use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
+use SolveBeam\Twinfield\OAuth2\Provider\AbstractTwinfieldProvider;
 use SolveBeam\Twinfield\Organisation\Organisation;
 
 /**
@@ -18,10 +17,13 @@ use SolveBeam\Twinfield\Organisation\Organisation;
  * which it calls once per new access token.
  *
  *   $tokens = new RefreshTokenAccessTokenProvider(
- *       new TwinfieldProvider(['clientId' => …, 'clientSecret' => …, 'redirectUri' => …]),
+ *       new Twinfield(['clientId' => …, 'clientSecret' => …, 'redirectUri' => …]),
  *       refreshToken: $storedRefreshToken,
  *       cache: $cachePool,
  *   );
+ *
+ * The provider is the `Twinfield` provider of `solvebeam/oauth2-twinfield`, or another provider of
+ * Twinfield access tokens that extends `AbstractTwinfieldProvider`.
  *
  * Twinfield may return a new refresh token on refresh; read it with
  * refreshToken() and store it if you persist refresh tokens yourself.
@@ -35,7 +37,7 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
     private ?array $current = null;
 
     public function __construct(
-        private readonly TwinfieldProvider $provider,
+        private readonly AbstractTwinfieldProvider $provider,
         private string $refreshToken,
         private readonly ?CacheItemPoolInterface $cache = null,
     ) {
@@ -100,8 +102,8 @@ final class RefreshTokenAccessTokenProvider implements AccessTokenProvider
             'expires' => $token->getExpires() ?? $validation->exp,
             'clusterUrl' => rtrim($validation->clusterUrl, '/'),
             'userCode' => $validation->organisationUserCode,
-            'organisationId' => $validation->organisation->id,
-            'organisationCode' => $validation->organisation->code,
+            'organisationId' => $validation->organisationId,
+            'organisationCode' => $validation->organisationCode,
         ];
 
         if ($cached !== null) {

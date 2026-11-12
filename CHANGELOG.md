@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The OAuth 2.0 provider moved to its own package, `solvebeam/oauth2-twinfield`, which the SDK requires. `OAuth2\Provider\Twinfield`, `OAuth2\Provider\TwinfieldResourceOwner` and `OAuth2\Scope` keep their class names.
+- `RefreshTokenAccessTokenProvider` moved from the `OAuth2` to the `Authentication` namespace, and accepts every provider that extends `OAuth2\Provider\AbstractTwinfieldProvider`.
+- `AccessTokenValidation` has the properties `organisationId` and `organisationCode` instead of `organisation`. `Twinfield::organisation()` still returns the `Organisation`.
+- `getAccessTokenValidation()` throws `OAuth2\UnexpectedResponseException` instead of `UnexpectedResponseException` when a claim is missing.
+
 ## [0.1.0] - 2026-11-10
 
 First release.

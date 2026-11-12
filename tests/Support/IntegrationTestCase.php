@@ -26,7 +26,7 @@ abstract class IntegrationTestCase extends TestCase
 
         if (!$config->hasCredentials()) {
             self::markTestSkipped(sprintf(
-                'No Twinfield credentials. Add TWINFIELD_CLIENT_ID and TWINFIELD_CLIENT_SECRET to %s/.env.',
+                'No Twinfield credentials. Run `composer twinfield:setup`, or add them to %s/.env.',
                 $config->configDir,
             ));
         }

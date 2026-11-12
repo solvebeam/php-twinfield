@@ -17,7 +17,7 @@ $tokens = StaticAccessTokenProvider::fromValidation($accessToken, $validation);
 $token = new AccessToken(['access_token' => $accessToken]);
 
 $validation = $provider->getAccessTokenValidation($token);
-echo $validation->organisation->code, ' ', $validation->clusterUrl, PHP_EOL;
+echo $validation->organisationCode, ' ', $validation->clusterUrl, PHP_EOL;
 
 $user = $provider->getResourceOwner($token);
 echo $user->organisationUserCode, ' ', $user->organisationId, PHP_EOL;

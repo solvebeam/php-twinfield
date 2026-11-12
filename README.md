@@ -396,6 +396,8 @@ Coding style follows PSR-12, enforced via the PHPCS ruleset in `phpcs.xml.dist`.
 
 ## OAuth2 Usage
 
+The provider comes from [solvebeam/oauth2-twinfield](https://github.com/solvebeam/twinfield-oauth2-php), which is installed with the SDK.
+
 ```php
 <?php
 
@@ -485,13 +487,18 @@ For more details, see the [Twinfield OpenID Connect documentation](https://devel
 
 ### One-time setup
 
-Register `http://localhost:8765/callback` as redirect URI for your client in the Twinfield developer portal, then run:
+Run:
 
 ```sh
 composer twinfield:setup
 ```
 
-This asks for your client ID, client secret and redirect URI, opens the Twinfield login in your browser and asks for a default company. Running any example for the first time does the same. Values are saved outside the project, in `~/.config/twinfield/` (only readable by you):
+This asks whether you have your own Twinfield client ID:
+
+- **Yes**: it asks for your client ID, client secret and redirect URI. Register `http://localhost:8765/callback` as redirect URI for your client in the Twinfield developer portal first.
+- **No**: it registers this checkout with [Twinfield Connect](https://php.twinfield.solvebeam.com/guides/twinfield-connect/) and logs in through the Twinfield client of SolveBeam.
+
+Then it opens the Twinfield login in your browser and asks for a default company. Running any example for the first time does the same. Values are saved outside the project, in `~/.config/twinfield/` (only readable by you):
 
 ```dotenv
 # ~/.config/twinfield/.env
@@ -501,6 +508,8 @@ TWINFIELD_REDIRECT_URI=http://localhost:8765/callback
 TWINFIELD_COMPANY=1002
 TWINFIELD_WRITE_COMPANIES=1002,1002_3   # optional, for write tests
 ```
+
+With Twinfield Connect the file has `TWINFIELD_CONNECT_CLIENT_ID` and `TWINFIELD_CONNECT_CLIENT_SECRET` instead of the client ID and secret.
 
 The refresh token is stored in `~/.config/twinfield/token.json`; access tokens are refreshed automatically.
 

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use SolveBeam\Twinfield\Authentication\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
-use SolveBeam\Twinfield\OAuth2\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\Twinfield;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 

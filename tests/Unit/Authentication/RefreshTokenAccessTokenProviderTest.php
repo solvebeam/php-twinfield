@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace SolveBeam\Twinfield\Tests\Unit\OAuth2;
+namespace SolveBeam\Twinfield\Tests\Unit\Authentication;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use SolveBeam\Twinfield\Authentication\RefreshTokenAccessTokenProvider;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield as TwinfieldProvider;
-use SolveBeam\Twinfield\OAuth2\RefreshTokenAccessTokenProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 final class RefreshTokenAccessTokenProviderTest extends TestCase

@@ -7,7 +7,9 @@ namespace SolveBeam\Twinfield\Tests\Support;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use RuntimeException;
 use SolveBeam\Twinfield\Authentication\AccessTokenProvider;
+use SolveBeam\Twinfield\Connect\Provider\TwinfieldConnect;
 use SolveBeam\Twinfield\OAuth2\AccessTokenValidation;
+use SolveBeam\Twinfield\OAuth2\Provider\AbstractTwinfieldProvider;
 use SolveBeam\Twinfield\OAuth2\Provider\Twinfield;
 use SolveBeam\Twinfield\Organisation\Organisation;
 
@@ -38,8 +40,16 @@ final class Session implements AccessTokenProvider
         return self::$shared ??= new self($config);
     }
 
-    public function provider(): Twinfield
+    public function provider(): AbstractTwinfieldProvider
     {
+        if ($this->config->usesConnect()) {
+            return TwinfieldConnect::forClient(
+                $this->config->connectClient(),
+                $this->config->redirectUri(),
+                ['connectUrl' => $this->config->connectUrl()],
+            );
+        }
+
         return new Twinfield([
             'clientId' => $this->config->clientId(),
             'clientSecret' => $this->config->clientSecret(),
@@ -152,8 +162,8 @@ final class Session implements AccessTokenProvider
             'refresh_token' => $token->getRefreshToken() ?? $previousRefreshToken,
             'expires' => $token->getExpires() ?? $validation->exp,
             'cluster_url' => $validation->clusterUrl,
-            'organisation_id' => $validation->organisation->id,
-            'organisation_code' => $validation->organisation->code,
+            'organisation_id' => $validation->organisationId,
+            'organisation_code' => $validation->organisationCode,
             'organisation_user_code' => $validation->organisationUserCode,
             'scopes' => $validation->scopes,
             'updated_at' => date(DATE_ATOM),

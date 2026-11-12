@@ -3,7 +3,9 @@ title: OAuth2 and scopes
 description: Log in with the Twinfield OAuth2 provider and request the right OpenID Connect scopes.
 ---
 
-The SDK includes a [league/oauth2-client](https://oauth2-client.thephpleague.com/) provider for Twinfield.
+Logging in goes through [solvebeam/oauth2-twinfield](https://github.com/solvebeam/twinfield-oauth2-php), a [league/oauth2-client](https://oauth2-client.thephpleague.com/) provider for Twinfield. It is installed with the SDK and also works on its own.
+
+You need a client ID and secret from Twinfield for it. Without them, log in through [Twinfield Connect](/guides/twinfield-connect/).
 
 ## Usage
 
@@ -42,7 +44,7 @@ The OpenID Connect scopes identify the user and keep the session; every API need
 | `twf.organisationUser` | Contains information about organisation user.<br><br>**⚠️ Important:** This scope is **mandatory** in order to login. | • `twf.organisationUserCode` - Code of the organisation user (used for login)<br>• `twf.organisationCode` - Code of the organisation<br>• `twf.organisationId` - GUID of organisation |
 | `offline_access` | Required to receive refresh tokens in the authorization code flow. | - |
 
-The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws an `UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
+The SDK needs `twf.organisationUser` and `twf.organisation`: `getAccessTokenValidation()` throws a `SolveBeam\Twinfield\OAuth2\UnexpectedResponseException` when one of their claims is missing. The validation gives the cluster URL, the organisation and the user the token belongs to; `$twinfield->organisation()` and `$twinfield->userCode()` return them without a request, and `$twinfield->users()->current()` reads the user. See [Current user](/examples/users/current-user/) and [Organisations and companies](/guides/organisations/).
 
 ### REST API scopes
 
